@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('personas', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre', 30);
+            $table->string('ap_paterno', 30);.
+            $table->string('ap_materno', 30);
+            $table->string('telefono', 15)->nullable();
+            $table->foreignId('usuario')->constrained('usuarios')->onDelete('cascade');
             $table->timestamps();
         });
     }
