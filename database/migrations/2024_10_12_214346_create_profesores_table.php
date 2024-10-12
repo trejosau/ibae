@@ -12,7 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('profesores', function (Blueprint $table) {
-            $table->id();
+            $table->id(); // Crea la columna id como clave primaria
+            $table->enum('especialidad', ['estilismo', 'barbería', 'maquillaje', 'uñas']);
+            $table->date('fecha_contratacion');
+            $table->string('RFC', 13)->unique();
+            $table->string('CURP', 18)->unique();
+            $table->enum('estado', ['activo', 'inactivo', 'vacaciones']);
+            $table->unsignedBigInteger('id_persona');
+            $table->string('zipcode', 10);
+            $table->string('colonia', 100);
+            $table->string('calle', 100);
+            $table->string('n_ext', 10);
+            $table->string('n_int', 10)->nullable();
+            $table->foreign('id_persona')->references('id')->on('personas')->onDelete('cascade');
             $table->timestamps();
         });
     }
