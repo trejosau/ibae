@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('estilistas', function (Blueprint $table) {
             $table->id();
+            $table->enum('estado', ['activo', 'inactivo', 'vacaciones']);
+            $table->unsignedBigInteger('id_persona');
+            $table->foreign('id_persona')->references('id')->on('personas')->onDelete('cascade');
             $table->timestamps();
         });
     }
