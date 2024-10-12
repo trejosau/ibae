@@ -2,29 +2,34 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    // Especifica el nombre de la tabla
+    protected $table = 'usuarios';
+
     /**
-     * The attributes that are mass assignable.
+     * Los atributos que se pueden asignar de forma masiva.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'name',                 // Nombre del usuario
+        'email',                // Correo electrónico del usuario
+        'password',             // Contraseña del usuario
+        'email_verified_at',    // Marca de tiempo de verificación del correo
+        'remember_token',       // Token para recordar sesión
+        'estado',               // Estado del usuario (activo/inactivo)
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Los atributos que deben estar ocultos para la serialización.
      *
      * @var array<int, string>
      */
@@ -34,15 +39,16 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Los atributos que deben ser convertidos a tipos específicos.
      *
      * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'email_verified_at' => 'datetime', // Convierte a un objeto de fecha y hora
+            'estado' => 'string',                // Convierte el estado a cadena
+            'password' => 'hashed',              // Asegura que la contraseña esté hasheada
         ];
     }
 }
