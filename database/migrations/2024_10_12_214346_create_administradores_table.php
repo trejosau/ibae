@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('administradores', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('id_persona');
+            $table->foreign('id_persona')->references('id')->on('personas')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -22,6 +24,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('administradores', function (Blueprint $table) {
+            $table->dropForeign(['id_persona']);
+        });
+
         Schema::dropIfExists('administradores');
     }
 };
