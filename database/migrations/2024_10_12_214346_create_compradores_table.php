@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('compradores', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->unsignedBigInteger('id_persona');
+            $table->enum('preferencia', ['barber', 'belleza']);
+            $table->foreign('id_persona')->references('id')->on('personas')->onDelete('cascade');
+            $table->string('razon_social', 100)->nullable();
+
         });
     }
 
