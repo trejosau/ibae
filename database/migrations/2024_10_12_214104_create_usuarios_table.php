@@ -32,7 +32,7 @@ return new class extends Migration
         // Tabla para sesiones
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('usuario_id')->nullable()->index();
+            $table->foreignId('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable(); // Dirección IP
             $table->text('user_agent')->nullable();
             $table->longText('payload');
