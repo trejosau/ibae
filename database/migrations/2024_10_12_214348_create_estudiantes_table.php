@@ -12,7 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('estudiantes', function (Blueprint $table) {
-            $table->id();
+            $table->id('matricula');
+            $table->unsignedBigInteger('id_persona');
+            $table->unsignedBigInteger('id_inscripcion');
+            $table->date('fecha_inscripcion');
+            $table->string('grado_estudio');
+            $table->string('zipcode');
+            $table->string('colonia');
+            $table->string('calle');
+            $table->string('num_ext');
+            $table->string('num_int')->nullable();
+
+
+            $table->foreign('id_persona')->references('id')->on('personas')->onDelete('cascade');
+            $table->foreign('id_inscripcion')->references('id')->on('inscripciones')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
