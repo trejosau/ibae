@@ -13,8 +13,8 @@ return new class extends Migration
             $table->string('nombre');
             $table->text('descripcion')->nullable();
             $table->string('marca', 100);
-            $table->decimal('precio_lista', 10, 2);
-            $table->decimal('precio_venta', 10, 2);
+            $table->decimal('precio_lista', 10);
+            $table->decimal('precio_venta', 10);
             $table->integer('cantidad');
             $table->enum('medida', ['pzas', 'ml', 'lt', 'gr', 'cm']);
             $table->unsignedBigInteger('id_proveedor');

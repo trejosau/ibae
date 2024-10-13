@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
-            $table->decimal('total', 10, 2);
+            $table->decimal('total', 10);
             $table->date('fecha_pedido');
             $table->enum('estado', ['entregado', 'listo para entrega', 'preparando para entrega']);
             $table->string('clave_entrega', 100);

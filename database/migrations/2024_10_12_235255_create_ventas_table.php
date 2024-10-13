@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_comprador');
             $table->date('fecha_compra');
-            $table->decimal('total', 10, 2);
+            $table->decimal('total', 10 );
             $table->unsignedBigInteger('id_admin');
             $table->enum('es_estudiante', ['si', 'no']);
             $table->foreign('id_admin')->references('id')->on('administradores')->onDelete('cascade');

@@ -11,7 +11,7 @@ class CreateHorarioCerradoTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('horario_cerrado', function (Blueprint $table) {
             $table->id();
@@ -28,7 +28,7 @@ class CreateHorarioCerradoTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('horario_cerrado');
     }

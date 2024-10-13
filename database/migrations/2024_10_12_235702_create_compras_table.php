@@ -15,7 +15,7 @@ return new class extends Migration
             $table->date('fecha_entrega');
             $table->enum('estado', ['entregado', 'pendiente', 'cancelado']);
             $table->text('motivo')->nullable();
-            $table->decimal('total', 10, 2);
+            $table->decimal('total', 10);
             $table->foreign('id_proveedor')->references('id')->on('proveedores')->onDelete('cascade');
         });
     }

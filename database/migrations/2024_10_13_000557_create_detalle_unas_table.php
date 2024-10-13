@@ -6,12 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::create('detalle_unas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_detalle_cita');
-            $table->integer('largo')->check('largo BETWEEN 1 AND 8');
+            $table->integer('largo')->default(0);
             $table->integer('cantidad_piedras')->default(0);
             $table->integer('cantidad_cristales')->default(0);
             $table->integer('cantidad_stickers')->default(0);
@@ -24,7 +24,7 @@ return new class extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('detalle_unas');
     }

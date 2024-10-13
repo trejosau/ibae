@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('inscripciones', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->decimal('precio', 10, 2);
+            $table->decimal('precio', 10);
             $table->text('descripcion')->nullable();
             $table->boolean('material_incluido')->default(false);
             $table->timestamps();
