@@ -2,26 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Persona extends Model
 {
-    use HasFactory;
-
     protected $table = 'personas';
 
     protected $fillable = [
         'nombre',
-        'apellido',
-        'fecha_nacimiento',
+        'ap_paterno',
+        'ap_materno',
         'telefono',
-        'direccion',
-        'usuario_id'
+        'usuario',
     ];
 
-    public function usuario()
+    public function usuario(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'usuario_id');
+        return $this->belongsTo(User::class, 'usuario');
     }
 }
