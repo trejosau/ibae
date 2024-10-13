@@ -12,7 +12,6 @@ class Profesor extends Model
     protected $fillable = [
         'especialidad',
         'fecha_contratacion',
-        'RFC',
         'CURP',
         'estado',
         'id_persona',
@@ -23,6 +22,9 @@ class Profesor extends Model
         'n_int',
     ];
 
+    protected $hidden = [
+        'RFC',
+        ];
     public function persona(): BelongsTo
     {
         return $this->belongsTo(Persona::class, 'id_persona');
