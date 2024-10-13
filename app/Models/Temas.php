@@ -2,10 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
 class Temas extends Model
 {
-    use HasFactory;
+    protected $table = 'temas';
+
+    protected $fillable = [
+        'nombre',
+        'descripcion',
+    ];
+
+    public function moduloTemas() : HasMany
+    {
+        return $this->hasMany(ModuloTemas::class, 'id_tema');
+    }
 }
+
