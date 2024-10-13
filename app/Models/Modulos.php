@@ -2,10 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Modulos extends Model
 {
-    use HasFactory;
+    protected $table = 'modulos';
+
+    protected $fillable = [
+        'nombre',
+        'duracion',
+    ];
+
+    public function curso(): BelongsTo
+    {
+        return $this->belongsTo(Cursos::class, 'id_curso');
+    }
 }
