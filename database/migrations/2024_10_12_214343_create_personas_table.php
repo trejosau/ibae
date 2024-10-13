@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('personas', function (Blueprint $table) {
+        Schema::create('personas', function (Blueprint $table) { // Especifica el nombre de la tabla si no sigue la convención de plural
             $table->id();
             $table->string('nombre', 30);
             $table->string('ap_paterno', 30);
             $table->string('ap_materno', 30);
             $table->string('telefono', 15)->nullable();
-            $table->foreignId('usuario')->constrained('usuarios')->onDelete('cascade');
+            $table->foreignId('usuario')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

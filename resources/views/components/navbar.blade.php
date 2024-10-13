@@ -110,9 +110,10 @@
                             <a class="dropdown-item" href="#">Settings</a>
                         </li>
                         <li>
-                            <form id="logout-form" action="" method="POST" style="display: none;">
+
+                            <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                                <button type="submit">Logout</button>
                             </form>
                         </li>
                     </ul>
