@@ -118,7 +118,7 @@
                         </li>
                     </ul>
                 @else
-                    <a href="#" class="btn btn-primary login-button me-3">
+                    <a href="{{ route('login') }}" class="btn btn-primary login-button me-3">
                         Login
                     </a>
                 @endif
