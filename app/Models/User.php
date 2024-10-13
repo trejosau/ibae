@@ -14,41 +14,28 @@ class User extends Authenticatable
     // Especifica el nombre de la tabla
     protected $table = 'usuarios';
 
-    /**
-     * Los atributos que se pueden asignar de forma masiva.
-     *
-     * @var array<int, string>
-     */
+
     protected $fillable = [
-        'name',                 // Nombre del usuario
-        'email',                // Correo electrónico del usuario
-        'password',             // Contraseña del usuario
-        'email_verified_at',    // Marca de tiempo de verificación del correo
-        'remember_token',       // Token para recordar sesión
-        'estado',               // Estado del usuario (activo/inactivo)
+        'name',
+        'email',
+        'password',
+        'email_verified_at',
+        'remember_token',
+        'estado',
     ];
 
-    /**
-     * Los atributos que deben estar ocultos para la serialización.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Los atributos que deben ser convertidos a tipos específicos.
-     *
-     * @return array<string, string>
-     */
+
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime', // Convierte a un objeto de fecha y hora
-            'estado' => 'string',                // Convierte el estado a cadena
-            'password' => 'hashed',              // Asegura que la contraseña esté hasheada
+            'email_verified_at' => 'datetime',
+            'estado' => 'string',
+            'password' => 'hashed',
         ];
     }
 }
