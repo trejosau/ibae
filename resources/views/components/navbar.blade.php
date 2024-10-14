@@ -106,9 +106,12 @@
                         <li>
                             <a class="dropdown-item" href="#">My profile</a>
                         </li>
-                        <li>
-                            <a class="dropdown-item" href="#">Settings</a>
-                        </li>
+                        <ul>
+                            @foreach(auth()->user()->roles as $role)
+                                <li>{{ $role->name }}</li>
+                            @endforeach
+                        </ul>
+
                         <li>
 
                             <form method="POST" action="{{ route('logout') }}">

@@ -6,11 +6,22 @@
             <div class="card-body">
                 <h5 class="card-title text-center">Registro</h5>
 
+                <!-- Mensaje de éxito -->
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <!-- Mensaje de error -->
                 @if ($errors->any())
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger pb-0">
                         <ul>
                             @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
+                                <ul>
+                                    {{ $error }}
+
+                                </ul>
                             @endforeach
                         </ul>
                     </div>
