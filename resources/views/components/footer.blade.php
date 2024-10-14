@@ -14,7 +14,7 @@
             <div class="col-md-6">
                 <h5>Acerca de Nosotros</h5>
                 <ul class="list-unstyled">
-                    <li><a href="#" class="text-white">Nuestra Historia</a></li>
+                    <li><a href="#" class="text-white">PEPE Historia</a></li>
                     <li><a href="#" class="text-white">Cursos</a></li>
                     <li><a href="#" class="text-white">Política de Privacidad</a></li>
                     <li><a href="#" class="text-white">Catalogo de productos</a></li>

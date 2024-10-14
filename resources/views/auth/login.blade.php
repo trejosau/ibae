@@ -6,9 +6,18 @@
             <div class="card-body">
                 <h5 class="card-title text-center">Iniciar Sesión</h5>
 
-                @if(session('error'))
-                    <div class="alert alert-danger" role="alert">
-                        {{ session('error') }}
+                @if(session('errors'))
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach (session('errors')->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                @if(session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
                     </div>
                 @endif
 

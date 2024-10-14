@@ -15,11 +15,14 @@ class CreateNewUser implements CreatesNewUsers
 
     public function create(array $input): User
     {
-        return User::create([
+
+       $user = User::create([
             'username' => $input['username'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
+        $user->assignRole('Comprador');
+        return $user;
     }
 
     protected function validator(array $data)

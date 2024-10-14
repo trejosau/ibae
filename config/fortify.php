@@ -35,7 +35,7 @@ return [
     'features' => [
         Features::registration(),
         Features::resetPasswords(),
-        // Features::emailVerification(),
+        Features::emailVerification(),
         Features::updateProfileInformation(),
         Features::updatePasswords(),
         Features::twoFactorAuthentication([
@@ -45,8 +45,8 @@ return [
         ]),
     ],
     'redirects' => [
-        'register' => '/login', // Redirigir a login después del registro
-        'logout' => '/register', // Redirigir a register después del logout
+        'register' => '/login',
+        'logout' => '/login',
     ],
 
 ];
