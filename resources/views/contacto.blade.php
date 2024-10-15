@@ -1,22 +1,22 @@
 @extends('layouts.app')
     <style>
 
-
-        /* Espaciado extra debajo de la barra de navegación */
         .container {
             margin-top: 120px;
         }
 
-        /* Botón estilizado */
         .btn-custom {
             background-color: #005bb5;
             color: #fff;
             border: none;
+            border-radius: 10px;
             transition: background-color 0.3s;
+            padding: 15px;
+            font-size: 15px;
         }
 
         .btn-custom:hover {
-            background-color: #003f7f;
+            background-color: #ff69b4;
         }
 
         /* Estilo de los campos del formulario */
@@ -40,7 +40,7 @@
         }
 
         .contact-info {
-            background-color: #005bb5; /* Fondo diferente para la información de contacto */
+            background-color: #081444; /* Fondo diferente para la información de contacto */
             padding: 20px;
             border-radius: 10px;
         }
@@ -58,6 +58,10 @@
             color: white;
         }
 
+        .info{
+            color: white;
+        }
+
         /* Estilo de la barra de navegación */
     </style>
 
@@ -67,7 +71,7 @@
     <div class="row justify-content-center">
         <!-- Formulario de contacto -->
         <div class="col-lg-5 contact-form">
-            <h2 class="text-center mb-4">Contáctanos</h2>
+            <h2 class="text-center mb-4 ">Contáctanos</h2>
 
             <form>
                 <div class="mb-3">
@@ -86,12 +90,12 @@
                     <label for="message" class="form-label">Mensaje</label>
                     <textarea class="form-control" id="message" rows="4" placeholder="Escribe tu mensaje" required></textarea>
                 </div>
-                <button type="submit" class="btn btn-custom w-100">Enviar</button>
+                <button type="submit" class=" w-100 btn-custom">Enviar</button>
             </form>
         </div>
 
         <!-- Información de contacto -->
-        <div class="col-lg-5 contact-info mt-5 mt-lg-0 ms-lg-5">
+        <div class="info col-lg-5 contact-info mt-5 mt-lg-0 ms-lg-5">
             <h4 class="text-center">Información de Contacto</h4>
             <div class="d-flex align-items-center">
                 <i class="bi bi-geo-alt me-3"></i>
