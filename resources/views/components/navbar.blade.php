@@ -26,6 +26,7 @@
                 />
             </a>
 
+            @if(!request()->routeIs('dashboard')) <!-- Condición para ocultar el menú en el dashboard -->
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link roboto-medium" href="{{ route('dashboard') }}">Dashboard</a>
@@ -36,12 +37,12 @@
                 <li class="nav-item">
                     <a class="nav-link roboto-medium" href="#">Sobre Nosotros</a>
                 </li>
-
                 <li class="nav-item">
                     <a class="icono" href="#"><i class="fab fa-instagram"></i></a>
                     <a class="icono" href="#"><i class="fab fa-facebook"></i></a>
                 </li>
             </ul>
+            @endif
         </div>
 
         <div class="d-flex align-items-center">
@@ -106,17 +107,11 @@
                         <li>
                             <a class="dropdown-item" href="#">My profile</a>
                         </li>
-                        <ul>
-                            @foreach(auth()->user()->roles as $role)
-                                <li>{{ $role->name }}</li>
-                            @endforeach
-                        </ul>
-
+                        <li class="dropdown-divider"></li>
                         <li>
-
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit">Logout</button>
+                                <button class="dropdown-item" type="submit">Logout</button>
                             </form>
                         </li>
                     </ul>
