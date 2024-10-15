@@ -47,7 +47,7 @@ class CreateNewUser implements CreatesNewUsers
             'password' => [
                 'required',
                 'string',
-                'min:8',
+                'min:4',
                 'confirmed',
             ],
         ]);
