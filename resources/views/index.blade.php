@@ -7,10 +7,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
 <body class="roboto">
-@include('components.navbar')
+
 <main>
     @include('components.frames')
 
+    @include('components.navbar')
 
     @include('components.servicios')
 

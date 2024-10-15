@@ -2,7 +2,7 @@ import './bootstrap';
 import 'bootstrap';
 import { Dropdown, Collapse, initMDB } from "mdb-ui-kit";
 initMDB({ Dropdown, Collapse });
-
+import $ from 'jquery';
 
 
 // animacion por frames
@@ -83,3 +83,34 @@ const observermap = new IntersectionObserver((entries) => {
 
 // Observamos el contenedor del mapa
 observermap.observe(mapContainer);
+
+
+
+
+// fijar navbar
+$(document).ready(function () {
+    const navbar = $('#navbar');
+    const navbarOffset = navbar.offset().top;
+
+    let lastScrollTop = 0;
+    let ticking = false;
+
+    $(window).on('scroll', function () {
+        lastScrollTop = $(this).scrollTop();
+
+        if (!ticking) {
+            window.requestAnimationFrame(function () {
+                if (lastScrollTop >= navbarOffset) {
+                    navbar.addClass('fixed');
+                } else {
+                    navbar.removeClass('fixed');
+                }
+                ticking = false;
+            });
+
+            ticking = true;
+        }
+    });
+});
+
+

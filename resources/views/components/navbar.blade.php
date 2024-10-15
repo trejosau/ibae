@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg " style="background-color: transparent;">
+<nav class="navbar navbar-expand-lg" id="navbar">
     <!-- Container wrapper -->
     <div class="container-fluid">
         <!-- Toggle button -->

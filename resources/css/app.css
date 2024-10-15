@@ -57,12 +57,20 @@ main {
 
 /* --- NAVBAR STYLES --- */
 .navbar {
-    position: fixed;
-    top: 0;
-    left: 0; right: 0;
-    padding: 10px 20px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    background-color: #081444;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    padding: 10px 0;
+    box-shadow: none;
+}
 
+.fixed {
+    position: fixed; /* Fija el navbar */
+    top: 0; /* Mantiene el navbar en la parte superior */
+    left: 0;
+    right: 0; /* Asegúrate de que ocupe el ancho completo */
+    z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+    background-color: #081444; /* Color de fondo del navbar */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-nav {
