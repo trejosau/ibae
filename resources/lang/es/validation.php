@@ -77,4 +77,9 @@ return [
     'uploaded' => 'El :attribute falló en subir.',
     'url' => 'El formato de :attribute no es válido.',
     'uuid' => 'El :attribute debe ser un UUID válido.',
+    'custom' => [
+        'password' => [
+            'confirmed' => 'Las contraseñas no coinciden.',
+        ],
+    ],
 ];
