@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #FFB6C1;">
+<nav class="navbar navbar-expand-lg " style="background-color: #081444;">
     <!-- Container wrapper -->
     <div class="container-fluid">
         <!-- Toggle button -->
@@ -35,7 +35,7 @@
                     <a class="nav-link roboto-medium" href="/contacto">Contáctanos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link roboto-medium" href="#">Sobre Nosotros</a>
+                    <a class="nav-link roboto-medium" href="/about-us">Sobre Nosotros</a>
                 </li>
                 <li class="nav-item">
                     <a class="icono" href="#"><i class="fab fa-instagram"></i></a>
