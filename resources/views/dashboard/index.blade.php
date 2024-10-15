@@ -1,23 +1,20 @@
 @extends('layouts.app')
 
-
-
 @section('content')
-    <div class="d-flex">
+    <div class="container">
+        <h1 class="my-4">{{ $lugar }}</h1> <!-- Título que mostrará el valor de $lugar -->
 
+        @if ($roles->isNotEmpty())
+            <h2>Roles de usuario:</h2>
+            <ul>
+                @foreach ($roles as $role)
+                    <li>{{ $role }}</li>
+                @endforeach
+            </ul>
+        @else
+            <p>No tienes roles asignados.</p>
+        @endif
 
-        <!-- Main Content -->
-        <div class="main-content flex-grow-1 p-3 ps-5">
-
-            @if (auth()->user()->roles->isNotEmpty())
-                <ul>
-                    @foreach (auth()->user()->roles as $role)
-                        Hola, {{ auth()->user()->username }}
-                        <li>{{ $role->name }}</li>
-                    @endforeach
-                </ul>
-            @endif
-
-        </div>
+        <p>Bienvenido, {{ $user->username }}!</p>
     </div>
 @endsection
