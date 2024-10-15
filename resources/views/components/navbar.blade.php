@@ -26,7 +26,7 @@
                 />
             </a>
 
-            @if(!request()->routeIs('dashboard')) <!-- Condición para ocultar el menú en el dashboard -->
+            @if(!request()->routeIs('dashboard'))
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link roboto-medium" href="{{ route('dashboard') }}">Dashboard</a>

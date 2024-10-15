@@ -16,6 +16,8 @@
     @yield('content')
 </main>
 
+@if(!request()->routeIs('dashboard'))
 @include('components.footer')
+    @endif
 </body>
 </html>
