@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #FFB6C1;">
     <!-- Container wrapper -->
     <div class="container-fluid">
         <!-- Toggle button -->
@@ -21,7 +21,7 @@
                 <img
                     src="{{ asset('images/logo.png') }}"
                     height="64"
-                    alt="MDB Logo"
+                    alt="IBAE"
                     loading="lazy"
                 />
             </a>
@@ -32,7 +32,7 @@
                     <a class="nav-link roboto-medium" href="{{ route('dashboard') }}">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link roboto-medium" href="/contacto">Contáctanos</a>
+                    <a class="nav-link roboto-medium" href="#">Contáctanos</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link roboto-medium" href="#">Sobre Nosotros</a>
@@ -42,11 +42,35 @@
                     <a class="icono" href="#"><i class="fab fa-facebook"></i></a>
                 </li>
             </ul>
-            @endif
+            @else
+                <ul class="navbar-nav navbar-dark ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link roboto-medium" href="{{route('dashboard.inicio')}}">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link roboto-medium" href="#">Opcion 1</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link roboto-medium" href="#">Opcion 2</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link roboto-medium" href="#">Opcion 2</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link roboto-medium" href="#">Opcion 3</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link roboto-medium" href="#">Opcion 4</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link roboto-medium" href="#">Opcion 5</a>
+                    </li>
+                </ul>
+                @endif
         </div>
 
         <div class="d-flex align-items-center">
-            @if(auth()->check())
+            @if(auth()->check() && !request()->routeIs('dashboard'))
                 <!-- Carrito -->
                 <a class="text-reset me-3" href="#">
                     <i class="fas fa-shopping-cart icono"></i>
@@ -96,7 +120,7 @@
                             src="{{ auth()->user()->profile_photo_url }}"
                             class="rounded-circle"
                             height="64"
-                            alt="{{ auth()->user()->name }}"
+                            alt="{{ auth()->user()->username }}"
                             loading="lazy"
                         />
                     </a>
@@ -122,7 +146,5 @@
                 @endif
             </div>
         </div>
-        <!-- Right elements -->
     </div>
-    <!-- Container wrapper -->
 </nav>
