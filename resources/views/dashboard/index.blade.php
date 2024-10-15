@@ -2,7 +2,9 @@
 
 @section('content')
     <div class="container">
-        <h1 class="my-4">{{ $lugar }}</h1> <!-- Título que mostrará el valor de $lugar -->
+        <h1 class="my-4" style="text-align: center; font-size: 2.5rem;">
+            {{ $lugar }}
+        </h1>
 
         @if ($roles->isNotEmpty())
             <h2>Roles de usuario:</h2>
