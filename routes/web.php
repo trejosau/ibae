@@ -21,3 +21,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/contacto', function () {
     return view('contacto');
 })->name('contacto');
+
+Route::get('/about-us', function () {
+    return view('sobrenosotros');
+})->name('sobrenosotros');
