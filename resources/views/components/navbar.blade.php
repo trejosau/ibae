@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg " style="background-color: #081444;">
+<nav class="navbar navbar-expand-lg " style="background-color: transparent;">
     <!-- Container wrapper -->
     <div class="container-fluid">
         <!-- Toggle button -->
@@ -27,46 +27,49 @@
             </a>
 
             @if(!request()->is('dashboard') && !request()->is('dashboard/*'))
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link roboto-medium" href="{{ route('dashboard') }}">Menu principal</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link roboto-medium" href="/contacto">Contáctanos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link roboto-medium" href="/about-us">Sobre Nosotros</a>
-                </li>
-                <li class="nav-item">
-                    <a class="icono" href="#"><i class="fab fa-instagram"></i></a>
-                    <a class="icono" href="#"><i class="fab fa-facebook"></i></a>
-                </li>
-            </ul>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    @if(auth()->user())
+                        <li class="nav-item">
+                            <a class="nav-link roboto-medium" href="{{ route('dashboard.inicio') }}">Menu principal</a>
+                        </li>
+                    @endif
+                    <li class="nav-item">
+                        <a class="nav-link roboto-medium" href="/contacto">Contáctanos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link roboto-medium" href="/about-us">Sobre Nosotros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="icono" href="#"><i class="fab fa-instagram"></i></a>
+                        <a class="icono" href="#"><i class="fab fa-facebook"></i></a>
+                    </li>
+                </ul>
             @else
                 <ul class="navbar-nav navbar-dark ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{route('dashboard.inicio')}}">Inicio</a>
+                        <a class="nav-link roboto-medium" href="{{ route('dashboard.inicio') }}">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{route('dashboard.ventas')}}">Ventas</a>
+                        <a class="nav-link roboto-medium" href="{{ route('dashboard.ventas') }}">Ventas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{route('dashboard.academia')}}">Academia</a>
+                        <a class="nav-link roboto-medium" href="{{ route('dashboard.academia') }}">Academia</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{route('dashboard.salon')}}">Salón</a>
+                        <a class="nav-link roboto-medium" href="{{ route('dashboard.salon') }}">Salón</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{route('dashboard.tienda')}}">Tienda</a>
+                        <a class="nav-link roboto-medium" href="{{ route('dashboard.tienda') }}">Tienda</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{route('dashboard.productos')}}">Productos</a>
+                        <a class="nav-link roboto-medium" href="{{ route('dashboard.productos') }}">Productos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{route('dashboard.reportes')}}">Reportes</a>
+                        <a class="nav-link roboto-medium" href="{{ route('dashboard.reportes') }}">Reportes</a>
                     </li>
                 </ul>
-                @endif
+            @endif
+
         </div>
 
         <div class="d-flex align-items-center">
