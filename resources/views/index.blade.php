@@ -30,6 +30,6 @@
 
 </main>
 
-@include('components.footer') <!-- Incluir el componente de footer -->
+@include('components.footer')
 </body>
 </html>
