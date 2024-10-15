@@ -8,3 +8,8 @@ Route::get('/home', function () {
 })->name('home');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+
+
+Route::get('/contacto', function () {
+    return view('contacto');
+})->name('contacto');

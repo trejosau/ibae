@@ -32,7 +32,7 @@
                     <a class="nav-link roboto-medium" href="{{ route('dashboard') }}">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link roboto-medium" href="#">Contáctanos</a>
+                    <a class="nav-link roboto-medium" href="/contacto">Contáctanos</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link roboto-medium" href="#">Sobre Nosotros</a>
