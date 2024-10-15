@@ -10,12 +10,14 @@ Route::get('/home', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard/inicio', [DashboardController::class, 'index'])->name('dashboard.inicio');
-    Route::get('/dashboard/opcion1', [DashboardController::class, 'opcion1'])->name('dashboard.opcion1');
-    Route::get('/dashboard/opcion2', [DashboardController::class, 'opcion2'])->name('dashboard.opcion2');
-    Route::get('/dashboard/opcion3', [DashboardController::class, 'opcion3'])->name('dashboard.opcion3');
-    Route::get('/dashboard/opcion4', [DashboardController::class, 'opcion4'])->name('dashboard.opcion4');
-    Route::get('/dashboard/opcion5', [DashboardController::class, 'opcion5'])->name('dashboard.opcion5');
+    Route::get('/dashboard/inicio', [DashboardController::class, 'inicio'])->name('dashboard.inicio');
+    Route::get('/dashboard/ventas', [DashboardController::class, 'ventas'])->name('dashboard.ventas');
+    Route::get('/dashboard/academia', [DashboardController::class, 'academia'])->name('dashboard.academia');
+    Route::get('/dashboard/salon', [DashboardController::class, 'salon'])->name('dashboard.salon');
+    Route::get('/dashboard/tienda', [DashboardController::class, 'tienda'])->name('dashboard.tienda');
+    Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');
+    Route::get('/dashboard/reportes', [DashboardController::class, 'reportes'])->name('dashboard.reportes');
+
 });
 
 Route::get('/contacto', function () {

@@ -63,7 +63,7 @@
         .info{
             color: white;
         }
-        
+
         .map{
             padding: 30px;
         }
@@ -126,4 +126,3 @@
     </div>
 </div>
 @endsection
-    

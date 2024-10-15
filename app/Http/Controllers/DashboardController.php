@@ -1,60 +1,42 @@
 <?php
 
+// DashboardController.php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function index()
-    {
-        return $this->renderDashboardView('Inicio');
+    public function index() {
+        return view('dashboard.index'); // Muestra la vista principal
     }
 
-    public function opcion1()
-    {
-        return $this->renderDashboardView('Opción 1');
+    public function inicio() {
+        return view('dashboard.index'); // Muestra el contenido de inicio
     }
 
-    public function opcion2()
-    {
-        return $this->renderDashboardView('Opción 2');
+    public function ventas() {
+        return view('dashboard.index'); // Muestra el contenido de ventas
     }
 
-    public function opcion3()
-    {
-        return $this->renderDashboardView('Opción 3');
+    public function academia() {
+        return view('dashboard.index'); // Muestra el contenido de academia
     }
 
-    public function opcion4()
-    {
-        return $this->renderDashboardView('Opción 4');
+    public function salon() {
+        return view('dashboard.index'); // Muestra el contenido de salón
     }
 
-    public function opcion5()
-    {
-        return $this->renderDashboardView('Opción 5');
+    public function tienda() {
+        return view('dashboard.index'); // Muestra el contenido de tienda
     }
 
-    private function renderDashboardView($lugar)
-    {
-        // Obtén el usuario autenticado
-        $user = Auth::user();
+    public function productos() {
+        return view('dashboard.index'); // Muestra el contenido de productos
+    }
 
-        // Obtén roles y permisos del usuario
-        $roles = $user->getRoleNames(); // Retorna una colección de roles
-        $permissions = $user->getAllPermissions(); // Retorna una colección de permisos
-
-        // Datos a pasar a la vista
-        $data = [
-            'user' => $user,
-            'roles' => $roles,
-            'permissions' => $permissions,
-            'lugar' => $lugar,
-        ];
-
-        // Devuelve la vista del dashboard
-        return view('dashboard.index', $data);
+    public function reportes() {
+        return view('dashboard.index'); // Muestra el contenido de reportes
     }
 }

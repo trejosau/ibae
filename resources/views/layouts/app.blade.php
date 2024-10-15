@@ -14,6 +14,7 @@
 
 <main>
     @yield('content')
+
 </main>
 
 @if(!request()->routeIs('dashboard'))

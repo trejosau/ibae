@@ -29,7 +29,7 @@
             @if(!request()->is('dashboard') && !request()->is('dashboard/*'))
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link roboto-medium" href="{{ route('dashboard') }}">Dashboard</a>
+                    <a class="nav-link roboto-medium" href="{{ route('dashboard') }}">Menu principal</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link roboto-medium" href="/contacto">Contáctanos</a>
@@ -48,19 +48,22 @@
                         <a class="nav-link roboto-medium" href="{{route('dashboard.inicio')}}">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{route('dashboard.opcion1')}}">Opcion 1</a>
+                        <a class="nav-link roboto-medium" href="{{route('dashboard.ventas')}}">Ventas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{route('dashboard.opcion2')}}">Opcion 2</a>
+                        <a class="nav-link roboto-medium" href="{{route('dashboard.academia')}}">Academia</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{route('dashboard.opcion3')}}">Opcion 3</a>
+                        <a class="nav-link roboto-medium" href="{{route('dashboard.salon')}}">Salón</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{route('dashboard.opcion4')}}">Opcion 4</a>
+                        <a class="nav-link roboto-medium" href="{{route('dashboard.tienda')}}">Tienda</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{route('dashboard.opcion5')}}">Opcion 5</a>
+                        <a class="nav-link roboto-medium" href="{{route('dashboard.productos')}}">Productos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link roboto-medium" href="{{route('dashboard.reportes')}}">Reportes</a>
                     </li>
                 </ul>
                 @endif

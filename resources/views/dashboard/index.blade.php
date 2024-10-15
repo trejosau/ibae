@@ -1,22 +1,40 @@
+<!-- resources/views/dashboard/index.blade.php -->
+
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <h1 class="my-4" style="text-align: center; font-size: 5.5rem;">
-            {{ $lugar }}
-        </h1>
 
-        @if ($roles->isNotEmpty())
-            <h2>Roles de usuario:</h2>
-            <ul>
-                @foreach ($roles as $role)
-                    <li>{{ $role }}</li>
-                @endforeach
-            </ul>
-        @else
-            <p>No tienes roles asignados.</p>
-        @endif
+    @switch(Route::currentRouteName())
+        @case('dashboard.inicio')
+            @include('dashboard.inicio')  <!-- Archivo: resources/views/dashboard/inicio.blade.php -->
+            @break
 
-        <p>Bienvenido, {{ $user->username }}!</p>
-    </div>
+        @case('dashboard.ventas')
+            @include('dashboard.ventas')  <!-- Archivo: resources/views/dashboard/ventas.blade.php -->
+            @break
+
+        @case('dashboard.academia')
+            @include('dashboard.academia')  <!-- Archivo: resources/views/dashboard/academia.blade.php -->
+            @break
+
+        @case('dashboard.salon')
+            @include('dashboard.salon')  <!-- Archivo: resources/views/dashboard/salon.blade.php -->
+            @break
+
+        @case('dashboard.tienda')
+            @include('dashboard.tienda')  <!-- Archivo: resources/views/dashboard/tienda.blade.php -->
+            @break
+
+        @case('dashboard.productos')
+            @include('dashboard.productos')  <!-- Archivo: resources/views/dashboard/productos.blade.php -->
+            @break
+
+        @case('dashboard.reportes')
+            @include('dashboard.reportes')  <!-- Archivo: resources/views/dashboard/reportes.blade.php -->
+            @break
+
+        @default
+            <p>No se encontró el contenido para esta ruta.</p>
+    @endswitch
+
 @endsection
