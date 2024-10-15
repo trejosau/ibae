@@ -1,0 +1,120 @@
+@extends('layouts.app')
+    <style>
+
+        .container {
+            margin-top: 120px;
+        }
+
+        .btn-custom {
+            background-color: #005bb5;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+            padding: 15px;
+            font-size: 15px;
+        }
+
+        .btn-custom:hover {
+            background-color: #ff69b4;
+        }
+
+        /* Estilo de los campos del formulario */
+        .form-control {
+            border-radius: 5px;
+            border: 1px solid #0072ff;
+            background-color: #ffffff;
+            color: black;
+        }
+
+        /* Ajustes de diseño de las columnas */
+        .contact-form h2, .contact-info h4 {
+            margin-bottom: 20px;
+        }
+
+        /* Fondo diferente para el formulario y la información de contacto */
+        .contact-form {
+            background-color: #0072ff; /* Fondo más oscuro para el formulario */
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .contact-info {
+            background-color: #081444; /* Fondo diferente para la información de contacto */
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        /* Iconos de contacto */
+        .contact-info i {
+            font-size: 1.5rem;
+            color: #ffffff;
+        }
+
+        /* Estilo del texto en la sección de contacto */
+        .contact-info p {
+            margin: 10px 0;
+            font-size: 1.1rem;
+            color: white;
+        }
+
+        .info{
+            color: white;
+        }
+
+        /* Estilo de la barra de navegación */
+    </style>
+
+
+@section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <!-- Formulario de contacto -->
+        <div class="col-lg-5 contact-form">
+            <h2 class="text-center mb-4 ">Contáctanos</h2>
+
+            <form>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="name" placeholder="Escribe tu nombre" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="email" placeholder="nombre@ejemplo.com" required>
+                </div>
+                <div class="mb-3">
+                    <label for="subject" class="form-label">Asunto</label>
+                    <input type="text" class="form-control" id="subject" placeholder="Escribe el asunto" required>
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Mensaje</label>
+                    <textarea class="form-control" id="message" rows="4" placeholder="Escribe tu mensaje" required></textarea>
+                </div>
+                <button type="submit" class=" w-100 btn-custom">Enviar</button>
+            </form>
+        </div>
+
+        <!-- Información de contacto -->
+        <div class="info col-lg-5 contact-info mt-5 mt-lg-0 ms-lg-5">
+            <h4 class="text-center">Información de Contacto</h4>
+            <div class="d-flex align-items-center">
+                <i class="bi bi-geo-alt me-3"></i>
+                <p><strong>Dirección:</strong> Calle Falsa 123, Ciudad Ejemplo</p>
+            </div>
+            <div class="d-flex align-items-center">
+                <i class="bi bi-telephone me-3"></i>
+                <p><strong>Teléfono:</strong> +123 456 7890</p>
+            </div>
+            <div class="d-flex align-items-center">
+                <i class="bi bi-envelope me-3"></i>
+                <p><strong>Correo:</strong> contacto@ejemplo.com</p>
+            </div>
+            <div class="d-flex align-items-center">
+                <i class="bi bi-clock me-3"></i>
+                <p><strong>Horario:</strong> Lunes a Viernes, 9 AM - 6 PM</p>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+    

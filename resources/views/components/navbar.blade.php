@@ -27,53 +27,26 @@
             </a>
 
             @if(!request()->routeIs('dashboard'))
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{ route('dashboard') }}">Dashboard</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="#">Contáctanos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="#">Sobre Nosotros</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="icono" href="#"><i class="fab fa-instagram"></i></a>
-                        <a class="icono" href="#"><i class="fab fa-facebook"></i></a>
-                    </li>
-                </ul>
-            @else
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{ route('dashboard') }}">Inicio</a>
-                    </li>
-                    @if (auth()->user()->hasRole('Administrador'))
-                        <li class="nav-item">
-                            <a class="nav-link roboto-medium" href="#">Usuarios</a>
-                        </li>
-                    @endif
-
-                    <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="#">Opcion 3</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="#">Opcion 4</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="#">Opcion 4 4</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="#">Opcion 5</a>
-                    </li>
-
-                </ul>
-                @endif
-
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link roboto-medium" href="{{ route('dashboard') }}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link roboto-medium" href="#">Contáctanos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link roboto-medium" href="#">Sobre Nosotros</a>
+                </li>
+                <li class="nav-item">
+                    <a class="icono" href="#"><i class="fab fa-instagram"></i></a>
+                    <a class="icono" href="#"><i class="fab fa-facebook"></i></a>
+                </li>
+            </ul>
+            @endif
         </div>
 
         <div class="d-flex align-items-center">
-            @if(auth()->check() && !request()->routeIs('dashboard'))
+            @if(auth()->check())
                 <!-- Carrito -->
                 <a class="text-reset me-3" href="#">
                     <i class="fas fa-shopping-cart icono"></i>
