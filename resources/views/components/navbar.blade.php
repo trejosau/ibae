@@ -35,7 +35,7 @@
                     <a class="nav-link roboto-medium" href="/contacto">Contáctanos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link roboto-medium" href="#">Sobre Nosotros</a>
+                    <a class="nav-link roboto-medium" href="/about-us">Sobre Nosotros</a>
                 </li>
                 <li class="nav-item">
                     <a class="icono" href="#"><i class="fab fa-instagram"></i></a>
