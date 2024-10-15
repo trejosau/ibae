@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <h1 class="my-4" style="text-align: center; font-size: 2.5rem;">
+        <h1 class="my-4" style="text-align: center; font-size: 5.5rem;">
             {{ $lugar }}
         </h1>
 
