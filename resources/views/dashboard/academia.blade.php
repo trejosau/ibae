@@ -1,90 +1,15 @@
 @extends('layouts.app')
 
+@push('styles')
+    <style>
+        .container {
+        margin-top: 120px;
+        }
+        </style>
+
+@endpush
+
 @section('title', 'Dashboard Academia')
-
-<style>
-    body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f6f9;
-    margin: 0;
-    padding: 0;
-    }
-
-    main {
-    padding: 20px;
-    }
-
-    /* Card styles */
-    .card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    height: 100%;
-    }
-
-    .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .card h5 {
-    font-size: 1.4rem;
-    color: #ffffff;
-    }
-
-    .card h2 {
-    font-size: 2.2rem;
-    margin-bottom: 0;
-    }
-
-    /* Custom colors for each section */
-    .card-inscripciones {
-    background-color: #17a2b8;
-    position: relative;
-    }
-
-    .card-colegiaturas {
-    background-color: #28a745;
-    position: relative;
-    }
-
-    .card-certificacion {
-    background-color: #ffc107;
-    position: relative;
-    }
-
-    .equal-height {
-    display: flex;
-    flex-direction: column;
-    }
-
-    /* Chart container */
-    .chart-container {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .chart-container h5 {
-    margin-bottom: 20px;
-    }
-
-    .chart {
-    height: 150px;
-    }
-
-    /* Table styles */
-    .table {
-    margin-top: 20px;
-    }
-
-    .rounded-table {
-    border-radius: 10px;
-    }
-    </style>
 
 
 @section('content')

@@ -2,8 +2,11 @@ import './bootstrap';
 import 'bootstrap';
 import { Dropdown, Collapse, initMDB } from "mdb-ui-kit";
 initMDB({ Dropdown, Collapse });
-import $ from 'jquery';
+import $ from 'jquery'; // Importar jQuery
 
+$(document).ready(function() {
+    console.log('jQuery está funcionando correctamente.');
+});
 
 // animacion por frames
 

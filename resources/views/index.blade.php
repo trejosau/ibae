@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frame Animation Landing</title>
+    <title>IBA&E</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         #loading-screen {
@@ -12,7 +12,7 @@
             left: 0;
             width: 100%;
             height: 100vh;
-            background-color: #f0f0f0; /* Color de fondo más suave */
+            background-color: #f0f0f0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -28,12 +28,12 @@
         }
 
         main {
-            display: none; /* Esconde el contenido principal inicialmente */
+            display: none;
         }
     </style>
     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
 </head>
-<body class="roboto loading"> <!-- Agrega la clase loading aquí -->
+<body class="roboto loading">
 @include('components.loading')
 
 <main>
@@ -57,10 +57,9 @@
 @include('components.footer')
 
 <script>
-    // Desactivar el scroll del body
-    document.body.classList.add('loading'); // Agrega la clase loading al inicio
+    document.body.classList.add('loading');
 
-    // Esconder la pantalla de carga y mostrar el contenido principal
+
     window.addEventListener('load', function () {
         const loadingScreen = document.getElementById('loading-screen');
         const body = document.body;

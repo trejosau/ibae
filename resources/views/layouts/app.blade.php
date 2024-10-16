@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Mi Aplicación')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+    @stack('styles')
 </head>
 <body>
 @include('components.navbar')
@@ -19,4 +19,6 @@
 @include('components.footer')
     @endif
 </body>
+
+@stack('scripts')
 </html>

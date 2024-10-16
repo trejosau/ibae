@@ -2,6 +2,7 @@
 
 @section('title', 'Dashboard')
 
+@push('styles')
 <style>
     body {
     font-family: 'Arial', sans-serif;
@@ -160,6 +161,7 @@
     }
 
     </style>
+@endpush
 
 @section('content')
     <main class="container">
@@ -244,14 +246,20 @@
             </div>
 
             <!-- Cantidad de Usuarios Registrados -->
-            <div class="col-md-6 mb-4">
-                <div class="card p-4 bg-secondary text-white">
-                    <h5 class="mb-3">Usuarios Registrados</h5>
-                    <p><strong>Total: 1500</strong></p>
-                    <p><strong>Estudiantes:</strong> 800</p>
-                    <p><strong>Clientes:</strong> 700</p>
+            <div class="col-md-6 mb-4 d-flex justify-content-center">
+                <div class="card p-4 bg-secondary text-white text-center" style="width: 300px; height: 300px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <div class="avatar mb-3" style="width: 100px; height: 100px; border-radius: 50%; background-color: white;">
+                        <img src="https://via.placeholder.com/100" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%;">
+                    </div>
+                    <h5>Total Usuarios</h5>
+                    <p><strong>1500</strong></p>
+                    <div class="user-roles">
+                        <p><strong>Estudiantes:</strong> 800</p>
+                        <p><strong>Clientes:</strong> 700</p>
+                    </div>
                 </div>
             </div>
+
 
             <!-- Seguidores en Instagram -->
             <div class="col-md-6 mb-4">

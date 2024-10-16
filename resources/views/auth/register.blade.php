@@ -15,7 +15,7 @@
                 <div class="col-12 col-lg-10 col-xl-8">
                     <div class="row gy-5 justify-content-center">
                         <div class="col-12 col-lg-5">
-                            <form method="POST" action="{{ route('register') }}">
+                            <form method="POST" action="{{ route('register') }}" id="passwordForm">
                                 @csrf
                                 <!-- Mensaje de éxito -->
                                 @if(session('success'))
@@ -66,6 +66,18 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Reglas de contraseña -->
+                                <div id="rules" class="mt-2 text-secondary small">
+                                    <h4>Reglas de contraseña:</h4>
+                                    <ul class="list-group">
+                                        <li id="minLength" class="list-group-item">Al menos 8 caracteres</li>
+                                        <li id="mixedCase" class="list-group-item">Al menos una mayúscula y una minúscula</li>
+                                        <li id="letters" class="list-group-item">Al menos una letra</li>
+                                        <li id="numbers" class="list-group-item">Al menos un número</li>
+                                        <li id="symbols" class="list-group-item">Al menos un símbolo</li>
+                                    </ul>
+                                </div>
                             </form>
                         </div>
                         <div class="col-12 col-lg-2 d-flex align-items-center justify-content-center gap-3 flex-lg-column">
@@ -91,3 +103,11 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            console.log('jQuery está funcionando correctamente.');
+        });
+    </script>
+@endpush

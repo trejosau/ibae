@@ -2,6 +2,7 @@
 
 @extends('layouts.app')
 
+
 @section('content')
 
     @switch(Route::currentRouteName())
