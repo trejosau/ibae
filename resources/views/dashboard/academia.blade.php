@@ -2,7 +2,7 @@
 
 @section('title', 'Dashboard Academia')
 
-@push('styles')
+<style>
     body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f6f9;
@@ -84,7 +84,8 @@
     .rounded-table {
     border-radius: 10px;
     }
-@endpush
+    </style>
+
 
 @section('content')
     <main class="container">
@@ -322,83 +323,5 @@
 
     </main>
 
-    @push('scripts')
-        <!-- Scripts de gráficos -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            // Gráfico para Ingresos en Academia
-            const ctxInscripciones = document.getElementById('inscripcionesChart').getContext('2d');
-            const ctxColegiaturas = document.getElementById('colegiaturasChart').getContext('2d');
-            const ctxCertificacion = document.getElementById('certificacionChart').getContext('2d');
-            const ctxAlumnosInscritos = document.getElementById('alumnosInscritosChart').getContext('2d');
-            const ctxSatisfaccion = document.getElementById('satisfaccionChart').getContext('2d');
-
-            // Gráfico de Inscripciones
-            new Chart(ctxInscripciones, {
-                type: 'line',
-                data: {
-                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-                    datasets: [{
-                        label: 'Inscripciones',
-                        data: [1000, 1200, 1100, 1300],
-                        borderColor: '#17a2b8',
-                        fill: false,
-                    }]
-                }
-            });
-
-            // Gráfico de Colegiaturas
-            new Chart(ctxColegiaturas, {
-                type: 'line',
-                data: {
-                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-                    datasets: [{
-                        label: 'Colegiaturas',
-                        data: [3000, 2500, 2000, 2700],
-                        borderColor: '#28a745',
-                        fill: false,
-                    }]
-                }
-            });
-
-            // Gráfico de Certificación
-            new Chart(ctxCertificacion, {
-                type: 'line',
-                data: {
-                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-                    datasets: [{
-                        label: 'Certificación',
-                        data: [800, 900, 700, 1000],
-                        borderColor: '#ffc107',
-                        fill: false,
-                    }]
-                }
-            });
-
-            // Gráfico de Alumnos Inscritos
-            new Chart(ctxAlumnosInscritos, {
-                type: 'bar',
-                data: {
-                    labels: ['Periodo 1', 'Periodo 2', 'Periodo 3', 'Periodo 4'],
-                    datasets: [{
-                        label: 'Alumnos Inscritos',
-                        data: [150, 200, 175, 220],
-                        backgroundColor: '#007bff',
-                    }]
-                }
-            });
-
-            // Gráfico de Satisfacción Promedio
-            new Chart(ctxSatisfaccion, {
-                type: 'pie',
-                data: {
-                    labels: ['Muy Satisfechos', 'Satisfechos', 'Insatisfechos'],
-                    datasets: [{
-                        data: [50, 30, 20],
-                        backgroundColor: ['#28a745', '#ffc107', '#dc3545'],
-                    }]
-                }
-            });
-        </script>
-    @endpush
 @endsection
+

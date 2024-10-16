@@ -2,7 +2,7 @@
 
 @section('title', 'Dashboard')
 
-@push('styles')
+<style>
     body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f6f9;
@@ -158,7 +158,8 @@
     .table-striped tbody tr:nth-child(odd) {
     background-color: #f9f9f9;
     }
-@endpush
+
+    </style>
 
 @section('content')
     <main class="container">
@@ -271,77 +272,4 @@
     </main>
 @endsection
 
-@push('scripts')
-    const academyCtx = document.getElementById('academyChart').getContext('2d');
-    const salonCtx = document.getElementById('salonChart').getContext('2d');
-    const storeCtx = document.getElementById('storeChart').getContext('2d');
 
-    // Ejemplo de gráfico para la academia
-    const academyChart = new Chart(academyCtx, {
-    type: 'line',
-    data: {
-    labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
-    datasets: [{
-    label: 'Academia',
-    data: [500, 1000, 750, 1250, 1500, 1750, 2000],
-    borderColor: 'rgba(255, 255, 255, 1)',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderWidth: 2
-    }]
-    },
-    options: {
-    responsive: true,
-    scales: {
-    y: {
-    beginAtZero: true
-    }
-    }
-    }
-    });
-
-    // Gráfico para el salón
-    const salonChart = new Chart(salonCtx, {
-    type: 'line',
-    data: {
-    labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
-    datasets: [{
-    label: 'Salón',
-    data: [300, 600, 450, 900, 1100, 1300, 1500],
-    borderColor: 'rgba(255, 255, 255, 1)',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderWidth: 2
-    }]
-    },
-    options: {
-    responsive: true,
-    scales: {
-    y: {
-    beginAtZero: true
-    }
-    }
-    }
-    });
-
-    // Gráfico para la tienda
-    const storeChart = new Chart(storeCtx, {
-    type: 'line',
-    data: {
-    labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
-    datasets: [{
-    label: 'Tienda',
-    data: [700, 800, 900, 1000, 1200, 1400, 1600],
-    borderColor: 'rgba(255, 255, 255, 1)',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderWidth: 2
-    }]
-    },
-    options: {
-    responsive: true,
-    scales: {
-    y: {
-    beginAtZero: true
-    }
-    }
-    }
-    });
-@endpush

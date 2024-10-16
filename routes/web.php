@@ -27,3 +27,11 @@ Route::get('/contacto', function () {
 Route::get('/about-us', function () {
     return view('sobrenosotros');
 })->name('sobrenosotros');
+
+Route::get('/plataforma', function () {
+    return view('plataforma');
+})->name('plataforma');
+
+Route::get('/salon', function () {
+    return view('salon');
+})->name('salon');

@@ -2,7 +2,7 @@
 
 @section('title', 'Dashboard Ventas')
 
-@push('styles')
+<style>
     body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f6f9;
@@ -84,7 +84,7 @@
     .rounded-table {
     border-radius: 10px;
     }
-@endpush
+    </style>
 
 @section('content')
     <main class="container">
@@ -267,69 +267,4 @@
 
     </main>
 
-    @push('scripts')
-        <!-- Scripts de gráficos -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            // Ejemplo de gráficos con Chart.js
-            const ctxAcademy = document.getElementById('academyChart').getContext('2d');
-            const ctxSalon = document.getElementById('salonChart').getContext('2d');
-            const ctxStore = document.getElementById('storeChart').getContext('2d');
-            const ctxStudentComp = document.getElementById('studentComparisonChart').getContext('2d');
-
-            // Ventas Academia
-            new Chart(ctxAcademy, {
-                type: 'line',
-                data: {
-                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-                    datasets: [{
-                        label: 'Ventas Academia',
-                        data: [1500, 1600, 1400, 1700],
-                        borderColor: '#007bff',
-                        fill: false,
-                    }]
-                }
-            });
-
-            // Ventas Salón
-            new Chart(ctxSalon, {
-                type: 'line',
-                data: {
-                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-                    datasets: [{
-                        label: 'Ventas Salón',
-                        data: [900, 1000, 850, 950],
-                        borderColor: '#28a745',
-                        fill: false,
-                    }]
-                }
-            });
-
-            // Ventas Tienda
-            new Chart(ctxStore, {
-                type: 'line',
-                data: {
-                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-                    datasets: [{
-                        label: 'Ventas Tienda',
-                        data: [2000, 2200, 2300, 2100],
-                        borderColor: '#ffc107',
-                        fill: false,
-                    }]
-                }
-            });
-
-            // Comparativa Estudiantes vs No Estudiantes
-            new Chart(ctxStudentComp, {
-                type: 'pie',
-                data: {
-                    labels: ['Ventas Estudiantes', 'Ventas No Estudiantes'],
-                    datasets: [{
-                        data: [30, 70],
-                        backgroundColor: ['#007bff', '#28a745'],
-                    }]
-                }
-            });
-        </script>
-    @endpush
 @endsection

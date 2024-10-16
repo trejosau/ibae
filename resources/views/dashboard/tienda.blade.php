@@ -2,7 +2,7 @@
 
 @section('title', 'Dashboard Tienda')
 
-@push('styles')
+<style>
     body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f6f9;
@@ -84,7 +84,8 @@
     .rounded-table {
     border-radius: 10px;
     }
-@endpush
+
+    </style>
 
 @section('content')
     <main class="container">
@@ -324,68 +325,5 @@
         </div>
     </main>
 
-    @push('scripts')
-        <!-- Scripts de gráficos -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            // Gráfico de Compra Física
-            const ctxCompraFisica = document.getElementById('compraFisicaChart').getContext('2d');
-            const ctxCompraOnline = document.getElementById('compraOnlineChart').getContext('2d');
-            const ctxVentasEstudiantes = document.getElementById('ventasEstudiantesChart').getContext('2d');
-            const ctxDescuentoEstudiantes = document.getElementById('descuentoEstudiantesChart').getContext('2d');
 
-            new Chart(ctxCompraFisica, {
-                type: 'line',
-                data: {
-                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-                    datasets: [{
-                        label: 'Ventas Físicas',
-                        data: [2000, 2500, 3000, 3500],
-                        borderColor: '#007bff',
-                        fill: false,
-                    }]
-                }
-            });
-
-            new Chart(ctxCompraOnline, {
-                type: 'line',
-                data: {
-                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-                    datasets: [{
-                        label: 'Ventas Online',
-                        data: [1500, 1800, 1600, 1900],
-                        borderColor: '#28a745',
-                        fill: false,
-                    }]
-                }
-            });
-
-            // Gráfico de Comparativa de Ventas
-            new Chart(ctxVentasEstudiantes, {
-                type: 'bar',
-                data: {
-                    labels: ['Estudiantes', 'No Estudiantes'],
-                    datasets: [{
-                        label: 'Ventas',
-                        data: [5000, 3000],
-                        backgroundColor: '#ffc107',
-                    }]
-                }
-            });
-
-            // Gráfico de Descuento Aplicado
-            new Chart(ctxDescuentoEstudiantes, {
-                type: 'line',
-                data: {
-                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-                    datasets: [{
-                        label: 'Descuento Aplicado',
-                        data: [200, 300, 250, 400],
-                        borderColor: '#dc3545',
-                        fill: false,
-                    }]
-                }
-            });
-        </script>
-    @endpush
 @endsection

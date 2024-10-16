@@ -2,7 +2,7 @@
 
 @section('title', 'Dashboard Salón')
 
-@push('styles')
+<style>
     body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f6f9;
@@ -84,7 +84,7 @@
     .rounded-table {
     border-radius: 10px;
     }
-@endpush
+    </style>
 
 @section('content')
     <main class="container">
@@ -306,82 +306,4 @@
         </div>
     </main>
 
-    @push('scripts')
-        <!-- Scripts de gráficos -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            // Gráfico de Ingresos del Salón
-            const ctxAnticipos = document.getElementById('anticiposChart').getContext('2d');
-            const ctxCitasCompletadas = document.getElementById('citasCompletadasChart').getContext('2d');
-            const ctxCitasEstilista = document.getElementById('citasEstilistaChart').getContext('2d');
-            const ctxServiciosDemanda = document.getElementById('serviciosDemandaChart').getContext('2d');
-            const ctxCategoriasPopulares = document.getElementById('categoriasPopularesChart').getContext('2d');
-
-            // Gráfico de Anticipos
-            new Chart(ctxAnticipos, {
-                type: 'line',
-                data: {
-                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-                    datasets: [{
-                        label: 'Anticipos',
-                        data: [500, 600, 700, 800],
-                        borderColor: '#17a2b8',
-                        fill: false,
-                    }]
-                }
-            });
-
-            // Gráfico de Citas Completadas
-            new Chart(ctxCitasCompletadas, {
-                type: 'line',
-                data: {
-                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-                    datasets: [{
-                        label: 'Citas Completadas',
-                        data: [1000, 1100, 1050, 1150],
-                        borderColor: '#28a745',
-                        fill: false,
-                    }]
-                }
-            });
-
-            // Gráfico de Citas Realizadas por Estilista
-            new Chart(ctxCitasEstilista, {
-                type: 'bar',
-                data: {
-                    labels: ['Estilista 1', 'Estilista 2', 'Estilista 3', 'Estilista 4'],
-                    datasets: [{
-                        label: 'Citas Realizadas',
-                        data: [30, 40, 25, 35],
-                        backgroundColor: '#007bff',
-                    }]
-                }
-            });
-
-            // Gráfico de Servicios con Mayor Demanda
-            new Chart(ctxServiciosDemanda, {
-                type: 'bar',
-                data: {
-                    labels: ['Corte', 'Manicura', 'Pedicura', 'Masaje'],
-                    datasets: [{
-                        label: 'Servicios Realizados',
-                        data: [100, 80, 60, 90],
-                        backgroundColor: '#ffc107',
-                    }]
-                }
-            });
-
-            // Gráfico de Categorías Populares
-            new Chart(ctxCategoriasPopulares, {
-                type: 'pie',
-                data: {
-                    labels: ['Corte', 'Manicura', 'Pedicura'],
-                    datasets: [{
-                        data: [40, 30, 30],
-                        backgroundColor: ['#007bff', '#28a745', '#ffc107'],
-                    }]
-                }
-            });
-        </script>
-    @endpush
 @endsection

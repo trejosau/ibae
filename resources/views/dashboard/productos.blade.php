@@ -2,7 +2,7 @@
 
 @section('title', 'Dashboard Productos')
 
-@push('styles')
+<style>
     body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f6f9;
@@ -75,7 +75,7 @@
     margin-bottom: 20px;
     }
 
-@endpush
+    </style>
 
 @section('content')
     <main class="container">
@@ -285,29 +285,4 @@
         </div>
     </main>
 
-    @push('scripts')
-        <!-- Scripts de gráficos -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            const ctxComparativaVentas = document.getElementById('comparativaVentasChart').getContext('2d');
-
-            new Chart(ctxComparativaVentas, {
-                type: 'line',
-                data: {
-                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-                    datasets: [{
-                        label: 'Producto A',
-                        data: [500, 800, 750, 900],
-                        borderColor: '#007bff',
-                        fill: false,
-                    }, {
-                        label: 'Producto B',
-                        data: [300, 400, 450, 500],
-                        borderColor: '#28a745',
-                        fill: false,
-                    }]
-                }
-            });
-        </script>
-    @endpush
-@endsection
+   @endsection

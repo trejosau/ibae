@@ -14,7 +14,7 @@
             @break
 
         @case('dashboard.academia')
-            @include('dashboard.academia')  <!-- Archivo: resources/views/dashboard/academia.blade.php -->
+            @include('dashboard.academia')  <!-- Archivo: resources/views/dashboard/plataforma.blade.php -->
             @break
 
         @case('dashboard.salon')
