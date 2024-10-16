@@ -3,9 +3,7 @@
 @import '@fortawesome/fontawesome-free/css/all.css';
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
-/*
-*  html5resetcss
-*/
+
 html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,abbr,address,cite,code,del,dfn,em,img,ins,kbd,q,samp,small,strong,sub,sup,var,b,i,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,figcaption,figure,footer,header,hgroup,menu,nav,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}
 body{line-height:1}
 article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}
@@ -438,6 +436,23 @@ a {
     color: #ff69b4;
 }
 
+.a-auth {
+    color: #333;
+    text-decoration: none;
+}
 
+.a-auth:hover {
+    color: #ff69b4;
+    text-decoration: underline;
+}
 
+.dropdown-item {
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    color: inherit;
+}
 
+.dropdown-item:hover {
+    background-color: transparent;
+    color: #ff69b4;
+}
