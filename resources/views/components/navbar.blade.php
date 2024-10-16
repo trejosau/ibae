@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg" id="navbar">
+<nav class="navbar navbar-expand-lg"  id="navbar">
     <!-- Container wrapper -->
     <div class="container-fluid">
         <!-- Toggle button -->
@@ -39,10 +39,7 @@
                     <li class="nav-item">
                         <a class="nav-link roboto-medium" href="/about-us">Sobre Nosotros</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="icono" href="#"><i class="fab fa-instagram"></i></a>
-                        <a class="icono" href="#"><i class="fab fa-facebook"></i></a>
-                    </li>
+
                 </ul>
             @else
                 <ul class="navbar-nav navbar-dark ms-auto mb-2 mb-lg-0">
