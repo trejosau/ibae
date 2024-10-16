@@ -26,7 +26,7 @@
                 <p class="mb-0 text-secondary">
                     © <script>
                         document.write(new Date().getFullYear())
-                    </script> Soft by IBA&E.
+                    </script>  IBA&E.
                 </p>
             </div>
         </div>
