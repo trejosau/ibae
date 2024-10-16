@@ -2,11 +2,20 @@ import './bootstrap';
 import 'bootstrap';
 import { Dropdown, Collapse, initMDB } from "mdb-ui-kit";
 initMDB({ Dropdown, Collapse });
-import $ from 'jquery'; // Importar jQuery
+import $ from 'jquery';
+// Default theme
+import '@splidejs/splide/css';
+
 
 $(document).ready(function() {
     console.log('jQuery está funcionando correctamente.');
 });
+
+import '@splidejs/splide/css/skyblue';
+import '@splidejs/splide/css/sea-green';
+
+
+import '@splidejs/splide/css/core';
 
 // animacion por frames
 
