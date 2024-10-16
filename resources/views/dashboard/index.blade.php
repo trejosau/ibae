@@ -6,31 +6,31 @@
 
     @switch(Route::currentRouteName())
         @case('dashboard.inicio')
-            @include('dashboard.inicio')  <!-- Archivo: resources/views/dashboard/inicio.blade.php -->
+            @include('dashboard.inicio')
             @break
 
         @case('dashboard.ventas')
-            @include('dashboard.ventas')  <!-- Archivo: resources/views/dashboard/ventas.blade.php -->
+            @include('dashboard.ventas')
             @break
 
         @case('dashboard.academia')
-            @include('dashboard.academia')  <!-- Archivo: resources/views/dashboard/plataforma.blade.php -->
+            @include('dashboard.academia')
             @break
 
         @case('dashboard.salon')
-            @include('dashboard.salon')  <!-- Archivo: resources/views/dashboard/salon.blade.php -->
+            @include('dashboard.salon')
             @break
 
         @case('dashboard.tienda')
-            @include('dashboard.tienda')  <!-- Archivo: resources/views/dashboard/tienda.blade.php -->
+            @include('dashboard.tienda')
             @break
 
         @case('dashboard.productos')
-            @include('dashboard.productos')  <!-- Archivo: resources/views/dashboard/productos.blade.php -->
+            @include('dashboard.productos')
             @break
 
         @case('dashboard.reportes')
-            @include('dashboard.reportes')  <!-- Archivo: resources/views/dashboard/reportes.blade.php -->
+            @include('dashboard.reportes')
             @break
 
         @default

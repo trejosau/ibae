@@ -7,4 +7,5 @@
         style="width: 300px; height: 300px;"
         loop autoplay>
     </dotlottie-player>
+
 </div>

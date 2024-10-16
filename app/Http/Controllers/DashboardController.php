@@ -9,34 +9,34 @@ use Illuminate\Http\Request;
 class DashboardController extends Controller
 {
     public function index() {
-        return view('dashboard.index'); // Muestra la vista principal
+        return view('dashboard.index');
     }
 
     public function inicio() {
-        return view('dashboard.index'); // Muestra el contenido de inicio
+        return view('dashboard.index');
     }
 
     public function ventas() {
-        return view('dashboard.index'); // Muestra el contenido de ventas
+        return view('dashboard.index');
     }
 
     public function academia() {
-        return view('dashboard.index'); // Muestra el contenido de academia
+        return view('dashboard.index');
     }
 
     public function salon() {
-        return view('dashboard.index'); // Muestra el contenido de salón
+        return view('dashboard.index');
     }
 
     public function tienda() {
-        return view('dashboard.index'); // Muestra el contenido de tienda
+        return view('dashboard.index');
     }
 
     public function productos() {
-        return view('dashboard.index'); // Muestra el contenido de productos
+        return view('dashboard.index');
     }
 
     public function reportes() {
-        return view('dashboard.index'); // Muestra el contenido de reportes
+        return view('dashboard.index');
     }
 }
