@@ -7,7 +7,8 @@
 <style>
     .contenedor{
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
     }
 
     .button{
@@ -20,6 +21,10 @@
         max-height: 400px;   
         object-fit: cover;     
     }
+
+    .tittle{
+        text-align: center
+    }
 </style>
 
 <main>
@@ -31,29 +36,55 @@
                     <img src="{{ asset('images/brunette-woman-with-mobile-phone-getting-her-hair-done.jpg') }}" alt="Imagen 1">
                 </li>
                 <li class="splide__slide">
-                    <img src="{{ asset('images/brunette-woman-with-mobile-phone-getting-her-hair-done.jpg') }}" alt="Imagen 2">
+                    <img src="{{ asset('images/cheerful-stylist-applying-makeup-anonymous-woman.jpg') }}" alt="Imagen 2">
                 </li>
                 <li class="splide__slide">
-                    <img src="{{ asset('images/brunette-woman-with-mobile-phone-getting-her-hair-done.jpg') }}" alt="Imagen 3">
+                    <img src="{{ asset('images/table-stylist-studio.jpg') }}" alt="Imagen 3">
                 </li>
             </ul>
         </div>
     </div>
 
-    <div class="contenedor row">
-        <div>
-            <img class="img-fluid pt-4 pb-4" src="{{ asset('images/brunette-woman-with-mobile-phone-getting-her-hair-done.jpg') }}" alt="">
-        </div>
+    <div class="tittle"> <h1 class="fs-1 pb-3">Nuestros Servicios</h1></div>
 
-        <div class="justify-content-center">
-            <h2 class="fs-2 pt-4">Salon Ibae</h2>
-            <p class="fs-4 pb-4 pt-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem eius deleniti recusandae ipsa, quam pariatur optio deserunt tenetur tempore at veritatis dolor dolore, repudiandae laborum aperiam blanditiis corporis? Sapiente, cupiditate!</p>
+    <div class="contenedor">
 
-            <div class="button">
-                <a href="#" class="btn btn-primary">Reservar una Cita</a>
+            <div class="lista 1">
+                <div> <img class="img-fluid p-4" src="{{ asset('images/healthy-beautiful-manicure-manicurist.jpg') }}" alt=""></div>
+                <div class="tittle"><H2>Manicura y Pedicura</H2></div>
             </div>
-        </div>
+
+            <div class="lista 2">
+                <div> <img class="img-fluid p-4" src="{{ asset('images/blonde-girl-getting-her-hair-done.jpg') }}" alt=""></div>
+                <div class="tittle"><h2>Color</h2></div>
+            </div>
+
+            <div class="lista 3">
+                <div> <img class="img-fluid p-4" src="{{ asset('images/woman-getting-her-hair-cut-beauty-salon.jpg') }}" alt=""></div>
+                <div class="tittle"><h2>Corte y Estilizado</h2></div>
+
+            </div>
+
+            <div class="lista 4">
+                <div> <img class="img-fluid p-4" src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt=""></div>
+                <div class="tittle"><h2>Alisado y Tratamiento</h2></div>
+
+            </div>
+
+            <div class="lista 5">
+                <div> <img class="img-fluid p-4" src="{{ asset('images/high-angle-hand-holding-pink-swab.jpg') }}" alt=""></div>
+                <div class="tittle"><h2>Cejas y Pestañas</h2></div>
+
+            </div>
+
+            <div class="lista 6">
+                <div> <img class="img-fluid p-4" src="{{ asset('images/beautiful-female-model-with-natural-make-up-done-by-professional-artist.jpg') }}" alt=""></div>
+                <div class="tittle"><h2>Maquillaje y Peinado</h2></div>
+            </div>
+
     </div>
+
+    <div class="tittle pt-5 pb-5"><a href="#"  class="btn btn-primary">Agenda Tu Cita</a></div>
 </main>
 
 <!-- Agrega los scripts de Splide al final -->
