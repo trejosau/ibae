@@ -14,7 +14,7 @@
     .button{
         text-align: center;
     }
-
+    
     .splide__slide img {
         width: 100%;           
         height: auto;

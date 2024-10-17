@@ -2,8 +2,11 @@
 
 @section('content')
 <style>
-    /* General layout */
-    .navegacion {
+
+.tittle{
+text-align: center;
+}   
+ .navegacion {
         text-align: center;
         padding: 20px;
         display: flex; /* Align items horizontally */
@@ -120,16 +123,12 @@
         clear: both;
     }
 
-    #myCarousel {
-        width: 100%; /* O 90% si lo prefieres */
-        max-width: 1000px; /* Max ancho que desees */
-        margin: auto; /* Centra el carrusel en la página */
+    .splide__slide img {
+        width: 100%;           
+        height: auto;
+        max-height: 400px;   
+        object-fit: cover;     
     }
-    .carousel-item img {
-        width: 100%; /* Asegura que las imágenes ocupen todo el ancho */
-        height: auto; /* Mantiene la relación de aspecto */
-    }
-
 
 </style>
 
@@ -243,27 +242,37 @@
     </nav>
 </div>
 
-<div id="myCarousel" class="carousel slide" data-ride="carousel">
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="{{asset('images/blonde-girl-getting-her-hair-done.jpg')}}" alt="Slide 1" class="d-block w-100">
-        </div>
-        <div class="carousel-item">
-            <img src="{{asset('images/blonde-girl-getting-her-hair-done.jpg')}}" alt="Slide 2" class="d-block w-100">
-        </div>
-        <div class="carousel-item">
-            <img src="{{asset('images/blonde-girl-getting-her-hair-done.jpg')}}" alt="Slide 3" class="d-block w-100">
-        </div>
+
+<div id="splide" class="splide">
+    <div class="splide__track">
+        <ul class="splide__list">
+            <li class="splide__slide">
+                <img src="{{ asset('images/2646156.jpg') }}" alt="Imagen 1">
+            </li>
+            <li class="splide__slide">
+                <img src="{{ asset('images/7216423.jpg') }}" alt="Imagen 2">
+            </li>
+            <li class="splide__slide">
+                <img src="{{ asset('images/7813697.jpg') }}" alt="Imagen 3">
+            </li>
+        </ul>
     </div>
-    <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
 </div>
 
+<div class="tittle p-5 fs-4"><h1>ECHA UN VISTAZO A NUESTRAS CATEGORIAS</h1></div>
 
+
+
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.7/dist/js/splide.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new Splide('#splide', {
+            type   : 'loop',     // Carrusel en bucle
+            perPage: 1,          // Mostrar una imagen a la vez
+            autoplay: true,      // Reproducción automática
+            interval: 3000,      // Intervalo de 3 segundos
+        }).mount();
+    });
+</script>
 @endsection
