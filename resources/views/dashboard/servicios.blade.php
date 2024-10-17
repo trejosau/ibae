@@ -44,6 +44,24 @@
                                 <button class="btn btn-danger btn-sm">Eliminar</button>
                             </td>
                         </tr>
+                        <tr>
+                            <td>Alisado</td>
+                            <td>$550</td>
+                            <td>Activo</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-servicio">Editar</button>
+                                <button class="btn btn-danger btn-sm">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Mechas</td>
+                            <td>$2200</td>
+                            <td>Activo</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-servicio">Editar</button>
+                                <button class="btn btn-danger btn-sm">Eliminar</button>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-agregar-servicio">Agregar Servicio</button>
@@ -60,4 +78,65 @@
                     <h5 class="modal-title" id="modal-agregar-servicio-label">Agregar Servicio</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="nombre-servicio" class="form-label">Nombre del Servicio</label>
+                            <input type="text" class="form-control" id="nombre-servicio" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="precio-servicio" class="form-label">Precio</label>
+                            <input type="number" class="form-control" id="precio-servicio" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="estado-servicio" class="form-label">Estado</label>
+                            <select class="form-select" id="estado-servicio" required>
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Agregar Servicio</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Servicio -->
+    <div class="modal fade" id="modal-editar-servicio" tabindex="-1" aria-labelledby="modal-editar-servicio-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-editar-servicio-label">Editar Servicio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="nombre-servicio-editar" class="form-label">Nombre del Servicio</label>
+                            <input type="text" class="form-control" id="nombre-servicio-editar" value="Corte de Cabello" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="precio-servicio-editar" class="form-label">Precio</label>
+                            <input type="number" class="form-control" id="precio-servicio-editar" value="250" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="estado-servicio-editar" class="form-label">Estado</label>
+                            <select class="form-select" id="estado-servicio-editar" required>
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -15,7 +15,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/compras', [DashboardController::class, 'compras'])->name('dashboard.compras');
     Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');
     Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');
-
+    Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');
 });
 
 Route::get('/contacto', function () {

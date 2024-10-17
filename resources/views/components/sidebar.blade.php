@@ -44,10 +44,17 @@
                     <li class="sidebar-item">
                         <a href="{{route('dashboard.servicios')}}" class="sidebar-link">Servicios</a>
                     </li>
+
                 </ul>
+
             </li>
 
-            <!-- Aqui ir agregnado mas  -->
+            <li class="sidebar-item">
+                <a href="{{ route('dashboard.productos') }}" class="sidebar-link">
+                    <i class="fa-brands fa-product-hunt"></i>
+                    <span>Productos</span>
+                </a>
+            </li>
 
 
         </ul>

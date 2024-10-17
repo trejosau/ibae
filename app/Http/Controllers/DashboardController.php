@@ -32,4 +32,8 @@ class DashboardController extends Controller
         return view('dashboard.index');
     }
 
+    public function productos() {
+        return view('dashboard.index');
+    }
+
 }

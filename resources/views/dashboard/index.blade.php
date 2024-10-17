@@ -42,8 +42,10 @@
     }
 
     #sidebar {
+
         width: 70px;
         min-width: 70px;
+        min-height: 100vh;
         z-index: 1000;
         transition: all .25s ease-in-out;
         background-color: #081444;
@@ -172,7 +174,7 @@
 
 <body>
 @include('components.sidebar')
-    <div class="main p-3">
+    <div class="main p-3 ">
         @switch(Route::currentRouteName())
             @case('dashboard.inicio')
                 @include('dashboard.inicio')
@@ -198,9 +200,6 @@
                 @include('dashboard.productos')
                 @break
 
-            @case('dashboard.reportes')
-                @include('dashboard.reportes')
-                @break
 
             @default
                 <p>No se encontró el contenido para esta ruta.</p>

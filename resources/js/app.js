@@ -7,6 +7,8 @@ import '@splidejs/splide/css';
 import '@splidejs/splide/css/skyblue';
 import '@splidejs/splide/css/sea-green';
 import '@splidejs/splide/css/core';
+import '@popperjs/core';
+
 
 document.addEventListener('DOMContentLoaded', function () {
     if (window.location.pathname === '/') {
