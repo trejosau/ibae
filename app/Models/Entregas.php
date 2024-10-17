@@ -28,6 +28,6 @@ class Entregas extends Model
 
     public function administrador() : BelongsTo
     {
-        return $this->belongsTo(Administrador::class, 'id_admin');
+        return $this->belongsTo(Administrador::class, 'id_admin', );
     }
 }

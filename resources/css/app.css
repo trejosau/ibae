@@ -70,8 +70,13 @@ main {
     transition: background-color 0.3s, box-shadow 0.3s;
     padding: 10px 0;
     box-shadow: none;
-    min-height: 99px;
-    max-height: 99px;
+}
+
+@media (min-width: 768px) {
+    .tu-clase {
+        min-height: 99px;
+        max-height: 99px;
+    }
 }
 
 .fixed {
