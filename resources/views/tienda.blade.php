@@ -2,6 +2,10 @@
 
 @section('content')
 <style>
+        .contenedor{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    }
 
 .tittle{
 text-align: center;
@@ -129,6 +133,15 @@ text-align: center;
         max-height: 400px;   
         object-fit: cover;     
     }
+    .imagen-circular {
+    width: 150px;      /* Ajusta el tamaño de la imagen según sea necesario */
+    height: 150px;     /* La altura debe coincidir con el ancho para un círculo perfecto */
+    border-radius: 50%; /* Esto hace que la imagen sea circular */
+    object-fit: cover;  /* Asegura que la imagen cubra el área sin distorsionarse */
+}
+
+
+
 
 </style>
 
@@ -260,6 +273,29 @@ text-align: center;
 </div>
 
 <div class="tittle p-5 fs-4"><h1>ECHA UN VISTAZO A NUESTRAS CATEGORIAS</h1></div>
+
+<div class="contenedor pb-4">
+        <div>
+            <div class="tittle"><a href=""><img src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt="Descripción" class="imagen-circular"></a></div>
+            <div class="tittle"><h2>Cabello</h2></div>
+        </div>
+        <div>
+            <div class="tittle"><a href=""><img src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt="Descripción" class="imagen-circular"></a></div>
+            <div class="tittle"><h2>Cabello</h2></div>
+        </div>
+        <div>
+            <div class="tittle"><a href=""><img src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt="Descripción" class="imagen-circular"></a></div>
+            <div class="tittle"><h2>Cabello</h2></div>
+        </div>
+        <div>
+            <div class="tittle"><a href=""><img src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt="Descripción" class="imagen-circular"></a></div>
+            <div class="tittle"><h2>Cabello</h2></div>
+        </div>
+        <div>
+            <div class="tittle"><a href=""><img src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt="Descripción" class="imagen-circular"></a></div>
+            <div class="tittle"><h2>Cabello</h2></div>
+        </div>
+</div>
 
 
 
