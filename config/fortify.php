@@ -47,6 +47,7 @@ return [
     'redirects' => [
         'register' => '/login',
         'logout' => '/login',
+        'login' => '/'
     ],
 
 ];
