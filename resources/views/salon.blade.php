@@ -7,59 +7,98 @@
 <style>
     .contenedor{
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
     }
 
     .button{
         text-align: center;
-
     }
 
+    .splide__slide img {
+        width: 100%;           
+        height: auto;
+        max-height: 400px;   
+        object-fit: cover;     
+    }
+
+    .tittle{
+        text-align: center
+    }
 </style>
 
-    <main>
-        <div id="carouselExampleIndicators" class="carousel slide">
-            <div class="carousel-indicators">
-              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            </div>
-            <div class="carousel-inner">
-              <div class="carousel-item active">
-                <img src="{{asset('images/brunette-woman-with-mobile-phone-getting-her-hair-done.jpg')}}" class="d-block w-100" alt="...">
-              </div>
-              <div class="carousel-item">
-                <img src="{{asset('images/table-stylist-studio.jpg')}}" class="d-block w-100" alt="...">
-              </div>
-              <div class="carousel-item">
-                <img src="{{asset('images/brunette-woman-with-mobile-phone-getting-her-hair-done.jpg')}}" class="d-block w-100" alt="...">
-              </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
-          </div>
-
-
-        <div class=" contenedor row">
-                    <div>
-                        <img class="img-fluid pt-4 pb-4" src="{{asset('images/brunette-woman-with-mobile-phone-getting-her-hair-done.jpg')}}" alt="">
-                    </div>
-
-                    <div class=" justify-content-center">
-                        <h2 class="fs-2 pt-4">Salon Ibae</h2>
-                        <p class="fs-4 pb-4 pt-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem eius deleniti recusandae ipsa, quam pariatur optio deserunt tenetur tempore at veritatis dolor dolore, repudiandae laborum aperiam blanditiis corporis? Sapiente, cupiditate!</p>
-
-                        <div class="button">
-                        <a href="#" class="btn btn-primary ">Reservar una Cita</a>
-                        </div>
-                    </div>
+<main>
+    <!-- Carrusel Splide -->
+    <div id="splide" class="splide">
+        <div class="splide__track">
+            <ul class="splide__list">
+                <li class="splide__slide">
+                    <img src="{{ asset('images/brunette-woman-with-mobile-phone-getting-her-hair-done.jpg') }}" alt="Imagen 1">
+                </li>
+                <li class="splide__slide">
+                    <img src="{{ asset('images/cheerful-stylist-applying-makeup-anonymous-woman.jpg') }}" alt="Imagen 2">
+                </li>
+                <li class="splide__slide">
+                    <img src="{{ asset('images/table-stylist-studio.jpg') }}" alt="Imagen 3">
+                </li>
+            </ul>
         </div>
+    </div>
 
-    </main>
+    <div class="tittle"> <h1 class="fs-1 pb-3">Nuestros Servicios</h1></div>
+
+    <div class="contenedor">
+
+            <div class="lista 1">
+                <div> <img class="img-fluid p-4" src="{{ asset('images/healthy-beautiful-manicure-manicurist.jpg') }}" alt=""></div>
+                <div class="tittle"><H2>Manicura y Pedicura</H2></div>
+            </div>
+
+            <div class="lista 2">
+                <div> <img class="img-fluid p-4" src="{{ asset('images/blonde-girl-getting-her-hair-done.jpg') }}" alt=""></div>
+                <div class="tittle"><h2>Color</h2></div>
+            </div>
+
+            <div class="lista 3">
+                <div> <img class="img-fluid p-4" src="{{ asset('images/woman-getting-her-hair-cut-beauty-salon.jpg') }}" alt=""></div>
+                <div class="tittle"><h2>Corte y Estilizado</h2></div>
+
+            </div>
+
+            <div class="lista 4">
+                <div> <img class="img-fluid p-4" src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt=""></div>
+                <div class="tittle"><h2>Alisado y Tratamiento</h2></div>
+
+            </div>
+
+            <div class="lista 5">
+                <div> <img class="img-fluid p-4" src="{{ asset('images/high-angle-hand-holding-pink-swab.jpg') }}" alt=""></div>
+                <div class="tittle"><h2>Cejas y Pestañas</h2></div>
+
+            </div>
+
+            <div class="lista 6">
+                <div> <img class="img-fluid p-4" src="{{ asset('images/beautiful-female-model-with-natural-make-up-done-by-professional-artist.jpg') }}" alt=""></div>
+                <div class="tittle"><h2>Maquillaje y Peinado</h2></div>
+            </div>
+
+    </div>
+
+    <div class="tittle pt-5 pb-5"><a href="#"  class="btn btn-primary">Agenda Tu Cita</a></div>
+</main>
+
+<!-- Agrega los scripts de Splide al final -->
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.7/dist/js/splide.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new Splide('#splide', {
+            type   : 'loop',     // Carrusel en bucle
+            perPage: 1,          // Mostrar una imagen a la vez
+            autoplay: true,      // Reproducción automática
+            interval: 3000,      // Intervalo de 3 segundos
+        }).mount();
+    });
+</script>
+
 @endsection
