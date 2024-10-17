@@ -1,8 +1,10 @@
 /* --- IMPORTS --- */
 @import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
 @import '@fortawesome/fontawesome-free/css/all.css';
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-
+@import 'lineicons/web-font/lineicons.css';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
 html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,abbr,address,cite,code,del,dfn,em,img,ins,kbd,q,samp,small,strong,sub,sup,var,b,i,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,figcaption,figure,footer,header,hgroup,menu,nav,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}
 body{line-height:1}
@@ -39,6 +41,10 @@ input,select{vertical-align:middle}
 .roboto-bold-italic { font-weight: 700; font-style: italic; }
 .roboto-black-italic { font-weight: 900; font-style: italic; }
 
+
+
+
+
 body {
     margin: 0;
     padding: 0;
@@ -52,6 +58,11 @@ body {
 main {
     flex: 1;
 }
+
+.hidden {
+    display: none;
+}
+
 
 /* --- NAVBAR STYLES --- */
 .navbar {

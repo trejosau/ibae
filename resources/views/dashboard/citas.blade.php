@@ -1,115 +1,119 @@
-<div class="container mt-5 salon-servicios-dashboard">
-    <h2 class="text-center mb-4">Servicios del Salón</h2>
+<div class="citas-section">
+    <h2 class="text-center mb-4">Sección de Citas</h2>
 
+    <!-- Gráfica de Citas -->
     <div class="row mb-4">
-        <div class="col-md-6">
-            <h4 class="text-center mb-3">Gestión de Servicios</h4>
-
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modal-agregar-servicio">
-                Agregar Servicio
-            </button>
-
-            <table class="table table-bordered text-center">
-                <thead class="table-dark">
-                <tr>
-                    <th>Nombre del Servicio</th>
-                    <th>Precio</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Alisado</td>
-                    <td>$550</td>
-                    <td><span class="badge bg-success">Activo</span></td>
-                    <td>
-                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-servicio">Editar</button>
-                        <button class="btn btn-danger btn-sm">Eliminar</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    Servicio Más Solicitado
-                </div>
-                <div class="card-body text-center">
-                    <h5 class="card-title">Alisado</h5>
-                    <p class="card-text">Veces solicitado: 35</p>
+        <div class="col-12">
+            <div class="card border-info h-100 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <i class="fas fa-calendar-alt fa-2x text-info"></i> Gráfica de Citas
+                    </h5>
+                    <div id="grafica-citas" class="text-center">
+                        <p>[Gráfica de Citas Aquí]</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal para Agregar Servicio -->
-    <div class="modal fade" id="modal-agregar-servicio" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Agregar Servicio</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="nombre-servicio" class="form-label">Nombre del Servicio</label>
-                            <input type="text" class="form-control" id="nombre-servicio" placeholder="Ingrese el nombre">
-                        </div>
-                        <div class="mb-3">
-                            <label for="precio-servicio" class="form-label">Precio</label>
-                            <input type="number" class="form-control" id="precio-servicio" placeholder="Ingrese el precio">
-                        </div>
-                        <div class="mb-3">
-                            <label for="estado-servicio" class="form-label">Estado</label>
-                            <select class="form-select" id="estado-servicio">
-                                <option value="activo">Activo</option>
-                                <option value="inactivo">Inactivo</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Agregar</button>
+    <!-- Citas Recientes -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-primary h-100 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <i class="fas fa-list-alt fa-2x text-primary"></i> Citas Recientes
+                    </h5>
+                    <table class="table table-bordered text-center">
+                        <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Servicios</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Ana López</td>
+                            <td>2024-10-15</td>
+                            <td>10:00 AM</td>
+                            <td>Corte + Peinado</td>
+                            <td>Completada</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-cita">Editar</button>
+                                <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modal-ver-detalle">Ver Detalle</button>
+                                <button class="btn btn-danger btn-sm">Cancelar</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-agregar-cita">Agregar Cita</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal para Editar Servicio -->
-    <div class="modal fade" id="modal-editar-servicio" tabindex="-1" aria-hidden="true">
+    <!-- Modal para Ver Detalle de Cita -->
+    <div class="modal fade" id="modal-ver-detalle" tabindex="-1" aria-labelledby="modal-ver-detalle-label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-ver-detalle-label">Detalle de la Cita</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Cliente:</strong> Ana López</li>
+                        <li class="list-group-item"><strong>Fecha:</strong> 2024-10-15</li>
+                        <li class="list-group-item"><strong>Hora:</strong> 10:00 AM</li>
+                        <li class="list-group-item"><strong>Servicios:</strong> Corte de cabello, Peinado</li>
+                        <li class="list-group-item"><strong>Observaciones:</strong> Cliente solicitó peinado con ondas suaves.</li>
+                        <li class="list-group-item"><strong>Estado:</strong> Completada</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Agregar Cita -->
+    <div class="modal fade" id="modal-agregar-cita" tabindex="-1" aria-labelledby="modal-agregar-cita-label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Editar Servicio</h5>
+                    <h5 class="modal-title" id="modal-agregar-cita-label">Agregar Cita</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="editar-nombre-servicio" class="form-label">Nombre del Servicio</label>
-                            <input type="text" class="form-control" id="editar-nombre-servicio" value="Alisado">
+                            <label for="cliente-cita" class="form-label">Cliente</label>
+                            <input type="text" class="form-control" id="cliente-cita" placeholder="Nombre del Cliente">
                         </div>
                         <div class="mb-3">
-                            <label for="editar-precio-servicio" class="form-label">Precio</label>
-                            <input type="number" class="form-control" id="editar-precio-servicio" value="550">
+                            <label for="fecha-cita" class="form-label">Fecha</label>
+                            <input type="date" class="form-control" id="fecha-cita">
                         </div>
                         <div class="mb-3">
-                            <label for="editar-estado-servicio" class="form-label">Estado</label>
-                            <select class="form-select" id="editar-estado-servicio">
-                                <option value="activo">Activo</option>
-                                <option value="inactivo">Inactivo</option>
+                            <label for="hora-cita" class="form-label">Hora</label>
+                            <input type="time" class="form-control" id="hora-cita">
+                        </div>
+                        <div class="mb-3">
+                            <label for="servicios-cita" class="form-label">Servicios</label>
+                            <select multiple class="form-select" id="servicios-cita">
+                                <option value="1">Corte de Cabello</option>
+                                <option value="2">Peinado</option>
+                                <option value="3">Mechas</option>
+                                <option value="4">Maquillaje</option>
+                                <option value="5">Pedicura</option>
                             </select>
+                            <small class="form-text text-muted">Mantén presionada la tecla Ctrl (Windows) o Cmd (Mac) para seleccionar múltiples servicios.</small>
                         </div>
+                        <button type="button" class="btn btn-primary">Agregar Cita</button>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Guardar Cambios</button>
                 </div>
             </div>
         </div>

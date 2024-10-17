@@ -12,11 +12,9 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard/inicio', [DashboardController::class, 'inicio'])->name('dashboard.inicio');
     Route::get('/dashboard/ventas', [DashboardController::class, 'ventas'])->name('dashboard.ventas');
-    Route::get('/dashboard/academia', [DashboardController::class, 'academia'])->name('dashboard.academia');
-    Route::get('/dashboard/salon', [DashboardController::class, 'salon'])->name('dashboard.salon');
-    Route::get('/dashboard/tienda', [DashboardController::class, 'tienda'])->name('dashboard.tienda');
-    Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');
-    Route::get('/dashboard/reportes', [DashboardController::class, 'reportes'])->name('dashboard.reportes');
+    Route::get('/dashboard/compras', [DashboardController::class, 'compras'])->name('dashboard.compras');
+    Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');
+    Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');
 
 });
 

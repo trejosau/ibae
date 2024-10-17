@@ -1,270 +1,213 @@
-@extends('layouts.app')
+<div class="ventas-section">
+    <h2 class="text-center mb-4">Sección de Ventas</h2>
 
-@section('title', 'Dashboard Ventas')
-
-<style>
-    body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f6f9;
-    margin: 0;
-    padding: 0;
-    }
-
-    main {
-    padding: 20px;
-    }
-
-    /* Card styles */
-    .card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    height: 100%;
-    }
-
-    .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .card h5 {
-    font-size: 1.4rem;
-    color: #ffffff;
-    }
-
-    .card h2 {
-    font-size: 2.2rem;
-    margin-bottom: 0;
-    }
-
-    /* Custom colors for each section */
-    .card-academia {
-    background-color: #007bff;
-    position: relative;
-    }
-
-    .card-salon {
-    background-color: #28a745;
-    position: relative;
-    }
-
-    .card-tienda {
-    background-color: #ffc107;
-    position: relative;
-    }
-
-    .equal-height {
-    display: flex;
-    flex-direction: column;
-    }
-
-    /* Chart container */
-    .chart-container {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .chart-container h5 {
-    margin-bottom: 20px;
-    }
-
-    .chart {
-    height: 150px;
-    }
-
-    /* Table styles */
-    .table {
-    margin-top: 20px;
-    }
-
-    .rounded-table {
-    border-radius: 10px;
-    }
-    </style>
-
-@section('content')
-    <main class="container">
-        <h1 class="dashboard-header text-center">Dashboard Ventas</h1>
-
-        <!-- Sección de Total de Ventas por Proceso -->
-        <div class="row">
-            <div class="col-md-12 mb-4">
-                <div class="card p-4 bg-primary text-white">
-                    <h5 class="mb-3">Total de Ventas por Proceso</h5>
-
-                    <!-- Filtros de Período -->
-                    <div class="row mb-4">
-                        <div class="col-md-3">
-                            <select class="form-control">
-                                <option value="rango-especifico">Elegir rango específico</option>
-                                <option value="semana">Elegir semana</option>
-                                <option value="mes">Elegir mes</option>
-                                <option value="trimestre">Elegir trimestre</option>
-                                <option value="año">Elegir año</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <input type="date" class="form-control">
-                        </div>
-                        <div class="col-md-3">
-                            <input type="date" class="form-control">
-                        </div>
-                    </div>
-
-                    <!-- Desglose de Ventas por Proceso -->
-                    <div class="row">
-                        <div class="col-md-4 mb-4">
-                            <div class="card card-academia p-4 text-white equal-height">
-                                <h5 class="mb-3">Academia</h5>
-                                <h2>$12,000</h2>
-                                <p>Ventas Totales</p>
-                                <div class="chart-container">
-                                    <canvas id="academyChart" class="chart"></canvas>
-                                    <small class="text-success">+10% desde el mes anterior</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <div class="card card-salon p-4 text-white equal-height">
-                                <h5 class="mb-3">Salón</h5>
-                                <h2>$8,500</h2>
-                                <p>Ventas Totales</p>
-                                <div class="chart-container">
-                                    <canvas id="salonChart" class="chart"></canvas>
-                                    <small class="text-danger">-5% desde el mes anterior</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <div class="card card-tienda p-4 text-white equal-height">
-                                <h5 class="mb-3">Tienda</h5>
-                                <h2>$15,000</h2>
-                                <p>Ventas Totales</p>
-                                <div class="chart-container">
-                                    <canvas id="storeChart" class="chart"></canvas>
-                                    <small class="text-success">+15% desde el mes anterior</small>
-                                </div>
-                            </div>
-                        </div>
+    <!-- Gráfica de Ventas -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-info h-100 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <i class="fas fa-chart-line fa-2x text-info"></i> Gráfica de Ventas
+                    </h5>
+                    <div id="grafica-ventas" class="text-center">
+                        <!-- Aquí iría la gráfica -->
+                        <p>[Gráfica de Ventas Aquí]</p>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Sección de Ranking de Clientes -->
-        <div class="row">
-            <div class="col-md-12 mb-4">
-                <div class="card p-4 bg-info text-white">
-                    <h5 class="mb-3">Ranking de Clientes</h5>
+    <!-- Filtros y Búsqueda -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="input-group">
+                <select class="form-select" id="filtro-tipo-venta" aria-label="Tipo de Venta">
+                    <option selected>Filtrar por Tipo de Venta</option>
+                    <option value="all">Todas</option>
+                    <option value="online">ONLINE</option>
+                    <option value="fisica">FÍSICA</option>
+                </select>
+                <input type="text" class="form-control" placeholder="Buscar por nombre..." id="buscar-venta">
+                <button class="btn btn-primary" type="button">Buscar</button>
+            </div>
+        </div>
+    </div>
 
-                    <!-- Filtros de Período -->
-                    <div class="row mb-4">
-                        <div class="col-md-3">
-                            <select class="form-control">
-                                <option value="rango-especifico">Elegir rango específico</option>
-                                <option value="semana">Elegir semana</option>
-                                <option value="mes">Elegir mes</option>
-                                <option value="trimestre">Elegir trimestre</option>
-                                <option value="año">Elegir año</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <input type="date" class="form-control">
-                        </div>
-                        <div class="col-md-3">
-                            <input type="date" class="form-control">
-                        </div>
-                    </div>
-
-                    <!-- Tabla de Ranking de Clientes -->
-                    <table class="table table-striped text-white rounded-table">
+    <!-- Ventas Recientes -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-success h-100 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <i class="fas fa-shopping-cart fa-2x text-success"></i> Ventas Recientes
+                    </h5>
+                    <table class="table table-bordered text-center">
                         <thead>
                         <tr>
-                            <th>Nombre</th>
-                            <th>Proceso</th>
-                            <th>Ventas Generadas</th>
+                            <th>Nombre del Comprador</th>
+                            <th>Fecha de la Compra</th>
+                            <th>Total de la Venta</th>
+                            <th>Estado</th>
+                            <th>Tipo de Venta</th>
+                            <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td>Cliente 1</td>
-                            <td>Academia</td>
-                            <td>$5000</td>
+                            <td>Juan Pérez</td>
+                            <td>2024-10-05</td>
+                            <td>$250</td>
+                            <td>Completada</td>
+                            <td>ONLINE (Pick & Go)</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-venta">Editar</button>
+                                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detalle-venta">Ver detalle</button>
+                                <button class="btn btn-danger btn-sm">Eliminar</button>
+                            </td>
                         </tr>
                         <tr>
-                            <td>Cliente 2</td>
-                            <td>Salón</td>
-                            <td>$3000</td>
+                            <td>María López</td>
+                            <td>2024-10-04</td>
+                            <td>$150</td>
+                            <td>Completada</td>
+                            <td>FÍSICA (Punto de Venta)</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-venta">Editar</button>
+                                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detalle-venta">Ver detalle</button>
+                                <button class="btn btn-danger btn-sm">Eliminar</button>
+                            </td>
                         </tr>
                         <tr>
-                            <td>Cliente 3</td>
-                            <td>Tienda</td>
-                            <td>$7000</td>
+                            <td>Pedro González</td>
+                            <td>2024-10-03</td>
+                            <td>$300</td>
+                            <td>Pendiente</td>
+                            <td>ONLINE (Pick & Go)</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-venta">Editar</button>
+                                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detalle-venta">Ver detalle</button>
+                                <button class="btn btn-danger btn-sm">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ana Martínez</td>
+                            <td>2024-10-02</td>
+                            <td>$200</td>
+                            <td>Completada</td>
+                            <td>FÍSICA (Punto de Venta)</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-venta">Editar</button>
+                                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detalle-venta">Ver detalle</button>
+                                <button class="btn btn-danger btn-sm">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Laura Torres</td>
+                            <td>2024-10-01</td>
+                            <td>$180</td>
+                            <td>Pendiente</td>
+                            <td>ONLINE (Pick & Go)</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-venta">Editar</button>
+                                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detalle-venta">Ver detalle</button>
+                                <button class="btn btn-danger btn-sm">Eliminar</button>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-agregar-venta">Agregar Venta</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Sección de Comparativa Estudiantes vs No Estudiantes -->
-        <div class="row">
-            <div class="col-md-12 mb-4">
-                <div class="card p-4 bg-warning text-dark">
-                    <h5 class="mb-3">Comparativa Estudiantes vs No Estudiantes</h5>
-
-                    <!-- Filtros de Período -->
-                    <div class="row mb-4">
-                        <div class="col-md-3">
-                            <select class="form-control">
-                                <option value="rango-especifico">Elegir rango específico</option>
-                                <option value="semana">Elegir semana</option>
-                                <option value="mes">Elegir mes</option>
-                                <option value="trimestre">Elegir trimestre</option>
-                                <option value="año">Elegir año</option>
+    <!-- Modal para Editar Venta -->
+    <div class="modal fade" id="modal-editar-venta" tabindex="-1" aria-labelledby="modal-editar-venta-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-editar-venta-label">Editar Venta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="nombre-comprador" class="form-label">Nombre del Comprador</label>
+                            <input type="text" class="form-control" id="nombre-comprador" value="Juan Pérez">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha-compra" class="form-label">Fecha de Compra</label>
+                            <input type="date" class="form-control" id="fecha-compra" value="2024-10-05">
+                        </div>
+                        <div class="mb-3">
+                            <label for="total-venta" class="form-label">Total de la Venta</label>
+                            <input type="text" class="form-control" id="total-venta" value="$250">
+                        </div>
+                        <div class="mb-3">
+                            <label for="estado-venta" class="form-label">Estado</label>
+                            <select class="form-select" id="estado-venta">
+                                <option selected>Completada</option>
+                                <option>Pendiente</option>
                             </select>
                         </div>
-                        <div class="col-md-3">
-                            <input type="date" class="form-control">
+                        <div class="mb-3">
+                            <label for="tipo-venta" class="form-label">Tipo de Venta</label>
+                            <select class="form-select" id="tipo-venta">
+                                <option selected>ONLINE (Pick & Go)</option>
+                                <option>FÍSICA (Punto de Venta)</option>
+                            </select>
                         </div>
-                        <div class="col-md-3">
-                            <input type="date" class="form-control">
-                        </div>
-                    </div>
-
-                    <!-- Ventas por Categoría -->
-                    <div class="row">
-                        <div class="col-md-4">
-                            <p><strong>Cat 1</strong></p>
-                            <p>Total Ventas: $5000</p>
-                            <p>Ventas Estudiantes: $1700</p>
-                        </div>
-                        <div class="col-md-4">
-                            <p><strong>Cat 2</strong></p>
-                            <p>Total Ventas: $5000</p>
-                            <p>Ventas Estudiantes: $2300</p>
-                        </div>
-                        <div class="col-md-4">
-                            <p><strong>Cat 3</strong></p>
-                            <p>Total Ventas: $10000</p>
-                            <p>Ventas Estudiantes: $4000</p>
-                        </div>
-                    </div>
-
-                    <!-- Gráfico de Comparativa -->
-                    <div class="chart-container">
-                        <canvas id="studentComparisonChart" class="chart"></canvas>
-                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Guardar Cambios</button>
                 </div>
             </div>
         </div>
+    </div>
 
-    </main>
-
-@endsection
+    <!-- Modal para Agregar Venta -->
+    <div class="modal fade" id="modal-agregar-venta" tabindex="-1" aria-labelledby="modal-agregar-venta-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-agregar-venta-label">Agregar Venta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="nombre-comprador-nueva" class="form-label">Nombre del Comprador</label>
+                            <input type="text" class="form-control" id="nombre-comprador-nueva" placeholder="Ingrese el nombre del comprador">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha-compra-nueva" class="form-label">Fecha de Compra</label>
+                            <input type="date" class="form-control" id="fecha-compra-nueva">
+                        </div>
+                        <div class="mb-3">
+                            <label for="total-venta-nueva" class="form-label">Total de la Venta</label>
+                            <input type="text" class="form-control" id="total-venta-nueva" placeholder="Ingrese el total de la venta">
+                        </div>
+                        <div class="mb-3">
+                            <label for="estado-venta-nueva" class="form-label">Estado</label>
+                            <select class="form-select" id="estado-venta-nueva">
+                                <option selected>Completada</option>
+                                <option>Pendiente</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipo-venta-nueva" class="form-label">Tipo de Venta</label>
+                            <select class="form-select" id="tipo-venta-nueva">
+                                <option selected>FÍSICA (Punto de Venta)</option>
+                                <option>ONLINE (Pick & Go)</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="btn-agregar-venta">Agregar Venta</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

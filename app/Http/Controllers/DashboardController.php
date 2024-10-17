@@ -20,23 +20,16 @@ class DashboardController extends Controller
         return view('dashboard.index');
     }
 
-    public function academia() {
+    public function compras() {
         return view('dashboard.index');
     }
 
-    public function salon() {
+    public function citas() {
         return view('dashboard.index');
     }
 
-    public function tienda() {
+    public function servicios() {
         return view('dashboard.index');
     }
 
-    public function productos() {
-        return view('dashboard.index');
-    }
-
-    public function reportes() {
-        return view('dashboard.index');
-    }
 }

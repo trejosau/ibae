@@ -1,283 +1,114 @@
-@extends('layouts.app')
+<h2 class="text-center mb-4">Resumen General</h2>
 
-@section('title', 'Dashboard')
-
-@push('styles')
-<style>
-    body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f6f9;
-    margin: 0;
-    padding: 0;
-    }
-
-    main {
-    padding: 40px;
-    }
-
-    /* Encabezado del Dashboard */
-    .dashboard-header {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 30px;
-    }
-
-    /* Card styles */
-    .card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    height: 100%;
-    padding: 25px;
-    margin-bottom: 30px;
-    }
-
-    .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .card h5 {
-    font-size: 1.6rem;
-    color: #fff;
-    margin-bottom: 10px;
-    font-weight: 600;
-    }
-
-    /* Custom colors for each section */
-    .card-academia {
-    background-color: #007bff;
-    position: relative;
-    }
-
-    .card-salon {
-    background-color: #28a745;
-    position: relative;
-    }
-
-    .card-tienda {
-    background-color: #ffc107;
-    position: relative;
-    }
-
-    .card h2 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    }
-
-    /* Add small icon at top-right */
-    .icon {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 2rem;
-    color: rgba(255, 255, 255, 0.7);
-    }
-
-    /* Equal card height */
-    .equal-height {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-    .dashboard-header {
-    font-size: 1.8rem;
-    text-align: center;
-    }
-
-    .card h5 {
-    text-align: center;
-    }
-
-    .card {
-    padding: 15px;
-    }
-    }
-
-    /* Button styles */
-    .btn-custom {
-    background-color: #ffffff;
-    color: black;
-    transition: background-color 0.3s ease;
-    border-radius: 25px;
-    padding: 10px 20px;
-    font-size: 0.95rem;
-    border: 1px solid #ccc;
-    margin-top: 15px;
-    }
-
-    .btn-custom:hover {
-    background-color: #f4f4f4;
-    border-color: #aaa;
-    }
-
-    /* Chart container */
-    .chart-container {
-    margin-top: 25px;
-    padding: 15px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .chart-container h5 {
-    margin-bottom: 20px;
-    font-size: 1.3rem;
-    font-weight: 600;
-    }
-
-    /* Main chart style */
-    .chart {
-    height: 170px;
-    }
-
-    /* Table styles */
-    .table {
-    margin-top: 20px;
-    }
-
-    .rounded-table {
-    border-radius: 10px;
-    }
-
-    .table th, .table td {
-    padding: 15px;
-    font-size: 1rem;
-    }
-
-    .table th {
-    background-color: #007bff;
-    color: white;
-    text-align: center;
-    }
-
-    .table-striped tbody tr:nth-child(odd) {
-    background-color: #f9f9f9;
-    }
-
-    </style>
-@endpush
-
-@section('content')
-    <main class="container">
-        <h1 class="dashboard-header text-center">Dashboard Principal</h1>
-
-        <!-- Sección de reportes principales -->
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="card card-academia p-4 text-white equal-height">
-                    <div class="icon"><i class="fas fa-school"></i></div>
-                    <h5 class="mb-3">Academia</h5>
-                    <h2>$12,000</h2>
-                    <p>Ingresos Totales</p>
-                    <div class="chart-container">
-                        <canvas id="academyChart" class="chart"></canvas>
-                        <small class="text-success">+10% desde el periodo anterior</small>
-                    </div>
-                    <button class="btn btn-light btn-custom mt-auto">Ver detalles</button>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card card-salon p-4 text-white equal-height">
-                    <div class="icon"><i class="fas fa-cut"></i></div>
-                    <h5 class="mb-3">Salón</h5>
-                    <h2>$8,500</h2>
-                    <p>Ingresos Totales</p>
-                    <div class="chart-container">
-                        <canvas id="salonChart" class="chart"></canvas>
-                        <small class="text-danger">-5% desde el periodo anterior</small>
-                    </div>
-                    <button class="btn btn-light btn-custom mt-auto">Ver detalles</button>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card card-tienda p-4 text-white equal-height">
-                    <div class="icon"><i class="fas fa-shopping-cart"></i></div>
-                    <h5 class="mb-3">Tienda</h5>
-                    <h2>$15,000</h2>
-                    <p>Ingresos Totales</p>
-                    <div class="chart-container">
-                        <canvas id="storeChart" class="chart"></canvas>
-                        <small class="text-success">+15% desde el periodo anterior</small>
-                    </div>
-                    <button class="btn btn-light btn-custom mt-auto">Ver detalles</button>
-                </div>
+<!-- Ingresos Totales -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-info h-100 mb-4"> <!-- Añadido h-100 -->
+            <div class="card-body text-center">
+                <h5 class="card-title">
+                    <i class="fas fa-money-bill-wave fa-2x text-info"></i> Ingresos Totales
+                </h5>
+                <p class="card-text h2">[Total Ingresos]</p>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- Sección de reportes secundarios -->
-        <div class="row">
-            <!-- Ranking de Clientes -->
-            <div class="col-md-6 mb-4">
-                <div class="card p-4 bg-info text-white">
-                    <h5 class="mb-3">Ranking de Clientes</h5>
-                    <table class="table table-striped text-white rounded-table">
-                        <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Categoría</th>
-                            <th>Ingresos Generados</th>
-                            <th>Rol Principal</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Cliente 1</td>
-                            <td>Academia</td>
-                            <td>$5000</td>
-                            <td>Estudiante</td>
-                        </tr>
-                        <tr>
-                            <td>Cliente 2</td>
-                            <td>Salón</td>
-                            <td>$3000</td>
-                            <td>Cliente</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Cantidad de Usuarios Registrados -->
-            <div class="col-md-6 mb-4 d-flex justify-content-center">
-                <div class="card p-4 bg-secondary text-white text-center" style="width: 300px; height: 300px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                    <div class="avatar mb-3" style="width: 100px; height: 100px; border-radius: 50%; background-color: white;">
-                        <img src="https://via.placeholder.com/100" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%;">
-                    </div>
-                    <h5>Total Usuarios</h5>
-                    <p><strong>1500</strong></p>
-                    <div class="user-roles">
-                        <p><strong>Estudiantes:</strong> 800</p>
-                        <p><strong>Clientes:</strong> 700</p>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Seguidores en Instagram -->
-            <div class="col-md-6 mb-4">
-                <div class="card p-4 bg-secondary text-white">
-                    <h5 class="mb-3"><i class="fab fa-instagram"></i> Seguidores en Instagram</h5>
-                    <p><strong>Total:</strong> 2500</p>
-                </div>
-            </div>
-
-            <!-- Seguidores en Facebook -->
-            <div class="col-md-6 mb-4">
-                <div class="card p-4 bg-secondary text-white">
-                    <h5 class="mb-3"><i class="fab fa-facebook"></i> Seguidores en Facebook</h5>
-                    <p><strong>Total:</strong> 3000</p>
-                </div>
+<!-- Ingresos por Proceso -->
+<div class="row text-center mb-4">
+    <div class="col-md-4">
+        <div class="card border-success h-100 mb-4"> <!-- Añadido h-100 -->
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-school fa-2x text-success"></i> Ingresos Academia
+                </h5>
+                <p class="card-text h2">[Ingresos Academia]</p>
             </div>
         </div>
-    </main>
-@endsection
+    </div>
 
+    <div class="col-md-4">
+        <div class="card border-warning h-100 mb-4"> <!-- Añadido h-100 -->
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-scissors fa-2x text-warning"></i> Ingresos Salón
+                </h5>
+                <p class="card-text h2">[Ingresos Salón]</p>
+            </div>
+        </div>
+    </div>
 
+    <div class="col-md-4">
+        <div class="card border-info h-100 mb-4"> <!-- Añadido h-100 -->
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-store fa-2x text-info"></i> Ingresos Tienda
+                </h5>
+                <p class="card-text h2">[Ingresos Tienda]</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detalles de Usuarios -->
+<div class="row text-center mb-4">
+    <div class="col-md-4">
+        <div class="card border-primary h-100 mb-4"> <!-- Añadido h-100 -->
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-users fa-2x text-primary"></i> Detalles de Usuarios
+                </h5>
+                <ul class="list-unstyled">
+                    <li class="p-1"><i class="fas fa-user-check"></i> Compradores: [333]</li>
+                    <li class="p-1"><i class="fas fa-user-tie"></i> Estilistas: [333]</li>
+                    <li class="p-1"><i class="fas fa-user-shield"></i> Administradores: [333]</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-success h-100 mb-4"> <!-- Añadido h-100 -->
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-box-open fa-2x text-success"></i> Productos en Inventario
+                </h5>
+                <p class="card-text h2">[Número de Productos]</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-warning h-100 mb-4"> <!-- Añadido h-100 -->
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-concierge-bell fa-2x text-warning"></i> Servicios Ofrecidos
+                </h5>
+                <p class="card-text h2">[Número de Servicios]</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Redes Sociales -->
+<div class="row text-center mb-4">
+    <div class="col-md-12">
+        <div class="card border-secondary h-100 mb-4"> <!-- Añadido h-100 -->
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-share-alt fa-2x text-secondary"></i> Redes sociales
+                </h5>
+                <ul class="list-unstyled d-flex justify-content-between mx-4"> <!-- Clases añadidas -->
+                    <li class="d-flex align-items-center">
+                        <i class="fab fa-facebook-f fa-2x"></i>
+                        <span class="p-3">Facebook: [Número de Seguidores]</span>
+                    </li>
+                    <li class="d-flex align-items-center">
+                        <i class="fab fa-instagram fa-2x"></i>
+                        <span class="p-3">Instagram: [Número de Seguidores]</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
