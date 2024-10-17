@@ -40,7 +40,7 @@
                             <a class="nav-link roboto-medium" href="{{ route('salon') }}">Salon</a>
                             </li>
                     <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="/contacto">Contáctanos</a>
+                        <a class="nav-link roboto-medium" href="/tienda">Tienda</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link roboto-medium" href="/about-us">Sobre Nosotros</a>

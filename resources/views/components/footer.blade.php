@@ -11,6 +11,9 @@
                 <a href="" target="_blank" class="text-secondary me-xl-5 me-3 mb-sm-0 mb-2">
                     Servicios de belleza
                 </a>
+                <a href="/contacto" class="text-secondary me-xl-5 me-3 mb-sm-0 mb-2">
+                    Contacto
+                </a>
             </div>
             <div class="col-lg-8 mx-auto text-center mb-4 mt-2">
                 <a href="#" target="_blank" class="text-secondary me-xl-4 me-4">

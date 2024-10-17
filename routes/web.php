@@ -33,3 +33,7 @@ Route::get('/plataforma', function () {
 Route::get('/salon', function () {
     return view('salon');
 })->name('salon');
+
+Route::get('/tienda', function () {
+    return view('tienda');
+})->name('tienda');
