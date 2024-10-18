@@ -1,5 +1,66 @@
+@php
+    // Simulación de datos que normalmente vendrían del controlador
+    $productos = [
+        (object)[
+            'id' => 1,
+            'nombre' => 'Producto 1',
+            'cantidad_stock' => 50,
+            'precio_venta' => 100,
+            'estado' => 'activo',
+            'imagen' => 'ruta/a/imagen1.jpg',
+        ],
+        (object)[
+            'id' => 2,
+            'nombre' => 'Producto 2',
+            'cantidad_stock' => 30,
+            'precio_venta' => 150,
+            'estado' => 'inactivo',
+            'imagen' => 'https://d1eipm3vz40hy0.cloudfront.net/images/SSAC-Blog/mercadotecnia-marketing-productos.jpg',
+        ],
+        (object)[
+            'id' => 3,
+            'nombre' => 'Producto 3',
+            'cantidad_stock' => 20,
+            'precio_venta' => 200,
+            'estado' => 'activo',
+            'imagen' => 'ruta/a/imagen3.jpg',
+        ],
+    ];
+@endphp
+
 <div class="productos-section">
     <h2 class="text-center mb-4">Gestión de Productos</h2>
+
+    <!-- Barra de Búsqueda -->
+    <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Buscar productos..." id="searchInput">
+    </div>
+
+    <!-- Filtros Avanzados -->
+    <div class="mb-3">
+        <select class="form-select" id="filterEstado">
+            <option value="">Filtrar por Estado</option>
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+        </select>
+    </div>
+
+    <!-- Dropdown para Seleccionar Columnas a Mostrar -->
+    <div class="mb-3">
+        <h5>Seleccionar columnas a mostrar:</h5>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                Seleccionar Columnas
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item"><input type="checkbox" id="toggleNombre" checked> Nombre</a></li>
+                <li><a class="dropdown-item"><input type="checkbox" id="toggleCantidad" checked> Cantidad en Stock</a></li>
+                <li><a class="dropdown-item"><input type="checkbox" id="togglePrecio" checked> Precio de Venta</a></li>
+                <li><a class="dropdown-item"><input type="checkbox" id="toggleEstado" checked> Estado</a></li>
+                <li><a class="dropdown-item"><input type="checkbox" id="toggleAcciones" checked> Acciones</a></li>
+            </ul>
+        </div>
+    </div>
 
     <!-- Tabla de Productos -->
     <div class="row mb-4">
@@ -9,48 +70,52 @@
                     <h5 class="card-title text-center">
                         <i class="fas fa-box-open fa-2x text-success"></i> Lista de Productos
                     </h5>
-                    <table class="table table-bordered  table-hover text-center">
+                    <table class="table table-bordered table-hover text-center">
                         <thead>
                         <tr>
-                            <th>Nombre del Producto</th>
-                            <th>Cantidad en Stock</th>
-                            <th>Precio de Venta</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
+                            <th data-sort="nombre">Nombre del Producto</th>
+                            <th data-sort="cantidad">Cantidad en Stock</th>
+                            <th data-sort="precio">Precio de Venta</th>
+                            <th data-sort="estado">Estado</th>
+                            <th data-sort="acciones">Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                <span class="text-primary">Shampoo Hidratante</span>
-                                <br>
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#modal-catalogo-producto-1" class="text-info">[Ver Catálogo]</a>
-                            </td>
-                            <td>50</td>
-                            <td>$150</td>
-                            <td>Activo</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-producto-1">Modificar</button>
-                                <button class="btn btn-danger btn-sm">Eliminar</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="text-primary">Acondicionador Nutritivo</span>
-                                <br>
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#modal-catalogo-producto-2" class="text-info">[Ver Catálogo]</a>
-                            </td>
-                            <td>30</td>
-                            <td>$180</td>
-                            <td>Activo</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-producto-2">Modificar</button>
-                                <button class="btn btn-danger btn-sm">Eliminar</button>
-                            </td>
-                        </tr>
+                        @foreach($productos as $producto)
+                            <tr>
+                                <td class="nombre">{{ $producto->nombre }}</td>
+                                <td class="cantidad">{{ $producto->cantidad_stock }}</td>
+                                <td class="precio">${{ $producto->precio_venta }}</td>
+                                <td class="estado">{{ ucfirst($producto->estado) }}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-producto-{{ $producto->id }}">
+                                        <i class="fas fa-edit"></i> Modificar
+                                    </button>
+                                    <button class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash-alt"></i> Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-agregar-producto">Agregar Producto</button>
+
+                    <!-- Paginación -->
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+                        </ul>
+                    </nav>
+
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-agregar-producto">
+                        <i class="fas fa-plus-circle"></i> Agregar Producto
+                    </button>
+                    <button class="btn btn-success" id="exportExcelBtn">
+                        <i class="fas fa-file-excel"></i> Exportar a Excel
+                    </button>
                 </div>
             </div>
         </div>
@@ -87,7 +152,19 @@
                         </div>
                         <div class="mb-3">
                             <label for="imagen-nuevo-producto" class="form-label">Imagen Principal</label>
-                            <input type="file" class="form-control" id="imagen-nuevo-producto" accept="image/*">
+                            <button type="button" id="imageButton" class="btn-circle">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                            <div id="imageDialog" class="dialog-box-images" style="display: none;">
+                                <div class="image-preview-area">
+                                    <div id="mainImageContainer" class="image-container"></div>
+                                    <div class="add-image">
+                                        <i class="bi bi-plus-circle add-btn"></i>
+                                        <input type="file" class="file-input" accept="image/*" style="display: none;" multiple />
+                                    </div>
+                                </div>
+                                <button type="button" id="saveImageBtn" class="btn btn-success mt-2">Guardar Imagen</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -99,139 +176,47 @@
         </div>
     </div>
 
-    <!-- Modal para el Catálogo de Imágenes del Producto 1 -->
-    <div class="modal fade" id="modal-catalogo-producto-1" tabindex="-1" aria-labelledby="modal-catalogo-producto-1-label" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-catalogo-producto-1-label">Catálogo de Imágenes - Shampoo Hidratante</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h6>Imagen Principal</h6>
-                            <div class="text-center">
-                                <img src="https://th.bing.com/th/id/OIP.xUPlHVpDpgOIMzYgPuyPVQHaHa?rs=1&pid=ImgDetMain" class="img-fluid mb-2" alt="Imagen Principal" id="imagen-principal-1">
-                                <button class="btn btn-info btn-sm mt-3" id="editar-imagen-principal-1">Editar Imagen</button>
-                            </div>
-                        </div>
+    <!-- Modal para Editar Producto -->
+    @foreach($productos as $producto)
+        <div class="modal fade" id="modal-editar-producto-{{ $producto->id }}" tabindex="-1" aria-labelledby="modal-editar-producto-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-editar-producto-label">Editar Producto: {{ $producto->nombre }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <!-- Input hidden que se activará al dar click en "Editar Imagen" -->
-                    <input type="file" id="input-editar-imagen-principal-1" style="display:none;" accept="image/*">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Guardar Cambios</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para el Catálogo de Imágenes del Producto 2 -->
-    <div class="modal fade" id="modal-catalogo-producto-2" tabindex="-1" aria-labelledby="modal-catalogo-producto-2-label" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-catalogo-producto-2-label">Catálogo de Imágenes - Acondicionador Nutritivo</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h6>Imagen Principal</h6>
-                            <div class="text-center">
-                                <img src="path/to/main-image-2.jpg" class="img-fluid mb-2" alt="Imagen Principal" id="imagen-principal-2">
-                                <button class="btn btn-info btn-sm mt-3" id="editar-imagen-principal-2">Editar Imagen</button>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="nombre-producto-{{ $producto->id }}" class="form-label">Nombre del Producto</label>
+                                <input type="text" class="form-control" id="nombre-producto-{{ $producto->id }}" value="{{ $producto->nombre }}" required>
                             </div>
-                        </div>
+
+                            <div class="mb-3">
+                                <label for="precio-producto-{{ $producto->id }}" class="form-label">Precio de Venta</label>
+                                <input type="number" class="form-control" id="precio-producto-{{ $producto->id }}" value="{{ $producto->precio_venta }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="estado-producto-{{ $producto->id }}" class="form-label">Estado</label>
+                                <select class="form-select" id="estado-producto-{{ $producto->id }}" required>
+                                    <option value="activo" {{ $producto->estado === 'activo' ? 'selected' : '' }}>Activo</option>
+                                    <option value="inactivo" {{ $producto->estado === 'inactivo' ? 'selected' : '' }}>Inactivo</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="imagen-producto-{{ $producto->id }}" class="form-label">Imagen Principal</label>
+                                <div id="previewImageContainer-{{ $producto->id }}" class="image-preview"></div>
+                                <input class="form-control" type="file" accept="image/*" onchange="previewImage(event, '{{ $producto->id }}')" />
+                            </div>
+                        </form>
                     </div>
-                    <!-- Input hidden que se activará al dar click en "Editar Imagen" -->
-                    <input type="file" id="input-editar-imagen-principal-2" style="display:none;" accept="image/*">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Guardar Cambios</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Modal para Editar Producto 1 -->
-    <div class="modal fade" id="modal-editar-producto-1" tabindex="-1" aria-labelledby="modal-editar-producto-1-label" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-editar-producto-1-label">Modificar Producto - Shampoo Hidratante</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="nombre-producto-1" class="form-label">Nombre del Producto</label>
-                            <input type="text" class="form-control" id="nombre-producto-1" value="Shampoo Hidratante" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="cantidad-producto-1" class="form-label">Cantidad en Stock</label>
-                            <input type="number" class="form-control" id="cantidad-producto-1" value="50" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="precio-producto-1" class="form-label">Precio de Venta</label>
-                            <input type="number" class="form-control" id="precio-producto-1" value="150" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="estado-producto-1" class="form-label">Estado</label>
-                            <select class="form-select" id="estado-producto-1" required>
-                                <option value="activo" selected>Activo</option>
-                                <option value="inactivo">Inactivo</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Guardar Cambios</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para Editar Producto 2 -->
-    <div class="modal fade" id="modal-editar-producto-2" tabindex="-1" aria-labelledby="modal-editar-producto-2-label" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-editar-producto-2-label">Modificar Producto - Acondicionador Nutritivo</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="nombre-producto-2" class="form-label">Nombre del Producto</label>
-                            <input type="text" class="form-control" id="nombre-producto-2" value="Acondicionador Nutritivo" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="cantidad-producto-2" class="form-label">Cantidad en Stock</label>
-                            <input type="number" class="form-control" id="cantidad-producto-2" value="30" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="precio-producto-2" class="form-label">Precio de Venta</label>
-                            <input type="number" class="form-control" id="precio-producto-2" value="180" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="estado-producto-2" class="form-label">Estado</label>
-                            <select class="form-select" id="estado-producto-2" required>
-                                <option value="activo" selected>Activo</option>
-                                <option value="inactivo">Inactivo</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Guardar Cambios</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    @endforeach
 </div>
+

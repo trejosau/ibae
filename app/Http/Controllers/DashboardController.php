@@ -35,5 +35,11 @@ class DashboardController extends Controller
     public function productos() {
         return view('dashboard.index');
     }
+    public function usuarios() {
+        return view('dashboard.index');
+    }
+    public function auditoria() {
+        return view('dashboard.index');
+    }
 
 }

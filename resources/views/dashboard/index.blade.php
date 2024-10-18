@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidebar With Bootstrap</title>
+    <title>Sidebar</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <style>
@@ -86,32 +86,45 @@
     }
 
     .sidebar-nav {
-        padding-top: .5rem;
+        padding-top: 0;
         flex: 1 1 auto;
+
     }
 
     a.sidebar-link {
-        padding: .625rem 1.625rem;
+        padding: 1rem 1.500rem;
         color: #FFF;
         display: block;
-        font-size: 0.9rem;
+        font-size: 1.3rem;
         white-space: nowrap;
-        border-left: 3px solid transparent;
+        border-left: 4px solid transparent;
+
     }
 
     .sidebar-link i {
-        font-size: 1.1rem;
+        font-size: 1.15rem;
         margin-right: .75rem;
+    }
+
+    .sidebar-link.ir-inicio i {
+        margin-right: 0;
+        margin-top: 2rem;
     }
 
     a.sidebar-link:hover {
         background-color: rgba(255, 255, 255, .075);
-        border-left: 5px solid #91235a;
+        border-left: 5px solid #f556a3;
+
+    }
+    a.sidebar-link.ir-inicio {
+        padding-bottom: 3rem;
     }
 
     .sidebar-item {
         position: relative;
     }
+
+
 
     #sidebar:not(.expand) .sidebar-item .sidebar-dropdown {
         position: absolute;
@@ -169,12 +182,109 @@
         color: #fff;
     }
 
+    /* ESTILO PARA AGREGAR IMAGES */
+    /* Estilo para el botón circular */
+    .btn-circle {
+        width: 60px;  /* Tamaño del botón "plus" */
+        height: 60px;
+        border-radius: 50%;
+        background-color: #fff;
+        border: 2px solid #ddd;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
+    .btn-circle i {
+        font-size: 30px;  /* Tamaño del ícono "plus" */
+        color: #000;
+    }
+
+    /* Diálogo flotante */
+    .dialog-box-images {
+        background-color: #0a0f24;
+        padding: 10px;
+        border-radius: 4px;
+        width: 250px; /* Tamaño del cuadro de diálogo */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        position: absolute;
+        z-index: 1000;
+    }
+
+    /* Contenedor de la imagen y el botón "plus" */
+    .image-preview-area {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;  /* Asegura que las imágenes se acomoden bien en varias filas */
+    }
+
+    /* Estilo para la imagen y el botón "plus" */
+    .add-image {
+        width: 60px;  /* Tamaño del botón "plus" */
+        height: 60px;
+        border-radius: 50%;
+        background-color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .add-btn {
+        font-size: 35px;  /* Tamaño del ícono "plus" */
+        color: white;
+    }
+
+    #mainImageContainer {
+        position: relative;
+    }
+
+    /* Estilo para la imagen y su ícono de eliminar */
+    #mainImageContainer img {
+        width: 150px;  /* Tamaño de la imagen cuadrada */
+        height: 150px; /* Tamaño de la imagen cuadrada */
+        object-fit: cover; /* Mantener la proporción correcta sin distorsionar */
+        margin-right: 10px; /* Espacio entre las imágenes */
+        margin-bottom: 10px; /* Espacio debajo de las imágenes */
+        border-radius: 10px; /* Bordes redondeados opcionales */
+    }
+
+    /* Estilo para el ícono de "X" en la parte superior derecha */
+    .remove-img {
+        position: absolute;
+        top: 5px;
+        right: 15px;
+        background-color: rgba(0, 0, 0, 0.3);
+        color: #fff;
+        border-radius:50%;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .remove-img:hover {
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .volver-home {
+        font-size: 1.6rem;
+
+        font-family: 'Poppins', sans-serif;
+    }
+
+    a.sidebar-link.ir-inicio:hover {
+        color: #ff69b4;
+        border-left: 5px solid #ff69b4;
+    }
     </style>
-
 <body>
+
+
 @include('components.sidebar')
     <div class="main p-3 ">
+
         @switch(Route::currentRouteName())
             @case('dashboard.inicio')
                 @include('dashboard.inicio')
@@ -199,13 +309,162 @@
             @case('dashboard.productos')
                 @include('dashboard.productos')
                 @break
-
+            @case('dashboard.usuarios')
+                @include('dashboard.usuarios')
+                @break
+            @case('dashboard.auditoria')
+                @include('dashboard.auditoria')
+                @break
 
             @default
                 <p>No se encontró el contenido para esta ruta.</p>
         @endswitch
     </div>
-</div>
+
+<script>
+    if (window.location.pathname === '/dashboard/productos') {
+        // Variables para el modal de agregar producto
+        const imageButton = document.getElementById('imageButton');
+        const imageDialog = document.getElementById('imageDialog');
+        const addBtn = document.querySelector('.add-btn');
+        const fileInput = document.querySelector('.file-input');
+        const mainImageContainer = document.getElementById('mainImageContainer');
+        const closeDialogBtn = document.getElementById('closeDialog');
+        const saveImageBtn = document.getElementById('saveImageBtn');
+
+        let popperInstance = null;
+
+        function createPopper(button, dialog) {
+            return Popper.createPopper(button, dialog, {
+                placement: 'top',
+                modifiers: [
+                    {
+                        name: 'offset',
+                        options: {
+                            offset: [0, 8],
+                        },
+                    },
+                ],
+            });
+        }
+
+        function toggleImageDialog(button, dialog, popperInstance) {
+            if (dialog.style.display === 'none' || dialog.style.display === '') {
+                dialog.style.display = 'block';
+                createPopper(button, dialog);
+            } else {
+                dialog.style.display = 'none';
+                if (popperInstance) {
+                    popperInstance.destroy();
+                    popperInstance = null;
+                }
+            }
+        }
+
+        function handleFileSelect(fileInput, imageContainer) {
+            const files = fileInput.files;
+            imageContainer.innerHTML = '';
+
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = e.target.result;
+                    imgElement.style.width = '100px';
+                    imgElement.style.height = '100px';
+
+                    const imageWrapper = document.createElement('div');
+                    imageWrapper.style.position = 'relative';
+                    imageWrapper.appendChild(imgElement);
+
+                    const removeIcon = document.createElement('span');
+                    removeIcon.className = 'remove-img';
+                    removeIcon.innerHTML = '&times;';
+                    removeIcon.style.cursor = 'pointer';
+                    removeIcon.addEventListener('click', function () {
+                        imageWrapper.remove();
+                    });
+
+                    imageWrapper.appendChild(removeIcon);
+                    imageContainer.appendChild(imageWrapper);
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Eventos para el modal de agregar producto
+        if (imageButton) {
+            imageButton.addEventListener('click', () => toggleImageDialog(imageButton, imageDialog, popperInstance));
+            addBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', () => handleFileSelect(fileInput, mainImageContainer));
+            closeDialogBtn.addEventListener('click', () => {
+                imageDialog.style.display = 'none';
+                if (popperInstance) {
+                    popperInstance.destroy();
+                    popperInstance = null;
+                }
+            });
+            saveImageBtn.addEventListener('click', () => {
+                console.log('Imagen guardada');
+                imageDialog.style.display = 'none';
+            });
+        }
+
+        // Variables para el modal de editar producto
+        const imageButtonEdit = document.getElementById('imageButtonEdit');
+        const imageDialogEdit = document.getElementById('imageDialogEdit');
+        const addBtnEdit = document.querySelector('.add-btn-edit');
+        const fileInputEdit = document.querySelector('.file-input-edit');
+        const mainImageContainerEdit = document.getElementById('mainImageContainerEdit');
+        const closeDialogBtnEdit = document.getElementById('closeDialogEdit');
+        const saveImageBtnEdit = document.getElementById('saveImageBtnEdit');
+
+        let popperInstanceEdit = null;
+
+        // Eventos para el modal de editar producto
+        if (imageButtonEdit) {
+            imageButtonEdit.addEventListener('click', () => toggleImageDialog(imageButtonEdit, imageDialogEdit, popperInstanceEdit));
+            addBtnEdit.addEventListener('click', () => fileInputEdit.click());
+            fileInputEdit.addEventListener('change', () => handleFileSelect(fileInputEdit, mainImageContainerEdit));
+            closeDialogBtnEdit.addEventListener('click', () => {
+                imageDialogEdit.style.display = 'none';
+                if (popperInstanceEdit) {
+                    popperInstanceEdit.destroy();
+                    popperInstanceEdit = null;
+                }
+            });
+            saveImageBtnEdit.addEventListener('click', () => {
+                console.log('Imagen guardada');
+                imageDialogEdit.style.display = 'none';
+            });
+        }
+    }
+
+
+
+    // aqui inicia la parte de usuarios
+    if (window.location.pathname === '/dashboard/usuarios') {
+        // Funcionalidad de la barra de búsqueda para usuarios
+        const searchInputUsuarios = document.getElementById('searchInputUsuarios');
+        searchInputUsuarios.addEventListener('input', function () {
+            const filter = searchInputUsuarios.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const nombre = row.cells[0].textContent.toLowerCase();
+                if (nombre.includes(filter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+
+    }
+</script>
+
+
 
 </body>
 

@@ -16,6 +16,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');
     Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');
     Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');
+    Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
+    Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');
 });
 
 Route::get('/contacto', function () {
@@ -37,3 +39,7 @@ Route::get('/salon', function () {
 Route::get('/tienda', function () {
     return view('tienda');
 })->name('tienda');
+
+Route::get('/profile', function () {
+    return view('components.profile');
+})->name('profile');

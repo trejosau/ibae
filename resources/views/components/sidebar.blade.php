@@ -12,10 +12,16 @@
             </div>
         </div>
         <div class="sidebar-divider"></div>
-        <ul class="sidebar-nav">
+        <ul class="sidebar-nav ">
+            <li class="sidebar-item mb-3">
+                <a href="{{ route('home') }}" class="sidebar-link ir-inicio ">
+                    <i class="fa-solid fa-home"></i>
+                    <span class="volver-home">Volver al inicio</span>
+                </a>
+            </li>
             <li class="sidebar-item">
                 <a href="{{ route('dashboard.inicio') }}" class="sidebar-link">
-                    <i class="fa-solid fa-file"></i>
+                    <i class='fas fa-chart-line'></i>
                     <span>Resumen general</span>
                 </a>
             </li>
@@ -56,9 +62,27 @@
                 </a>
             </li>
 
+            <li class="sidebar-item">
+                <a href="{{ route('dashboard.usuarios') }}" class="sidebar-link">
+                    <i class="fa-regular fa-user"></i>
+                    <span>Usuarios</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{{ route('dashboard.auditoria') }}" class="sidebar-link">
+                    <i class='fas fa-archive'></i>
+                    <span>Auditoría</span>
+                </a>
+            </li>
+
 
         </ul>
         <li class="sidebar-footer">
+                @csrf
+                <a href="{{ route('profile') }}" class="sidebar-link">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Mi perfil</span>
+                </a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <a class="sidebar-link" type="submit">
@@ -69,3 +93,4 @@
         </li>
 
     </aside>
+
