@@ -37,6 +37,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" href="#" onclick="cargarContenido('2fa')">{{ $usuario['dos_factor'] ? 'Deshabilitar 2FA' : 'Habilitar 2FA' }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="#" onclick="cargarContenido('notificaciones')">Notificaciones</a>
+                        </li>
                     </ul>
                 </div>
             </nav>
@@ -164,6 +167,26 @@
                         <div class="card-body text-light">
                             <p>{{ $usuario['dos_factor'] ? 'Actualmente tienes habilitada la autenticación de dos factores.' : 'Habilita la autenticación de dos factores para mayor seguridad.' }}</p>
                             <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-2fa">${{ $usuario['dos_factor'] ? 'Deshabilitar 2FA' : 'Habilitar 2FA' }}</button>
+                        </div>
+                    </div>
+                    `;
+                    break;
+                    case 'notificaciones':
+                        contenidoHtml = `
+                    <div class="card mb-4" style="border-radius: 10px; background: #2c2c2c;">
+                        <div class="card-header text-light">
+                            Aqu estan tus notificaciones
+                        </div>
+                        <div class="card-body text-light">
+                            <ol>
+
+                            <li >Tu cita ha sido confirmada</li>
+                            <li>Recordatorio: Tu contraseña expira en 2 días</li>
+                            <li>Nueva actualización disponible</li>
+                            <li>Tienes una reunión programada para mañana</li>
+                            <li>Nueva solicitud de amistad</li>
+                            <li>Se ha publicado un nuevo comentario en tu publicación</li>
+                            </ol>
                         </div>
                     </div>
                     `;
