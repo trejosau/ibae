@@ -79,7 +79,7 @@
         </ul>
         <li class="sidebar-footer">
                 @csrf
-                <a href="{{ route('profile') }}" class="sidebar-link">
+                <a href="{{ route('dashboard.profile') }}" class="sidebar-link">
                     <i class="fa-solid fa-gear"></i>
                     <span>Mi perfil</span>
                 </a>

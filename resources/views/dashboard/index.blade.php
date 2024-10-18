@@ -315,6 +315,9 @@
             @case('dashboard.auditoria')
                 @include('dashboard.auditoria')
                 @break
+                @case('dashboard.profile')
+                @include('dashboard.profile')
+                @break
 
             @default
                 <p>No se encontró el contenido para esta ruta.</p>

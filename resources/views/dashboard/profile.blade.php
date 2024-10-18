@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-
-        @section('content')
-            @php
+ @php
                 // Simulación de datos del usuario
                 $usuario = [
                     'nombre_completo' => 'Juan Pérez',
@@ -268,4 +264,3 @@
             </div>
         </div>
     </div>
-@endsection

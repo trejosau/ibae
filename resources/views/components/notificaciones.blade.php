@@ -40,5 +40,5 @@
     <a class="dropdown-item" href="">Limpiar notificaciones</a>
 </li>
 <li>
-    <a class="dropdown-item" href="{{ route('profile') }}">Historial de notificaciones</a>
+    <a class="dropdown-item" href="{{ route('dashboard.profile') }}">Historial de notificaciones</a>
 </li>

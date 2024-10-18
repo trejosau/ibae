@@ -12,34 +12,6 @@ class DashboardController extends Controller
         return view('dashboard.index');
     }
 
-    public function inicio() {
-        return view('dashboard.index');
-    }
 
-    public function ventas() {
-        return view('dashboard.index');
-    }
-
-    public function compras() {
-        return view('dashboard.index');
-    }
-
-    public function citas() {
-        return view('dashboard.index');
-    }
-
-    public function servicios() {
-        return view('dashboard.index');
-    }
-
-    public function productos() {
-        return view('dashboard.index');
-    }
-    public function usuarios() {
-        return view('dashboard.index');
-    }
-    public function auditoria() {
-        return view('dashboard.index');
-    }
 
 }
