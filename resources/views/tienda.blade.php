@@ -1,7 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+
+
 <style>
+            #splide {
+            width: 100%;
+            margin: auto;
+        }
         .contenedor{
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -276,24 +282,24 @@ text-align: center;
 
 <div class="contenedor pb-4">
         <div>
-            <div class="tittle"><a href=""><img src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt="Descripción" class="imagen-circular"></a></div>
+            <div class="tittle"><a href=""><img src="{{ asset('images/young-brunette-woman-grey-dress-posing.jpg') }}" alt="Descripción" class="imagen-circular" loading="lazy"></a></div>
             <div class="tittle"><h2>Cabello</h2></div>
         </div>
         <div>
-            <div class="tittle"><a href=""><img src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt="Descripción" class="imagen-circular"></a></div>
-            <div class="tittle"><h2>Cabello</h2></div>
+            <div class="tittle"><a href=""><img src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt="Descripción" class="imagen-circular" loading="lazy"></a></div>
+            <div class="tittle"><h2>Electricos</h2></div>
         </div>
         <div>
-            <div class="tittle"><a href=""><img src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt="Descripción" class="imagen-circular"></a></div>
-            <div class="tittle"><h2>Cabello</h2></div>
+            <div class="tittle"><a href=""><img src="{{ asset('images/woman-using-pink-beauty-product-her-face.jpg') }}" alt="Descripción" class="imagen-circular" loading="lazy"></a></div>
+            <div class="tittle"><h2>Skincare</h2></div>
         </div>
         <div>
-            <div class="tittle"><a href=""><img src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt="Descripción" class="imagen-circular"></a></div>
-            <div class="tittle"><h2>Cabello</h2></div>
+            <div class="tittle"><a href=""><img src="{{ asset('images/woman-with-nail-art-promoting-design-luxury-earrings-ring.jpg') }}" alt="Descripción" class="imagen-circular" loading="lazy"></a></div>
+            <div class="tittle"><h2>Uñas</h2></div>
         </div>
         <div>
-            <div class="tittle"><a href=""><img src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt="Descripción" class="imagen-circular"></a></div>
-            <div class="tittle"><h2>Cabello</h2></div>
+            <div class="tittle"><a href=""><img src="{{ asset('images/makeup-brushes-with-whirling-pink-powder.jpg') }}" alt="Descripción" class="imagen-circular" loading="lazy"></a></div>
+            <div class="tittle"><h2>Maquillaje</h2></div>
         </div>
 </div>
 
