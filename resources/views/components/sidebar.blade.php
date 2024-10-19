@@ -1,3 +1,16 @@
+@php
+    // Simulación de datos del usuario
+    $usuario = [
+        'nombre_completo' => 'Juan Pérez',
+        'email' => 'juan.perez@example.com',
+        'telefono' => '123-456-7890',
+        'direccion' => 'Calle Falsa 123',
+        'foto' => 'https://th.bing.com/th/id/OIP.ptWtXRl15WkFas1-030N0gHaEJ?rs=1&pid=ImgDetMain',
+        'dos_factor' => false,
+        'roles' => ['Usuario', 'Administrador'],
+    ];
+@endphp
+
 <div class="wrapper">
     <aside id="sidebar">
         <div class="d-flex">
@@ -6,7 +19,6 @@
                 <i class="bi bi-grid-1x2-fill hidden"></i> <!-- Este icono estará oculto inicialmente -->
             </button>
             <div class="sidebar-logo">
-                <a href="{{ route('home') }}">IBA&E</a>
                 <p class="usuario">Hola, {{ auth()->user()->username }}</p>
                 <p  id="fecha-hora"></p>
             </div>
@@ -19,6 +31,28 @@
                     <span class="volver-home">Volver al inicio</span>
                 </a>
             </li>
+            <li class="sidebar-item">
+                <a href="#profileDropdown" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                   data-bs-target="#profileDropdown" aria-expanded="false" aria-controls="profileDropdown">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Mi perfil</span>
+                </a>
+                <ul id="profileDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    <li class="sidebar-item">
+                        <a href="" class="sidebar-link">Información</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="" class="sidebar-link">Configuración</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="" class="sidebar-link">Notificaciones</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="" class="sidebar-link">{{ $usuario['dos_factor'] ? 'Deshabilitar 2FA' : 'Habilitar 2FA' }}</a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="sidebar-item">
                 <a href="{{ route('dashboard.inicio') }}" class="sidebar-link">
                     <i class='fas fa-chart-line'></i>
@@ -76,13 +110,10 @@
             </li>
 
 
+
         </ul>
         <li class="sidebar-footer">
-                @csrf
-                <a href="{{ route('dashboard.profile') }}" class="sidebar-link">
-                    <i class="fa-solid fa-gear"></i>
-                    <span>Mi perfil</span>
-                </a>
+
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <a class="sidebar-link" type="submit">

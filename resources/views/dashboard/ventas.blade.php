@@ -10,8 +10,7 @@
                         <i class="fas fa-chart-line fa-2x text-info"></i> Gráfica de Ventas
                     </h5>
                     <div id="grafica-ventas" class="text-center">
-                        <!-- Aquí iría la gráfica -->
-                        <p>[Gráfica de Ventas Aquí]</p>
+                        <div id="chart"></div>
                     </div>
                 </div>
             </div>

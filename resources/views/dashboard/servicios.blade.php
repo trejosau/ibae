@@ -1,5 +1,42 @@
 <div class="servicios-section">
-    <h2 class="text-center mb-4">Sección de Servicios</h2>
+    <div class="filter-section mb-4">
+        <h2 class="text-center mb-4">Filtrar Servicios</h2>
+        <div class="row align-items-end">
+            <div class="col-md-5 mb-3">
+                <label for="select-mes" class="form-label">Seleccionar Mes</label>
+                <select class="form-select" id="select-mes">
+                    <option value="" disabled selected>Seleccione un mes</option>
+                    <option value="enero">Enero</option>
+                    <option value="febrero">Febrero</option>
+                    <option value="marzo">Marzo</option>
+                    <option value="abril">Abril</option>
+                    <option value="mayo">Mayo</option>
+                    <option value="junio">Junio</option>
+                    <option value="julio">Julio</option>
+                    <option value="agosto">Agosto</option>
+                    <option value="septiembre">Septiembre</option>
+                    <option value="octubre">Octubre</option>
+                    <option value="noviembre">Noviembre</option>
+                    <option value="diciembre">Diciembre</option>
+                </select>
+            </div>
+            <div class="col-md-5 mb-3">
+                <label for="select-ano" class="form-label">Seleccionar Año</label>
+                <select class="form-select" id="select-ano">
+                    <option value="" disabled selected>Seleccione un año</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <!-- Agrega más años si es necesario -->
+                </select>
+            </div>
+            <div class="col-md-2 mb-3 text-end">
+                <label class="form-label d-none">Filtrar</label> <!-- Label hidden for accessibility -->
+                <button class="btn btn-primary w-100" id="btn-filtrar">Filtrar</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Gráfica de Servicios -->
     <div class="row mb-4">
@@ -9,13 +46,21 @@
                     <h5 class="card-title text-center">
                         <i class="fas fa-chart-pie fa-2x text-info"></i> Gráfica de Servicios Solicitados
                     </h5>
-                    <div id="grafica-servicios" class="text-center">
-                        <p>[Gráfica de Servicios Aquí]</p>
+                    <div class="row text-center">
+                        <!-- Gráfico de Pastel -->
+                        <div class="col-md-6">
+                            <canvas id="servicio-pastel"></canvas>
+                        </div>
+                        <!-- Gráfico de Barras -->
+                        <div class="col-md-6">
+                            <canvas id="servicio-barras" ></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Servicios Activos -->
     <div class="row mb-4">
@@ -140,3 +185,77 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Datos de Ejemplo para Gráfico de Pastel (Servicios más solicitados en agosto)
+    const servicioData = {
+        labels: ['Corte de Cabello', 'Alisado', 'Mechas', 'Coloración'],
+        datasets: [{
+            label: 'Servicios Solicitados en Agosto',
+            data: [40, 30, 20, 10], // Total de cada servicio
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+            hoverOffset: 4
+        }]
+    };
+
+    const configPastel = {
+        type: 'pie',
+        data: servicioData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    };
+
+    const servicioPastel = new Chart(
+        document.getElementById('servicio-pastel'),
+        configPastel
+    );
+
+    // Datos de Ejemplo para Gráfico de Barras (Servicios semanales en agosto)
+    const servicioBarrasData = {
+        labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+        datasets: [
+            {
+                label: 'Corte de Cabello',
+                data: [10, 15, 10, 5],
+                backgroundColor: '#FF6384'
+            },
+            {
+                label: 'Alisado',
+                data: [5, 10, 5, 10],
+                backgroundColor: '#36A2EB'
+            },
+            {
+                label: 'Mechas',
+                data: [2, 5, 8, 5],
+                backgroundColor: '#FFCE56'
+            },
+            {
+                label: 'Coloración',
+                data: [3, 5, 5, 2],
+                backgroundColor: '#4BC0C0'
+            }
+        ]
+    };
+
+    const configBarras = {
+        type: 'bar',
+        data: servicioBarrasData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
+    const servicioBarras = new Chart(
+        document.getElementById('servicio-barras'),
+        configBarras
+    );
+</script>

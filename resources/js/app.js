@@ -8,6 +8,17 @@ import '@splidejs/splide/css/skyblue';
 import '@splidejs/splide/css/sea-green';
 import '@splidejs/splide/css/core';
 import '@popperjs/core';
+import { Calendar } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction'; // para la interacción
+
+import ApexCharts from 'apexcharts';
+
+
+
+
+
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -188,4 +199,358 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    if (window.location.pathname === '/dashboard/inicio') {
+
+
+// Opciones del gráfico con tus datos de ingresos
+        var options = {
+            series: [
+                {
+                    name: 'Academia',
+                    data: [
+                        [new Date('2020-04-01').getTime(), 5000],
+                        [new Date('2020-05-01').getTime(), 25000],  // Pico fuerte en marzo 2020
+                        [new Date('2020-06-01').getTime(), 500],    // Caída fuerte en junio 2020
+                        [new Date('2020-09-01').getTime(), 30000],  // Subida brutal en septiembre 2020
+                        [new Date('2021-02-01').getTime(), 2000],
+                        [new Date('2021-05-01').getTime(), 35000],  // Pico enorme en mayo 2021
+                        [new Date('2021-08-01').getTime(), 400],    // Caída dramática en agosto 2021
+                        [new Date('2022-01-01').getTime(), 27000],  // Pico en enero 2022
+                        [new Date('2022-04-01').getTime(), 1500],
+                        [new Date('2022-10-01').getTime(), 45000],  // Máximo impresionante en octubre 2022
+                        [new Date('2023-03-01').getTime(), 300],    // Caída extrema en marzo 2023
+                        [new Date('2023-09-01').getTime(), 32000],  // Recuperación en septiembre 2023
+                        [new Date('2024-02-01').getTime(), 50000]   // Subida masiva en abril 2024
+                    ]
+                },
+                {
+                    name: 'Salón',
+                    data: [
+                        [new Date('2020-04-01').getTime(), 15000],  // Pico inicial en febrero 2020
+                        [new Date('2020-05-01').getTime(), 1000],   // Caída en mayo 2020
+                        [new Date('2020-10-01').getTime(), 40000],  // Pico extremo en octubre 2020
+                        [new Date('2021-01-01').getTime(), 2000],
+                        [new Date('2021-06-01').getTime(), 28000],  // Fuerte subida en junio 2021
+                        [new Date('2021-11-01').getTime(), 600],    // Caída grande en noviembre 2021
+                        [new Date('2022-03-01').getTime(), 35000],  // Recuperación en marzo 2022
+                        [new Date('2022-07-01').getTime(), 2500],
+                        [new Date('2023-01-01').getTime(), 42000],  // Pico muy alto en enero 2023
+                        [new Date('2023-06-01').getTime(), 700],    // Caída extrema en junio 2023
+                        [new Date('2023-12-01').getTime(), 30000],  // Pico en diciembre 2023
+                        [new Date('2024-02-01').getTime(), 2000]
+                    ]
+                },
+                {
+                    name: 'Tienda',
+                    data: [
+                        [new Date('2020-04-01').getTime(), 35000],  // Gran pico en abril 2020
+                        [new Date('2020-07-01').getTime(), 500],    // Caída fuerte en julio 2020
+                        [new Date('2020-12-01').getTime(), 48000],  // Pico enorme en diciembre 2020
+                        [new Date('2021-04-01').getTime(), 3000],
+                        [new Date('2021-09-01').getTime(), 55000],  // Máximo en septiembre 2021
+                        [new Date('2022-02-01').getTime(), 800],    // Caída muy fuerte en febrero 2022
+                        [new Date('2022-08-01').getTime(), 60000],  // Gran subida en agosto 2022
+                        [new Date('2022-11-01').getTime(), 1000],
+                        [new Date('2023-05-01').getTime(), 70000],  // Pico brutal en mayo 2023
+                        [new Date('2023-10-01').getTime(), 500],    // Caída muy baja en octubre 2023
+                        [new Date('2024-01-01').getTime(), 80000],  // Máximo impresionante en enero 2024
+                        [new Date('2024-02-01').getTime(), 1000]    // Caída final en febrero 2024
+                    ]
+                }
+            ]
+            ,
+
+            chart: {
+                type: 'area',
+                height: 350,
+                stacked: true,
+                events: {
+                    selection: function (chart, e) {
+                        console.log(new Date(e.xaxis.min));
+                    }
+                }
+            },
+            colors: ['#008FFB', '#00E396', '#CED4DC'],
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'monotoneCubic'
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    opacityFrom: 0.6,
+                    opacityTo: 0.8
+                }
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'left'
+            },
+            xaxis: {
+                type: 'datetime'
+            }
+        };
+
+// Renderizar el gráfico en el contenedor con id 'chart'
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+
+    }
+
+    if (window.location.pathname === '/dashboard/ventas') {
+
+            // Aquí puedes colocar los datos de las fechas y valores
+        var dates = [
+            ['2020-01-01', 150],
+            ['2020-02-01', 120],
+            ['2020-03-01', 130],
+            ['2020-04-01', 160],
+            ['2020-05-01', 200],
+            ['2020-06-01', 300],  // Pico por inicio del verano
+            ['2020-07-01', 350],  // Pico de verano
+            ['2020-08-01', 250],
+            ['2020-09-01', 180],
+            ['2020-10-01', 160],
+            ['2020-11-01', 220],
+            ['2020-12-01', 400],  // Pico por temporada navideña
+            ['2021-01-01', 180],
+            ['2021-02-01', 130],
+            ['2021-03-01', 140],
+            ['2021-04-01', 170],
+            ['2021-05-01', 210],
+            ['2021-06-01', 320],  // Pico por inicio del verano
+            ['2021-07-01', 370],  // Pico de verano
+            ['2021-08-01', 260],
+            ['2021-09-01', 190],
+            ['2021-10-01', 170],
+            ['2021-11-01', 230],
+            ['2021-12-01', 450],  // Pico por temporada navideña
+            ['2022-01-01', 190],
+            ['2022-02-01', 140],
+            ['2022-03-01', 150],
+            ['2022-04-01', 180],
+            ['2022-05-01', 220],
+            ['2022-06-01', 330],  // Pico por inicio del verano
+            ['2022-07-01', 380],  // Pico de verano
+            ['2022-08-01', 280],
+            ['2022-09-01', 200],
+            ['2022-10-01', 180],
+            ['2022-11-01', 240],
+            ['2022-12-01', 470],  // Pico por temporada navideña
+            ['2023-01-01', 200],
+            ['2023-02-01', 150],
+            ['2023-03-01', 160],
+            ['2023-04-01', 190],
+            ['2023-05-01', 230],
+            ['2023-06-01', 340],  // Pico por inicio del verano
+            ['2023-07-01', 390],  // Pico de verano
+            ['2023-08-01', 290],
+            ['2023-09-01', 210],
+            ['2023-10-01', 190],
+            ['2023-11-01', 250],
+            ['2023-12-01', 500],  // Pico por temporada navideña
+            ['2024-01-01', 210],
+            ['2024-02-01', 160],
+            ['2024-03-01', 170],
+            ['2024-04-01', 200],
+            ['2024-05-01', 240],
+            ['2024-06-01', 350],  // Pico por inicio del verano
+            ['2024-07-01', 400],  // Pico de verano
+            ['2024-08-01', 300],
+            ['2024-09-01', 220],
+            ['2024-10-01', 200],
+            ['2024-11-01', 260],
+            ['2024-12-01', 520]   // Pico por temporada navideña
+        ];
+
+
+
+        var options = {
+            series: [{
+                name: 'IBA&E',
+                data: dates
+            }],
+            chart: {
+                type: 'area',
+                stacked: false,
+                height: 350,
+                zoom: {
+                    type: 'x',
+                    enabled: true,
+                    autoScaleYaxis: true
+                },
+                toolbar: {
+                    autoSelected: 'zoom'
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            markers: {
+                size: 0,
+            },
+
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    inverseColors: false,
+                    opacityFrom: 0.5,
+                    opacityTo: 0,
+                    stops: [0, 90, 100]
+                },
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (val) {
+                        return (val / 1000000).toFixed(0);
+                    },
+                },
+                title: {
+                    text: 'Price'
+                },
+            },
+            xaxis: {
+                type: 'datetime',
+            },
+            tooltip: {
+                shared: false,
+                y: {
+                    formatter: function (val) {
+                        return val.toFixed(2); // Ajusta los decimales en el tooltip
+                    }
+                }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+    }
+
+
+    if (window.location.pathname === '/dashboard/compras') {
+
+        // Variables de configuración
+        var numProductos = 30; // Ajusta el número de productos
+        var maxStock = 90;     // Máximo stock aleatorio para las barras
+        var alturaBarra = 20;   // Altura de cada barra en píxeles
+
+        // Generación dinámica de productos y datos
+        var categories = Array.from({ length: numProductos }, (_, i) => 'Producto ' + (i + 1));
+        var data = Array.from({ length: numProductos }, () => Math.floor(Math.random() * maxStock)); // Datos aleatorios
+
+        // Configuración del gráfico
+        var options = {
+            series: [{
+                name: 'Stock',  // Nombre personalizado para la serie
+                data: data
+            }],
+            chart: {
+                type: 'bar',
+                height: numProductos * alturaBarra + 'px', // Ajuste automático de altura
+                toolbar: {
+                    show: true,  // Mostrar herramientas del gráfico
+                }
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: true,
+                    barHeight: alturaBarra + 'px', // Altura fija de las barras
+                    distributed: true,             // Colores variados para las barras
+                }
+            },
+            xaxis: {
+                categories: categories, // Nombres de los productos
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val;  // Mostrar "Stock: [valor]" en el tooltip
+                    }
+                }
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        fontSize: '12px', // Tamaño de fuente para los nombres de los productos
+                    }
+                }
+            },
+            grid: {
+                show: true,  // Mostrar la cuadrícula de fondo
+            },
+            dataLabels: {
+                enabled: false // No mostrar etiquetas dentro de las barras
+            },
+            legend: {
+                show: false // Ocultar leyenda de colores
+            }
+        };
+
+        // Renderizar el gráfico
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+    }
+
+
+
+    if (window.location.pathname === '/dashboard/citas') {
+        // Datos de ejemplo para las citas
+        const categorias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+        const citas = [12, 8, 15, 10, 18, 20, 5];
+
+        // Configuración del gráfico
+        const opciones = {
+            series: [{
+                name: 'Citas',
+                data: citas
+            }],
+            chart: {
+                type: 'line', // Cambiar a gráfico de líneas
+                height: '350px',
+                toolbar: {
+                    show: true,
+                }
+            },
+            xaxis: {
+                categories: categorias, // Días de la semana
+            },
+            yaxis: {
+                title: {
+                    text: 'Número de Citas'
+                }
+            },
+            title: {
+                text: 'Citas por Día en el Salón de Belleza',
+                align: 'center'
+            },
+            dataLabels: {
+                enabled: true // Habilita las etiquetas de datos
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val + ' citas'; // Muestra "X citas" en el tooltip
+                    }
+                }
+            },
+            stroke: {
+                curve: 'smooth' // Hace que la línea sea suave
+            }
+        };
+
+        // Renderizar el gráfico
+        const chart = new ApexCharts(document.querySelector("#chart"), opciones);
+        chart.render();
+
+
+
+    }
+
+
+
+
 });

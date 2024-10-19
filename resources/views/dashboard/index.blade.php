@@ -108,7 +108,7 @@
 
     .sidebar-link.ir-inicio i {
         margin-right: 0;
-        margin-top: 2rem;
+        margin-top: .6rem;
     }
 
     a.sidebar-link:hover {
@@ -117,7 +117,7 @@
 
     }
     a.sidebar-link.ir-inicio {
-        padding-bottom: 3rem;
+        padding-bottom: 2rem;
     }
 
     .sidebar-item {
@@ -465,6 +465,8 @@
 
 
     }
+
+
 </script>
 
 

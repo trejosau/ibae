@@ -1,6 +1,9 @@
 <div class="citas-section">
     <h2 class="text-center mb-4">Sección de Citas</h2>
 
+    <!-- Filtros -->
+
+
     <!-- Gráfica de Citas -->
     <div class="row mb-4">
         <div class="col-12">
@@ -10,13 +13,31 @@
                         <i class="fas fa-calendar-alt fa-2x text-info"></i> Gráfica de Citas
                     </h5>
                     <div id="grafica-citas" class="text-center">
-                        <p>[Gráfica de Citas Aquí]</p>
+                        <div id="chart"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    <div class="row mb-4">
+        <div class="col-6">
+            <div class="input-group">
+                <label class="input-group-text" for="filtro-estilista">Filtrar por Estilista</label>
+                <select class="form-select" id="filtro-estilista">
+                    <option selected>Selecciona un estilista...</option>
+                    <option value="1">Estilista 1</option>
+                    <option value="2">Estilista 2</option>
+                    <option value="3">Estilista 3</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="input-group">
+                <label class="input-group-text" for="filtro-fecha">Filtrar por Fecha</label>
+                <input type="date" class="form-control" id="filtro-fecha">
+            </div>
+        </div>
+    </div>
     <!-- Citas Recientes -->
     <div class="row mb-4">
         <div class="col-12">
@@ -32,6 +53,7 @@
                             <th>Fecha</th>
                             <th>Hora</th>
                             <th>Servicios</th>
+                            <th>Estilista</th> <!-- Nueva columna para Estilista -->
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
@@ -42,6 +64,7 @@
                             <td>2024-10-15</td>
                             <td>10:00 AM</td>
                             <td>Corte + Peinado</td>
+                            <td>Estilista 1</td> <!-- Estilista asignado -->
                             <td>Completada</td>
                             <td>
                                 <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-cita">Editar</button>
@@ -71,6 +94,7 @@
                         <li class="list-group-item"><strong>Fecha:</strong> 2024-10-15</li>
                         <li class="list-group-item"><strong>Hora:</strong> 10:00 AM</li>
                         <li class="list-group-item"><strong>Servicios:</strong> Corte de cabello, Peinado</li>
+                        <li class="list-group-item"><strong>Estilista:</strong> Estilista 1</li> <!-- Estilista en el detalle -->
                         <li class="list-group-item"><strong>Observaciones:</strong> Cliente solicitó peinado con ondas suaves.</li>
                         <li class="list-group-item"><strong>Estado:</strong> Completada</li>
                     </ul>
@@ -111,6 +135,14 @@
                                 <option value="5">Pedicura</option>
                             </select>
                             <small class="form-text text-muted">Mantén presionada la tecla Ctrl (Windows) o Cmd (Mac) para seleccionar múltiples servicios.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="estilista-cita" class="form-label">Estilista</label>
+                            <select class="form-select" id="estilista-cita">
+                                <option value="1">Estilista 1</option>
+                                <option value="2">Estilista 2</option>
+                                <option value="3">Estilista 3</option>
+                            </select>
                         </div>
                         <button type="button" class="btn btn-primary">Agregar Cita</button>
                     </form>

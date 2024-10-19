@@ -31,34 +31,76 @@
 <div class="productos-section">
     <h2 class="text-center mb-4">Gestión de Productos</h2>
 
-    <!-- Barra de Búsqueda -->
-    <div class="mb-3">
-        <input type="text" class="form-control" placeholder="Buscar productos..." id="searchInput">
+    <!-- Card para Gráficas -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-center border-success">
+                <div class="card-header">Productos Más Vendidos</div>
+                <div class="card-body">
+                    <canvas id="productosMasVendidosChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center border-success">
+                <div class="card-header">Mejor Valorados</div>
+                <div class="card-body">
+                    <canvas id="mejorValoradosChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center border-success">
+                <div class="card-header">Menos Vendidos</div>
+                <div class="card-body">
+                    <canvas id="menosVendidosChart"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Filtros Avanzados -->
-    <div class="mb-3">
-        <select class="form-select" id="filterEstado">
-            <option value="">Filtrar por Estado</option>
-            <option value="activo">Activo</option>
-            <option value="inactivo">Inactivo</option>
-        </select>
+    <!-- Filtros y Barra de Búsqueda en la Misma Línea -->
+    <div class="row mb-3 align-items-end">
+        <div class="col-md-4">
+            <input type="text" class="form-control" placeholder="Buscar productos..." id="searchInput">
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" id="filterEstado">
+                <option value="">Filtrar por Estado</option>
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <input type="number" class="form-control" id="minPrice" placeholder="Min Precio">
+        </div>
+        <div class="col-md-2">
+            <input type="number" class="form-control" id="maxPrice" placeholder="Max Precio">
+        </div>
     </div>
 
-    <!-- Dropdown para Seleccionar Columnas a Mostrar -->
-    <div class="mb-3">
-        <h5>Seleccionar columnas a mostrar:</h5>
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                Seleccionar Columnas
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item"><input type="checkbox" id="toggleNombre" checked> Nombre</a></li>
-                <li><a class="dropdown-item"><input type="checkbox" id="toggleCantidad" checked> Cantidad en Stock</a></li>
-                <li><a class="dropdown-item"><input type="checkbox" id="togglePrecio" checked> Precio de Venta</a></li>
-                <li><a class="dropdown-item"><input type="checkbox" id="toggleEstado" checked> Estado</a></li>
-                <li><a class="dropdown-item"><input type="checkbox" id="toggleAcciones" checked> Acciones</a></li>
-            </ul>
+    <!-- Filtros de Cantidad en Stock -->
+    <div class="row mb-3 align-items-end">
+        <div class="col-md-2">
+            <input type="number" class="form-control" id="minStock" placeholder="Min Stock">
+        </div>
+        <div class="col-md-2">
+            <input type="number" class="form-control" id="maxStock" placeholder="Max Stock">
+        </div>
+        <div class="col-md-4">
+            <h5>Seleccionar columnas a mostrar:</h5>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    Seleccionar Columnas
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item"><input type="checkbox" id="toggleNombre" checked> Nombre</a></li>
+                    <li><a class="dropdown-item"><input type="checkbox" id="toggleCantidad" checked> Cantidad en Stock</a></li>
+                    <li><a class="dropdown-item"><input type="checkbox" id="togglePrecio" checked> Precio de Venta</a></li>
+                    <li><a class="dropdown-item"><input type="checkbox" id="toggleEstado" checked> Estado</a></li>
+                    <li><a class="dropdown-item"><input type="checkbox" id="toggleAcciones" checked> Acciones</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -145,32 +187,16 @@
                         </div>
                         <div class="mb-3">
                             <label for="estado-nuevo-producto" class="form-label">Estado</label>
-                            <select class="form-select" id="estado-nuevo-producto" required>
-                                <option value="activo" selected>Activo</option>
+                            <select class="form-select" id="estado-nuevo-producto">
+                                <option value="activo">Activo</option>
                                 <option value="inactivo">Inactivo</option>
                             </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="imagen-nuevo-producto" class="form-label">Imagen Principal</label>
-                            <button type="button" id="imageButton" class="btn-circle">
-                                <i class="bi bi-plus"></i>
-                            </button>
-                            <div id="imageDialog" class="dialog-box-images" style="display: none;">
-                                <div class="image-preview-area">
-                                    <div id="mainImageContainer" class="image-container"></div>
-                                    <div class="add-image">
-                                        <i class="bi bi-plus-circle add-btn"></i>
-                                        <input type="file" class="file-input" accept="image/*" style="display: none;" multiple />
-                                    </div>
-                                </div>
-                                <button type="button" id="saveImageBtn" class="btn btn-success mt-2">Guardar Imagen</button>
-                            </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Guardar Producto</button>
+                    <button type="button" class="btn btn-primary">Agregar Producto</button>
                 </div>
             </div>
         </div>
@@ -178,41 +204,39 @@
 
     <!-- Modal para Editar Producto -->
     @foreach($productos as $producto)
-        <div class="modal fade" id="modal-editar-producto-{{ $producto->id }}" tabindex="-1" aria-labelledby="modal-editar-producto-label" aria-hidden="true">
+        <div class="modal fade" id="modal-editar-producto-{{ $producto->id }}" tabindex="-1" aria-labelledby="modal-editar-producto-{{ $producto->id }}-label" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modal-editar-producto-label">Editar Producto: {{ $producto->nombre }}</h5>
+                        <h5 class="modal-title" id="modal-editar-producto-{{ $producto->id }}-label">Modificar Producto: {{ $producto->nombre }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form>
                             <div class="mb-3">
-                                <label for="nombre-producto-{{ $producto->id }}" class="form-label">Nombre del Producto</label>
-                                <input type="text" class="form-control" id="nombre-producto-{{ $producto->id }}" value="{{ $producto->nombre }}" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="precio-producto-{{ $producto->id }}" class="form-label">Precio de Venta</label>
-                                <input type="number" class="form-control" id="precio-producto-{{ $producto->id }}" value="{{ $producto->precio_venta }}" required>
+                                <label for="nombre-editar-producto-{{ $producto->id }}" class="form-label">Nombre del Producto</label>
+                                <input type="text" class="form-control" id="nombre-editar-producto-{{ $producto->id }}" value="{{ $producto->nombre }}" required>
                             </div>
                             <div class="mb-3">
-                                <label for="estado-producto-{{ $producto->id }}" class="form-label">Estado</label>
-                                <select class="form-select" id="estado-producto-{{ $producto->id }}" required>
+                                <label for="cantidad-editar-producto-{{ $producto->id }}" class="form-label">Cantidad en Stock</label>
+                                <input type="number" class="form-control" id="cantidad-editar-producto-{{ $producto->id }}" value="{{ $producto->cantidad_stock }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="precio-editar-producto-{{ $producto->id }}" class="form-label">Precio de Venta</label>
+                                <input type="number" class="form-control" id="precio-editar-producto-{{ $producto->id }}" value="{{ $producto->precio_venta }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="estado-editar-producto-{{ $producto->id }}" class="form-label">Estado</label>
+                                <select class="form-select" id="estado-editar-producto-{{ $producto->id }}">
                                     <option value="activo" {{ $producto->estado === 'activo' ? 'selected' : '' }}>Activo</option>
                                     <option value="inactivo" {{ $producto->estado === 'inactivo' ? 'selected' : '' }}>Inactivo</option>
                                 </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="imagen-producto-{{ $producto->id }}" class="form-label">Imagen Principal</label>
-                                <div id="previewImageContainer-{{ $producto->id }}" class="image-preview"></div>
-                                <input class="form-control" type="file" accept="image/*" onchange="previewImage(event, '{{ $producto->id }}')" />
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary">Guardar Cambios</button>
+                        <button type="button" class="btn btn-primary">Modificar Producto</button>
                     </div>
                 </div>
             </div>
@@ -220,3 +244,75 @@
     @endforeach
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx1 = document.getElementById('productosMasVendidosChart').getContext('2d');
+    const ctx2 = document.getElementById('mejorValoradosChart').getContext('2d');
+    const ctx3 = document.getElementById('menosVendidosChart').getContext('2d');
+
+    const productosMasVendidosChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Producto 1', 'Producto 2', 'Producto 3'],
+            datasets: [{
+                label: 'Cantidad Vendida',
+                data: [30, 20, 10],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    const mejorValoradosChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ['Producto 1', 'Producto 2', 'Producto 3'],
+            datasets: [{
+                label: 'Calificación',
+                data: [5, 4, 3],
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    const menosVendidosChart = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+            labels: ['Producto 1', 'Producto 2', 'Producto 3'],
+            datasets: [{
+                label: 'Cantidad Vendida',
+                data: [10, 5, 2],
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
