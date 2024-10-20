@@ -68,7 +68,7 @@
             loadingScreen.style.display = 'none';
             body.classList.remove('loading');
             document.body.classList.add('loaded');
-        }, 500);
+        }, 0);
     });
 </script>
 </body>

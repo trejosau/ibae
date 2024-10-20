@@ -94,6 +94,7 @@
                             src="{{ auth()->user()->profile_photo_url }}"
                             class="rounded-circle"
                             height="64"
+                            width="64"
                             alt="{{ auth()->user()->username }}"
                             loading="lazy"
                         />
