@@ -112,11 +112,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    if (window.location.pathname.startsWith('/dashboard/')) {
+    if (window.location.pathname.startsWith('/dashboard/') || window.location.pathname.startsWith('/plataforma/')) {
         const elementos = document.querySelector(".toggle-btn");
         const iconOpen = elementos.querySelector(".bi-grid-1x2"); // Icono cuando el sidebar está cerrado
         const iconClose = elementos.querySelector(".bi-grid-1x2-fill"); // Icono cuando el sidebar está abierto
 
+        // Evento para alternar la expansión del sidebar
         elementos.addEventListener("click", function () {
             document.querySelector("#sidebar").classList.toggle("expand");
 
@@ -130,18 +131,22 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
+        // Función para actualizar la fecha y hora
         function actualizarFechaHora() {
             const hoy = new Date();
             const dia = String(hoy.getDate()).padStart(2, '0');
-            const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+            const mes = String(hoy.getMonth() + 1).padStart(2, '0'); // Los meses comienzan en 0
             const anio = hoy.getFullYear();
             const horas = String(hoy.getHours()).padStart(2, '0');
             const minutos = String(hoy.getMinutes()).padStart(2, '0');
             const segundos = String(hoy.getSeconds()).padStart(2, '0');
+
             document.getElementById('fecha-hora').textContent =
                 `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;
         }
-        setInterval(actualizarFechaHora, 1000);  // Actualiza cada segundo
+
+        // Llama a la función de actualización de fecha y hora cada segundo
+        setInterval(actualizarFechaHora, 1000);
     }
 
     if (window.location.pathname === '/register') {
