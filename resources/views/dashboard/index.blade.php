@@ -145,6 +145,10 @@
         opacity: 1;
     }
 
+    #sidebar:not(.expand) .sidebar-item:hover .sidebar-link {
+        background-color: #d99db7;
+    }
+
     #sidebar.expand .sidebar-link[data-bs-toggle="collapse"]::after {
         border: solid;
         border-width: 0 .075rem .075rem 0;

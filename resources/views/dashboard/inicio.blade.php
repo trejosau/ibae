@@ -3,13 +3,49 @@
 
     <!-- Ingresos Totales -->
     <div class="row mb-4">
-        <div class="col-12">
+        <div class="col-10">
             <div class="card border-info h-100 mb-4">
                 <div class="card-body text-center">
                     <h5 class="card-title">
                         <i class="fas fa-money-bill-wave fa-2x text-info"></i> Ingresos Totales
                     </h5>
                     <p class="card-text h2">[Total Ingresos]</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="card border-secondary h-100 mb-4 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Acceso Directo</h5>
+                    <a href="/plataforma" class="btn btn-secondary">Ir a Plataforma</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accesos Directos -->
+    <div class="row mb-4 d-flex justify-content-center">
+        <div class="col-3">
+            <div class="card border-success text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Atajo a ventas</h5>
+                    <a href="{{ route('dashboard.ventas') }}" class="btn btn-success">Ir a ventas</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card border-warning text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Gestión de Usuarios</h5>
+                    <a href="{{ route('dashboard.usuarios') }}" class="btn btn-warning">Ir a usuarios</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card border-danger text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Configuraciones</h5>
+                    <a href="{{route('dashboard.profile')}}" class="btn btn-danger">Ir a configuraciones</a>
                 </div>
             </div>
         </div>
@@ -105,14 +141,10 @@
                     <h5 class="card-title">
                         <i class="fas fa-share-alt fa-2x text-secondary"></i> Redes sociales
                     </h5>
-                    <ul class="list-unstyled d-flex justify-content-between mx-4"> <!-- Clases añadidas -->
+                    <ul class="list-unstyled d-flexmx-4"> <!-- Clases añadidas -->
                         <li class="d-flex align-items-center">
                             <i class="fab fa-facebook-f fa-2x"></i>
-                            <span class="p-3">Facebook: [Número de Seguidores]</span>
-                        </li>
-                        <li class="d-flex align-items-center">
-                            <i class="fab fa-instagram fa-2x"></i>
-                            <span class="p-3">Instagram: [Número de Seguidores]</span>
+                            <span class="p-3">Facebook: {{ $followersCount ?? 'No disponible' }}</span>
                         </li>
                     </ul>
                 </div>

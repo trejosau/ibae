@@ -1,12 +1,38 @@
 @php
     $usuarios = [
-        (object)[ 'id' => 1, 'nombre_completo' => 'Juan Pérez', 'tipo_usuario' => 'comprador', 'estado' => 'activo' ],
-        (object)[ 'id' => 2, 'nombre_completo' => 'María López', 'tipo_usuario' => 'estilista', 'estado' => 'activo' ],
-        (object)[ 'id' => 3, 'nombre_completo' => 'Carlos García', 'tipo_usuario' => 'administrador', 'estado' => 'inactivo' ],
-        (object)[ 'id' => 4, 'nombre_completo' => 'Laura Martínez', 'tipo_usuario' => 'alumno', 'estado' => 'activo' ],
-        (object)[ 'id' => 5, 'nombre_completo' => 'Luis Torres', 'tipo_usuario' => 'profesor', 'estado' => 'activo' ],
+        (object)[
+            'id' => 1,
+            'nombre_completo' => 'Juan Pérez',
+            'tipo_usuario' => ['comprador'],
+            'estado' => 'activo'
+        ],
+        (object)[
+            'id' => 2,
+            'nombre_completo' => 'María López',
+            'tipo_usuario' => ['comprador', 'estilista'], // Estilista + Comprador
+            'estado' => 'activo'
+        ],
+        (object)[
+            'id' => 3,
+            'nombre_completo' => 'Carlos García',
+            'tipo_usuario' => ['comprador', 'administrador'], // Administrador + Comprador
+            'estado' => 'inactivo'
+        ],
+        (object)[
+            'id' => 4,
+            'nombre_completo' => 'Laura Martínez',
+            'tipo_usuario' => ['comprador', 'alumno'], // Alumno + Comprador
+            'estado' => 'activo'
+        ],
+        (object)[
+            'id' => 5,
+            'nombre_completo' => 'Luis Torres',
+            'tipo_usuario' => ['comprador', 'profesor'], // Profesor + Comprador
+            'estado' => 'activo'
+        ],
     ];
 @endphp
+
 
 <div class="usuarios-section">
     <h2 class="text-center mb-4">Gestión de Usuarios</h2>
@@ -29,7 +55,7 @@
                             <thead>
                             <tr>
                                 <th>Nombre Completo</th>
-                                <th>Tipo de Usuario</th>
+                                <th>Roles</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
@@ -38,7 +64,7 @@
                             @foreach($usuarios as $usuario)
                                 <tr>
                                     <td>{{ $usuario->nombre_completo }}</td>
-                                    <td>{{ ucfirst($usuario->tipo_usuario) }}</td>
+                                    <td>{{ implode(', ', array_map('ucfirst', $usuario->tipo_usuario)) }}</td>
                                     <td>{{ ucfirst($usuario->estado) }}</td>
                                     <td>
                                         <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-usuario-{{ $usuario->id }}">Modificar</button>
@@ -71,27 +97,46 @@
                 </div>
                 <div class="modal-body">
                     <form id="formAgregarUsuario">
+                        <!-- Campo para Nombre Completo -->
                         <div class="mb-3">
-                            <label for="nombre-completo" class="form-label">Nombre Completo</label>
-                            <input type="text" class="form-control" id="nombre-completo" placeholder="Ingrese el nombre completo" required>
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre" required>
                         </div>
                         <div class="mb-3">
-                            <label for="tipo-usuario" class="form-label">Tipo de Usuario</label>
-                            <select class="form-select" id="tipo-usuario" required>
-                                <option value="comprador">Comprador</option>
-                                <option value="estilista">Estilista</option>
-                                <option value="administrador">Administrador</option>
-                                <option value="alumno">Alumno</option>
-                                <option value="profesor">Profesor</option>
-                            </select>
+                            <label for="apellido-paterno" class="form-label">Apellido Paterno</label>
+                            <input type="text" class="form-control" id="apellido-paterno" placeholder="Ingrese el apellido paterno" required>
                         </div>
                         <div class="mb-3">
-                            <label for="estado" class="form-label">Estado</label>
-                            <select class="form-select" id="estado" required>
-                                <option value="activo">Activo</option>
-                                <option value="inactivo">Inactivo</option>
-                            </select>
+                            <label for="apellido-materno" class="form-label">Apellido Materno</label>
+                            <input type="text" class="form-control" id="apellido-materno" placeholder="Ingrese el apellido materno" required>
                         </div>
+
+                        <!-- Campo para Usuario -->
+                        <div class="mb-3">
+                            <label for="usuario" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" id="usuario" placeholder="Ingrese el nombre de usuario" required>
+                        </div>
+
+                        <!-- Campo para Correo -->
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo</label>
+                            <input type="email" class="form-control" id="correo" placeholder="Ingrese el correo electrónico" required>
+                        </div>
+
+                        <!-- Campo para Contraseña -->
+                        <div class="mb-3">
+                            <label for="contrasena" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="contrasena" placeholder="Ingrese la contraseña" required>
+                        </div>
+
+                        <!-- Campo para Fecha de Nacimiento -->
+                        <div class="mb-3">
+                            <label for="fecha-nacimiento" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="fecha-nacimiento" required>
+                        </div>
+
+                        <!-- Campo para Estado -->
+
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -101,6 +146,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- Modal para Editar Usuario -->
     @foreach($usuarios as $usuario)
@@ -113,20 +159,89 @@
                     </div>
                     <div class="modal-body">
                         <form id="formEditarUsuario-{{ $usuario->id }}">
+                            <!-- Nombre Completo -->
                             <div class="mb-3">
                                 <label for="nombre-completo-{{ $usuario->id }}" class="form-label">Nombre Completo</label>
                                 <input type="text" class="form-control" id="nombre-completo-{{ $usuario->id }}" value="{{ $usuario->nombre_completo }}" required>
                             </div>
+
+                            <!-- Apellido Paterno -->
                             <div class="mb-3">
-                                <label for="tipo-usuario-{{ $usuario->id }}" class="form-label">Tipo de Usuario</label>
-                                <select class="form-select" id="tipo-usuario-{{ $usuario->id }}" required>
-                                    <option value="comprador" {{ $usuario->tipo_usuario === 'comprador' ? 'selected' : '' }}>Comprador</option>
-                                    <option value="estilista" {{ $usuario->tipo_usuario === 'estilista' ? 'selected' : '' }}>Estilista</option>
-                                    <option value="administrador" {{ $usuario->tipo_usuario === 'administrador' ? 'selected' : '' }}>Administrador</option>
-                                    <option value="alumno" {{ $usuario->tipo_usuario === 'alumno' ? 'selected' : '' }}>Alumno</option>
-                                    <option value="profesor" {{ $usuario->tipo_usuario === 'profesor' ? 'selected' : '' }}>Profesor</option>
-                                </select>
+                                <label for="apellido-paterno-{{ $usuario->id }}" class="form-label">Apellido Paterno</label>
+                                <input type="text" class="form-control" id="apellido-paterno-{{ $usuario->id }}" placeholder="Ingrese el apellido paterno" required>
                             </div>
+
+                            <!-- Apellido Materno -->
+                            <div class="mb-3">
+                                <label for="apellido-materno-{{ $usuario->id }}" class="form-label">Apellido Materno</label>
+                                <input type="text" class="form-control" id="apellido-materno-{{ $usuario->id }}" placeholder="Ingrese el apellido materno" required>
+                            </div>
+
+                            <!-- Correo Electrónico -->
+                            <div class="mb-3">
+                                <label for="correo-{{ $usuario->id }}" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="correo-{{ $usuario->id }}" placeholder="Ingrese el correo" required>
+                            </div>
+
+                            <!-- Usuario -->
+                            <div class="mb-3">
+                                <label for="usuario-{{ $usuario->id }}" class="form-label">Usuario</label>
+                                <input type="text" class="form-control" id="usuario-{{ $usuario->id }}" placeholder="Ingrese el nombre de usuario" required>
+                            </div>
+
+                            <!-- Contraseña -->
+                            <div class="mb-3">
+                                <label for="contrasena-{{ $usuario->id }}" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="contrasena-{{ $usuario->id }}" placeholder="Ingrese la contraseña">
+                            </div>
+
+                            <!-- Fecha de Nacimiento -->
+                            <div class="mb-3">
+                                <label for="fecha-nacimiento-{{ $usuario->id }}" class="form-label">Fecha de Nacimiento</label>
+                                <input type="date" class="form-control" id="fecha-nacimiento-{{ $usuario->id }}" required>
+                            </div>
+
+                            <!-- Roles -->
+                            <div class="mb-3">
+                                <label for="roles-{{ $usuario->id }}" class="form-label">Roles</label>
+                                <div>
+                                    <!-- Rol Comprador (siempre activo y deshabilitado) -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="comprador" id="comprador-{{ $usuario->id }}" checked disabled>
+                                        <label class="form-check-label" for="comprador-{{ $usuario->id }}">
+                                            Comprador
+                                        </label>
+                                    </div>
+
+                                    <!-- Otros roles -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="alumno" id="alumno-{{ $usuario->id }}" {{ in_array('alumno', $usuario->tipo_usuario) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="alumno-{{ $usuario->id }}">
+                                            Alumno
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="profesor" id="profesor-{{ $usuario->id }}" {{ in_array('profesor', $usuario->tipo_usuario) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="profesor-{{ $usuario->id }}">
+                                            Profesor
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="administrador" id="administrador-{{ $usuario->id }}" {{ in_array('administrador', $usuario->tipo_usuario) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="administrador-{{ $usuario->id }}">
+                                            Administrador
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="estilista" id="estilista-{{ $usuario->id }}" {{ in_array('estilista', $usuario->tipo_usuario) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="estilista-{{ $usuario->id }}">
+                                            Estilista
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Estado -->
                             <div class="mb-3">
                                 <label for="estado-{{ $usuario->id }}" class="form-label">Estado</label>
                                 <select class="form-select" id="estado-{{ $usuario->id }}" required>
@@ -144,7 +259,11 @@
             </div>
         </div>
     @endforeach
+
+
+
 </div>
+
 
 <script>
     // Funcionalidad de la barra de búsqueda para usuarios
