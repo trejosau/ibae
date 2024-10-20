@@ -113,22 +113,26 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (window.location.pathname.startsWith('/dashboard/') || window.location.pathname.startsWith('/plataforma/')) {
-        const elementos = document.querySelector(".toggle-btn");
-        const iconOpen = elementos.querySelector(".bi-grid-1x2"); // Icono cuando el sidebar está cerrado
-        const iconClose = elementos.querySelector(".bi-grid-1x2-fill"); // Icono cuando el sidebar está abierto
+        const toggleBtns = document.querySelectorAll(".toggle-btn");
 
-        // Evento para alternar la expansión del sidebar
-        elementos.addEventListener("click", function () {
-            document.querySelector("#sidebar").classList.toggle("expand");
+        toggleBtns.forEach((elemento) => {
+            const iconOpen = elemento.querySelector(".bi-grid-1x2"); // Icono cuando el sidebar está cerrado
+            const iconClose = elemento.querySelector(".bi-grid-1x2-fill"); // Icono cuando el sidebar está abierto
 
-            // Alternar iconos
-            if (document.querySelector("#sidebar").classList.contains("expand")) {
-                iconOpen.classList.add("hidden");
-                iconClose.classList.remove("hidden");
-            } else {
-                iconOpen.classList.remove("hidden");
-                iconClose.classList.add("hidden");
-            }
+            // Evento para alternar la expansión del sidebar
+            elemento.addEventListener("click", function () {
+                const sidebar = elemento.closest('aside'); // Encuentra el sidebar padre
+                sidebar.classList.toggle("expand");
+
+                // Alternar iconos
+                if (sidebar.classList.contains("expand")) {
+                    iconOpen.classList.add("hidden");
+                    iconClose.classList.remove("hidden");
+                } else {
+                    iconOpen.classList.remove("hidden");
+                    iconClose.classList.add("hidden");
+                }
+            });
         });
 
         // Función para actualizar la fecha y hora
@@ -141,13 +145,15 @@ document.addEventListener('DOMContentLoaded', function () {
             const minutos = String(hoy.getMinutes()).padStart(2, '0');
             const segundos = String(hoy.getSeconds()).padStart(2, '0');
 
-            document.getElementById('fecha-hora').textContent =
-                `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;
+            document.querySelectorAll('#fecha-hora').forEach((element) => {
+                element.textContent = `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;
+            });
         }
 
         // Llama a la función de actualización de fecha y hora cada segundo
         setInterval(actualizarFechaHora, 1000);
     }
+
 
     if (window.location.pathname === '/register') {
         $(document).ready(function() {

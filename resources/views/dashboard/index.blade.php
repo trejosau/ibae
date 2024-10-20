@@ -282,51 +282,51 @@
         color: #ff69b4;
         border-left: 5px solid #ff69b4;
     }
-    </style>
+</style>
 <body>
 
 
 @include('components.sidebar')
-    <div class="main p-3 ">
+<div class="main p-3 ">
 
-        @switch(Route::currentRouteName())
-            @case('dashboard.inicio')
-                @include('dashboard.inicio')
-                @break
+    @switch(Route::currentRouteName())
+        @case('dashboard.inicio')
+            @include('dashboard.inicio')
+            @break
 
-            @case('dashboard.ventas')
-                @include('dashboard.ventas')
-                @break
+        @case('dashboard.ventas')
+            @include('dashboard.ventas')
+            @break
 
-            @case('dashboard.compras')
-                @include('dashboard.compras')
-                @break
+        @case('dashboard.compras')
+            @include('dashboard.compras')
+            @break
 
-            @case('dashboard.citas')
-                @include('dashboard.citas')
-                @break
+        @case('dashboard.citas')
+            @include('dashboard.citas')
+            @break
 
-            @case('dashboard.servicios')
-                @include('dashboard.servicios')
-                @break
+        @case('dashboard.servicios')
+            @include('dashboard.servicios')
+            @break
 
-            @case('dashboard.productos')
-                @include('dashboard.productos')
-                @break
-            @case('dashboard.usuarios')
-                @include('dashboard.usuarios')
-                @break
-            @case('dashboard.auditoria')
-                @include('dashboard.auditoria')
-                @break
-                @case('dashboard.profile')
-                @include('dashboard.profile')
-                @break
+        @case('dashboard.productos')
+            @include('dashboard.productos')
+            @break
+        @case('dashboard.usuarios')
+            @include('dashboard.usuarios')
+            @break
+        @case('dashboard.auditoria')
+            @include('dashboard.auditoria')
+            @break
+        @case('dashboard.profile')
+            @include('dashboard.profile')
+            @break
 
-            @default
-                <p>No se encontró el contenido para esta ruta.</p>
-        @endswitch
-    </div>
+        @default
+            <p>No se encontró el contenido para esta ruta.</p>
+    @endswitch
+</div>
 
 <script>
     if (window.location.pathname === '/dashboard/productos') {
