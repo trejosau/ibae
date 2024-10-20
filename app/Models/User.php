@@ -27,7 +27,8 @@ class User extends Authenticatable
         'remember_token',
         'estado',
         'password',
-        'remember_token'
+        'remember_token',
+        'profile_photo_url'
     ];
 
 

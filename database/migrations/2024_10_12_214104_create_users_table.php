@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->enum('estado', ['activo', 'inactivo'])->default('activo');
+            $table->string('profile_photo_url')->nullable();
             $table->timestamps();
         });
 
