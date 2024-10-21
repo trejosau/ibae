@@ -2,190 +2,170 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Beauty Salon Carousel</title>
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* Estilo básico para el carrusel */
+        .carousel-item img {
+            width: 100%;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
         }
 
-        body,
-        html {
-            height: 100%;
-            font-family: 'Poppins', sans-serif; /* Cambia a Poppins para un estilo moderno */
-            background-color: #f3f3f3;
-        }
-
-        .navbar {
-            background-color: #333; /* Color de fondo de la barra de navegación */
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .swiper {
-            width: 100vw;
-            height: 60vh; /* Ajusta la altura del carrusel */
-        }
-
-        .swiper-slide {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* Fondo con imagen del slide */
+        .carousel-item {
             position: relative;
-            overflow: hidden; /* Ocultar cualquier parte de la imagen que sobresalga */
+            background-size: cover;
+            background-position: center;
         }
 
-        .swiper-slide img {
-            width: 100%; /* Mantener ancho completo del contenedor */
-            height: auto; /* Mantener proporción 16:9 */
-            max-height: 100%; /* Limitar la altura al 100% del contenedor */
-            transition: width 0.5s ease, height 0.5s ease; /* Transición suave de imagen */
-            object-fit: cover; /* Cubrir todo el contenedor */
-        }
-
-        .swiper-slide.zoomed-out img {
-            width: 80%; /* Ajustar ancho para simular recorte */
-            height: 80%; /* Ajustar altura para simular recorte */
-        }
-
-        .outlined-text {
+        /* Aplicar el blur solo en los bordes usando pseudo-elementos */
+        .carousel-item::before {
+            content: '';
             position: absolute;
-            font-size: 88px; /* Tamaño del texto */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            filter: blur(10px);
+        }
+
+        .slide1::before {
+            background-image: url('{{ asset('images/2646156.jpg') }}');
+        }
+
+        .slide2::before {
+            background-image: url('{{ asset('images/7813697.jpg') }}');
+        }
+
+        .slide3::before {
+            background-image: url('{{ asset('images/7216423.jpg') }}');
+        }
+
+        /* Estilos por defecto para pantallas grandes */
+        .carousel-item img {
+            max-height: 500px;
+            min-height: 500px;
+        }
+
+        .carousel-item {
+            filter: grayscale(60%);
+            transition: filter .8s ease;
+        }
+
+        .carousel-item:hover {
+            filter: none;
+        }
+
+        /* Estilo personalizado para el caption */
+        .carousel-caption h5 {
+            font-size: 3rem;
             font-weight: bold;
-            color: transparent;
-            -webkit-text-stroke: 3px #fff; /* Contorno blanco */
             text-transform: uppercase;
-            transition: color 0.5s ease, -webkit-text-stroke 0.5s ease;
+            color: #f556a3;
         }
 
-        .normal {
-            color: #fff; /* Color del texto normal */
-            -webkit-text-stroke: 0; /* Sin borde */
+        .carousel-caption p {
+            font-size: 1.5rem;
         }
 
-        .zoom-out-text {
-            color: transparent;
-            -webkit-text-stroke: 3px #fff; /* Solo borde al hacer zoom out */
+        /* Para pantallas medianas (tablets) */
+        @media (max-width: 1024px) {
+            .carousel-item img {
+                max-height: 400px;
+                min-height: 400px;
+            }
+
+            .carousel-caption h5 {
+                font-size: 2.5rem;
+            }
+
+            .carousel-caption p {
+                font-size: 1.3rem;
+            }
         }
 
-        .swiper-button-next,
-        .swiper-button-prev {
-            color: #fff;
-            width: 50px;
-            height: 50px;
+        /* Para pantallas pequeñas (móviles) */
+        @media (max-width: 768px) {
+            .carousel-item img {
+                max-height: 300px;
+                min-height: 300px;
+            }
+
+            .carousel-caption h5 {
+                font-size: 2rem;
+            }
+
+            .carousel-caption p {
+                font-size: 1.1rem;
+            }
         }
 
-        .swiper-button-next::after,
-        .swiper-button-prev::after {
-            font-size: 20px; /* Tamaño de los iconos */
-        }
+        /* Para pantallas extra pequeñas */
+        @media (max-width: 576px) {
+            .carousel-item img {
+                max-height: 250px;
+                min-height: 250px;
+            }
 
-        .services {
-            text-align: center;
-            padding: 40px;
-        }
+            .carousel-caption h5 {
+                font-size: 1.8rem;
+            }
 
-        .service-circle {
-            margin: 10px;
-            border-radius: 50%;
-            width: 100px;
-            height: 100px;
-            background-color: #E8C65C;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            .carousel-caption p {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 
 <body>
-
-<!-- Barra de navegación -->
-<div class="navbar">
-    <h1>Beauty Salon</h1>
-</div>
-
-<div class="swiper-container swiper">
-    <div class="swiper-wrapper">
-        <!-- Slide 1 -->
-        <div class="swiper-slide" style="background-color: #9FA051;">
-            <img src="https://watermark.lovepik.com/photo/20211210/large/lovepik-beauty-salon-beauty-division-facial-care-picture_501763564.jpg" alt="Slide 1">
-            <h1 class="outlined-text zoom-out-text">Alaciados</h1>
+@include('components.navbar')
+<div id="carouselExampleDark" class="carousel carousel-dark slide carousel-fade mt-0" data-bs-ride="carousel" data-bs-interval="5000">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active"
+                aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active slide1" data-bs-interval="10000">
+            <a href="https://www.example.com/">
+                <img src="{{ asset('images/2646156.jpg') }}" class="d-block w-100" alt="Slide 1">
+            </a>
+            <div class="carousel-caption d-none d-md-block text-light">
+                <h5>Mensaje publicitario</h5>
+                <p>Professional treatments to enhance your natural beauty.</p>
+            </div>
         </div>
-        <!-- Slide 2 -->
-        <div class="swiper-slide" style="background-color: #9B89C5;">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr2LKcbDK7excHznv4oksGIetvmtLEJAesGA&s" alt="Slide 2">
-            <h1 class="outlined-text zoom-out-text">Colorimetría</h1>
+        <div class="carousel-item slide2">
+            <a href="https://www.example.com/">
+                <img src="{{ asset('images/7813697.jpg') }}" class="d-block w-100" alt="Slide 2">
+            </a>
+            <div class="carousel-caption d-none d-md-block">
+                <h5>Relax & Rejuvenate</h5>
+                <p>Experience the luxury of a personalized beauty session.</p>
+            </div>
         </div>
-        <!-- Slide 3 -->
-        <div class="swiper-slide" style="background-color: #D7A594;">
-            <img src="https://naomisheadmasters.com/wp-content/uploads/2023/12/Top-10-Salons-In-Himachal-Pradesh1.jpg" alt="Slide 3">
-            <h1 class="outlined-text zoom-out-text">Producto 3</h1>
+        <div class="carousel-item slide3">
+            <a href="https://www.example.com/">
+                <img src="{{ asset('images/7216423.jpg') }}" class="d-block w-100" alt="Slide 3">
+            </a>
+            <div class="carousel-caption d-none d-md-block">
+                <h5>Your Glow, Our Priority</h5>
+                <p>Expert care for your skin, hair, and wellness needs.</p>
+            </div>
         </div>
     </div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
 </div>
 
-<div class="services">
-    <h2>Servicios de Belleza</h2>
-    <div style="display: flex; justify-content: center;">
-        <div class="service-circle">Servicio 1</div>
-        <div class="service-circle">Servicio 2</div>
-        <div class="service-circle">Servicio 3</div>
-    </div>
-</div>
-
-<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-<script>
-    const swiper = new Swiper('.swiper', {
-        loop: true,
-        autoplay: {
-            delay: 4000, // Cada slide dura 4 segundos en total
-            disableOnInteraction: false,
-        },
-        speed: 500, // Velocidad del cambio de slide
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        on: {
-            slideChangeTransitionStart: function () {
-                const slides = document.querySelectorAll('.swiper-slide');
-                slides.forEach(slide => {
-                    slide.classList.add('zoomed-out');
-                    const text = slide.querySelector('.outlined-text');
-                    text.classList.add('zoom-out-text');
-                    text.classList.remove('normal');
-                });
-            },
-            slideChangeTransitionEnd: function () {
-                const activeSlide = document.querySelector('.swiper-slide-active');
-                const text = activeSlide.querySelector('.outlined-text');
-
-                // Zoom out al inicio (primeros 1.5 segundos)
-                setTimeout(() => {
-                    activeSlide.classList.remove('zoomed-out');
-                    text.classList.remove('zoom-out-text');
-                    text.classList.add('normal');
-                }, 1500); // A los 1.5 segundos
-
-                // Zoom out al final (al segundo 4)
-                setTimeout(() => {
-                    activeSlide.classList.add('zoomed-out');
-                    text.classList.add('zoom-out-text');
-                    text.classList.remove('normal');
-                }, 3500); // A los 3.5 segundos
-            }
-        }
-    });
-</script>
+<!-- Bootstrap JS Bundle with Popper -->
 </body>
 
 </html>
