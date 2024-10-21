@@ -14,7 +14,7 @@
         <ul class="sidebar-nav">
             <!-- Sección para todos -->
             <li class="sidebar-item">
-                <a href="#inicio" class="sidebar-link">
+                <a href="{{ route('home') }}" class="sidebar-link">
                     <i class="fa-solid fa-house"></i>
                     <span>Inicio</span>
                 </a>

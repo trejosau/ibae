@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
 
 
 Route::get('/salon', function () {
-    return view('salon');
+    return view('salon.index');
 })->name('salon');
 
 Route::get('/tienda', function () {
