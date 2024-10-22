@@ -8,6 +8,7 @@ import '@splidejs/splide/css/skyblue';
 import '@splidejs/splide/css/sea-green';
 import '@splidejs/splide/css/core';
 import '@popperjs/core';
+
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';

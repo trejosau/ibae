@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Navbar Transparente</title>
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body {
@@ -21,17 +26,6 @@
             transition: background-color 0.3s ease-in-out; /* Transición de color al hacer scroll */
             animation: slideDown 1s ease-out;
             margin-bottom: 110px;
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
         }
 
         .navbar {
@@ -145,7 +139,7 @@
 
         /* Nueva sección con fondo cd678b */
         .new-section {
-            background-color: #cd678b;
+            background-color: #ffecec;
             padding: 50px 0;
             color: white;
             text-align: center;
@@ -161,6 +155,25 @@
 
         .new-section p {
             font-size: 18px;
+        }
+
+        /* Estilos para el Swiper */
+        .swiper {
+            width: 100%;
+            padding: 30px 0;
+        }
+
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .swiper-slide img {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -184,10 +197,43 @@
 
     <div class="row new-section">
         <div class="col-12">
-            <h2>Nuestros Servicios</h2>
-            <p>Ofrecemos una variedad de servicios para cuidar de tu belleza y bienestar.</p>
+            <span class="birthstone-regular" style="font-size: 2rem; color: #cd678b;">Nuestros servicios</span>
+
+            <!-- Aquí va el carrusel -->
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="https://images.hdqwalls.com/download/minimal-landscape-sunrise-4k-jy-1080x1920.jpg" alt="Paisaje minimalista">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://images.hdqwalls.com/download/spiderman-red-suit-minimal-4k-xc-1080x1920.jpg" alt="Spiderman traje rojo">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://images.hdqwalls.com/download/exploring-the-world-spiderman-2099-h8-1080x1920.jpg" alt="Spiderman 2099">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://images.hdqwalls.com/download/marvels-spider-man-2-game-5k-4b-1080x1920.jpg" alt="Spider-Man 2">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://images.hdqwalls.com/download/venom-unleashed-marvels-spider-man-2-fw-1080x1920.jpg" alt="Venom Spider-Man 2">
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
         </div>
     </div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    var swiper = new Swiper(".mySwiper", {
+        slidesPerView: 3,
+        spaceBetween: 30,
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+    });
+</script>
+
 </body>
 </html>
