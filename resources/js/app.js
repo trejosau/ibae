@@ -11,7 +11,8 @@ import '@popperjs/core';
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction'; // para la interacción
+import interactionPlugin from '@fullcalendar/interaction';
+
 
 import ApexCharts from 'apexcharts';
 

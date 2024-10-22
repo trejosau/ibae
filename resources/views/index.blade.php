@@ -30,6 +30,166 @@
         main {
             display: none;
         }
+        /* --- FRAME CONTAINER --- */
+        .frame-container {
+            position: relative;
+            height: calc(100vh - 99px);
+            background-color: #202020;
+        }
+
+        /* Fotogramas */
+        .frame {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .frame-container .frame:first-child {
+            display: block;
+        }
+
+        .map-section {
+            text-align: center;
+            color: #1e1e1e;
+            font-family: 'Roboto', sans-serif;
+            padding: 20px;
+        }
+
+        .map-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .map-description {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        /* --- Contenedor del mapa con animación de entrada --- */
+        .map-container {
+            position: relative;
+            padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+            height: 0;
+            max-width: 100%;
+            margin: 0 auto 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            opacity: 0; /* Oculto inicialmente */
+            transform: translateY(80px) scale(0.95);
+            filter: blur(8px);
+            transition: opacity 1s ease-out, transform 1s ease-out, filter 1s ease-out;
+        }
+
+        /* Activación de la animación */
+        .map-container.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+
+        /* --- Estilo del iframe dentro del contenedor del mapa --- */
+        .map-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            border-radius: 8px;
+        }
+
+        /* --- Botón para obtener indicaciones --- */
+        .map-button {
+            background-color: #ff69b4;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            color: white;
+            text-decoration: none;
+        }
+
+        .map-button:hover {
+            background-color: #e357a1;
+        }
+
+
+        /* --- NAVBAR STYLES --- */
+        .navbar {
+            background-color: #081444;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            padding: 10px 0;
+            box-shadow: none;
+        }
+
+        @media (min-width: 768px) {
+            .navbar {
+                min-height: 99px;
+                max-height: 99px;
+            }
+        }
+
+        .fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: #081444;
+        }
+
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-item a {
+            padding: 5px 1rem;
+            margin: 0 -.25rem;
+            font-size: 27px;
+            border: none;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            background-image: linear-gradient(
+                to right,
+                #e089b2,
+                #e089b2 50%,
+                #ffffff 50%
+            );
+            background-size: 200% 100%;
+            background-position: -100%;
+            display: inline-block;
+            position: relative;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .nav-item a:hover {
+            background-position: 0;
+            border-bottom: 3px solid #e089b2;
+        }
+
+
+        .nav-item .icono {
+            color: #ffffff;
+            margin-right: 20px;
+        }
+
+        .login-button {
+            background-color: #ff69b4;
+            transition: background-color 0.3s;
+            color: white;
+            border: none;
+
+        }
+
     </style>
     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
 </head>

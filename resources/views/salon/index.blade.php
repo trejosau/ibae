@@ -1,171 +1,193 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Beauty Salon Carousel</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar Transparente</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        /* Estilo básico para el carrusel */
-        .carousel-item img {
-            width: 100%;
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
+        body {
+            margin: 0;
+            background-color: #ccf3dc; /* Color del body */
+            overflow-x: hidden; /* Evitar scroll horizontal */
         }
 
-        /* Fondo con imagen del slide */
-        .carousel-item {
-            position: relative;
-            background-size: cover;
-            background-position: center;
-        }
-
-        /* Aplicar el blur solo en los bordes usando pseudo-elementos */
-        .carousel-item::before {
-            content: '';
+        .header {
+            background-color: transparent;
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-size: cover;
-            background-position: center;
-            z-index: -1;
-            filter: blur(10px);
+            width: 100%;
+            max-height: 110px;
+            z-index: 1000;
+            transition: background-color 0.3s ease-in-out; /* Transición de color al hacer scroll */
+            animation: slideDown 1s ease-out;
+            margin-bottom: 110px;
         }
 
-        .slide1::before {
-            background-image: url('{{ asset('images/2646156.jpg') }}');
-        }
-
-        .slide2::before {
-            background-image: url('{{ asset('images/7813697.jpg') }}');
-        }
-
-        .slide3::before {
-            background-image: url('{{ asset('images/7216423.jpg') }}');
-        }
-
-        /* Estilos por defecto para pantallas grandes */
-        .carousel-item img {
-            max-height: 500px;
-            min-height: 500px;
-        }
-
-        .carousel-item {
-            filter: grayscale(60%);
-            transition: filter .8s ease;
-        }
-
-        .carousel-item:hover {
-            filter: none;
-        }
-
-        /* Estilo personalizado para el caption */
-        .carousel-caption h5 {
-            font-size: 3rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #f556a3;
-        }
-
-        .carousel-caption p {
-            font-size: 1.5rem;
-        }
-
-        /* Para pantallas medianas (tablets) */
-        @media (max-width: 1024px) {
-            .carousel-item img {
-                max-height: 400px;
-                min-height: 400px;
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
             }
-
-            .carousel-caption h5 {
-                font-size: 2.5rem;
-            }
-
-            .carousel-caption p {
-                font-size: 1.3rem;
+            to {
+                transform: translateY(0);
+                opacity: 1;
             }
         }
 
-        /* Para pantallas pequeñas (móviles) */
-        @media (max-width: 768px) {
-            .carousel-item img {
-                max-height: 300px;
-                min-height: 300px;
-            }
+        .navbar {
+            box-shadow: none;
+            padding: 0;
+        }
 
-            .carousel-caption h5 {
-                font-size: 2rem;
-            }
+        .navbar-nav {
+            display: flex;
+            justify-content: center; /* Centrar los elementos del menú */
+            flex-wrap: wrap;
+            padding: 10px;
+        }
 
-            .carousel-caption p {
-                font-size: 1.1rem;
+        .nav-item {
+            margin: 0 15px; /* Espacio entre los elementos */
+        }
+
+        .nav-link {
+            color: #cd678b; /* Color del texto */
+            transition: color 0.3s, border 0.3s, transform 0.3s; /* Transiciones para el color, borde y transformación */
+            padding: 10px 15px; /* Espacio interior */
+            border: 2px solid transparent; /* Borde transparente inicialmente */
+            border-radius: 50px; /* Borde circular */
+        }
+
+        .nav-link:hover {
+            color: #f4b3c2; /* Color del texto al pasar el mouse */
+            border-color: #f4b3c2; /* Borde al pasar el mouse */
+        }
+
+        .icons {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .icons a {
+            color: #cd678b;
+            margin-left: 15px;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .icons a:hover {
+            color: #f4b3c2;
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .logo {
+            max-width: 100px; /* Ajusta el tamaño máximo según lo necesites */
+            height: auto; /* Mantiene la proporción de la imagen */
+            display: block; /* Se comporta como un bloque */
+            animation: fadeIn 5s ease-in-out; /* Animación de entrada */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
             }
         }
 
-        /* Para pantallas extra pequeñas */
-        @media (max-width: 576px) {
-            .carousel-item img {
-                max-height: 250px;
-                min-height: 250px;
-            }
+        main {
+            padding-top: 120px;
+        }
 
-            .carousel-caption h5 {
-                font-size: 1.8rem;
-            }
+        /* Estilos para la sección de la imagen y texto */
+        .image-section {
+            text-align: left;
+            padding: 50px;
+            position: relative; /* Hacer la posición relativa para la imagen */
+        }
 
-            .carousel-caption p {
-                font-size: 1rem;
-            }
+        .image-section .text-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .image-section h1 {
+            font-size: 48px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .cta-button {
+            background-color: #cd678b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: background-color 0.3s ease-in-out;
+            margin-top: 20px;
+        }
+
+        .cta-button:hover {
+            background-color: #f4b3c2;
+        }
+
+        .image-section img {
+            max-width: 100%;
+            max-height: 600px; /* Establece la altura máxima */
+            height: auto; /* Mantiene la proporción de la imagen */
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Nueva sección con fondo cd678b */
+        .new-section {
+            background-color: #cd678b;
+            padding: 50px 0;
+            color: white;
+            text-align: center;
+            margin-top: -100px; /* Ajustar para que suba detrás de la imagen */
+            position: relative;
+            z-index: 1; /* Colocar debajo de la imagen */
+        }
+
+        .new-section h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .new-section p {
+            font-size: 18px;
         }
     </style>
 </head>
-
 <body>
-@include('components.navbar')
-<div id="carouselExampleDark" class="carousel carousel-dark slide carousel-fade mt-0" data-bs-ride="carousel" data-bs-interval="5000">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active"
-                aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
-    </div>
-    <div class="carousel-inner">
-        <div class="carousel-item active slide1" data-bs-interval="10000">
-            <a href="https://www.example.com/">
-                <img src="{{ asset('images/2646156.jpg') }}" class="d-block w-100" alt="Slide 1">
-            </a>
-            <div class="carousel-caption d-none d-md-block text-light">
-                <h5>Mensaje publicitario</h5>
-                <p>Professional treatments to enhance your natural beauty.</p>
-            </div>
-        </div>
-        <div class="carousel-item slide2">
-            <a href="https://www.example.com/">
-                <img src="{{ asset('images/7813697.jpg') }}" class="d-block w-100" alt="Slide 2">
-            </a>
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Relax & Rejuvenate</h5>
-                <p>Experience the luxury of a personalized beauty session.</p>
-            </div>
-        </div>
-        <div class="carousel-item slide3">
-            <a href="https://www.example.com/">
-                <img src="{{ asset('images/7216423.jpg') }}" class="d-block w-100" alt="Slide 3">
-            </a>
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Your Glow, Our Priority</h5>
-                <p>Expert care for your skin, hair, and wellness needs.</p>
-            </div>
-        </div>
-    </div>
-</div>
+@include('components.navbarSalon')
 
-<!-- Bootstrap JS Bundle with Popper -->
+<main class="container-fluid">
+    <div class="row image-section">
+        <div class="col-md-3"></div> <!-- Primera columna vacía -->
+        <div class="col-md-5 text-content">
+            <span class="birthstone-regular" style="font-size: 2rem; color: #d99db7;">Rosy Saucedo Salon</span>
+            <h1 class="quintessential-regular">Transforma tu look con nosotros</h1>
+            <button class="cta-button">Agenda tu cita ahora</button>
+        </div>
+        <div class="col-md-3">
+            <img src="https://romanamx.com/cdn/shop/products/BeautyCreations-CORRECTORCOBERTURACOMPLETAC02BC_6.jpg?v=1647617968" alt="Imagen de salón"
+                 style="border: 10px solid white; padding: 0; margin: 0;">
+        </div>
+        <div class="col-md-1"></div> <!-- Última columna vacía -->
+    </div>
+
+    <div class="row new-section">
+        <div class="col-12">
+            <h2>Nuestros Servicios</h2>
+            <p>Ofrecemos una variedad de servicios para cuidar de tu belleza y bienestar.</p>
+        </div>
+    </div>
+</main>
 </body>
-
 </html>
