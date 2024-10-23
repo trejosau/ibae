@@ -381,9 +381,9 @@ text-align: center;
             <div class="card mb-4">
                 <img src="{{ $producto->imagen }}" class="card-img-top" alt="{{ $producto->nombre }}">
                 <div class="card-body">
-                    <h5 class="card-title">{{ $producto->nombre }}</h5>
-                    <p class="card-text">{{ $producto->descripcion }}</p>
-                    <p class="card-text"><strong>Precio:</strong> ${{ $producto->precio_venta }}</p>
+                    <h5 class="card-title fw-bold pb-3">{{ $producto->nombre }}</h5>
+                    <p class="card-text pb-3">{{ $producto->descripcion }}</p>
+                    <p class="card-text  pb-3"><strong>Precio:</strong> <strong>${{ $producto->precio_venta }}</strong></p>
                     <a href="#" class="btn btn-primary">Ver más</a>
                 </div>
             </div>
