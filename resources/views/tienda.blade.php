@@ -214,115 +214,6 @@ text-align: center;
 </style>
 
 @include('components.navbarTienda')
-<!-- Modern navigation with mega menu -->
-<div class="accordion" id="categoryAccordion">
-    <nav class="navegacion">
-        <div class="navegacion-item">
-            <a href="#">Tintes</a>
-            <div class="mega-menu mega-menu1 clearfix">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <h3>TINTES</h3>
-                            <a href="#">Tintes Permanentes</a>
-                            <a href="#">Tintes temporales y fantasía</a>
-                            <a href="#">Peróxido, decolorantes y aditivos</a>
-                            <a href="#">Accesorios para teñir</a>
-                            <a href="#">Cobertura de canas</a>
-                            <a href="#">Depositadores de color</a>
-                        </div>
-                        <div class="col-md-3">
-                            <h3>Productos Relacionados</h3>
-                            <a href="#">Shampoo para tintes</a>
-                            <a href="#">Acondicionadores</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="navegacion-item">
-            <a href="#">Cabello</a>
-            <div class="mega-menu mega-menu2 clearfix">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <h3>CABELLO</h3>
-                            <a href="#">Shampoo y acondicionador</a>
-                            <a href="#">Tratamientos capilares</a>
-                            <a href="#">Mascarillas para el cabello</a>
-                            <a href="#">Sérum y aceites</a>
-                            <a href="#">Cepillos y peines</a>
-                        </div>
-                        <div class="col-md-3">
-                            <h3>Accesorios</h3>
-                            <a href="#">Secadoras de cabello</a>
-                            <a href="#">Planchas</a>
-                            <a href="#">Rizadores</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="navegacion-item">
-            <a href="#">Barbería</a>
-            <div class="mega-menu mega-menu3 clearfix">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <h3>BARBERÍA</h3>
-                            <a href="#">Cortes</a>
-                            <a href="#">Rasuradoras</a>
-                            <a href="#">Cremas y lociones</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="navegacion-item">
-            <a href="#">Maquillaje</a>
-            <div class="mega-menu mega-menu4 clearfix">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <h3>ROSTRO</h3>
-                            <a href="#">Bases</a>
-                            <a href="#">Correctores</a>
-                            <a href="#">Paletas de maquillaje</a>
-                            <a href="#">Iluminadores</a>
-                            <a href="#">Polvos</a>
-                            <a href="#">Rubores & Bronceadores</a>
-                        </div>
-                        <div class="col-md-3">
-                            <h3>LABIOS</h3>
-                            <a href="#">Delineadores</a>
-                            <a href="#">Lápiz labial</a>
-                            <a href="#">Brillo Labial</a>
-                            <a href="#">Bálsamo Labial</a>
-                        </div>
-                        <div class="col-md-3">
-                            <h3>OJOS</h3>
-                            <a href="#">Paletas de maquillaje</a>
-                            <a href="#">Delineadores</a>
-                            <a href="#">Cejas</a>
-                            <a href="#">Pestañas postizas</a>
-                        </div>
-                        <div class="col-md-3">
-                            <h3>ACCESORIOS</h3>
-                            <a href="#">Brochas y aplicadores</a>
-                            <a href="#">Cosmetiqueras</a>
-                            <a href="#">Organizadores</a>
-                            <a href="#">Espejos</a>
-                            <a href="#">Herramientas y accesorios</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-</div>
 
 
 <div class="container-fluid ps-0 pe-0">
@@ -373,8 +264,31 @@ text-align: center;
 </div>
 
 
-<h1 class=" tittle p-5 fs-5" >TODOS LOS PRODUCTOS</h1>
+<h1 class=" tittle p-5 fs-5 fw-bold" >TODOS LOS PRODUCTOS</h1>
 <div class="container">
+    <form id="filterForm" method="GET" action="{{ route('productos.filtrar') }}">
+        <div>
+            <label for="categoria">Categoría:</label>
+            <select id="categoria" name="categoria">
+                <option value="">Todas</option>
+                <option value="tintes">Tintes</option>
+                <option value="cabello">Cabello</option>
+                <option value="barberia">Barbería</option>
+                <option value="maquillaje">Maquillaje</option>
+            </select>
+        </div>
+        <div>
+            <label for="precio_min">Precio mínimo:</label>
+            <input type="number" id="precio_min" name="precio_min" min="0">
+        </div>
+        <div>
+            <label for="precio_max">Precio máximo:</label>
+            <input type="number" id="precio_max" name="precio_max" min="0">
+        </div>
+        <button type="submit">Filtrar</button>
+    </form>
+    
+
     <div class="row">
         @foreach ($productos as $producto)
         <div class="col-md-4">
