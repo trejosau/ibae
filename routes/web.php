@@ -56,7 +56,7 @@ Route::get('/tienda', function () {
     return view('tienda');
 })->name('tienda');
 Route::get('/tienda', [ProductosController::class, 'index']);
-Route::get('/tienda', [ProductosController::class, 'filtrar'])->name('productos.filtrar');
+Route::post('/tienda', [ProductosController::class, 'filtrar'])->name('productos.filtrar');
 
 
 Route::get('auth/google', [loginGoogleController::class, 'redirectToGoogle'])->name('login.google');
