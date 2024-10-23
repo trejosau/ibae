@@ -2,11 +2,14 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
 @import '@fortawesome/fontawesome-free/css/all.css';
+@import 'leaflet/dist/leaflet.css';
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 @import 'lineicons/web-font/lineicons.css';
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Quintessential&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Birthstone&family=League+Script&family=Playfair+Display:ital,wght@0,700;1,700&family=Quintessential&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Birthstone&family=Gamja+Flower&family=Gowun+Dodum&family=League+Script&family=Playfair+Display:ital,wght@0,700;1,700&family=Quintessential&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
 
 html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,abbr,address,cite,code,del,dfn,em,img,ins,kbd,q,samp,small,strong,sub,sup,var,b,i,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,figcaption,figure,footer,header,hgroup,menu,nav,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}
 body{line-height:1}
@@ -66,6 +69,118 @@ a {
     font-family: "Birthstone", cursive;
     font-weight: 400;
     font-style: normal;
+}
+.gowun-dodum-regular {
+    font-family: "Gowun Dodum", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+.be-vietnam-pro-thin {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+}
+
+.be-vietnam-pro-extralight {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 200;
+    font-style: normal;
+}
+
+.be-vietnam-pro-light {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.be-vietnam-pro-regular {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.be-vietnam-pro-medium {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.be-vietnam-pro-semibold {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.be-vietnam-pro-bold {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.be-vietnam-pro-extrabold {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 800;
+    font-style: normal;
+}
+
+.be-vietnam-pro-black {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 900;
+    font-style: normal;
+}
+
+.be-vietnam-pro-thin-italic {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 100;
+    font-style: italic;
+}
+
+.be-vietnam-pro-extralight-italic {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 200;
+    font-style: italic;
+}
+
+.be-vietnam-pro-light-italic {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 300;
+    font-style: italic;
+}
+
+.be-vietnam-pro-regular-italic {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.be-vietnam-pro-medium-italic {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.be-vietnam-pro-semibold-italic {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.be-vietnam-pro-bold-italic {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.be-vietnam-pro-extrabold-italic {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 800;
+    font-style: italic;
+}
+
+.be-vietnam-pro-black-italic {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 900;
+    font-style: italic;
 }
 
 

@@ -24,6 +24,7 @@
     "express": "^4.21.1",
     "jquery": "^3.7.1",
     "jquery-ui": "^1.14.0",
+    "leaflet": "^1.9.4",
     "lineicons": "^1.0.3",
     "mdb-ui-kit": "^8.0.0",
     "puppeteer": "^23.6.0",
