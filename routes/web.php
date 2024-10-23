@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\loginGoogleController;
 use App\Http\Controllers\PlataformaController;
+use App\Http\Controllers\ProductosController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -54,6 +55,7 @@ Route::get('/salon', function () {
 Route::get('/tienda', function () {
     return view('tienda');
 })->name('tienda');
+Route::get('/tienda', [ProductosController::class, 'index']);
 
 Route::get('auth/google', [loginGoogleController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleCallback'])->name('login.google.callback');

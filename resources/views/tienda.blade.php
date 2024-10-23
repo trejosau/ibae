@@ -373,6 +373,25 @@ text-align: center;
 </div>
 
 
+<h1 class=" tittle p-5 fs-5" >TODOS LOS PRODUCTOS</h1>
+<div class="container">
+    <div class="row">
+        @foreach ($productos as $producto)
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <img src="{{ $producto->imagen }}" class="card-img-top" alt="{{ $producto->nombre }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ $producto->nombre }}</h5>
+                    <p class="card-text">{{ $producto->descripcion }}</p>
+                    <p class="card-text"><strong>Precio:</strong> ${{ $producto->precio_venta }}</p>
+                    <a href="#" class="btn btn-primary">Ver más</a>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
+
 </body>
 </html>
 
