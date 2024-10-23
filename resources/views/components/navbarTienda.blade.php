@@ -136,7 +136,7 @@
 
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="#">TuLogo</a>
+        <a class="navbar-brand" href="/">TuLogo</a>
         <div class="form-inline">
             <input type="text" placeholder="Buscar productos...">
             <button type="button">Buscar</button>

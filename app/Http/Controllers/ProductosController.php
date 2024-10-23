@@ -14,24 +14,29 @@ class ProductosController extends Controller
     }
 
     public function filtrar(Request $request)
-    {
-        $query = Productos::query(); // Asegúrate de que el modelo sea el correcto
-    
-        if ($request->filled('categoria')) {
-            $query->where('categoria', $request->categoria);
-        }
-    
-        if ($request->filled('precio_min')) {
-            $query->where('precio', '>=', $request->precio_min);
-        }
-    
-        if ($request->filled('precio_max')) {
-            $query->where('precio', '<=', $request->precio_max);
-        }
-    
-        $productos = $query->get();
-    
-        return view('tienda', compact('productos')); // Cambiado a 'tienda'
+{
+    $query = Productos::query();
+
+    // Filtrar por id_categoria si se selecciona una categoría
+    if ($request->filled('id_categoria')) {
+        $query->where('id_categoria', $request->id_categoria);
     }
+
+    // Filtrar por precio mínimo si está establecido
+    if ($request->filled('precio_min')) {
+        $query->where('precio_venta', '>=', $request->precio_min);
+    }
+
+    // Filtrar por precio máximo si está establecido
+    if ($request->filled('precio_max')) {
+        $query->where('precio_venta', '<=', $request->precio_max);
+    }
+
+    // Obtener los productos filtrados
+    $productos = $query->get();
+
+    return view('tienda', compact('productos'));
+}
+
     
 }

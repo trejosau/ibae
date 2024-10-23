@@ -12,7 +12,9 @@
 
 
 <style>
-
+.contenedor-imagen{
+    padding-top: 120px;
+}
         .contenedor{
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -216,7 +218,7 @@ text-align: center;
 @include('components.navbarTienda')
 
 
-<div class="container-fluid ps-0 pe-0">
+<div class="contenedor-imagen container-fluid ps-0 pe-0">
     <div class="row g-0">
         <div class="col-lg-8 col-12 px-1"> <!-- Usamos padding en lugar de margen -->
             <img src="{{asset('images/BANNER1.jpg')}}" alt="Banner 1" class="img-fluid banner border-top-right border-bottom-right">
@@ -266,27 +268,41 @@ text-align: center;
 
 <h1 class=" tittle p-5 fs-5 fw-bold" >TODOS LOS PRODUCTOS</h1>
 <div class="container">
-    <form id="filterForm" method="GET" action="{{ route('productos.filtrar') }}">
-        <div>
-            <label for="categoria">Categoría:</label>
-            <select id="categoria" name="categoria">
-                <option value="">Todas</option>
-                <option value="tintes">Tintes</option>
-                <option value="cabello">Cabello</option>
-                <option value="barberia">Barbería</option>
-                <option value="maquillaje">Maquillaje</option>
-            </select>
+    <form id="filterForm" method="GET" action="{{ route('productos.filtrar') }}" class="p-3">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="id_categoria" class="form-label">Categoría:</label>
+                <select id="id_categoria" name="id_categoria" class="form-select">
+                    <option value="">Todas</option>
+                    <option value="1">Tintes</option>
+                    <option value="2">Cabello</option>
+                    <option value="3">Barbería</option>
+                    <option value="4">Maquillaje</option>
+                </select>
+            </div>
         </div>
-        <div>
-            <label for="precio_min">Precio mínimo:</label>
-            <input type="number" id="precio_min" name="precio_min" min="0">
+    
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="precio_min" class="form-label">Precio mínimo:</label>
+                <input type="number" id="precio_min" name="precio_min" min="0" class="form-control">
+            </div>
+    
+            <div class="col-md-6">
+                <label for="precio_max" class="form-label">Precio máximo:</label>
+                <input type="number" id="precio_max" name="precio_max" min="0" class="form-control">
+            </div>
         </div>
-        <div>
-            <label for="precio_max">Precio máximo:</label>
-            <input type="number" id="precio_max" name="precio_max" min="0">
+    
+        <div class="row">
+            <div class="col-md-12 text-end">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </div>
         </div>
-        <button type="submit">Filtrar</button>
     </form>
+    
+    
+    
     
 
     <div class="row">
@@ -305,6 +321,9 @@ text-align: center;
         @endforeach
     </div>
 </div>
+
+
+@include('components.footer')
 
 </body>
 </html>
