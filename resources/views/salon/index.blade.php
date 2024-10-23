@@ -8,7 +8,7 @@
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
     />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/css/lightbox.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body {
@@ -138,7 +138,7 @@
         }
 
         /* Nueva sección con fondo cd678b */
-        .new-section {
+        .services-section {
             background-color: #ffecec;
             padding: 50px 0;
             color: white;
@@ -148,12 +148,12 @@
             z-index: 1; /* Colocar debajo de la imagen */
         }
 
-        .new-section h2 {
+        .services-section h2 {
             font-size: 36px;
             margin-bottom: 20px;
         }
 
-        .new-section p {
+        .services-section p {
             font-size: 18px;
         }
 
@@ -161,6 +161,19 @@
         .swiper {
             width: 100%;
             padding: 30px 0;
+        }
+        .label {
+            position: absolute;
+            bottom: 10px; /* Ajusta la distancia desde la parte inferior */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5rem; /* Tamaño de texto */
+            color: #cd678b; /* Color de texto */
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 5px 10px; /* Espaciado interno */
+            border-radius: 5px; /* Bordes redondeados */
+            text-align: center; /* Centrar texto */
+            font-family: 'Quintessential', serif; /* Fuente personalizada */
         }
 
         .swiper-slide {
@@ -203,6 +216,65 @@
             font-size: 0.9rem;
             color: #666;
         }
+
+        .photo-gallery {
+            padding: 50px 0;
+        }
+
+        .photo-gallery h2 {
+            margin-bottom: 30px;
+            font-size: 26px;
+            text-align: center;
+            color: #333;
+        }
+
+        .photo-gallery .photos {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .photo-gallery .item {
+            padding: 15px;
+        }
+
+        .photo-gallery figure {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            object-fit: cover;
+            aspect-ratio: 1 / 1; /* Mantener proporción 1:1 */
+            display: block;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Efecto de brillo (shine) */
+        .photo-gallery figure::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -75%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 100%);
+            transform: skewX(-25deg);
+            transition: left 0.75s ease-in-out;
+            z-index: 1;
+        }
+
+        .photo-gallery figure:hover::before {
+            left: 125%;
+        }
+
+        /* Efecto hover en la imagen */
+        .photo-gallery figure:hover img {
+            transform: scale(1.05);
+            z-index: 2;
+        }
     </style>
 </head>
 <body>
@@ -223,7 +295,7 @@
         <div class="col-md-1"></div> <!-- Última columna vacía -->
     </div>
 
-    <div class="row new-section">
+    <div class="row services-section">
         <div class="col-12">
             <span class="birthstone-regular" style="font-size: 2rem; color: #cd678b;">Nuestros servicios</span>
 
@@ -231,22 +303,65 @@
             <div class="swiper mySwiperServicios">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">
-                        <img src="https://images.hdqwalls.com/download/minimal-landscape-sunrise-4k-jy-1080x1920.jpg" alt="Paisaje minimalista">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZfN67YRDY3wQjcDxj-GJv3hRGwgTnbKlKpw&s" alt="Paisaje minimalista">
+                        <div class="label">Mechas</div>
                     </div>
                     <div class="swiper-slide">
-                        <img src="https://images.hdqwalls.com/download/spiderman-red-suit-minimal-4k-xc-1080x1920.jpg" alt="Spiderman traje rojo">
+                        <img src="https://media.glamour.mx/photos/61908f022d97bd4c522ab7e2/master/w_1600%2Cc_limit/195052.jpg" alt="Spiderman traje rojo">
+                        <div class="label">Manicura</div>
                     </div>
                     <div class="swiper-slide">
-                        <img src="https://images.hdqwalls.com/download/exploring-the-world-spiderman-2099-h8-1080x1920.jpg" alt="Spiderman 2099">
+                        <img src="https://www.olgacamargo.com/wp-content/uploads/2019/03/taninoplastia-con-keratina-olga-camargo-21-antes-y-despu%C3%A9s.jpg" alt="Spiderman 2099">
+                        <div class="label">Alisados</div>
                     </div>
                     <div class="swiper-slide">
-                        <img src="https://images.hdqwalls.com/download/marvels-spider-man-2-game-5k-4b-1080x1920.jpg" alt="Spider-Man 2">
+                        <img src="https://popcosmeticsmx.com/cdn/shop/articles/Diseno_sin_titulo_43.png?v=1642804459" alt="Spider-Man 2">
+                        <div class="label">Pestañas</div>
                     </div>
                     <div class="swiper-slide">
-                        <img src="https://images.hdqwalls.com/download/venom-unleashed-marvels-spider-man-2-fw-1080x1920.jpg" alt="Venom Spider-Man 2">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8yvgKZ0zKzisJPGvAs0aHcjyV7I3THU3jxw&s" alt="Venom Spider-Man 2">
+                        <div class="label">Cejas</div>
                     </div>
                 </div>
                 <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="photo-gallery">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center">Nuestras instalaciones</h2>
+            </div>
+            <div class="row photos">
+                <div class="col-sm-6 col-md-4 col-lg-3 item">
+                    <a href="https://peakbusinessvaluation.com/wp-content/uploads/Business-Valuation-for-Buying-a-Hair-and-Nail-Salon.jpg" data-lightbox="photos">
+                        <figure>
+                            <img class="img-fluid" src="https://peakbusinessvaluation.com/wp-content/uploads/Business-Valuation-for-Buying-a-Hair-and-Nail-Salon.jpg" alt="Salón 1">
+                        </figure>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 item">
+                    <a href="https://www.daysmart.com/salon/wp-content/uploads/sites/2/2023/09/fetaure-beauty-bar.jpg" data-lightbox="photos">
+                        <figure>
+                            <img class="img-fluid" src="https://www.daysmart.com/salon/wp-content/uploads/sites/2/2023/09/fetaure-beauty-bar.jpg" alt="Salón 2">
+                        </figure>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 item">
+                    <a href="https://5.imimg.com/data5/SELLER/Default/2021/1/KU/WP/HK/121167792/beauty-palour-interior-500x500.jpg" data-lightbox="photos">
+                        <figure>
+                            <img class="img-fluid" src="https://5.imimg.com/data5/SELLER/Default/2021/1/KU/WP/HK/121167792/beauty-palour-interior-500x500.jpg" alt="Salón 3">
+                        </figure>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 item">
+                    <a href="https://img.freepik.com/premium-photo/elegant-modern-beauty-salon_456977-1626.jpg" data-lightbox="photos">
+                        <figure>
+                            <img class="img-fluid" src="https://img.freepik.com/premium-photo/elegant-modern-beauty-salon_456977-1626.jpg" alt="Salón 4">
+                        </figure>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -256,9 +371,9 @@
                 <!-- Columna de Imagen -->
                 <div class="col-6">
                     <img
-                        src="https://images.hdqwalls.com/download/spiderman-red-suit-minimal-4k-xc-1080x1920.jpg"
-                        alt="Spiderman traje rojo"
-                        class="img-fluid w-100 h-100 object-fit-cover"
+                        src="{{asset('images/logo-salon.jpg')}}"
+                        alt="Rosy Saucedo Salon"
+                        class="img-fluid w-100 h-100 object-fit-cover about-image"
                         style="max-height: 500px;">
                 </div>
 
@@ -268,10 +383,10 @@
           Sobre Rosy Saucedo Salon
         </span>
                     <p class="fs-4 pb-2 gowun-dodum-regular">
-                        Este es el lugar ideal para transformar tu estilo y resaltar tu belleza única.
+                        Este es el lugar ideal para transformar tu estilo.
                     </p>
                     <p class="fs-5 pb-4 gowun-dodum-regular ">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem eius deleniti recusandae ipsa, quam pariatur optio deserunt tenetur tempore at veritatis dolor dolore, repudiandae laborum aperiam blanditiis.
+                        Abrimos de Lunes a Sabado de 10:00am a 8:00pm. Nos encantará conocerte y disfrutar de nuestra experiencia.
                     </p>
                     <div class="d-flex align-items-center gap-3 be-vietnam-pro-semibold">
                         <div
@@ -283,7 +398,7 @@
                             <div
                                 class="fs-6 text-muted"
                                 style="font-size: 1rem; margin-bottom: 10px;">
-                                Call us now!
+                                Llamanos!
                             </div>
                             <div
                                 class="phone-number"
@@ -298,52 +413,6 @@
             </div>
         </div>
     </div>
-    <div class="row" style="position: relative; height: 540px;">
-        <!-- Mapa de Google embebido -->
-        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d225.01693992381237!2d-103.2288307!3d25.5293471!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x868fc12cfd56e333%3A0x921f869f5ff67324!2sAv.%20V.%20Carranza%202-altos%2C%20Centro%2C%2027440%20Matamoros%2C%20Coah.!5e0!3m2!1ses!2smx!4v1729703356765!5m2!1ses!2smx" width="600" height="540" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        <!-- Imagen PNG superpuesta -->
-        <div class="col-12"
-             style="
-         position: absolute;
-         top: 0;
-         right: 0;
-         height: 540px;
-         background-image: url('{{asset('images/beauty-png.png')}}');
-         background-size: contain;
-         background-repeat: no-repeat;
-         background-position: right;
-         width: 100%;
-         z-index: 1;
-         pointer-events: none;">
-        </div>
-    </div>
-    <div class="container py-4">
-        <div class="row text-center">
-            <div class="col-md-4">
-                <div class="mb-2">
-                    <i class="bi bi-geo-alt-fill contact-icon" style="background-color: #82c99b; padding: 7px;  border-radius: 50%; "></i>
-                </div>
-                <h5>Address</h5>
-                <p>Matamoros Coahuila <br> Av. Carranza Altos #2</p>
-            </div>
-            <div class="col-md-4">
-                <div class="mb-2">
-                    <i class="bi bi-telephone-fill contact-icon" style="background-color: #82c99b; padding: 7px;  border-radius: 50%; "></i>
-                </div>
-                <h5>Phone</h5>
-                <p>+52 (871) 234 56 78</p>
-            </div>
-            <div class="col-md-4">
-                <div class="mb-2">
-                    <i class="bi bi-envelope-fill contact-icon"style="background-color: #82c99b; padding: 7px;  border-radius: 50%; "></i>
-                </div>
-                <h5>Email</h5>
-                <p>ibae@gmail.com</p>
-            </div>
-        </div>
-
-    </div>
-    <!-- Aquí va el carrusel de referencias -->
     <div class="swiper mySwiperReferencias">
         <div class="swiper-wrapper">
             <!-- Slide 1 -->
@@ -351,7 +420,7 @@
                 <div class="card p-3" style="border-radius: 10px;">
                     <div class="row mb-3">
                         <div class="col-6 text-center">
-                            <img src="https://via.placeholder.com/150" alt="Cliente 1" style="border-radius: 75px; border: 3px solid #f4b3c2; display: block; margin: 0 auto;">
+                            <img src="https://th.bing.com/th/id/R.0923cb9d753205e4932b1d58fde3199a?rik=WvJvTwSyoxfJbQ&pid=ImgRaw&r=0" alt="Cliente 1" style="border-radius: 75px; border: 3px solid #f4b3c2; display: block; margin: 0 auto;">
                             <h5 class="text-primary" style="color: #cd678b;">Cliente 1</h5>
                         </div>
                         <div class="col-6">
@@ -377,7 +446,7 @@
                 <div class="card p-3" style="border-radius: 10px;">
                     <div class="row mb-3">
                         <div class="col-6 text-center">
-                            <img src="https://via.placeholder.com/150" alt="Cliente 2" style="border-radius: 75px; border: 3px solid #f4b3c2; display: block; margin: 0 auto;">
+                            <img src="https://th.bing.com/th/id/R.066b97a1ee609c9a0a332e9f5ab17370?rik=NG90vvPJE4BRWg&riu=http%3a%2f%2fhdqwalls.com%2fdownload%2f1%2fgorgeous-model-portrait-kr.jpg&ehk=i6ckM7pTAhYr2l96Ftt37YJtvZMR0qbzMZJVuV6OxWc%3d&risl=&pid=ImgRaw&r=0" alt="Cliente 2" style="border-radius: 75px; border: 3px solid #f4b3c2; display: block; margin: 0 auto;">
                             <h5 class="text-primary" style="color: #cd678b;">Cliente 2</h5>
                         </div>
                         <div class="col-6">
@@ -402,7 +471,7 @@
                 <div class="card p-3" style="border-radius: 10px;">
                     <div class="row mb-3">
                         <div class="col-6 text-center">
-                            <img src="https://via.placeholder.com/150" alt="Cliente 3" style="border-radius: 75px; border: 3px solid #f4b3c2; display: block; margin: 0 auto;">
+                            <img src="https://c.wallhere.com/photos/84/21/portrait_women_model_face_Nikolas_Verano-1461367.jpg!d" alt="Cliente 3" style="border-radius: 75px; border: 3px solid #f4b3c2; display: block; margin: 0 auto;">
                             <h5 class="text-primary" style="color: #cd678b;">Cliente 3</h5>
                         </div>
                         <div class="col-6">
@@ -427,7 +496,7 @@
                 <div class="card p-3" style="border-radius: 10px;">
                     <div class="row mb-3">
                         <div class="col-6 text-center">
-                            <img src="https://via.placeholder.com/150" alt="Cliente 4" style="border-radius: 75px; border: 3px solid #f4b3c2; display: block; margin: 0 auto;">
+                            <img src="https://th.bing.com/th/id/R.0830e5202e7be47ba5478bd182ec3afc?rik=%2bjJZJO0Ijhcv0w&pid=ImgRaw&r=0" alt="Cliente 4" style="border-radius: 75px; border: 3px solid #f4b3c2; display: block; margin: 0 auto;">
                             <h5 class="text-primary" style="color: #cd678b;">Cliente 4</h5>
                         </div>
                         <div class="col-6">
@@ -452,7 +521,7 @@
                 <div class="card p-3" style="border-radius: 10px;">
                     <div class="row mb-3">
                         <div class="col-6 text-center">
-                            <img src="https://via.placeholder.com/150" alt="Cliente 5" style="border-radius: 75px; border: 3px solid #f4b3c2; display: block; margin: 0 auto;">
+                            <img src="https://londonfem.com/wp-content/uploads/2016/06/secretos-de-belleza-londonfem.jpg" alt="Cliente 5" style="border-radius: 75px; border: 3px solid #f4b3c2; display: block; margin: 0 auto;">
                             <h5 class="text-primary" style="color: #cd678b;">Cliente 5</h5>
                         </div>
                         <div class="col-6">
@@ -477,24 +546,51 @@
         <div class="swiper-button-next"></div>
         <div class="swiper-button-prev"></div>
     </div>
+    <div class="row" style="position: relative; height: 540px;">
+        <!-- Mapa de Google embebido -->
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d225.01693992381237!2d-103.2288307!3d25.5293471!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x868fc12cfd56e333%3A0x921f869f5ff67324!2sAv.%20V.%20Carranza%202-altos%2C%20Centro%2C%2027440%20Matamoros%2C%20Coah.!5e0!3m2!1ses!2smx!4v1729703356765!5m2!1ses!2smx" width="600" height="540" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <!-- Imagen PNG superpuesta -->
+        <div class="col-12"
+             style="
+         position: absolute;
+         top: 0;
+         right: 0;
+         height: 540px;
+         background-image: url('{{asset('images/beauty-png.png')}}');
+         background-size: contain;
+         background-repeat: no-repeat;
+         background-position: right;
+         width: 100%;
+         z-index: 1;
+         pointer-events: none;">
+        </div>
+    </div>
+    <div class="container py-4 be-vietnam-pro-semibold">
+        <div class="row text-center">
+            <div class="col-md-4 ">
+                <div class="mb-2">
+                    <i class="bi bi-geo-alt-fill contact-icon" style="background-color: #82c99b; padding: 7px;  border-radius: 50%; "></i>
+                </div>
+                <h5>Dirección</h5>
+                <p class="gowun-dodum-regular">Matamoros Coahuila <br> Av. Carranza Altos #2</p>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-2">
+                    <i class="bi bi-telephone-fill contact-icon" style="background-color: #82c99b; padding: 7px;  border-radius: 50%; "></i>
+                </div>
+                <h5>Telefono</h5>
+                <p class="gowun-dodum-regular">+52 (871) 234 56 78</p>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-2">
+                    <i class="bi bi-envelope-fill contact-icon"style="background-color: #82c99b; padding: 7px;  border-radius: 50%; "></i>
+                </div>
+                <h5>Correo</h5>
+                <p class="gowun-dodum-regular">ibae@gmail.com</p>
+            </div>
+        </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </div>
 
 </main>
 
@@ -529,7 +625,7 @@
         },
     });
 </script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
 
 </body>
 </html>
