@@ -142,7 +142,7 @@
             <button type="button">Buscar</button>
         </div>
         <div class="nav-icons">
-            <a href="#">Iniciar Sesión</a>
+            <a href="/login">Iniciar Sesión</a>
             <a href="#">
                 <span>$0.00</span> <i class="fas fa-shopping-cart"></i>
                 <span class="badge">0</span>

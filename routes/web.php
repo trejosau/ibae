@@ -58,6 +58,10 @@ Route::get('/tienda', function () {
 Route::get('/tienda', [ProductosController::class, 'index']);
 Route::post('/tienda', [ProductosController::class, 'filtrar'])->name('productos.filtrar');
 
+Route::get('/cursos', function () {
+    return view('cursos');
+})->name('cursos');
+
 
 Route::get('auth/google', [loginGoogleController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleCallback'])->name('login.google.callback');

@@ -43,7 +43,7 @@
                         <a class="nav-link roboto-medium" href="/tienda">Tienda</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="/about-us">Sobre Nosotros</a>
+                        <a class="nav-link roboto-medium" href="/cursos">Cursos</a>
                     </li>
 
                 </ul>
