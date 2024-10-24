@@ -29,6 +29,13 @@
         text-align: center;
         position: relative;
     }
+    .card-img-top {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    width: 100%; /* Añadido para que ocupe el ancho completo */
+    height: auto;
+}
+
 
     .hero-overlay {
         position: absolute;
@@ -143,43 +150,43 @@
 
 
 <div class="container mt-5" id="courses">
-    <h2 class="text-center mb-4 reveal">Nuestros Cursos</h2>
+    <h2 class="text-center mb-4 reveal fw-bold fs-5 pt-5">Nuestros Cursos</h2>
     <div class="row">
         <div class="col-md-4 reveal">
             <div class="card mb-4">
-                <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="Curso de Maquillaje">
+                <img src="{{asset('images/client-doing-hair-cut-barber-shop-salon.jpg')}}" class="card-img-top" alt="Curso de Maquillaje">
                 <div class="card-body">
-                    <h5 class="card-title">Curso de Maquillaje Profesional</h5>
-                    <p class="card-text">Técnicas avanzadas de maquillaje con prácticas en modelos reales.</p>
-                    <p><i class="fas fa-clock icon-style"></i>3 meses</p>
-                    <p><i class="fas fa-dollar-sign icon-style"></i>$500 USD</p>
-                    <a href="#" class="btn btn-primary">Inscribirse</a>
+                    <h5 class="card-title pb-3">Cursos de Barberia</h5>
+                    <p class="card-text pb-3">Técnicas avanzadas de maquillaje con prácticas en modelos reales.</p>
+                    <p><i class="fas fa-clock icon-style pb-3"></i>3 meses</p>
+                    <p><i class="fas fa-dollar-sign icon-style pb-3"></i>$500 USD</p>
+                    <a href="#" class="btn btn-primary pb-3">Inscribirse</a>
                 </div>
             </div>
         </div>
         <!-- Curso 2 -->
         <div class="col-md-4 reveal">
             <div class="card mb-4">
-                <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="Curso de Estilismo">
+                <img src="{{asset('images/make-up-artist-wearing-medical-mask-reflection-mirror.jpg')}}" class="card-img-top alt="Curso de Estilismo">
                 <div class="card-body">
-                    <h5 class="card-title">Curso de Estilismo y Peluquería</h5>
-                    <p class="card-text">Conviértete en un experto estilista, cortes y peinados profesionales.</p>
-                    <p><i class="fas fa-clock icon-style"></i>6 meses</p>
-                    <p><i class="fas fa-dollar-sign icon-style"></i>$800 USD</p>
-                    <a href="#" class="btn btn-primary">Inscribirse</a>
+                    <h5 class="card-title pb-3">Curso de Uñas, Maquillaje y Peinado</h5>
+                    <p class="card-text pb-3">Conviértete en un experto estilista, cortes y peinados profesionales.</p>
+                    <p><i class="fas fa-clock icon-style pb-3"></i>6 meses</p>
+                    <p><i class="fas fa-dollar-sign icon-style pb-3"></i>$800 USD</p>
+                    <a href="#" class="btn btn-primary pb-3">Inscribirse</a>
                 </div>
             </div>
         </div>
         <!-- Curso 3 -->
         <div class="col-md-4 reveal">
             <div class="card mb-4">
-                <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="Curso de Uñas">
+                <img src="{{asset('images/side-view-woman-hair-salon.jpg')}}" class="card-img-top" alt="Curso de Uñas">
                 <div class="card-body">
-                    <h5 class="card-title">Curso de Uñas Esculpidas</h5>
-                    <p class="card-text">Domina técnicas de aplicación de uñas esculpidas, gel y acrílico.</p>
-                    <p><i class="fas fa-clock icon-style"></i>2 meses</p>
-                    <p><i class="fas fa-dollar-sign icon-style"></i>$300 USD</p>
-                    <a href="#" class="btn btn-primary">Inscribirse</a>
+                    <h5 class="card-title pb-3">Carrera de Estilismo y Diseño de Imagen</h5>
+                    <p class="card-text pb-3">Domina técnicas de aplicación de uñas esculpidas, gel y acrílico.</p>
+                    <p><i class="fas fa-clock icon-style pb-3"></i>2 meses</p>
+                    <p><i class="fas fa-dollar-sign icon-style pb-3"></i>$300 USD</p>
+                    <a href="#" class="btn btn-primary pb-3">Inscribirse</a>
                 </div>
             </div>
         </div>
