@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\loginGoogleController;
 use App\Http\Controllers\PlataformaController;
 use App\Http\Controllers\ProductosController;
+use App\Http\Controllers\SalonController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -65,3 +66,8 @@ Route::get('/cursos', function () {
 
 Route::get('auth/google', [loginGoogleController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleCallback'])->name('login.google.callback');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/salon', [SalonController::class, 'index'])->name('salon.index');
+    Route::get('/salon/agendar', [SalonController::class, 'agendar'])->name('salon.agendar');
+});

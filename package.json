@@ -25,6 +25,7 @@
     "jquery": "^3.7.1",
     "jquery-ui": "^1.14.0",
     "leaflet": "^1.9.4",
+    "lightbox2": "^2.11.5",
     "lineicons": "^1.0.3",
     "mdb-ui-kit": "^8.0.0",
     "puppeteer": "^23.6.0",
