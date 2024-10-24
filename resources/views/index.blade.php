@@ -182,13 +182,6 @@
             margin-right: 20px;
         }
 
-        .login-button {
-            background-color: #ff69b4;
-            transition: background-color 0.3s;
-            color: white;
-            border: none;
-
-        }
 
     </style>
     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>

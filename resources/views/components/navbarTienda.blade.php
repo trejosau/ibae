@@ -136,13 +136,13 @@
 
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="/">TuLogo</a>
+        <a class="navbar-brand" href="{{route('home')}}">TuLogo</a>
         <div class="form-inline">
             <input type="text" placeholder="Buscar productos...">
             <button type="button">Buscar</button>
         </div>
         <div class="nav-icons">
-            <a href="/login">Iniciar Sesión</a>
+            <a href="{{route('login')}}">
             <a href="#">
                 <span>$0.00</span> <i class="fas fa-shopping-cart"></i>
                 <span class="badge">0</span>
@@ -258,7 +258,7 @@
             </div>
         </div>
 
-        
+
 <div class="navegacion-item">
     <a href="#">Accesorios</a>
     <div class="mega-menu mega-menu3 clearfix">
