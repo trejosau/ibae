@@ -23,122 +23,7 @@
 .tittle{
 text-align: center;
 }
- .navegacion {
-        text-align: center;
-        padding: 20px;
-        display: flex; /* Align items horizontally */
-        justify-content: center;
-        gap: 30px; /* Space between items */
-        font-family: 'Arial', sans-serif;
-        font-size: 16px;
-    }
-    .navegacion a {
-        color: #333;
-        text-decoration: none;
-        font-weight: bold;
-        padding: 10px;
-        position: relative;
-        transition: color 0.3s ease;
-    }
-    .navegacion a:hover {
-        color: #e63946; /* Modern red color */
-    }
 
-    /* Mega menu general styles */
-    .navegacion-item {
-        position: relative; /* To position the mega-menu relative to the link */
-    }
-
-    .mega-menu1 {
-        display: none; /* Hidden by default */
-        position: absolute;
-        background-color: #fff;
-        padding: 20px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Modern shadow effect */
-        z-index: 1000;
-        top: 100%; /* Aligns just below the link */
-        left: -100px;
-        right: 0;
-        border-radius: 8px; /* Soft corners for a modern look */
-        width: 800px; /* Increase width of the mega menu */
-        max-height: 400px; /* Increase max height to allow more content */
-        overflow-y: auto; /* Enable scrolling if content overflows */
-    }
-    .mega-menu2 {
-        display: none; /* Hidden by default */
-        position: absolute;
-        background-color: #fff;
-        padding: 20px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Modern shadow effect */
-        z-index: 1000;
-        top: 100%; /* Aligns just below the link */
-        left: -100px;
-        right: 0;
-        border-radius: 8px; /* Soft corners for a modern look */
-        width: 800px; /* Increase width of the mega menu */
-        max-height: 400px; /* Increase max height to allow more content */
-        overflow-y: auto; /* Enable scrolling if content overflows */
-    }
-    .mega-menu3 {
-        display: none; /* Hidden by default */
-        position: absolute;
-        background-color: #fff;
-        padding: 20px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Modern shadow effect */
-        z-index: 1000;
-        top: 100%; /* Aligns just below the link */
-        left: -100px;
-        right: 0;
-        border-radius: 8px; /* Soft corners for a modern look */
-        width: 800px; /* Increase width of the mega menu */
-        max-height: 400px; /* Increase max height to allow more content */
-        overflow-y: auto; /* Enable scrolling if content overflows */
-    }
-    .mega-menu4 {
-        display: none; /* Hidden by default */
-        position: absolute;
-        background-color: #fff;
-        padding: 20px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Modern shadow effect */
-        z-index: 1000;
-        top: 100%; /* Aligns just below the link */
-        left: -300px;
-        right: 0;
-        border-radius: 8px; /* Soft corners for a modern look */
-        width: 800px; /* Increase width of the mega menu */
-        max-height: 400px; /* Increase max height to allow more content */
-        overflow-y: auto; /* Enable scrolling if content overflows */
-    }
-
-    .mega-menu h3 {
-        margin-top: 0; /* Removes top margin for the headings */
-        margin-bottom: 10px; /* Space below each heading */
-        font-size: 18px; /* Slightly larger font size for headings */
-    }
-
-    .mega-menu a {
-        display: block; /* Makes each link a block element */
-        margin-bottom: 5px; /* Adds space between links */
-        padding: 5px; /* Adds padding to each link */
-        color: #333;
-        transition: background-color 0.3s ease; /* Smooth background color transition */
-    }
-
-    .mega-menu a:hover {
-        background-color: #f0f0f0; /* Highlight color on hover */
-    }
-
-    /* Show the mega menu on hover */
-    .navegacion-item:hover .mega-menu {
-        display: block;
-    }
-
-    /* Clearfix for container */
-    .clearfix::after {
-        content: "";
-        display: table;
-        clear: both;
-    }
 
     .imagen-circular {
     width: 150px;      /* Ajusta el tamaño de la imagen según sea necesario */
@@ -147,18 +32,9 @@ text-align: center;
     object-fit: cover;  /* Asegura que la imagen cubra el área sin distorsionarse */
 }
 
-        .navbar {
-            background-color: #6c757d; /* Color de fondo del navbar */
-            padding: 15px;
-        }
-
-        .navbar-brand {
-            color: #fff; /* Color del logo */
-            font-size: 24px; /* Tamaño del logo */
-        }
 
         .navbar-brand:hover {
-            color: #ffd700; /* Color del logo al pasar el mouse */
+            color: #ffd700;
         }
 
         .form-inline {

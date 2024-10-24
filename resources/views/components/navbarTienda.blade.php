@@ -1,5 +1,4 @@
 <style>
-    /* Estilos de la barra de navegación */
     .navbar {
         position: fixed;
         top: 0;
@@ -12,7 +11,7 @@
 
     .navegacion {
         position: fixed;
-        top: 60px; /* Ajusta según la altura del navbar */
+        top: 60px;
         left: 0;
         right: 0;
         z-index: 999;
@@ -43,102 +42,116 @@
         position: relative;
     }
 
-    /* Estilos del mega menú */
     .mega-menu {
         display: none;
         position: absolute;
-        background-color: #f9f9f9; /* Fondo claro del mega menú */
-        padding: 10px; /* Ajustar padding para el contenido */
+        background-color: #f9f9f9;
+        padding: 10px;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         top: 100%;
         left: 50%;
         transform: translateX(-50%);
         border-radius: 8px;
-        width: auto; /* Auto width based on content */
-        white-space: nowrap; /* Evita el wrap del texto */
-        overflow: visible; /* Evita scroll en el dropdown */
+        width: auto;
+        white-space: nowrap;
+        overflow: visible;
     }
 
     .mega-menu .container-fluid {
         display: flex;
-        flex-wrap: nowrap; /* Mantiene las columnas en una línea */
-        justify-content: space-between; /* Asegura un espaciado adecuado */
+        flex-wrap: nowrap;
+        justify-content: space-between;
     }
 
-    /* Estilos de las columnas */
     .mega-menu .col-md-4,
     .mega-menu .col-md-3,
     .mega-menu .col-md-2,
     .mega-menu .col-md-5 {
-        flex: 1; /* Las columnas ocuparán espacio igual */
+        flex: 1;
         box-sizing: border-box;
-        padding: 10px; /* Espaciado interno para las columnas */
-        margin-right: 10px; /* Margen derecho entre columnas */
-        border-right: 1px dashed #ccc; /* Borde sutil entre columnas */
-        min-width: 180px; /* Aumenta el ancho mínimo de las columnas */
-        max-width: 250px; /* Ajusta según sea necesario */
-        overflow: hidden; /* Evita que el contenido sobresalga */
-        text-overflow: ellipsis; /* Muestra '...' si el texto es demasiado largo */
-        white-space: normal; /* Permitir que el texto haga wrap */
-        background-color: #ffeef8; /* Color de fondo rosa pastel para las columnas */
+        padding: 10px;
+        margin-right: 10px;
+        border-right: 1px dashed #ccc;
+        min-width: 180px;
+        max-width: 250px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        background-color: #ffeef8;
     }
 
-    /* Elimina el borde derecho de la última columna */
     .mega-menu .col-md-4:last-child,
     .mega-menu .col-md-3:last-child,
     .mega-menu .col-md-2:last-child,
     .mega-menu .col-md-5:last-child {
-        border-right: none; /* Sin borde en la última columna */
-        margin-right: 0; /* Sin margen en la última columna */
+        border-right: none; /
+        margin-right: 0;
     }
 
-    /* Estilos de encabezados y enlaces de subcategorías */
+
     .mega-menu h3 {
         margin-top: 0;
         margin-bottom: 10px;
         font-size: 18px;
-        background-color: #f0c4d0; /* Color de fondo pastel para los encabezados */
+        background-color: #f0c4d0;
         padding: 5px;
-        border-radius: 4px; /* Bordes redondeados para los encabezados */
-        color: #333; /* Color del texto */
+        border-radius: 4px;
+        color: #333;
     }
 
     .mega-menu a {
         display: block;
         margin-bottom: 5px;
         padding: 5px;
-        color: #555; /* Color del texto de los enlaces */
+        color: #555;
         transition: background-color 0.3s ease;
-        border-radius: 3px; /* Bordes redondeados para enlaces */
-        position: relative; /* Para permitir el uso de pseudo-elementos */
+        border-radius: 3px;
+        position: relative;
     }
 
     .mega-menu a:before {
-        content: "•"; /* Punto antes de cada enlace */
-        color: #e63946; /* Color del punto */
-        margin-right: 5px; /* Espacio entre el punto y el texto */
+        content: "•";
+        color: #e63946;
+        margin-right: 5px;
     }
 
     .mega-menu a:hover {
-        background-color: #f0e1e5; /* Color de fondo claro al pasar el ratón */
+        background-color: #f0e1e5;
     }
 
-    /* Mostrar el mega menú al pasar el ratón */
     .navegacion-item:hover .mega-menu {
         display: block;
     }
 
-    /* Clearfix para el contenedor */
     .clearfix::after {
         content: "";
         display: table;
         clear: both;
     }
+
+    .login-link {
+        margin-left: 20px;
+    }
+
+    .login-link a {
+        color: #fff;
+        background-color: #e63946;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .login-link a:hover {
+        background-color: #d99db7;
+        border-color: #d99db7;
+    }
+
 </style>
 
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="#">TuLogo</a>
+        <a class="navbar-brand" href="{{route('home')}}">TuLogo</a>
         <div class="form-inline">
             <input type="text" placeholder="Buscar productos...">
             <button type="button">Buscar</button>
@@ -146,8 +159,12 @@
         <div class="nav-icons">
             <a href="#"><span>$0.00</span> <i class="fas fa-shopping-cart"></i></a>
         </div>
+        <div class="login-link">
+            <a href="{{route('login')}}" class="btn">Iniciar Sesión</a>
+        </div>
     </div>
 </nav>
+
 
 <nav class="navegacion">
     <div class="navegacion-item">
