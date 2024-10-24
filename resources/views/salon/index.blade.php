@@ -286,7 +286,7 @@
         <div class="col-md-5 text-content">
             <span class="birthstone-regular" style="font-size: 2rem; color: #d99db7;">Rosy Saucedo Salon</span>
             <h1 class="quintessential-regular">Transforma tu look con nosotros</h1>
-            <button class="cta-button">Agenda tu cita ahora</button>
+            <a href="{{ route('salon.agendar') }}" class="cta-button">Agenda tu cita ahora</a>
         </div>
         <div class="col-md-3">
             <img src="https://romanamx.com/cdn/shop/products/BeautyCreations-CORRECTORCOBERTURACOMPLETAC02BC_6.jpg?v=1647617968" alt="Imagen de salón"

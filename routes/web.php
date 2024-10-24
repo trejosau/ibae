@@ -65,4 +65,5 @@ Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleC
 
 Route::middleware('auth')->group(function () {
     Route::get('/salon', [SalonController::class, 'index'])->name('salon.index');
-}
+    Route::get('/salon/agendar', [SalonController::class, 'agendar'])->name('salon.agendar');
+});
