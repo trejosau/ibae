@@ -10,7 +10,7 @@
         </a>
 
         <!-- Salón -->
-        <a href="{{ route('salon') }}" class="service-item">
+        <a href="{{ route('salon.index') }}" class="service-item">
             <img src="https://th.bing.com/th/id/OIP.GsgjT7BsRcBRbcniZeikZQHaHa?rs=1&pid=ImgDetMain" alt="Salón">
             <div class="roboto-medium service-label ">SALÓN</div>
         </a>

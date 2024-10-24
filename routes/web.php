@@ -49,9 +49,6 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/salon', function () {
-    return view('salon.index');
-})->name('salon');
 
 Route::get('/tienda', function () {
     return view('tienda');
@@ -70,4 +67,5 @@ Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleC
 Route::middleware('auth')->group(function () {
     Route::get('/salon', [SalonController::class, 'index'])->name('salon.index');
     Route::get('/salon/agendar', [SalonController::class, 'agendar'])->name('salon.agendar');
+    Route::get('/salon/confirmar', [SalonController::class, 'confirmar'])->name('salon.confirmar');
 });

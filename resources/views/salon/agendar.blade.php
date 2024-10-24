@@ -234,9 +234,9 @@
                 <h6 class="price">$0.00</h6>
             </div>
         </div>
-        <button class="btn btn-primary mt-3" id="next-button">
+        <a href="{{ route('salon.confirmar') }}" class="btn btn-primary mt-3" id="next-button">
             Siguiente <i class="fas fa-arrow-right"></i>
-        </button>
+        </a>
     </div>
 
 </main>

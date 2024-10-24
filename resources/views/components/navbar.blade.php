@@ -37,7 +37,7 @@
                         <a class="nav-link roboto-medium" href="{{ route('plataforma') }}">Plataforma</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link roboto-medium" href="{{ route('salon') }}">Salon</a>
+                            <a class="nav-link roboto-medium" href="{{ route('salon.index') }}">Salon</a>
                             </li>
                     <li class="nav-item">
                         <a class="nav-link roboto-medium" href="/tienda">Tienda</a>
