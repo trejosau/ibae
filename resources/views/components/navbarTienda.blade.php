@@ -1,27 +1,31 @@
 <style>
+    /* Estilos de la barra de navegación */
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background-color: rgb(255, 105, 135);
+        padding: 10px 20px;
+    }
 
-.navbar{
-    position: fixed;
-    top: 0; /* La coloca en la parte superior */
-    left: 0; /* La coloca en la izquierda */
-    right: 0;
-    z-index: 1000; /* Asegura que esté encima de la navegación */
-}
     .navegacion {
         position: fixed;
-        top: 60px; /* Ajusta este valor según la altura de tu navbar */
-    left: 0; /* La coloca en la izquierda */
-    right: 0;
-    z-index: 999; /* Un z-index menor que el navbar */
+        top: 60px; /* Ajusta según la altura del navbar */
+        left: 0;
+        right: 0;
+        z-index: 999;
         text-align: center;
-        padding: 20px;
-        display: flex; /* Align items horizontally */
+        padding: 20px 0;
+        display: flex;
         justify-content: center;
-        gap: 30px; /* Space between items */
+        gap: 30px;
         font-family: 'Arial', sans-serif;
         font-size: 16px;
         background-color: #fff;
     }
+
     .navegacion a {
         color: #333;
         text-decoration: none;
@@ -30,281 +34,223 @@
         position: relative;
         transition: color 0.3s ease;
     }
+
     .navegacion a:hover {
-        color: #e63946; /* Modern red color */
+        color: #e63946;
     }
 
-    /* Mega menu general styles */
     .navegacion-item {
-        position: relative; /* To position the mega-menu relative to the link */
+        position: relative;
     }
 
-    .mega-menu1 {
-        display: none; /* Hidden by default */
+    /* Estilos del mega menú */
+    .mega-menu {
+        display: none;
         position: absolute;
-        background-color: #fff;
-        padding: 20px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Modern shadow effect */
-        z-index: 1000;
-        top: 100%; /* Aligns just below the link */
-        left: -100px;
-        right: 0;
-        border-radius: 8px; /* Soft corners for a modern look */
-        width: 800px; /* Increase width of the mega menu */
-        max-height: 400px; /* Increase max height to allow more content */
-        overflow-y: auto; /* Enable scrolling if content overflows */
-    }
-    .mega-menu2 {
-        display: none; /* Hidden by default */
-        position: absolute;
-        background-color: #fff;
-        padding: 20px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Modern shadow effect */
-        z-index: 1000;
-        top: 100%; /* Aligns just below the link */
-        left: -100px;
-        right: 0;
-        border-radius: 8px; /* Soft corners for a modern look */
-        width: 800px; /* Increase width of the mega menu */
-        max-height: 400px; /* Increase max height to allow more content */
-        overflow-y: auto; /* Enable scrolling if content overflows */
-    }
-    .mega-menu3 {
-        display: none; /* Hidden by default */
-        position: absolute;
-        background-color: #fff;
-        padding: 20px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Modern shadow effect */
-        z-index: 1000;
-        top: 100%; /* Aligns just below the link */
-        left: -100px;
-        right: 0;
-        border-radius: 8px; /* Soft corners for a modern look */
-        width: 800px; /* Increase width of the mega menu */
-        max-height: 400px; /* Increase max height to allow more content */
-        overflow-y: auto; /* Enable scrolling if content overflows */
-    }
-    .mega-menu4 {
-        display: none; /* Hidden by default */
-        position: absolute;
-        background-color: #fff;
-        padding: 20px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Modern shadow effect */
-        z-index: 1000;
-        top: 100%; /* Aligns just below the link */
-        left: -300px;
-        right: 0;
-        border-radius: 8px; /* Soft corners for a modern look */
-        width: 800px; /* Increase width of the mega menu */
-        max-height: 400px; /* Increase max height to allow more content */
-        overflow-y: auto; /* Enable scrolling if content overflows */
+        background-color: #f9f9f9; /* Fondo claro del mega menú */
+        padding: 10px; /* Ajustar padding para el contenido */
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 8px;
+        width: auto; /* Auto width based on content */
+        white-space: nowrap; /* Evita el wrap del texto */
+        overflow: visible; /* Evita scroll en el dropdown */
     }
 
+    .mega-menu .container-fluid {
+        display: flex;
+        flex-wrap: nowrap; /* Mantiene las columnas en una línea */
+        justify-content: space-between; /* Asegura un espaciado adecuado */
+    }
+
+    /* Estilos de las columnas */
+    .mega-menu .col-md-4,
+    .mega-menu .col-md-3,
+    .mega-menu .col-md-2,
+    .mega-menu .col-md-5 {
+        flex: 1; /* Las columnas ocuparán espacio igual */
+        box-sizing: border-box;
+        padding: 10px; /* Espaciado interno para las columnas */
+        margin-right: 10px; /* Margen derecho entre columnas */
+        border-right: 1px dashed #ccc; /* Borde sutil entre columnas */
+        min-width: 180px; /* Aumenta el ancho mínimo de las columnas */
+        max-width: 250px; /* Ajusta según sea necesario */
+        overflow: hidden; /* Evita que el contenido sobresalga */
+        text-overflow: ellipsis; /* Muestra '...' si el texto es demasiado largo */
+        white-space: normal; /* Permitir que el texto haga wrap */
+        background-color: #ffeef8; /* Color de fondo rosa pastel para las columnas */
+    }
+
+    /* Elimina el borde derecho de la última columna */
+    .mega-menu .col-md-4:last-child,
+    .mega-menu .col-md-3:last-child,
+    .mega-menu .col-md-2:last-child,
+    .mega-menu .col-md-5:last-child {
+        border-right: none; /* Sin borde en la última columna */
+        margin-right: 0; /* Sin margen en la última columna */
+    }
+
+    /* Estilos de encabezados y enlaces de subcategorías */
     .mega-menu h3 {
-        margin-top: 0; /* Removes top margin for the headings */
-        margin-bottom: 10px; /* Space below each heading */
-        font-size: 18px; /* Slightly larger font size for headings */
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 18px;
+        background-color: #f0c4d0; /* Color de fondo pastel para los encabezados */
+        padding: 5px;
+        border-radius: 4px; /* Bordes redondeados para los encabezados */
+        color: #333; /* Color del texto */
     }
 
     .mega-menu a {
-        display: block; /* Makes each link a block element */
-        margin-bottom: 5px; /* Adds space between links */
-        padding: 5px; /* Adds padding to each link */
-        color: #333;
-        transition: background-color 0.3s ease; /* Smooth background color transition */
+        display: block;
+        margin-bottom: 5px;
+        padding: 5px;
+        color: #555; /* Color del texto de los enlaces */
+        transition: background-color 0.3s ease;
+        border-radius: 3px; /* Bordes redondeados para enlaces */
+        position: relative; /* Para permitir el uso de pseudo-elementos */
+    }
+
+    .mega-menu a:before {
+        content: "•"; /* Punto antes de cada enlace */
+        color: #e63946; /* Color del punto */
+        margin-right: 5px; /* Espacio entre el punto y el texto */
     }
 
     .mega-menu a:hover {
-        background-color: #f0f0f0; /* Highlight color on hover */
+        background-color: #f0e1e5; /* Color de fondo claro al pasar el ratón */
     }
 
-    /* Show the mega menu on hover */
+    /* Mostrar el mega menú al pasar el ratón */
     .navegacion-item:hover .mega-menu {
         display: block;
     }
 
-    /* Clearfix for container */
+    /* Clearfix para el contenedor */
     .clearfix::after {
         content: "";
         display: table;
         clear: both;
     }
-
-
 </style>
-
 
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="{{route('home')}}">TuLogo</a>
+        <a class="navbar-brand" href="#">TuLogo</a>
         <div class="form-inline">
             <input type="text" placeholder="Buscar productos...">
             <button type="button">Buscar</button>
         </div>
         <div class="nav-icons">
-            <a href="{{route('login')}}">
-            <a href="#">
-                <span>$0.00</span> <i class="fas fa-shopping-cart"></i>
-                <span class="badge">0</span>
-            </a>
+            <a href="#"><span>$0.00</span> <i class="fas fa-shopping-cart"></i></a>
         </div>
     </div>
 </nav>
 
-<div class="accordion" id="categoryAccordion">
-    <nav class="navegacion">
-        <div class="navegacion-item">
-            <a href="#">Tintes</a>
-            <div class="mega-menu mega-menu1 clearfix">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <h3>TINTES</h3>
-                            <a href="#">Tintes Permanentes</a>
-                            <a href="#">Tintes temporales y fantasía</a>
-                            <a href="#">Peróxido, decolorantes y aditivos</a>
-                            <a href="#">Accesorios para teñir</a>
-                            <a href="#">Cobertura de canas</a>
-                            <a href="#">Depositadores de color</a>
-                        </div>
-                        <div class="col-md-3">
-                            <h3>Productos Relacionados</h3>
-                            <a href="#">Shampoo para tintes</a>
-                            <a href="#">Acondicionadores</a>
-                        </div>
-                    </div>
+<nav class="navegacion">
+    <div class="navegacion-item">
+        <a href="#">Tintes</a>
+        <div class="mega-menu clearfix">
+            <div class="container-fluid">
+                <div class="col-md-4">
+                    <h3>TINTES</h3>
+                    <a href="#">Tintes Permanentes</a>
+                    <a href="#">Tintes Temporales</a>
+                    <a href="#">Tintes Orgánicos</a>
+                    <a href="#">Tintes Sin Amoniaco</a>
                 </div>
-            </div>
-        </div>
-
-        <div class="navegacion-item">
-            <a href="#">Cabello</a>
-            <div class="mega-menu mega-menu2 clearfix">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <h3>CABELLO</h3>
-                            <a href="#">Shampoo y acondicionador</a>
-                            <a href="#">Tratamientos capilares</a>
-                            <a href="#">Mascarillas para el cabello</a>
-                            <a href="#">Sérum y aceites</a>
-                            <a href="#">Cepillos y peines</a>
-                        </div>
-                        <div class="col-md-3">
-                            <h3>Accesorios</h3>
-                            <a href="#">Secadoras de cabello</a>
-                            <a href="#">Planchas</a>
-                            <a href="#">Rizadores</a>
-                        </div>
-                    </div>
+                <div class="col-md-4">
+                    <h3>Productos Relacionados</h3>
+                    <a href="#">Shampoo para tintes</a>
+                    <a href="#">Acondicionadores</a>
+                    <a href="#">Tratamientos Post-Tinte</a>
+                    <a href="#">Protección del Color</a>
                 </div>
-            </div>
-        </div>
-
-        <div class="navegacion-item">
-            <a href="#">Barbería</a>
-            <div class="mega-menu mega-menu3 clearfix">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <h3>BARBERÍA</h3>
-                            <a href="#">Cortes</a>
-                            <a href="#">Rasuradoras</a>
-                            <a href="#">Cremas y lociones</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="navegacion-item">
-            <a href="#">Maquillaje</a>
-            <div class="mega-menu mega-menu4 clearfix">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <h3>ROSTRO</h3>
-                            <a href="#">Bases</a>
-                            <a href="#">Correctores</a>
-                            <a href="#">Paletas de maquillaje</a>
-                            <a href="#">Iluminadores</a>
-                            <a href="#">Polvos</a>
-                            <a href="#">Rubores & Bronceadores</a>
-                        </div>
-                        <div class="col-md-3">
-                            <h3>LABIOS</h3>
-                            <a href="#">Delineadores</a>
-                            <a href="#">Lápiz labial</a>
-                            <a href="#">Brillo Labial</a>
-                            <a href="#">Bálsamo Labial</a>
-                        </div>
-                        <div class="col-md-3">
-                            <h3>OJOS</h3>
-                            <a href="#">Paletas de maquillaje</a>
-                            <a href="#">Delineadores</a>
-                            <a href="#">Cejas</a>
-                            <a href="#">Pestañas postizas</a>
-                        </div>
-                        <div class="col-md-3">
-                            <h3>ACCESORIOS</h3>
-                            <a href="#">Brochas y aplicadores</a>
-                            <a href="#">Cosmetiqueras</a>
-                            <a href="#">Organizadores</a>
-                            <a href="#">Espejos</a>
-                            <a href="#">Herramientas y accesorios</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-<div class="navegacion-item">
-    <a href="#">Accesorios</a>
-    <div class="mega-menu mega-menu3 clearfix">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-3">
-                    <h3>BARBERÍA</h3>
-                    <a href="#">Cortes</a>
-                    <a href="#">Rasuradoras</a>
-                    <a href="#">Cremas y lociones</a>
+                <div class="col-md-4">
+                    <h3>Accesorios</h3>
+                    <a href="#">Accesorios para teñir</a>
+                    <a href="#">Peróxido</a>
+                    <a href="#">Decolorantes</a>
+                    <a href="#">Pinceles y Bowls</a>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="navegacion-item">
-    <a href="#">Uñas</a>
-    <div class="mega-menu mega-menu3 clearfix">
-        <div class="container-fluid">
-            <div class="row">
+
+    <div class="navegacion-item">
+        <a href="#">Cabello</a>
+        <div class="mega-menu clearfix">
+            <div class="container-fluid">
                 <div class="col-md-3">
-                    <h3>BARBERÍA</h3>
-                    <a href="#">Cortes</a>
-                    <a href="#">Rasuradoras</a>
-                    <a href="#">Cremas y lociones</a>
+                    <h3>CABELLO</h3>
+                    <a href="#">Shampoo y Acondicionador</a>
+                    <a href="#">Tratamientos capilares</a>
+                    <a href="#">Cuidado del cuero cabelludo</a>
+                </div>
+                <div class="col-md-3">
+                    <h3>Estilo</h3>
+                    <a href="#">Geles y ceras</a>
+                    <a href="#">Lacas</a>
+                    <a href="#">Pomadas</a>
+                </div>
+                <div class="col-md-3">
+                    <h3>Secado</h3>
+                    <a href="#">Secadoras de cabello</a>
+                    <a href="#">Difusores</a>
+                </div>
+                <div class="col-md-3">
+                    <h3>Accesorios</h3>
+                    <a href="#">Planchas</a>
+                    <a href="#">Rizadores</a>
+                    <a href="#">Peines</a>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="navegacion-item">
-    <a href="#">Herramientas</a>
-    <div class="mega-menu mega-menu3 clearfix">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-3">
+    <div class="navegacion-item">
+        <a href="#">Barbería</a>
+        <div class="mega-menu clearfix">
+            <div class="container-fluid">
+                <div class="col-md-4">
                     <h3>BARBERÍA</h3>
                     <a href="#">Cortes</a>
                     <a href="#">Rasuradoras</a>
+                    <a href="#">Navajas</a>
+                </div>
+                <div class="col-md-4">
+                    <h3>Cuidado</h3>
                     <a href="#">Cremas y lociones</a>
+                    <a href="#">Aceites para barba</a>
+                </div>
+                <div class="col-md-4">
+                    <h3>Accesorios</h3>
+                    <a href="#">Peines y cepillos</a>
+                    <a href="#">Tijeras</a>
                 </div>
             </div>
         </div>
     </div>
-</div>
-    </nav>
-</div>
 
+    <div class="navegacion-item">
+        <a href="#">Uñas</a>
+        <div class="mega-menu clearfix">
+            <div class="container-fluid">
+                <div class="col-md-5">
+                    <h3>UÑAS</h3>
+                    <a href="#">Esmaltes</a>
+                    <a href="#">Gel para uñas</a>
+                    <a href="#">Tratamientos para uñas</a>
+                </div>
+                <div class="col-md-5">
+                    <h3>HERRAMIENTAS</h3>
+                    <a href="#">Pinceles</a>
+                    <a href="#">Esponjas</a>
+                    <a href="#">Limas</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

@@ -270,7 +270,7 @@ text-align: center;
 <div class="container">
     <form id="filterForm" method="POST" action="{{ route('productos.filtrar') }}" class="p-3">
         @csrf <!-- Protección CSRF necesaria en formularios POST -->
-    
+
         <div class="row mb-3">
             <div class="col-md-4">
                 <label for="id_categoria" class="form-label">Categoría:</label>
@@ -283,29 +283,29 @@ text-align: center;
                 </select>
             </div>
         </div>
-    
+
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="precio_min" class="form-label">Precio mínimo:</label>
                 <input type="number" id="precio_min" name="precio_min" min="0" value="{{ old('precio_min') }}" class="form-control">
             </div>
-    
+
             <div class="col-md-6">
                 <label for="precio_max" class="form-label">Precio máximo:</label>
                 <input type="number" id="precio_max" name="precio_max" min="0" value="{{ old('precio_max') }}" class="form-control">
             </div>
         </div>
-    
+
         <div class="row">
             <div class="col-md-12 text-end">
                 <button type="submit" class="btn btn-primary">Filtrar</button>
             </div>
         </div>
     </form>
-    
-    
-    
-    
+
+
+
+
 
     <div class="row">
         @foreach ($productos as $producto)
