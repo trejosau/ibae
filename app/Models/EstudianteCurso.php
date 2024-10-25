@@ -19,12 +19,14 @@ class EstudianteCurso extends Model
         'asistencia',
     ];
 
-    public function estudiante() : BelongsTo
+    public $timestamps = false; // Desactiva los timestamps
+
+    public function estudiante(): BelongsTo
     {
         return $this->belongsTo(Estudiante::class, 'id_estudiante', 'matricula');
     }
 
-    public function cursoApertura() : BelongsTo
+    public function cursoApertura(): BelongsTo
     {
         return $this->belongsTo(CursoApertura::class, 'id_curso_apertura');
     }

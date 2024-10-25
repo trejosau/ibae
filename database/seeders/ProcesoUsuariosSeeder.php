@@ -8,7 +8,7 @@ use App\Models\Administrador;
 use App\Models\Estilista;
 use App\Models\Estudiante;
 use App\Models\Profesor;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Comprador; // Asegúrate de que esta importación sea correcta
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -47,6 +47,13 @@ class ProcesoUsuariosSeeder extends Seeder
                 'updated_at' => now(), // Fecha de actualización
             ]);
 
+            // Crear registro en la tabla compradores
+            Comprador::create([
+                'id_persona' => $persona->id,
+                'preferencia' => $i % 2 === 0 ? 'barber' : 'belleza', // Alternar preferencias
+                'razon_social' => "Razón Social " . $usuario->username,
+            ]);
+
             // Asignar roles a los usuarios
             if ($i === 1 || $i === 2) {
                 // Primeros 2 usuarios como Administradores
@@ -70,11 +77,11 @@ class ProcesoUsuariosSeeder extends Seeder
                     'CURP' => 'CURP' . $i,
                     'estado' => 'activo',
                     'id_persona' => $persona->id,
-                    'zipcode' => '00000',
+                    'zipcode' => '270' . random_int(1,8) . $i+1,
                     'colonia' => 'Colonia ' . $i,
                     'calle' => 'Calle ' . $i,
-                    'n_ext' => 'NExt ' . $i,
-                    'n_int' => 'NInt ' . $i,
+                    'n_ext' => random_int(128,900),
+                    'n_int' => null,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -98,11 +105,11 @@ class ProcesoUsuariosSeeder extends Seeder
                     'id_persona' => $persona->id,
                     'id_inscripcion' => 1, // Cambia esto según tu lógica
                     'fecha_inscripcion' => now(),
-                    'grado_estudio' => 'Grado ' . ($i - 6),
-                    'zipcode' => '00000',
+                    'grado_estudio' => 'Preparatoria ' . ($i - 6),
+                    'zipcode' => '270' . random_int(1,8) . $i,
                     'colonia' => 'Colonia ' . $i,
                     'calle' => 'Calle ' . $i,
-                    'num_ext' => 'NExt ' . $i,
+                    'num_ext' => random_int(120,600),
                     'num_int' => null,
                     'created_at' => now(),
                     'updated_at' => now(),

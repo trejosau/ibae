@@ -8,6 +8,8 @@ class Servicios extends Model
 {
     protected $table = 'servicios';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'nombre',
         'descripcion',

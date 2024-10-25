@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->enum('nombre', ['Tintes', 'Cabello', 'Barbería', 'Maquillaje', 'Accesorios', 'Uñas', 'Herramientas']);
             $table->text('descripcion')->nullable();
+            $table->timestamps();
         });
     }
 

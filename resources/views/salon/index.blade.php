@@ -548,8 +548,7 @@
     </div>
     <div class="row" style="position: relative; height: 540px;">
         <!-- Mapa de Google embebido -->
-        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d225.01693992381237!2d-103.2288307!3d25.5293471!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x868fc12cfd56e333%3A0x921f869f5ff67324!2sAv.%20V.%20Carranza%202-altos%2C%20Centro%2C%2027440%20Matamoros%2C%20Coah.!5e0!3m2!1ses!2smx!4v1729703356765!5m2!1ses!2smx" width="600" height="540" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        <!-- Imagen PNG superpuesta -->
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d225.0170023520013!2d-103.228792592773!3d25.529313817182658!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x868fc10721cb0b2b%3A0x42112eb1d8fa7a46!2sInstituto%20de%20Belleza%20Arte%20%26%20Estilo!5e0!3m2!1ses!2smx!4v1729825845825!5m2!1ses!2smx" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         <div class="col-12"
              style="
          position: absolute;

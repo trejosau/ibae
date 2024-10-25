@@ -14,6 +14,7 @@ class Proveedores extends Model
         'nombre_empresa',
         'contacto_telefono',
         'contacto_correo',
+
     ];
 
     public function productos() : HasMany

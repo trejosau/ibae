@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum('preferencia', ['barber', 'belleza']);
             $table->foreign('id_persona')->references('id')->on('personas')->onDelete('cascade');
             $table->string('razon_social', 100)->nullable();
-
+            $table->timestamps();
         });
     }
 

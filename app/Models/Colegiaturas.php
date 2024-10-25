@@ -10,6 +10,8 @@ class Colegiaturas extends Model
 {
     use HasFactory;
 
+    use HasFactory;
+
     protected $table = 'colegiaturas';
 
     protected $fillable = [
@@ -20,6 +22,8 @@ class Colegiaturas extends Model
         'estado',
         'Monto',
     ];
+
+    public $timestamps = false;
 
     public function estudianteCurso() : BelongsTo
     {

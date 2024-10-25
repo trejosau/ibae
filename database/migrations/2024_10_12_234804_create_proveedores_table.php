@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('nombre_empresa');
             $table->string('contacto_telefono', 15);
             $table->string('contacto_correo');
+            $table->timestamps();
         });
     }
 

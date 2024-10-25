@@ -12,6 +12,7 @@ class DetalleCita extends Model
 
     protected $table = 'detalle_cita';
 
+    public $timestamps = false;
     protected $fillable = [
         'id_cita',
         'id_servicio',

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('asistencia')->default(0);
             $table->foreign('id_estudiante')->references('matricula')->on('estudiantes');
             $table->foreign('id_curso_apertura')->references('id')->on('curso_apertura');
+
         });
     }
 
@@ -23,4 +24,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('estudiante_curso');
     }
-};
+
+    };

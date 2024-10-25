@@ -12,6 +12,8 @@ class Compras extends Model
 
     protected $table = 'compras';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'id_proveedor',
         'fecha_compra',

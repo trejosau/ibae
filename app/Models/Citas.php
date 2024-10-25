@@ -11,7 +11,7 @@ class Citas extends Model
 
 
     protected $table = 'citas';
-
+    public $timestamps = false;
 
     protected $fillable = [
         'id_estilista',
