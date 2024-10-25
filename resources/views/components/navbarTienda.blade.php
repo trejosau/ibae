@@ -151,7 +151,7 @@
 
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="{{route('home')}}">TuLogo</a>
+        <a class="navbar-brand" href="{{route('home')}}"><img src="{{asset('images/logo.png')}}" alt="Logo" class="img-fluid"></a>
         <div class="form-inline">
             <input type="text" placeholder="Buscar productos...">
             <button type="button">Buscar</button>
