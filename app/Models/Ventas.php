@@ -8,6 +8,8 @@ class Ventas extends Model
 {
     protected $table = 'ventas';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'id_comprador',
         'fecha_compra',

@@ -12,6 +12,8 @@ class DetalleVenta extends Model
 
     protected $table = 'detalle_venta';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'id_venta',
         'id_producto',

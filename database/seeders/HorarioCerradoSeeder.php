@@ -12,7 +12,7 @@ class HorarioCerradoSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('horariocerrado')->insert([
+        DB::table('horario_cerrado')->insert([
             [
                 'fecha_hora_cierre_inicio' => '2024-10-25 10:00:00',
                 'fecha_hora_cierre_fin' => '2024-10-25 12:00:00',
