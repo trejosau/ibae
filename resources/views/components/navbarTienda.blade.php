@@ -147,11 +147,16 @@
         border-color: #d99db7;
     }
 
+    .logo{
+        width: auto;
+        height: 80px;
+    }
+
 </style>
 
-<nav class="navbar navbar-expand-lg">
-    <div class="container">
-        <a class="navbar-brand" href="{{route('home')}}"><img src="{{asset('images/logo.png')}}" alt="Logo" class="img-fluid"></a>
+<nav class="navbar navbar-expand-lg p-0">
+    <div class="container p-0">
+        <a class="navbar-brand" href="{{route('home')}}"><img class="logo" src="{{asset('images/logo.png')}}" alt="Logo" class="img-fluid"></a>
         <div class="form-inline">
             <input type="text" placeholder="Buscar productos...">
             <button type="button">Buscar</button>
