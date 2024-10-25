@@ -6,13 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+
     public function up() : void
     {
         Schema::create('horario_salon', function (Blueprint $table) {
             $table->id();
-            $table->enum('dia', ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']);
+            $table->enum('dia', ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado']); // Días de la semana
             $table->time('hora_apertura');
             $table->time('hora_cierre');
+            $table->timestamps();
         });
     }
 
