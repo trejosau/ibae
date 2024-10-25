@@ -21,12 +21,13 @@ class ProductoSeeder extends Seeder
                 'nombre' => 'Producto ' . $i,
                 'descripcion' => $faker->paragraph,
                 'marca' => $faker->company,
-                'precio_lista' => $faker->randomFloat(2, 50, 500), // Genera precios entre 50 y 500
-                'precio_venta' => $faker->randomFloat(2, 40, 450), // Precio de venta menor al precio de lista
+                'precio_lista' => $faker->randomFloat(2, 50, 500),
+                'precio_venta' => $faker->randomFloat(2, 40, 450),
                 'cantidad' => $faker->numberBetween(1, 100),
                 'medida' => $faker->randomElement(['pzas', 'ml', 'lt', 'gr', 'cm']),
                 'id_proveedor' => $proveedores->random()->id,
-                'main_photo' => $faker->imageUrl(640, 480, 'products', true), // Foto de producto ficticia
+                'main_photo' => 'https://picsum.photos/640/480?random=' . rand(1, 1000),
+
                 'stock' => $faker->numberBetween(0, 200),
                 'estado' => $faker->randomElement(['activo', 'inactivo', 'agotado']),
                 'fecha_agregado' => $faker->date(),

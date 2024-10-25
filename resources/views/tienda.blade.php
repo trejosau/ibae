@@ -187,7 +187,7 @@ text-align: center;
         @foreach ($productos as $producto)
         <div class="col-md-4">
             <div class="card mb-4">
-                <img src="{{ $producto->imagen }}" class="card-img-top" alt="{{ $producto->nombre }}">
+                <img src="{{ $producto->main_photo }}" class="card-img-top" alt="{{ $producto->nombre }}">
                 <div class="card-body">
                     <h5 class="card-title fw-bold pb-3">{{ $producto->nombre }}</h5>
                     <p class="card-text pb-3">{{ $producto->descripcion }}</p>
