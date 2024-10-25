@@ -11,6 +11,7 @@ class ModuloCurso extends Model
     use HasFactory;
 
     protected $table = 'modulo_curso';
+    public $timestamps = false;
 
     protected $fillable = [
         'id_modulo',

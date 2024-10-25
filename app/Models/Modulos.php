@@ -9,6 +9,8 @@ class Modulos extends Model
 {
     protected $table = 'modulos';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'nombre',
         'duracion',

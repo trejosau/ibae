@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ModuloTemas extends Model
 {
     protected $table = 'modulo_temas';
-
+public $timestamps = false;
     protected $fillable = [
         'id_modulo',
         'id_tema',

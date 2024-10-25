@@ -33,5 +33,9 @@ class DatabaseSeeder extends Seeder
         $this->call(HorarioCerradoSeeder::class);
         $this->call(VentasSeeder::class);
         $this->call(DetalleVentasSeeder::class);
+        $this->call(TemasSeeder::class);
+        $this->call(ModulosSeeder::class);
+        $this->call(ModuloTemasSeeder::class);
+        $this->call(ModuloCursoSeeder::class);
     }
 }
