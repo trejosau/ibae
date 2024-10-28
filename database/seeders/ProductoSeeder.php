@@ -16,8 +16,13 @@ class ProductoSeeder extends Seeder
         $categorias = Categorias::all();
         $proveedores = Proveedores::all();
 
+        if ($categorias->isEmpty() || $proveedores->isEmpty()) {
+            return;
+        }
+
+        $productos = [];
         for ($i = 1; $i <= 50; $i++) {
-            Productos::create([
+            $productos[] = [
                 'nombre' => 'Producto ' . $i,
                 'descripcion' => $faker->paragraph,
                 'marca' => $faker->company,
@@ -27,12 +32,13 @@ class ProductoSeeder extends Seeder
                 'medida' => $faker->randomElement(['pzas', 'ml', 'lt', 'gr', 'cm']),
                 'id_proveedor' => $proveedores->random()->id,
                 'main_photo' => 'https://picsum.photos/640/480?random=' . rand(1, 1000),
-
                 'stock' => $faker->numberBetween(0, 200),
                 'estado' => $faker->randomElement(['activo', 'inactivo', 'agotado']),
-                'fecha_agregado' => $faker->date(),
+                'fecha_agregado' => now(),
                 'id_categoria' => $categorias->random()->id,
-            ]);
+            ];
         }
+
+        Productos::insert($productos);
     }
 }
