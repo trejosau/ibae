@@ -15,10 +15,11 @@
             <!-- Sección para todos -->
             <li class="sidebar-item">
                 <a href="{{ route('home') }}" class="sidebar-link">
-                    <i class="fa-solid fa-house"></i>
-                    <span>Inicio</span>
+                    <i class="fa-solid fa-reply"></i>
+                    <span>Volver a Inicio</span>
                 </a>
             </li>
+           
 
             <!-- Sección para Cursos -->
             <li class="sidebar-item">
@@ -29,7 +30,7 @@
                     <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                 </a>
                 <ul id="cursosDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item"><a href="" class="sidebar-link">Ver Cursos</a></li>
+                    <li class="sidebar-item"><a href="{{ route('plataforma.mis-cursos') }}" class="sidebar-link">Ver Cursos</a></li>
                     <li class="sidebar-item"><a href="" class="sidebar-link">Historial de Cursos</a></li>
                 </ul>
             </li>
@@ -43,8 +44,8 @@
                     <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                 </a>
                 <ul id="modulosDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item"><a href="" class="sidebar-link">Ver Módulos</a></li>
-                    <li class="sidebar-item"><a href="" class="sidebar-link">Ver Temas</a></li>
+                    <li class="sidebar-item"><a href="{{route('plataforma.lista-modulos')}}" class="sidebar-link">Ver Módulos</a></li>
+                    <li class="sidebar-item"><a href="{{route('plataforma.temas-modulos')}}" class="sidebar-link">Ver Temas</a></li>
                 </ul>
             </li>
 
@@ -58,9 +59,9 @@
                     <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                 </a>
                 <ul id="estudiantesProfesoresDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item"><a href="" class="sidebar-link">Lista de Estudiantes</a></li>
-                    <li class="sidebar-item"><a href="" class="sidebar-link">Inscripciones</a></li>
-                    <li class="sidebar-item"><a href="" class="sidebar-link">Lista de Profesores</a></li>
+                    <li class="sidebar-item"><a href="{{route('plataforma.estudiantes')}}" class="sidebar-link">Lista de Estudiantes</a></li>
+                    <li class="sidebar-item"><a href="{{route('plataforma.inscripciones')}}" class="sidebar-link">Inscripciones</a></li>
+                    <li class="sidebar-item"><a href="{{route('plataforma.profesores')}}" class="sidebar-link">Lista de Profesores</a></li>
 
                 </ul>
             </li>
@@ -75,8 +76,8 @@
                     <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                 </a>
                 <ul id="finanzasDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item"><a href="" class="sidebar-link">Pagos y Colegiaturas</a></li>
-                    <li class="sidebar-item"><a href="" class="sidebar-link">Historial de Pagos</a></li>
+                    <li class="sidebar-item"><a href="{{route('plataforma.pagos')}}" class="sidebar-link">Pagos y Colegiaturas</a></li>
+                    <li class="sidebar-item"><a href="{{route('plataforma.historial-pagos')}}" class="sidebar-link">Historial de Pagos</a></li>
                 </ul>
             </li>
 
@@ -90,13 +91,13 @@
                 </a>
                 <ul id="estudianteDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                     <li class="sidebar-item">
-                        <a href="" class="sidebar-link">Mis Cursos</a>
+                        <a href="{{route('plataforma.espacio-mis-cursos')}}" class="sidebar-link">Mis Cursos</a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="" class="sidebar-link">Mis Pagos</a>
+                        <a href="{{route('plataforma.espacio-mis-pagos')}}" class="sidebar-link">Mis Pagos</a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="" class="sidebar-link">Perfil / Configuración</a>
+                        <a href="{{route('plataforma.espacio-perfil')}}" class="sidebar-link">Perfil / Configuración</a>
                     </li>
                 </ul>
             </li>

@@ -310,15 +310,10 @@
 @include('components.sidebarPlataforma')
 <div class="main p-3 ">
 
-    @switch(Route::currentRouteName())
-        @case('plataforma.inicio')
-            @include('plataforma.inicio')
-            @break
-        @default
-            <p>No se encontró el contenido para esta ruta.</p>
-    @endswitch
-</div>
 
+    @include(Route::currentRouteName())
+    
+</div>
 
 </body>
 <script>

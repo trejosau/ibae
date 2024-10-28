@@ -38,16 +38,19 @@ Route::get('/about-us', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/plataforma', [PlataformaController::class, 'index'])->name('plataforma');
-    Route::get('/plataforma/inicio', [PlataformaController::class, 'index'])->name('plataforma.inicio');
-    Route::get('/plataforma/ventas', [PlataformaController::class, 'index'])->name('plataforma.ventas');
-    Route::get('/plataforma/compras', [PlataformaController::class, 'index'])->name('plataforma.compras');
-    Route::get('/plataforma/citas', [PlataformaController::class, 'index'])->name('plataforma.citas');
-    Route::get('/plataforma/servicios', [PlataformaController::class, 'index'])->name('plataforma.servicios');
-    Route::get('/plataforma/productos', [PlataformaController::class, 'index'])->name('plataforma.productos');
-    Route::get('/plataforma/usuarios', [PlataformaController::class, 'index'])->name('plataforma.usuarios');
-    Route::get('/plataforma/auditoria', [PlataformaController::class, 'index'])->name('plataforma.auditoria');
-    Route::get('/plataforma/perfil', [PlataformaController::class, 'index'])->name('plataforma.perfil');
-});
+    Route::get('/plataforma/cursos/mis-cursos', [PlataformaController::class, 'misCursos'])->name('plataforma.mis-cursos');
+    Route::get('/plataforma/cursos/historial-cursos', [PlataformaController::class, 'historialCursos'])->name('plataforma.historial-cursos');
+    Route::get('/plataforma/modulos/lista', [PlataformaController::class, 'listaModulos'])->name('plataforma.lista-modulos');
+    Route::get('/plataforma/modulos/temas', [PlataformaController::class, 'temasModulos'])->name('plataforma.temas-modulos');
+    Route::get('/plataforma/personal/estudiantes', [PlataformaController::class, 'estudiantes'])->name('plataforma.estudiantes');
+    Route::get('/plataforma/personal/inscripciones', [PlataformaController::class, 'inscripciones'])->name('plataforma.inscripciones');
+    Route::get('/plataforma/personal/profesores', [PlataformaController::class, 'profesores'])->name('plataforma.profesores');
+    Route::get('/plataforma/finanzas/pagos', [PlataformaController::class, 'pagos'])->name('plataforma.pagos');
+    Route::get('/plataforma/finanzas/historial-pagos', [PlataformaController::class, 'historialPagos'])->name('plataforma.historial-pagos');
+    Route::get('/plataforma/espacio/mis-cursos', [PlataformaController::class, 'misCursosEspacio'])->name('plataforma.espacio-mis-cursos');
+    Route::get('/plataforma/espacio/mis-pagos', [PlataformaController::class, 'misPagosEspacio'])->name('plataforma.espacio-mis-pagos');
+    Route::get('/plataforma/espacio/perfil', [PlataformaController::class, 'perfilEspacio'])->name('plataforma.espacio-perfil');
+    });
 
 
 
