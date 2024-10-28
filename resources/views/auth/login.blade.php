@@ -43,7 +43,14 @@
 
                                     <div class="col-12 d-flex justify-content-between align-items-center">
                                         <div class="text-end">
-                                            <a href="#" class="a-auth font-monospace ">Recuperar contraseña</a>
+                                            <a href="#" class="a-auth font-monospace">Recuperar contraseña</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-check mb-3">
+                                            <input type="checkbox" class="form-check-input" name="remember" id="remember">
+                                            <label class="form-check-label" for="remember">Mantener sesión iniciada</label>
                                         </div>
                                     </div>
 
@@ -54,6 +61,7 @@
                                     </div>
                                 </div>
                             </form>
+
                         </div>
                         <div class="col-12 col-lg-2 d-flex align-items-center justify-content-center gap-3 flex-lg-column">
                             <div class="bg-dark h-100 d-none d-lg-block" style="width: 1px; --bs-bg-opacity: .1;"></div>
