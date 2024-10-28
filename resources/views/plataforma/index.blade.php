@@ -310,10 +310,11 @@
 @include('components.sidebarPlataforma')
 <div class="main p-3 ">
 
-
-    @include(Route::currentRouteName())
-    
-</div>
+    @if (Route::currentRouteName() == 'plataforma.index')
+        @include('plataforma.index')
+    @elseif (Route::currentRouteName())
+    @endif
+   </div>
 
 </body>
 <script>

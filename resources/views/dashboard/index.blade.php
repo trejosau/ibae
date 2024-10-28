@@ -288,7 +288,7 @@
 
 @include('components.sidebar')
 <div class="main p-3">
-    @include('dashboard.' . str_replace('dashboard.', '', Route::currentRouteName()))
+    @include(Route::currentRouteName())
 </div>
 
 <script>

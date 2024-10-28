@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\GraficasController;
 use App\Http\Controllers\loginGoogleController;
 use App\Http\Controllers\PlataformaController;
 use App\Http\Controllers\ProductosController;
@@ -35,9 +34,11 @@ Route::get('/about-us', function () {
     return view('sobrenosotros');
 })->name('sobrenosotros');
 
+Route::get('/plataforma/', function () {
+    return Redirect::route('plataforma.mis-cursos');
+})->name('plataforma');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/plataforma', [PlataformaController::class, 'index'])->name('plataforma');
     Route::get('/plataforma/cursos/mis-cursos', [PlataformaController::class, 'misCursos'])->name('plataforma.mis-cursos');
     Route::get('/plataforma/cursos/historial-cursos', [PlataformaController::class, 'historialCursos'])->name('plataforma.historial-cursos');
     Route::get('/plataforma/modulos/lista', [PlataformaController::class, 'listaModulos'])->name('plataforma.lista-modulos');
