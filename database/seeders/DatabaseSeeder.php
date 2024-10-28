@@ -37,5 +37,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ModulosSeeder::class);
         $this->call(ModuloTemasSeeder::class);
         $this->call(ModuloCursoSeeder::class);
+        $this->call(PedidoSeeder::class);
     }
 }
