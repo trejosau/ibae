@@ -34,7 +34,7 @@
                         </li>
                     @endif
                     <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{ route('plataforma.index') }}">Plataforma</a>
+                        <a class="nav-link roboto-medium" href="{{ route('plataforma') }}">Plataforma</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link roboto-medium" href="{{ route('salon.index') }}">Salon</a>
