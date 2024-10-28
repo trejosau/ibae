@@ -15,6 +15,13 @@ return new class extends Migration
             $table->dateTime('fecha_hora_creacion');
             $table->dateTime('fecha_hora_inicio_cita');
             $table->dateTime('fecha_hora_fin_cita');
+            $table->decimal('total', 10, 2);
+            $table->decimal('anticipo', 10, 2);
+            $table->decimal('pago_restante', 10, 2)->default(0); // Nuevo campo agregado
+            $table->enum('estado_pago', ['concluido', 'anticipo']);
+            $table->enum('estado_cita', ['programada', 'reprogramada', 'cancelada', 'completada'])->default('programada');
+            $table->dateTime('nueva_fecha_hora_inicio_cita')->nullable();
+            $table->string('motivo_reprogramacion')->nullable();
             $table->foreign('id_estilista')->references('id')->on('estilistas')->onDelete('cascade');
             $table->foreign('id_comprador')->references('id')->on('compradores')->onDelete('cascade');
         });

@@ -133,22 +133,5 @@
             </div>
         </div>
     </div>
-    <!-- Redes Sociales -->
-    <div class="row text-center mb-4">
-        <div class="col-md-12">
-            <div class="card border-secondary h-100 mb-4"> <!-- Añadido h-100 -->
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-share-alt fa-2x text-secondary"></i> Redes sociales
-                    </h5>
-                    <ul class="list-unstyled d-flexmx-4"> <!-- Clases añadidas -->
-                        <li class="d-flex align-items-center">
-                            <i class="fab fa-facebook-f fa-2x"></i>
-                            <span class="p-3">Facebook: {{ $followersCount ?? 'No disponible' }}</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+
 </div>
