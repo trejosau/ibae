@@ -8,17 +8,16 @@ use App\Models\DetalleUnas;
 use App\Models\Citas;
 use App\Models\Servicios;
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
 
 class DetalleCitaSeeder extends Seeder
 {
     public function run()
     {
         $citas = Citas::all();
-        $servicios = Servicios::all();
+        $servicios = Servicios::whereIn('categoria', ['color', 'manicura'])->get(); // Filtramos solo servicios de color o manicura
 
         if ($citas->isEmpty() || $servicios->isEmpty()) {
-            return; // No hay citas o servicios
+            return; // No hay citas o servicios de color/manicura
         }
 
         foreach ($citas as $cita) {
@@ -31,30 +30,27 @@ class DetalleCitaSeeder extends Seeder
                     'id_servicio' => $servicio->id,
                 ]);
 
-                // Verificar la categoría del servicio
-                if (in_array($servicio->categoria, ['color', 'manicura'])) {
-                    // Agregar detalle cabello o detalle uñas según la categoría
-                    if ($servicio->categoria === 'color') {
-                        DetalleCabello::create([
-                            'id_detalle_cita' => $detalleCita->id,
-                            'largo' => $this->randomLargo(),
-                            'volumen' => $this->randomVolumen(),
-                            'estado' => $this->randomEstado(),
-                        ]);
-                    } elseif ($servicio->categoria === 'manicura') {
-                        DetalleUnas::create([
-                            'id_detalle_cita' => $detalleCita->id,
-                            'largo' => rand(1, 5), // Ejemplo de largo entre 1 y 5
-                            'cantidad_piedras' => rand(0, 10),
-                            'cantidad_cristales' => rand(0, 10),
-                            'cantidad_stickers' => rand(0, 10),
-                            'cantidad_efecto_foil' => rand(0, 5),
-                            'cantidad_efecto_espejo' => rand(0, 5),
-                            'cantidad_efecto_azucar' => rand(0, 5),
-                            'cantidad_efecto_mano_alzada' => rand(0, 5),
-                            'cantidad_efecto_3d' => rand(0, 5),
-                        ]);
-                    }
+                // Solo añadir detalles para servicios de color o manicura
+                if ($servicio->categoria === 'color') {
+                    DetalleCabello::create([
+                        'id_detalle_cita' => $detalleCita->id,
+                        'largo' => $this->randomLargo(),
+                        'volumen' => $this->randomVolumen(),
+                        'estado' => $this->randomEstado(),
+                    ]);
+                } elseif ($servicio->categoria === 'manicura') {
+                    DetalleUnas::create([
+                        'id_detalle_cita' => $detalleCita->id,
+                        'largo' => rand(1, 5), // Largo de uñas
+                        'cantidad_piedras' => rand(0, 10),
+                        'cantidad_cristales' => rand(0, 10),
+                        'cantidad_stickers' => rand(0, 10),
+                        'cantidad_efecto_foil' => rand(0, 5),
+                        'cantidad_efecto_espejo' => rand(0, 5),
+                        'cantidad_efecto_azucar' => rand(0, 5),
+                        'cantidad_efecto_mano_alzada' => rand(0, 5),
+                        'cantidad_efecto_3d' => rand(0, 5),
+                    ]);
                 }
             }
         }
