@@ -9,6 +9,8 @@ class Pedidos extends Model
 {
     protected $table = 'pedidos';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'total',
         'fecha_pedido',

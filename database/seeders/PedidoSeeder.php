@@ -7,9 +7,8 @@ use App\Models\Entregas;
 use App\Models\DetallePedido;
 use App\Models\Comprador;
 use App\Models\Pedidos;
-
+use App\Models\Productos;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
 
 class PedidoSeeder extends Seeder
@@ -43,8 +42,15 @@ class PedidoSeeder extends Seeder
             for ($i = 0; $i < $numProductos; $i++) {
                 $producto = $productos->random();
                 $cantidad = rand(1, 3);
-                $precioAplicado = $producto->precio; // Asumimos que el producto tiene un campo precio
-                $descuento = $faker->randomFloat(2, 0, 10); // Descuento aleatorio entre 0 y 10
+
+                // Determinar el precio aplicado según si es estudiante
+                if ($pedido->es_estudiante) {
+                    $precioAplicado = $producto->precio_lista; // Para estudiantes
+                } else {
+                    $precioAplicado = $producto->precio_venta; // Para no estudiantes
+                }
+
+                $descuento = $faker->randomFloat(2, 0, 10);
 
                 $detallePedido = DetallePedido::create([
                     'id_pedido' => $pedido->id,

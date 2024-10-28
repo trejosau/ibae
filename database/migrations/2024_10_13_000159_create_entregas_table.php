@@ -12,10 +12,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_pedido');
             $table->unsignedBigInteger('id_admin');
-            $table->dateTime('fecha_hora_entregado');
-            $table->dateTime('fecha_hora_listo_entregar');
+            $table->dateTime('fecha_hora_entregado')->nullable();
+            $table->dateTime('fecha_hora_listo_entregar')->nullable();
             $table->enum('estado', ['listo entregar', 'entregado']);
             $table->string('nombre_recolector');
+
             $table->foreign('id_pedido')->references('id')->on('pedidos')->onDelete('cascade');
             $table->foreign('id_admin')->references('id')->on('administradores')->onDelete('cascade');
         });

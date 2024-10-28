@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Entregas extends Model
 {
-    use HasFactory;
 
     protected $table = 'entregas';
+
+    public $timestamps = false;
 
     protected $fillable = [
         'id_pedido',
@@ -23,11 +23,11 @@ class Entregas extends Model
 
     public function pedido() : BelongsTo
     {
-        return $this->belongsTo(Pedido::class, 'id_pedido');
+        return $this->belongsTo(Pedidos::class, 'id_pedido');
     }
 
     public function administrador() : BelongsTo
     {
-        return $this->belongsTo(Administrador::class, 'id_admin', );
+        return $this->belongsTo(Administrador::class, 'id_admin' );
     }
 }

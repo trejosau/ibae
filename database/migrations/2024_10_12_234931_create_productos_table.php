@@ -8,13 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
+
         Schema::create('productos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
             $table->text('descripcion')->nullable();
             $table->string('marca', 100);
-            $table->decimal('precio_lista', 10);
-            $table->decimal('precio_venta', 10);
+            $table->decimal('precio_proveedor', 10, 2); // Precio del proveedor
+            $table->decimal('precio_lista', 10, 2);     // Precio lista
+            $table->decimal('precio_venta', 10, 2);     // Precio venta
             $table->integer('cantidad');
             $table->enum('medida', ['pzas', 'ml', 'lt', 'gr', 'cm']);
             $table->unsignedBigInteger('id_proveedor');
