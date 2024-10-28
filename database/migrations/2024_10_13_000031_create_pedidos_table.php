@@ -15,7 +15,7 @@ return new class extends Migration
             $table->enum('estado', ['entregado', 'listo para entrega', 'preparando para entrega']);
             $table->string('clave_entrega', 100);
             $table->unsignedBigInteger('id_comprador');
-            $table->enum('es_estudiante', ['si', 'no']);
+            $table->boolean('es_estudiante');
             $table->foreign('id_comprador')->references('id')->on('compradores')->onDelete('cascade');
         });
     }
