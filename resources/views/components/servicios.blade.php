@@ -4,7 +4,7 @@
 
     <div class="services-container">
         <!-- Cursos -->
-        <a href="{{ route('plataforma.index') }}" class="service-item">
+        <a href="{{ route('plataforma') }}" class="service-item">
             <img src="https://trendsstudio.com.mx/wp-content/uploads/2020/08/Trends-Studio-Curso-Maquillaje-de-Belleza-5-1.jpg" alt="Cursos">
             <div class="service-label roboto-medium">CURSOS</div>
         </a>
