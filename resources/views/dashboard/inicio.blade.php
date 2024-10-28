@@ -1,28 +1,5 @@
 <div class="container">
     <h2 class="text-center mb-4">Resumen General</h2>
-
-    <!-- Ingresos Totales -->
-    <div class="row mb-4">
-        <div class="col-10">
-            <div class="card border-info h-100 mb-4">
-                <div class="card-body text-center">
-                    <h5 class="card-title">
-                        <i class="fas fa-money-bill-wave fa-2x text-info"></i> Ingresos Totales
-                    </h5>
-                    <p class="card-text h2">[Total Ingresos]</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-2">
-            <div class="card border-secondary h-100 mb-4 text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Acceso Directo</h5>
-                    <a href="/plataforma" class="btn btn-secondary">Ir a Plataforma</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Accesos Directos -->
     <div class="row mb-4 d-flex justify-content-center">
         <div class="col-3">
@@ -49,7 +26,31 @@
                 </div>
             </div>
         </div>
+        <div class="col-3">
+            <div class="card border-secondary text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Acceso Directo</h5>
+                    <a href="/plataforma" class="btn btn-secondary">Ir a Plataforma</a>
+                </div>
+            </div>
+        </div>
     </div>
+    <!-- Ingresos Totales -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-info h-100 mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">
+                        <i class="fas fa-money-bill-wave fa-2x text-info"></i> Ingresos Totales
+                    </h5>
+                    <p class="card-text h2">$ {{ $totalGeneral }}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
 
     <!-- Ingresos por Proceso -->
     <div class="row mb-4">
@@ -59,7 +60,7 @@
                     <h5 class="card-title">
                         <i class="fas fa-school fa-2x text-success"></i> Ingresos Academia
                     </h5>
-                    <p class="card-text h2">[Ingresos Academia]</p>
+                    <p class="card-text h2">$ {{ $totalAcademia  }}</p>
                 </div>
             </div>
         </div>
@@ -70,7 +71,7 @@
                     <h5 class="card-title">
                         <i class="fas fa-scissors fa-2x text-warning"></i> Ingresos Salón
                     </h5>
-                    <p class="card-text h2">[Ingresos Salón]</p>
+                    <p class="card-text h2">$ {{ $totalCitas }}</p>
                 </div>
             </div>
         </div>
@@ -81,7 +82,7 @@
                     <h5 class="card-title">
                         <i class="fas fa-store fa-2x text-info"></i> Ingresos Tienda
                     </h5>
-                    <p class="card-text h2">[Ingresos Tienda]</p>
+                    <p class="card-text h2">$ {{ $totalVentasPedidos }}</p>
                 </div>
             </div>
         </div>
@@ -103,35 +104,47 @@
                         <i class="fas fa-users fa-2x text-primary"></i> Detalles de Usuarios
                     </h5>
                     <ul class="list-unstyled">
-                        <li class="p-1"><i class="fas fa-user-check"></i> Compradores: [333]</li>
-                        <li class="p-1"><i class="fas fa-user-tie"></i> Estilistas: [333]</li>
-                        <li class="p-1"><i class="fas fa-user-shield"></i> Administradores: [333]</li>
+                        <li class="p-1">
+                            <i class="fas fa-user text-dark mb-3"></i>
+                            <span class="font-weight-bold h4">TOTAL USUARIOS: {{ $compradoresCount }}</span>
+                        </li>
+                        <li class="p-1"><i class="fas fa-user-tie"></i> Estilistas: [{{ $estilistasCount }}]</li>
+                        <li class="p-1"><i class="fas fa-user-shield"></i> Administradores: [{{ $administradoresCount }}]</li>
+                        <li class="p-1"><i class="fas fa-user-graduate"></i> Profesores: [{{ $profesoresCount }}]</li>
+                        <li class="p-1"><i class="fas fa-user-graduate"></i> Estudiantes: [{{ $estudiantesCount }}]</li>
                     </ul>
                 </div>
             </div>
+
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-8">
             <div class="card border-success h-100 mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-box-open fa-2x text-success"></i> Productos en Inventario
-                    </h5>
-                    <p class="card-text h2">[Número de Productos]</p>
+                <div class="card-body row">
+                    <div class="col-md-4 text-center">
+                        <h5 class="card-title">
+                            <i class="fas fa-box-open fa-2x text-success"></i> Valor de stock
+                        </h5>
+                        <p class="card-text h2">$ {{ $valorStock }}</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h5 class="card-title">
+                            <i class="fas fa-dollar-sign fa-2x text-success"></i> Valor stock venta
+                        </h5>
+                        <p class="card-text h2">$ {{ $valorStockVenta }}</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h5 class="card-title">
+                            <i class="fas fa-chart-line fa-2x text-success"></i> Ganancia Aproximada
+                        </h5>
+                        <p class="card-text h2">$ {{ $valorStockVenta-$valorStock }}</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card border-warning h-100 mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-concierge-bell fa-2x text-warning"></i> Servicios Ofrecidos
-                    </h5>
-                    <p class="card-text h2">[Número de Servicios]</p>
-                </div>
-            </div>
-        </div>
+
+
     </div>
 
 </div>

@@ -19,6 +19,13 @@ class Citas extends Model
         'fecha_hora_creacion',
         'fecha_hora_inicio_cita',
         'fecha_hora_fin_cita',
+        'total',
+        'anticipo',
+        'pago_restante',
+        'estado_pago',
+        'estado_cita',
+        'nueva_fecha_hora_inicio_cita',
+        'motivo_reprogramacion',
     ];
 
     public function estilista() : \Illuminate\Database\Eloquent\Relations\BelongsTo

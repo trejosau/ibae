@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GraficasController;
 use App\Http\Controllers\loginGoogleController;
 use App\Http\Controllers\PlataformaController;
 use App\Http\Controllers\ProductosController;
@@ -14,17 +15,17 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard/inicio', [DashboardController::class, 'index'])->name('dashboard.inicio');
-    Route::get('/dashboard/ventas', [DashboardController::class, 'index'])->name('dashboard.ventas');
-    Route::get('/dashboard/compras', [DashboardController::class, 'index'])->name('dashboard.compras');
-    Route::get('/dashboard/citas', [DashboardController::class, 'index'])->name('dashboard.citas');
-    Route::get('/dashboard/servicios', [DashboardController::class, 'index'])->name('dashboard.servicios');
-    Route::get('/dashboard/productos', [DashboardController::class, 'index'])->name('dashboard.productos');
-    Route::get('/dashboard/usuarios', [DashboardController::class, 'index'])->name('dashboard.usuarios');
-    Route::get('/dashboard/auditoria', [DashboardController::class, 'index'])->name('dashboard.auditoria');
-    Route::get('/dashboard/profile', [DashboardController::class, 'index'])->name('dashboard.profile');
-    Route::get('/dashboard/fetch-followers', [DashboardController::class, 'fetchFollowers'])->name('dashboard.fetch.followers');
+    Route::get('/dashboard/inicio', [DashboardController::class, 'inicio'])->name('dashboard.inicio');
+    Route::get('/dashboard/ventas', [DashboardController::class, 'ventas'])->name('dashboard.ventas');
+    Route::get('/dashboard/compras', [DashboardController::class, 'compras'])->name('dashboard.compras');
+    Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');
+    Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');
+    Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');
+    Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
+    Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');
+    Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
 });
+
 
 Route::get('/contacto', function () {
     return view('contacto');

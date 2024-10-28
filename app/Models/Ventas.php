@@ -16,5 +16,6 @@ class Ventas extends Model
         'total',
         'id_admin',
         'es_estudiante',
+
     ];
 }

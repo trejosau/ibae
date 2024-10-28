@@ -287,45 +287,8 @@
 
 
 @include('components.sidebar')
-<div class="main p-3 ">
-
-    @switch(Route::currentRouteName())
-        @case('dashboard.inicio')
-            @include('dashboard.inicio')
-            @break
-
-        @case('dashboard.ventas')
-            @include('dashboard.ventas')
-            @break
-
-        @case('dashboard.compras')
-            @include('dashboard.compras')
-            @break
-
-        @case('dashboard.citas')
-            @include('dashboard.citas')
-            @break
-
-        @case('dashboard.servicios')
-            @include('dashboard.servicios')
-            @break
-
-        @case('dashboard.productos')
-            @include('dashboard.productos')
-            @break
-        @case('dashboard.usuarios')
-            @include('dashboard.usuarios')
-            @break
-        @case('dashboard.auditoria')
-            @include('dashboard.auditoria')
-            @break
-        @case('dashboard.profile')
-            @include('dashboard.profile')
-            @break
-
-        @default
-            <p>No se encontró el contenido para esta ruta.</p>
-    @endswitch
+<div class="main p-3">
+    @include('dashboard.' . str_replace('dashboard.', '', Route::currentRouteName()))
 </div>
 
 <script>
