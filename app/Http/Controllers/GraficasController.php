@@ -29,40 +29,18 @@ class GraficasController extends Controller
             ->get()
             ->keyBy('Mes');
 
-        $resultados = [];
-        for ($mes = 1; $mes <= 12; $mes++) {
-            $montoColegiaturas = $colegiaturasPorMes->get($mes)->Monto_Total ?? 0;
-            $montoInscripciones = $inscripcionesPorMes->get($mes)->Monto_Total ?? 0;
-
-            $resultados[] = [
-                'Mes' => $mes,
-                'Total' => $montoColegiaturas + $montoInscripciones
-            ];
-        }
-
-        return response()->json($resultados);
+        return $this->formatearResultados($colegiaturasPorMes, $inscripcionesPorMes);
     }
 
     public function obtenerTotalSalon(Request $request)
     {
-        // Obtener suma de citas por mes
         $citasPorMes = Citas::selectRaw('MONTH(fecha_hora_creacion) AS Mes, SUM(total - pago_restante) AS Monto_Total')
             ->groupBy('Mes')
             ->orderBy('Mes')
             ->get()
             ->keyBy('Mes');
 
-        $resultados = [];
-        for ($mes = 1; $mes <= 12; $mes++) {
-            $montoCitas = $citasPorMes->get($mes)->Monto_Total ?? 0;
-
-            $resultados[] = [
-                'Mes' => $mes,
-                'Total' => $montoCitas
-            ];
-        }
-
-        return response()->json($resultados);
+        return $this->formatearResultados($citasPorMes);
     }
 
     public function obtenerTotalVentas(Request $request)
@@ -77,25 +55,13 @@ class GraficasController extends Controller
             ->orderBy('Mes')
             ->get()->keyBy('Mes');
 
-        $resultados = [];
-        for ($mes = 1; $mes <= 12; $mes++) {
-            $montoVentas = $ventasPorMes->get($mes)->Total_Ventas ?? 0;
-            $montoPedidos = $pedidosPorMes->get($mes)->Total_Pedidos ?? 0; // Obtener total de pedidos o 0
-
-            $resultados[] = [
-                'Mes' => $mes,
-                'Total' => $montoVentas + $montoPedidos
-            ];
-        }
-
-        return response()->json($resultados);
+        return $this->formatearResultados($ventasPorMes, $pedidosPorMes);
     }
+
     public function obtenerData(Request $request)
     {
         $academiaData = $this->obtenerTotalPorMesAcademia($request)->getData(true);
-
         $citasData = $this->obtenerTotalSalon($request)->getData(true);
-
         $ventasData = $this->obtenerTotalVentas($request)->getData(true);
 
         $resultados = [
@@ -107,5 +73,21 @@ class GraficasController extends Controller
         return response()->json($resultados);
     }
 
+    private function formatearResultados($data1, $data2 = null)
+    {
+        $resultados = [];
+        for ($mes = 1; $mes <= 12; $mes++) {
+            $montoData1 = $data1->get($mes)->Monto_Total ?? 0;
 
+            // Verificamos si $data2 existe y no es null
+            $montoData2 = $data2 ? ($data2->get($mes)->Total_Pedidos ?? 0) : 0;
+
+            $resultados[] = [
+                'Mes' => $mes,
+                'Total' => $montoData1 + $montoData2
+            ];
+        }
+
+        return response()->json($resultados);
+    }
 }

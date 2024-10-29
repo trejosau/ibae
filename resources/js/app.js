@@ -211,65 +211,146 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+
+
+
+
+
+
+
+
+
     if (window.location.pathname === '/dashboard/inicio') {
 
+        // Función para formatear los datos en el formato [fecha, total] para ApexCharts
+        function formatDataForChart(dataArray) {
+            return dataArray.map(item => {
+                const date = new Date(new Date().getFullYear(), item.Mes - 1, 1); // Primer día del mes
+                return [date.getTime(), item.Total];
+            });
+        }
 
-        var options = {
-            series: [
-                {
-                    name: 'Academia',
-                    data: [
-                        [Mes, Total]
-                    ]
-                },
-                {
-                    name: 'Salón',
-                    data: [
-                        [Mes, Total]
-                        ]
-                },
-                {
-                    name: 'Tienda',
-                    data: [
-                        [Mes, Total]
-                        ]
-                }
-            ]
-            ,
+        // Realizar la solicitud AJAX a la ruta /graficas/data
+        fetch('/graficas/data')
+            .then(response => response.json())
+            .then(data => {
+                // Formatear los datos de cada categoría para el gráfico
+                const academiaData = formatDataForChart(data.academia);
+                const salonData = formatDataForChart(data.salon);
+                const ventasData = formatDataForChart(data.ventas);
 
-            chart: {
-                type: 'area',
-                height: 350,
-                stacked: true,
-            },
-            colors: ['#008FFB', '#00E396', '#CED4DC'],
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                curve: 'monotoneCubic'
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    opacityFrom: 0.6,
-                    opacityTo: 0.8
-                }
-            },
-            legend: {
-                position: 'top',
-                horizontalAlign: 'left'
-            },
-            xaxis: {
-                type: 'datetime'
-            }
-        };
+                // Configuración del gráfico ApexCharts
+                var options = {
+                    series: [
+                        {
+                            name: 'Academia',
+                            data: academiaData
+                        },
+                        {
+                            name: 'Salón',
+                            data: salonData
+                        },
+                        {
+                            name: 'Tienda',
+                            data: ventasData
+                        }
+                    ],
+                    chart: {
+                        locales: [{
+                            "name": "es",
+                            "options": {
+                                "months": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                                "shortMonths": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                                "days": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+                                "shortDays": ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+                                "toolbar": {
+                                    "exportToSVG": "Descargar SVG",
+                                    "exportToPNG": "Descargar PNG",
+                                    "menu": "Menú",
+                                    "selection": "Selección",
+                                    "selectionZoom": "Zoom de Selección",
+                                    "zoomIn": "Acercar",
+                                    "zoomOut": "Alejar",
+                                    "pan": "Desplazar",
+                                    "reset": "Restablecer Zoom"
+                                }
+                            }
+                        }],
+                        defaultLocale: "es",
+                        type: 'line',
+                        height: 350,
+                        stacked: false
+                    },
+                    colors: ['#008FFB', '#00E396', '#CED4DC'],
+                    dataLabels: {
+                        enabled: false
+                    },
+                    stroke: {
+                        curve: 'smooth'
+                    },
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            opacityFrom: 0.6,
+                            opacityTo: 0.8
+                        }
+                    },
+                    legend: {
+                        position: 'top',
+                        horizontalAlign: 'left'
+                    },
+                        xaxis: {
+                            type: 'datetime',
+                            labels: {
+                                format: 'MMM'
+                            },
+                            title: {
+                                text: 'Meses del Año'
+                            }
+                        },
+                    yaxis: {
+                        tickAmount: 8,
+                        labels: {
+                            formatter: function(value) {
+                                return `$${value.toLocaleString()}`;
+                            }
+                        },
+                        title: {
+                            text: 'Cantidad Total'
+                        }
+                    },
 
-// Renderizar el gráfico en el contenedor con id 'chart'
-        var chart = new ApexCharts(document.querySelector("#chart"), options);
-        chart.render();
+                    tooltip: {
+                        x: {
+                            format: 'MMMM' // Muestra el nombre completo del mes en el tooltip
+                        },
+                        y: {
+                            formatter: function(value) {
+                                return `$${value.toLocaleString()}`; // Formato con símbolo de moneda y separadores
+                            }
+                        }
+                    }
+                };
 
+                // Renderizar el gráfico en el contenedor con id 'chart'
+                var chart = new ApexCharts(document.querySelector("#chart"), options);
+                chart.render();
+            })
+            .catch(error => console.error('Error al cargar los datos:', error));
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     if (window.location.pathname === '/dashboard/ventas') {
 
