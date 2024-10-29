@@ -149,7 +149,7 @@
 
     .logo{
         width: auto;
-        height: 80px;
+        height: 60px;
     }
 
 </style>
