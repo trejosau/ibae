@@ -214,60 +214,25 @@ document.addEventListener('DOMContentLoaded', function () {
     if (window.location.pathname === '/dashboard/inicio') {
 
 
-// Opciones del gráfico con tus datos de ingresos
         var options = {
             series: [
                 {
                     name: 'Academia',
                     data: [
-                        [new Date('2020-04-01').getTime(), 5000],
-                        [new Date('2020-05-01').getTime(), 25000],  // Pico fuerte en marzo 2020
-                        [new Date('2020-06-01').getTime(), 500],    // Caída fuerte en junio 2020
-                        [new Date('2020-09-01').getTime(), 30000],  // Subida brutal en septiembre 2020
-                        [new Date('2021-02-01').getTime(), 2000],
-                        [new Date('2021-05-01').getTime(), 35000],  // Pico enorme en mayo 2021
-                        [new Date('2021-08-01').getTime(), 400],    // Caída dramática en agosto 2021
-                        [new Date('2022-01-01').getTime(), 27000],  // Pico en enero 2022
-                        [new Date('2022-04-01').getTime(), 1500],
-                        [new Date('2022-10-01').getTime(), 45000],  // Máximo impresionante en octubre 2022
-                        [new Date('2023-03-01').getTime(), 300],    // Caída extrema en marzo 2023
-                        [new Date('2023-09-01').getTime(), 32000],  // Recuperación en septiembre 2023
-                        [new Date('2024-02-01').getTime(), 50000]   // Subida masiva en abril 2024
+                        [Mes, Total]
                     ]
                 },
                 {
                     name: 'Salón',
                     data: [
-                        [new Date('2020-04-01').getTime(), 15000],  // Pico inicial en febrero 2020
-                        [new Date('2020-05-01').getTime(), 1000],   // Caída en mayo 2020
-                        [new Date('2020-10-01').getTime(), 40000],  // Pico extremo en octubre 2020
-                        [new Date('2021-01-01').getTime(), 2000],
-                        [new Date('2021-06-01').getTime(), 28000],  // Fuerte subida en junio 2021
-                        [new Date('2021-11-01').getTime(), 600],    // Caída grande en noviembre 2021
-                        [new Date('2022-03-01').getTime(), 35000],  // Recuperación en marzo 2022
-                        [new Date('2022-07-01').getTime(), 2500],
-                        [new Date('2023-01-01').getTime(), 42000],  // Pico muy alto en enero 2023
-                        [new Date('2023-06-01').getTime(), 700],    // Caída extrema en junio 2023
-                        [new Date('2023-12-01').getTime(), 30000],  // Pico en diciembre 2023
-                        [new Date('2024-02-01').getTime(), 2000]
-                    ]
+                        [Mes, Total]
+                        ]
                 },
                 {
                     name: 'Tienda',
                     data: [
-                        [new Date('2020-04-01').getTime(), 35000],  // Gran pico en abril 2020
-                        [new Date('2020-07-01').getTime(), 500],    // Caída fuerte en julio 2020
-                        [new Date('2020-12-01').getTime(), 48000],  // Pico enorme en diciembre 2020
-                        [new Date('2021-04-01').getTime(), 3000],
-                        [new Date('2021-09-01').getTime(), 55000],  // Máximo en septiembre 2021
-                        [new Date('2022-02-01').getTime(), 800],    // Caída muy fuerte en febrero 2022
-                        [new Date('2022-08-01').getTime(), 60000],  // Gran subida en agosto 2022
-                        [new Date('2022-11-01').getTime(), 1000],
-                        [new Date('2023-05-01').getTime(), 70000],  // Pico brutal en mayo 2023
-                        [new Date('2023-10-01').getTime(), 500],    // Caída muy baja en octubre 2023
-                        [new Date('2024-01-01').getTime(), 80000],  // Máximo impresionante en enero 2024
-                        [new Date('2024-02-01').getTime(), 1000]    // Caída final en febrero 2024
-                    ]
+                        [Mes, Total]
+                        ]
                 }
             ]
             ,
@@ -276,11 +241,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 type: 'area',
                 height: 350,
                 stacked: true,
-                events: {
-                    selection: function (chart, e) {
-                        console.log(new Date(e.xaxis.min));
-                    }
-                }
             },
             colors: ['#008FFB', '#00E396', '#CED4DC'],
             dataLabels: {

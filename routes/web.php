@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GraficasController;
 use App\Http\Controllers\loginGoogleController;
 use App\Http\Controllers\PlataformaController;
 use App\Http\Controllers\ProductosController;
@@ -74,3 +75,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/salon/agendar', [SalonController::class, 'agendar'])->name('salon.agendar');
     Route::get('/salon/confirmar', [SalonController::class, 'confirmar'])->name('salon.confirmar');
 });
+
+Route::get('/graficas/colegiaturas', [GraficasController::class, 'obtenerTotalPorMesAcademia'])->name('graficas.colegiaturas');
+Route::get('/graficas/salon', [GraficasController::class, 'obtenerTotalSalon'])->name('graficas.salon');
+Route::get('/graficas/tienda', [GraficasController::class, 'obtenerTotalVentas'])->name('graficas.tienda');
+Route::get('/graficas/data', [GraficasController::class, 'obtenerData'])->name('graficas.data');
