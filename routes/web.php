@@ -61,6 +61,7 @@ Route::get('/tienda', function () {
 })->name('tienda');
 Route::get('/tienda', [ProductosController::class, 'index']);
 Route::post('/tienda', [ProductosController::class, 'filtrar'])->name('productos.filtrar');
+Route::get('/producto/{id}', [ProductosController::class, 'mostrarDetalle'])->name('producto.detalle');
 
 Route::get('/cursos', function () {
     return view('cursos');
