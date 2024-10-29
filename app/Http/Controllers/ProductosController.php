@@ -29,13 +29,28 @@ class ProductosController extends Controller
             $query->where('precio_venta', '<=', $request->precio_max);
         }
     
-        $productos = $query->get(); // Obtener productos filtrados
+        $productos = $query->get(); 
     
-        return view('tienda', compact('productos')); // Retornar a la vista de tienda
+        return view('tienda', compact('productos'));
         
+    }
+    
+    public function mostrarDetalle($id)
+    {
+        $producto = Productos::findOrFail($id);
+        
+        // Suponiendo que tienes una lógica para obtener productos relacionados
+        $productosRelacionados = Productos::where('id_categoria', $producto->id_categoria)
+            ->where('id', '!=', $id) // Excluir el producto actual
+            ->take(3) // Limitar a 3 productos relacionados
+            ->get();
+    
+        return view('detalle', compact('producto', 'productosRelacionados'));
     }
     
 
 
+
     
 }
+

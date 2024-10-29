@@ -192,7 +192,7 @@ text-align: center;
                     <h5 class="card-title fw-bold pb-3">{{ $producto->nombre }}</h5>
                     <p class="card-text pb-3">{{ $producto->descripcion }}</p>
                     <p class="card-text  pb-3"><strong>Precio:</strong> <strong>${{ $producto->precio_venta }}</strong></p>
-                    <a href="#" class="btn btn-primary">Ver más</a>
+                    <a href="{{ route('producto.detalle', $producto->id) }}" class="btn btn-primary">Ver más</a>
                 </div>
             </div>
         </div>
@@ -205,5 +205,3 @@ text-align: center;
 
 </body>
 </html>
-
-
