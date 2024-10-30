@@ -81,6 +81,7 @@
         display: flex;
         flex-direction: column;
         background-color: var(--sidebar-bg);
+        position: fixed;
     }
 
 
