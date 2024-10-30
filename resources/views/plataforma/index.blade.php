@@ -61,27 +61,26 @@
 
     .wrapper {
         display: flex;
-        width: 100%;
     }
 
     .main {
         min-height: 100vh;
         width: 100%;
         overflow: hidden;
-        padding: 1rem;
         background-color: var(--body-bg);
     }
 
     #sidebar {
+
         width: 70px;
         min-width: 70px;
         min-height: 100vh;
         z-index: 1000;
         transition: all .25s ease-in-out;
-        background-color: var(--sidebar-bg);
+        background-color: #081444;
         display: flex;
         flex-direction: column;
-        position: fixed;
+        background-color: var(--sidebar-bg);
     }
 
 
