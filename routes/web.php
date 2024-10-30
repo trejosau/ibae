@@ -8,6 +8,8 @@ use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\SalonController;
 use App\Http\Controllers\VentaController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Redirect;
+
 
 Route::get('/', function () {
     return view('index');
@@ -58,7 +60,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/plataforma/espacio/perfil', [PlataformaController::class, 'perfilEspacio'])->name('plataforma.espacio-perfil');
     });
 
-
+Route::delete('/plataforma/cursos/{id}', [PlataformaController::class, 'destroy'])->name('cursos.destroy');
+Route::get('/plataforma/cursos/{id}/edit', [PlataformaController::class, 'edit'])->name('cursos.edit');
+Route::put('/plataforma/cursos/{id}', [PlataformaController::class, 'update'])->name('cursos.update');
+Route::post('/cursos', [PlataformaController::class, 'store'])->name('cursos.store');
 
     Route::get('/tienda', [ProductosController::class, 'index'])->name('tienda'); // Ruta para la tienda principal
     Route::post('/catalogo', [ProductosController::class, 'filtrar'])->name('productos.filtrar'); // Filtrar productos desde el formulario

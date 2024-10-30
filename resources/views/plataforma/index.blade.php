@@ -10,6 +10,13 @@
 </head>
 <style>
     /* Variables de colores */
+
+    .titulo {
+        font-size: 3rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        padding-right: 500px;
+    }
     :root {
         --primary-color: #ffb3c1; /* Rosa pastel */
         --sidebar-bg: #f6f8fc; /* Azul claro muy suave */
@@ -54,6 +61,7 @@
 
     .wrapper {
         display: flex;
+        width: 100%;
     }
 
     .main {
@@ -73,8 +81,9 @@
         background-color: var(--sidebar-bg);
         display: flex;
         flex-direction: column;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra para un efecto de profundidad */
+        position: fixed;
     }
+    
 
     #sidebar.expand {
         width: 260px;
@@ -307,15 +316,15 @@
 <body>
 
 
-@include('components.sidebarPlataforma')
-<div class="main p-3 ">
-
-    @if (Route::currentRouteName() == 'plataforma.index')
-        @include('plataforma.index')
-    @elseif (Route::currentRouteName())
-    @endif
-   </div>
-
+    <div class="wrapper d-flex">
+        <aside id="sidebar">
+            @include('components.sidebarPlataforma')
+        </aside>
+        <div class="main p-3">
+            @include(Route::currentRouteName())
+        </div>
+    </div>
+    
 </body>
 <script>
     const themeToggle = document.getElementById('theme-toggle');

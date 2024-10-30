@@ -289,6 +289,7 @@
 @include('components.sidebar')
 <div class="main p-3">
     @include(Route::currentRouteName())
+    
 </div>
 
 <script>

@@ -20,8 +20,8 @@
                 </a>
             </li>
            
-
-            <!-- Sección para Cursos -->
+            @if(auth()->user()->hasAnyRole(['profesor', 'admin']))
+            <!-- Código para la pestaña Cursos -->
             <li class="sidebar-item">
                 <a href="#cursosDropdown" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                    data-bs-target="#cursosDropdown" aria-expanded="false" aria-controls="cursosDropdown">
@@ -31,9 +31,13 @@
                 </a>
                 <ul id="cursosDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                     <li class="sidebar-item"><a href="{{ route('plataforma.mis-cursos') }}" class="sidebar-link">Ver Cursos</a></li>
-                    <li class="sidebar-item"><a href="" class="sidebar-link">Historial de Cursos</a></li>
+                    <li class="sidebar-item"><a href="{{route('plataforma.historial-cursos')}}" class="sidebar-link">Historial de Cursos</a></li>
                 </ul>
             </li>
+        @endif
+        
+        
+        
 
             <!-- Sección para Módulos -->
             <li class="sidebar-item">
@@ -122,3 +126,4 @@
         </li>
     </aside>
 </div>
+
