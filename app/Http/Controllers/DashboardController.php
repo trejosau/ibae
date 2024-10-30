@@ -16,8 +16,12 @@ use App\Models\Ventas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class DashboardController extends Controller
+class DashboardInicioController extends Controller
 {
+    public function index(Request $request)
+    {
+        return redirect()->route('dashboard.inicio');
+    }
     public function inicio(Request $request)
     {
 
