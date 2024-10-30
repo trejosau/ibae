@@ -6,7 +6,7 @@
         <div class="col-md-6">
             <!-- Mostrar la imagen principal del producto -->
             @if($producto->main_photo)
-                <img src="{{ asset('storage/' . $producto->main_photo) }}" alt="{{ $producto->nombre }}" class="img-fluid rounded shadow mb-4">
+                <img src="{{ asset($producto->main_photo) }}" alt="{{ $producto->nombre }}" class="img-fluid rounded shadow mb-4">
             @else
                 <div class="alert alert-warning">Imagen no disponible</div>
             @endif
@@ -30,7 +30,7 @@
             <div class="col-md-4">
                 <div class="card mb-4 shadow-sm">
                     @if($productoRelacionado->main_photo)
-                        <img src="{{ asset('storage/' . $productoRelacionado->main_photo) }}" alt="{{ $productoRelacionado->nombre }}" class="card-img-top">
+                        <img src="{{ asset($productoRelacionado->main_photo) }}" alt="{{ $productoRelacionado->nombre }}" class="card-img-top">
                     @else
                         <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 200px; background-color: #f8f9fa;">
                             <p class="text-muted">Imagen no disponible</p>

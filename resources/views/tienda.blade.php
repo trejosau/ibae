@@ -119,86 +119,50 @@ text-align: center;
 <div class="tittle p-5 fs-4"><h1>ECHA UN VISTAZO A NUESTRAS CATEGORIAS</h1></div>
 
 <div class="contenedor pb-4">
-        <div>
-            <div class="tittle"><a href=""><img src="{{ asset('images/young-brunette-woman-grey-dress-posing.jpg') }}" alt="Descripción" class="imagen-circular" loading="lazy"></a></div>
-            <div class="tittle"><h2>Cabello</h2></div>
+    <div>
+        <div class="tittle">
+            <a href="{{ route('productos.categoria', ['id_categoria' => 1]) }}">
+                <img src="{{ asset('images/young-brunette-woman-grey-dress-posing.jpg') }}" alt="Cabello" class="imagen-circular" loading="lazy">
+            </a>
         </div>
-        <div>
-            <div class="tittle"><a href=""><img src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt="Descripción" class="imagen-circular" loading="lazy"></a></div>
-            <div class="tittle"><h2>Electricos</h2></div>
+        <div class="tittle"><h2>Cabello</h2></div>
+    </div>
+    <div>
+        <div class="tittle">
+            <a href="{{ route('productos.categoria', ['id_categoria' => 2]) }}">
+                <img src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt="Electricos" class="imagen-circular" loading="lazy">
+            </a>
         </div>
-        <div>
-            <div class="tittle"><a href=""><img src="{{ asset('images/woman-using-pink-beauty-product-her-face.jpg') }}" alt="Descripción" class="imagen-circular" loading="lazy"></a></div>
-            <div class="tittle"><h2>Skincare</h2></div>
+        <div class="tittle"><h2>Electricos</h2></div>
+    </div>
+    <div>
+        <div class="tittle">
+            <a href="{{ route('productos.categoria', ['id_categoria' => 3]) }}">
+                <img src="{{ asset('images/woman-using-pink-beauty-product-her-face.jpg') }}" alt="Skincare" class="imagen-circular" loading="lazy">
+            </a>
         </div>
-        <div>
-            <div class="tittle"><a href=""><img src="{{ asset('images/woman-with-nail-art-promoting-design-luxury-earrings-ring.jpg') }}" alt="Descripción" class="imagen-circular" loading="lazy"></a></div>
-            <div class="tittle"><h2>Uñas</h2></div>
+        <div class="tittle"><h2>Skincare</h2></div>
+    </div>
+    <div>
+        <div class="tittle">
+            <a href="{{ route('productos.categoria', ['id_categoria' => 4]) }}">
+                <img src="{{ asset('images/woman-with-nail-art-promoting-design-luxury-earrings-ring.jpg') }}" alt="Uñas" class="imagen-circular" loading="lazy">
+            </a>
         </div>
-        <div>
-            <div class="tittle"><a href=""><img src="{{ asset('images/makeup-brushes-with-whirling-pink-powder.jpg') }}" alt="Descripción" class="imagen-circular" loading="lazy"></a></div>
-            <div class="tittle"><h2>Maquillaje</h2></div>
+        <div class="tittle"><h2>Uñas</h2></div>
+    </div>
+    <div>
+        <div class="tittle">
+            <a href="{{ route('productos.categoria', ['id_categoria' => 5]) }}">
+                <img src="{{ asset('images/makeup-brushes-with-whirling-pink-powder.jpg') }}" alt="Maquillaje" class="imagen-circular" loading="lazy">
+            </a>
         </div>
-</div>
-
-
-<h1 class=" tittle p-5 fs-5 fw-bold" >TODOS LOS PRODUCTOS</h1>
-<div class="container">
-    <form id="filterForm" method="POST" action="{{ route('productos.filtrar') }}" class="p-3">
-        @csrf <!-- Protección CSRF necesaria en formularios POST -->
-
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label for="id_categoria" class="form-label">Categoría:</label>
-                <select id="id_categoria" name="id_categoria" class="form-select">
-                    <option value="">Todas</option>
-                    <option value="1" {{ old('id_categoria') == 1 ? 'selected' : '' }}>Tintes</option>
-                    <option value="2" {{ old('id_categoria') == 2 ? 'selected' : '' }}>Cabello</option>
-                    <option value="3" {{ old('id_categoria') == 3 ? 'selected' : '' }}>Barbería</option>
-                    <option value="4" {{ old('id_categoria') == 4 ? 'selected' : '' }}>Maquillaje</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="precio_min" class="form-label">Precio mínimo:</label>
-                <input type="number" id="precio_min" name="precio_min" min="0" value="{{ old('precio_min') }}" class="form-control">
-            </div>
-
-            <div class="col-md-6">
-                <label for="precio_max" class="form-label">Precio máximo:</label>
-                <input type="number" id="precio_max" name="precio_max" min="0" value="{{ old('precio_max') }}" class="form-control">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12 text-end">
-                <button type="submit" class="btn btn-primary">Filtrar</button>
-            </div>
-        </div>
-    </form>
-
-
-
-
-
-    <div class="row">
-        @foreach ($productos as $producto)
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <img src="{{ $producto->main_photo }}" class="card-img-top" alt="{{ $producto->nombre }}">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold pb-3">{{ $producto->nombre }}</h5>
-                    <p class="card-text pb-3">{{ $producto->descripcion }}</p>
-                    <p class="card-text  pb-3"><strong>Precio:</strong> <strong>${{ $producto->precio_venta }}</strong></p>
-                    <a href="{{ route('producto.detalle', $producto->id) }}" class="btn btn-primary">Ver más</a>
-                </div>
-            </div>
-        </div>
-        @endforeach
+        <div class="tittle"><h2>Maquillaje</h2></div>
     </div>
 </div>
+
+
+
 
 
 @include('components.footer')
