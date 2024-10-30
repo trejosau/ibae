@@ -57,12 +57,11 @@ Route::middleware('auth')->group(function () {
 
 
 
-Route::get('/tienda', function () {
-    return view('tienda');
-})->name('tienda');
-Route::get('/tienda', [ProductosController::class, 'index']);
-Route::post('/tienda', [ProductosController::class, 'filtrar'])->name('productos.filtrar');
-Route::get('/producto/{id}', [ProductosController::class, 'mostrarDetalle'])->name('producto.detalle');
+    Route::get('/tienda', [ProductosController::class, 'index'])->name('tienda'); // Ruta para la tienda principal
+    Route::post('/catalogo', [ProductosController::class, 'filtrar'])->name('productos.filtrar'); // Filtrar productos desde el formulario
+    Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, 'filtrar'])->name('productos.categoria'); // Filtrar productos por categoría desde URL
+    Route::get('/producto/{id}', [ProductosController::class, 'mostrarDetalle'])->name('producto.detalle');
+
 
 Route::get('/cursos', function () {
     return view('cursos');
