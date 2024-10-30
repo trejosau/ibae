@@ -35,6 +35,7 @@ class GraficasController extends Controller
     public function obtenerTotalSalon(Request $request)
     {
         $citasPorMes = Citas::selectRaw('MONTH(fecha_hora_creacion) AS Mes, SUM(total - pago_restante) AS Monto_Total')
+            ->whereYear('fecha_hora_creacion', now()->year)
             ->groupBy('Mes')
             ->orderBy('Mes')
             ->get()
@@ -46,11 +47,13 @@ class GraficasController extends Controller
     public function obtenerTotalVentas(Request $request)
     {
         $ventasPorMes = Ventas::selectRaw('MONTH(fecha_compra) AS Mes, SUM(total) AS Total_Ventas')
+            ->whereYear('fecha_compra', now()->year)
             ->groupBy('Mes')
             ->orderBy('Mes')
             ->get()->keyBy('Mes');
 
         $pedidosPorMes = Pedidos::selectRaw('MONTH(fecha_pedido) AS Mes, SUM(total) AS Total_Pedidos')
+            ->whereYear('fecha_pedido', now()->year)
             ->groupBy('Mes')
             ->orderBy('Mes')
             ->get()->keyBy('Mes');

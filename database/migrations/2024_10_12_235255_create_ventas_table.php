@@ -15,6 +15,7 @@ return new class extends Migration
             $table->decimal('total', 10 );
             $table->unsignedBigInteger('id_admin');
             $table->enum('es_estudiante', ['si', 'no']);
+            $table->foregin('matricula')->references('matricula')->on('estudiantes');
             $table->foreign('id_admin')->references('id')->on('administradores')->onDelete('cascade');
             $table->foreign('id_comprador')->references('id')->on('compradores')->onDelete('cascade');
         });

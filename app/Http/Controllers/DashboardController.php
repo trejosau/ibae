@@ -16,7 +16,7 @@ use App\Models\Ventas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class DashboardInicioController extends Controller
+class DashboardController extends Controller
 {
     public function index(Request $request)
     {
@@ -82,7 +82,13 @@ class DashboardInicioController extends Controller
 
     public function ventas(Request $request)
     {
-        return view('dashboard.index');
+        $productos = Productos::all();
+        return view('dashboard.index', compact('productos'));
+    }
+
+    public function ventasStore(Request $request)
+    {
+
     }
 
     public function compras(Request $request)
