@@ -83,7 +83,7 @@
         flex-direction: column;
         position: fixed;
     }
-    
+
 
     #sidebar.expand {
         width: 260px;
@@ -314,17 +314,12 @@
 </style>
 
 <body>
-
-
-    <div class="wrapper d-flex">
-        <aside id="sidebar">
-            @include('components.sidebarPlataforma')
-        </aside>
-        <div class="main p-3">
-            @include(Route::currentRouteName())
-        </div>
+<div class="wrapper">
+    @include('components.sidebarPlataforma')
+    <div class="main p-3">
+        @include(Route::currentRouteName())
     </div>
-    
+</div>
 </body>
 <script>
     const themeToggle = document.getElementById('theme-toggle');
