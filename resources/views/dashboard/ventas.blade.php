@@ -279,8 +279,12 @@
                                 <input type="text" class="form-control" name="nombre_comprador" id="nombre-comprador-nueva" placeholder="Ingrese el nombre del comprador">
                             </div>
                             <div class="form-check mb-3">
-                                <input type="checkbox" class="form-check-input" name="es_estudiante" id="es-estudiante">
+                                <input type="checkbox" class="form-check-input" id="es-estudiante" onchange="toggleMatricula()">
                                 <label class="form-check-label" for="es-estudiante">¿Es Estudiante?</label>
+                            </div>
+                            <div class="mb-3 d-none" id="div-matricula">
+                                <label for="matricula" class="form-label">Matrícula del Estudiante</label>
+                                <input type="text" class="form-control" id="matricula" placeholder="Ingrese la matrícula">
                             </div>
 
                             <!-- Resumen de la Venta -->
@@ -335,6 +339,18 @@
         </div>
     </div>
 
+    <script>
+        function toggleMatricula() {
+            const checkBox = document.getElementById('es-estudiante');
+            const divMatricula = document.getElementById('div-matricula');
+            if (checkBox.checked) {
+                divMatricula.classList.remove('d-none'); // Muestra el campo de matrícula
+            } else {
+                divMatricula.classList.add('d-none'); // Oculta el campo de matrícula
+                document.getElementById('matricula').value = ''; // Limpia el valor del campo
+            }
+        }
+    </script>
 
     <script>
         let carrito = {};
