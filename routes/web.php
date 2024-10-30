@@ -6,6 +6,7 @@ use App\Http\Controllers\loginGoogleController;
 use App\Http\Controllers\PlataformaController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\SalonController;
+use App\Http\Controllers\VentaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -17,7 +18,9 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard/inicio', [DashboardController::class, 'inicio'])->name('dashboard.inicio');
     Route::get('/dashboard/ventas', [DashboardController::class, 'ventas'])->name('dashboard.ventas');
-    Route::post('/dashboard/ventas/store', [DashboardController::class, 'ventasStore'])->name('ventas.store');
+    Route::post('/ventas/agregar-producto', [VentaController::class, 'agregarProducto'])->name('ventas.agregarProducto');
+    Route::post('/ventas/quitar-producto', [VentaController::class, 'quitarProducto'])->name('ventas.quitarProducto');
+    Route::post('/ventas/realizar', [VentaController::class, 'realizarVenta'])->name('ventas.realizar');
     Route::get('/dashboard/compras', [DashboardController::class, 'compras'])->name('dashboard.compras');
     Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');
     Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');

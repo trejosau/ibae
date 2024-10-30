@@ -261,6 +261,7 @@
 
 
     <!-- Modal Agregar Venta -->
+    <!-- Modal Agregar Venta -->
     <div class="modal fade" id="modal-agregar-venta" tabindex="-1" aria-labelledby="modal-agregar-venta-label" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content h-100">
@@ -272,35 +273,48 @@
                     <!-- Sidebar con Información del Comprador y Resumen de la Venta -->
                     <div class="col-3 border-end p-4 d-flex flex-column bg-light">
                         <h5 class="mb-4">Información del Comprador</h5>
-                        <form id="form-venta">
+                        <form id="form-venta" action="{{ route('ventas.realizar') }}" method="POST">
                             @csrf
                             <div class="mb-3">
                                 <label for="nombre-comprador-nueva" class="form-label">Nombre del Comprador</label>
-                                <input type="text" class="form-control" name="nombre_comprador" id="nombre-comprador-nueva" placeholder="Ingrese el nombre del comprador">
+                                <input type="text" class="form-control" name="nombre_comprador" id="nombre-comprador-nueva" placeholder="Ingrese el nombre del comprador" required>
                             </div>
                             <div class="form-check mb-3">
-                                <input type="checkbox" class="form-check-input" id="es-estudiante" onchange="toggleMatricula()">
+                                <input type="checkbox" class="form-check-input" id="es-estudiante" name="es_estudiante" onchange="toggleMatricula()">
                                 <label class="form-check-label" for="es-estudiante">¿Es Estudiante?</label>
                             </div>
                             <div class="mb-3 d-none" id="div-matricula">
                                 <label for="matricula" class="form-label">Matrícula del Estudiante</label>
-                                <input type="text" class="form-control" id="matricula" placeholder="Ingrese la matrícula">
+                                <input type="text" class="form-control" name="matricula" id="matricula" placeholder="Ingrese la matrícula">
                             </div>
 
                             <!-- Resumen de la Venta -->
                             <h6 class="text-center mb-3">Resumen de la Venta</h6>
                             <div id="resumen-venta" class="border rounded p-3 bg-white flex-grow-1 overflow-auto" style="max-height: 300px;">
-                                <ul id="lista-resumen" class="list-group list-group-flush">
-                                    <!-- Aquí se agregarán los productos seleccionados con JavaScript -->
+                                <ul class="list-group list-group-flush" id="lista-productos">
+                                    @if (session()->has('carrito') && count(session('carrito')) > 0)
+                                        @foreach (session('carrito') as $productoId => $producto)
+                                            <li class="list-group-item d-flex justify-content-between align-items-center p-1" id="producto-{{ $productoId }}">
+                                                <span>{{ $producto['nombre'] }}: {{ $producto['cantidad'] }}</span>
+                                                <span class="badge bg-primary rounded-pill">${{ number_format($producto['precio'] * $producto['cantidad'], 2) }}</span>
+                                                <button type="button" class="btn btn-outline-danger btn-sm ms-2 btn-quitar-producto" data-producto-id="{{ $productoId }}">Eliminar</button>
+                                            </li>
+                                        @endforeach
+                                    @else
+                                        <li class="list-group-item text-center">No hay productos en el carrito</li>
+                                    @endif
                                 </ul>
                             </div>
+
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <h6 class="mb-0">Total:</h6>
-                                <span id="total-venta" class="fw-bold">$0.00</span>
+                                <span class="fw-bold">
+                                ${{ number_format(array_sum(array_map(fn($p) => $p['precio'] * $p['cantidad'], session('carrito', []))), 2) }}
+                            </span>
                             </div>
 
                             <!-- Botón para Enviar al Controlador -->
-                            <button type="button" class="btn btn-primary mt-3" onclick="enviarVenta()">Realizar Venta</button>
+                            <button type="submit" class="btn btn-primary mt-3">Realizar Venta</button>
                         </form>
                     </div>
 
@@ -314,21 +328,13 @@
                                         <h6 class="card-title fw-semibold mb-2" style="font-size: 1rem;">{{ $producto->nombre }}</h6>
                                         <p class="card-text text-muted mb-1" style="font-size: 0.85rem;">{{ Str::limit($producto->descripcion, 50) }}</p>
                                         <p class="card-text text-primary fw-bold mb-2" style="font-size: 0.9rem;">${{ number_format($producto->precio_venta, 2) }}</p>
-                                        <div class="d-flex justify-content-center align-items-center mb-2">
-                                            <button class="btn btn-outline-secondary btn-sm" onclick="cambiarCantidad('{{ $producto->id }}', -1)" title="Quitar">
-                                                <i class="fas fa-minus"></i>
-                                            </button>
-                                            <input type="number" id="input-cantidad-{{ $producto->id }}" class="form-control form-control-sm mx-1" min="0" value="0" oninput="validarCantidad(this)" style="width: 60px; height: 36px; text-align: center;">
-                                            <button class="btn btn-outline-secondary btn-sm" onclick="cambiarCantidad('{{ $producto->id }}', 1)" title="Agregar">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                            <button class="btn btn-outline-primary btn-sm ms-2" onclick="agregarProducto('{{ $producto->id }}', '{{ $producto->nombre }}', {{ $producto->precio_venta }})" title="Agregar al Carrito">
-                                                <i class="fas fa-shopping-cart"></i>
-                                            </button>
-                                            <button class="btn btn-outline-danger btn-sm ms-2" onclick="quitarProducto('{{ $producto->id }}')" title="Eliminar del Resumen">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
+                                        <form action="{{ route('ventas.agregarProducto') }}" method="POST" class="form-agregar-producto">
+                                            @csrf
+                                            <input type="hidden" name="producto_id" value="{{ $producto->id }}">
+                                            <label for="cantidad-{{ $producto->id }}" class="form-label">Cantidad:</label>
+                                            <input type="number" name="cantidad" id="cantidad-{{ $producto->id }}" class="form-control form-control-sm mb-2" min="1" value="1">
+                                            <button type="button" class="btn btn-outline-primary btn-sm btn-agregar-producto" data-producto-id="{{ $producto->id }}">Agregar al Carrito</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -339,83 +345,73 @@
         </div>
     </div>
 
-    <script>
-        function toggleMatricula() {
-            const checkBox = document.getElementById('es-estudiante');
-            const divMatricula = document.getElementById('div-matricula');
-            if (checkBox.checked) {
-                divMatricula.classList.remove('d-none'); // Muestra el campo de matrícula
-            } else {
-                divMatricula.classList.add('d-none'); // Oculta el campo de matrícula
-                document.getElementById('matricula').value = ''; // Limpia el valor del campo
-            }
-        }
-    </script>
-
-    <script>
-        let carrito = {};
-
-        function validarCantidad(input) {
-            if (input.value < 0) {
-                input.value = 0;
-            }
-        }
-
-        function cambiarCantidad(id, cambio) {
-            const cantidadInput = document.getElementById(`input-cantidad-${id}`);
-            let cantidad = parseInt(cantidadInput.value) || 0;
-            cantidad += cambio;
-            if (cantidad < 0) {
-                cantidad = 0;
-            }
-
-            cantidadInput.value = cantidad;
-        }
-
-        function agregarProducto(id, nombre, precio) {
-            const cantidadInput = document.getElementById(`input-cantidad-${id}`);
-            const cantidad = parseInt(cantidadInput.value) || 0;
-
-            if (cantidad > 0) {
-                if (carrito[id]) {
-                    carrito[id].cantidad += cantidad; // Incrementar la cantidad en el carrito
-                } else {
-                    carrito[id] = { nombre: nombre, cantidad: cantidad, precio: precio }; // Agregar nuevo producto al carrito
-                }
-
-                actualizarResumen();
-                cantidadInput.value = 0; // Reiniciar el campo de cantidad después de agregar
-            }
-        }
-
-        function quitarProducto(id) {
-            delete carrito[id]; // Eliminar producto del carrito
-            actualizarResumen();
-        }
-
-        function actualizarResumen() {
-            const listaResumen = document.getElementById("lista-resumen");
-            listaResumen.innerHTML = "";
-            let total = 0;
-
-            for (const [id, producto] of Object.entries(carrito)) {
-                const item = document.createElement("li");
-                item.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center", "p-1");
-                item.innerHTML = `<span>${producto.nombre}</span><span>${producto.cantidad}</span>`;
-                const subtotal = producto.cantidad * producto.precio;
-                total += subtotal;
-                const totalBadge = document.createElement("span");
-                totalBadge.classList.add("badge", "bg-primary", "rounded-pill");
-                totalBadge.textContent = `$${subtotal.toFixed(2)}`;
-                item.appendChild(totalBadge);
-                listaResumen.appendChild(item);
-            }
-
-            document.getElementById("total-venta").textContent = `$${total.toFixed(2)}`;
-        }
-    </script>
-
-
 
 
 </div>
+
+
+
+<script>
+    function toggleMatricula() {
+        const checkBox = document.getElementById('es-estudiante');
+        const divMatricula = document.getElementById('div-matricula');
+        if (checkBox.checked) {
+            divMatricula.classList.remove('d-none'); // Muestra el campo de matrícula
+        } else {
+            divMatricula.classList.add('d-none'); // Oculta el campo de matrícula
+            document.getElementById('matricula').value = ''; // Limpia el valor del campo
+        }
+    }
+
+    // Agregar producto al carrito
+    document.querySelectorAll('.btn-agregar-producto').forEach(button => {
+        button.addEventListener('click', function () {
+            const form = button.closest('form');
+            const productoId = button.getAttribute('data-producto-id');
+
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    producto_id: productoId,
+                    cantidad: form.querySelector(`input[name="cantidad"]`).value
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Actualiza la lista de productos en el carrito
+                        document.getElementById('lista-productos').innerHTML = data.carritoHtml;
+                    }
+                });
+        });
+    });
+
+    // Delegación de eventos para eliminar producto
+    document.getElementById('lista-productos').addEventListener('click', function (event) {
+        if (event.target.classList.contains('btn-quitar-producto')) {
+            const productoId = event.target.getAttribute('data-producto-id');
+
+            fetch('{{ route('ventas.quitarProducto') }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    producto_id: productoId
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Actualiza la lista de productos en el carrito
+                        document.getElementById('lista-productos').innerHTML = data.carritoHtml;
+                    }
+                });
+        }
+    });
+</script>

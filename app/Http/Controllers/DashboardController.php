@@ -6,14 +6,17 @@ use App\Models\Administrador;
 use App\Models\Citas;
 use App\Models\Colegiaturas;
 use App\Models\Comprador;
+use App\Models\DetalleVenta;
 use App\Models\Estilista;
 use App\Models\Estudiante;
 use App\Models\Inscripcion;
 use App\Models\Pedidos;
+use App\Models\Persona;
 use App\Models\Productos;
 use App\Models\Profesor;
 use App\Models\Ventas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -88,9 +91,93 @@ class DashboardController extends Controller
 
     public function ventasStore(Request $request)
     {
+        // Obtener el ID del usuario autenticado
+        $userId = Auth::id();
 
+        // Obtener el id_persona del usuario autenticado
+        $persona = Persona::where('usuario', $userId)->first();
+
+        if (!$persona) {
+            return response()->json(['error' => 'Persona no encontrada.'], 404);
+        }
+
+        $idPersona = $persona->id;
+
+        // Obtener el administrador que corresponde a este id_persona
+        $admin = Administrador::where('id_persona', $idPersona)->first();
+
+        if (!$admin) {
+            return response()->json(['error' => 'Administrador no encontrado.'], 404);
+        }
+
+        $adminId = $admin->id; // Obtén el ID del administrador
+
+        // Obtener datos del comprador
+        $nombreComprador = $request->input('nombreComprador');
+        $fechaCompra = now()->toDateString(); // Fecha actual
+        $esEstudiante = $request->input('esEstudiante') ? 'si' : 'no'; // Si está marcado el checkbox
+        $matricula = $esEstudiante === 'si' ? $request->input('matricula') : null; // Obtener matrícula si es estudiante
+
+        // Crear la venta
+        $venta = Venta::create([
+            'id_comprador' => $request->input('id_comprador'), // Asegúrate de enviar este dato en la petición
+            'fecha_compra' => $fechaCompra,
+            'total' => 0, // Inicialmente puedes dejarlo en 0 o calcularlo más adelante
+            'id_admin' => $adminId,
+            'es_estudiante' => $esEstudiante,
+            'matricula' => $matricula,
+        ]);
+
+        // Procesar los detalles de la venta
+        $detalles = $this->procesarDetallesVenta($request->input('carrito'), $venta->id, $esEstudiante);
+
+        // Retornar la respuesta
+        return response()->json([
+            'mensaje' => 'Venta registrada correctamente.',
+            'venta' => [
+                'nombre_comprador' => $nombreComprador,
+                'fecha_compra' => $fechaCompra,
+                'id_admin' => $adminId,
+                'es_estudiante' => $esEstudiante,
+                'matricula' => $matricula,
+                'detalles' => $detalles,
+            ],
+        ]);
     }
 
+    private function procesarDetallesVenta($carrito, $idVenta, $esEstudiante)
+    {
+        $detalles = [];
+        foreach ($carrito as $idProducto => $producto) {
+            $cantidad = $producto['cantidad'];
+            $precioAplicado = $this->calcularPrecioAplicado($producto, $esEstudiante);
+            $descuento = $esEstudiante === 'si' ? $producto['precio'] - $producto['precio_lista'] : 0;
+
+            // Guardar el detalle en la base de datos
+            DetalleVenta::create([
+                'id_venta' => $idVenta,
+                'id_producto' => $idProducto,
+                'cantidad' => $cantidad,
+                'precio_aplicado' => $precioAplicado,
+                'descuento' => $descuento,
+            ]);
+
+            $detalles[] = [
+                'id_producto' => $idProducto,
+                'cantidad' => $cantidad,
+                'precio_aplicado' => $precioAplicado,
+                'descuento' => $descuento,
+            ];
+        }
+
+        return $detalles;
+    }
+
+    private function calcularPrecioAplicado($producto, $esEstudiante)
+    {
+        // Calcula el precio aplicado según si es estudiante o no
+        return $esEstudiante === 'si' ? $producto['precio_lista'] : $producto['precio'];
+    }
     public function compras(Request $request)
     {
         return view('dashboard.index');

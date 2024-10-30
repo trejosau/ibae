@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_venta');
             $table->unsignedBigInteger('id_producto');
+            $table->integer('cantidad');
             $table->decimal('precio_aplicado', 10);
             $table->decimal('descuento', 10)->default(0);
             $table->foreign('id_venta')->references('id')->on('ventas')->onDelete('cascade');
