@@ -10,16 +10,15 @@ return new class extends Migration
     {
         Schema::create('ventas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_comprador');
-            $table->date('fecha_compra');
+            $table->string('nombre_comprador');
+            $table->timestamp('fecha_compra');
             $table->decimal('total', 10 );
             $table->unsignedBigInteger('id_admin');
             $table->enum('es_estudiante', ['si', 'no']);
             $table->unsignedBigInteger('matricula')->nullable();
             $table->foreign('matricula')->references('matricula')->on('estudiantes');
             $table->foreign('id_admin')->references('id')->on('administradores')->onDelete('cascade');
-            $table->foreign('id_comprador')->references('id')->on('compradores')->onDelete('cascade');
-        });
+            });
     }
 
     public function down(): void
