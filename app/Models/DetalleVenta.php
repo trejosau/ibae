@@ -16,19 +16,20 @@ class DetalleVenta extends Model
     protected $fillable = [
         'id_venta',
         'id_producto',
+        'cantidad',
         'precio_aplicado',
         'descuento',
     ];
 
 
-    public function venta() : BelongsTo
+    public function venta()
     {
         return $this->belongsTo(Ventas::class, 'id_venta');
     }
 
-
-    public function producto() : BelongsTo
+    // Relación con productos (un detalle tiene muchos productos)
+    public function productos()
     {
-        return $this->belongsTo(Productos::class, 'id_producto');
+        return $this->belongsTo(Productos::class, 'id_producto'); // Asegúrate de que 'id_producto' sea la clave foránea
     }
 }

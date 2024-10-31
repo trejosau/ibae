@@ -35,4 +35,8 @@ class Productos extends Model
     {
         return $this->belongsTo(Categorias::class, 'id_categoria');
     }
+    public function detalles()
+    {
+        return $this->hasMany(DetalleVenta::class, 'id_producto'); // Relación inversa
+    }
 }

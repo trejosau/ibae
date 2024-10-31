@@ -16,7 +16,7 @@ class Administrador extends Model
         'id_persona',
     ];
 
-    public function persona() : BelongsTo
+    public function persona()
     {
         return $this->belongsTo(Persona::class, 'id_persona');
     }

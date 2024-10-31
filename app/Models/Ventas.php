@@ -11,7 +11,7 @@ class Ventas extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id_comprador',
+        'nombre_comprador',
         'fecha_compra',
         'total',
         'id_admin',
@@ -19,6 +19,20 @@ class Ventas extends Model
         'matricula',
     ];
 
+    public function vendedor()
+    {
+        return $this->belongsTo(Administrador::class, 'id_admin', 'id');
+    }
+
+    public function detalles()
+    {
+        return $this->hasMany(DetalleVenta::class, 'id_venta');
+    }
+
+    public function administrador()
+    {
+        return $this->belongsTo(Administrador::class, 'id_admin'); // 'id_admin' es la clave foránea
+    }
 
 }
 
