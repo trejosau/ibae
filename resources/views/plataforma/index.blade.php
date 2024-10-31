@@ -5,11 +5,32 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidebar</title>
+    <title>Plataforma</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <style>
     /* Variables de colores */
+    .titulo{
+font-size: 30px
+    }
+.card-text{
+    margin-top: 10px; 
+}
+.card {
+    transition: transform 0.2s; /* Animación suave al hacer hover */
+}
+
+.card:hover {
+    transform: scale(1.05); /* Aumenta el tamaño de la tarjeta al pasar el ratón */
+}
+
+.card-body {
+    background-color: #f9f9f9; /* Color de fondo más suave para el contenido de la tarjeta */
+}
+
+.card-title {
+    font-weight: bold; /* Negrita para los títulos */
+}
 
     .titulo {
         font-size: 3rem;
