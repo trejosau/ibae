@@ -13,7 +13,7 @@
 
 <style>
     .titulo-grande {
-        font-size: 2rem; /* Tamaño de la fuente más grande */
+        font-size: 1rem; /* Tamaño de la fuente más grande */
         font-weight: bold; /* Asegura que el texto sea más visible */
     }
 
