@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
 use App\Models\Productos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductosController extends Controller
 {
@@ -60,7 +60,7 @@ class ProductosController extends Controller
         ->select('id_producto', DB::raw('SUM(cantidad) as total_vendido'))
         ->groupBy('id_producto')
         ->orderBy('total_vendido', 'desc')
-        ->take(6) // Limitar a los 6 productos más vendidos
+        ->take(10) // Limitar a los 6 productos más vendidos
         ->pluck('id_producto');
 
     // Obtener los detalles de los productos más vendidos
@@ -68,7 +68,6 @@ class ProductosController extends Controller
 
     return view('tienda', compact('productos'));
 }
-
 
 
 
