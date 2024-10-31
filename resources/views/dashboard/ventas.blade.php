@@ -389,6 +389,8 @@
             </div>
         </div>
     </div>
+</div>
+
     <script>
         function toggleMatricula() {
             const checkbox = document.getElementById('es-estudiante');
