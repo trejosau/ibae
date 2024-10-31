@@ -86,8 +86,22 @@ class DashboardController extends Controller
     public function ventas(Request $request)
     {
         $productos = Productos::all();
-        return view('dashboard.index', compact('productos'));
+
+        $ventas = Ventas::with(['administrador.persona'])
+        ->select('nombre_comprador', 'fecha_compra', 'total', 'id_admin', 'es_estudiante', 'matricula')
+            ->orderBy('fecha_compra', 'desc')
+            ->paginate(10);
+
+        $ventas->getCollection()->transform(function ($venta) {
+            $venta->tipo = 'Física'; // Establecer tipo como "Física"
+            $venta->estado = 'Completada'; // Establecer estado como "Completada"
+            return $venta;
+        });
+
+        return view('dashboard.index', compact('productos', 'ventas'));
     }
+
+
 
     public function ventasStore(Request $request)
     {
