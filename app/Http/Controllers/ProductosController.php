@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Models\Productos;
 use Illuminate\Http\Request;
 
@@ -52,6 +53,22 @@ class ProductosController extends Controller
         return view('detalle', compact('producto', 'productosRelacionados'));
     }
     
+
+    public function productosMasVendidos()
+{
+    $productosMasVendidos = DB::table('detalle_pedido')
+        ->select('id_producto', DB::raw('SUM(cantidad) as total_vendido'))
+        ->groupBy('id_producto')
+        ->orderBy('total_vendido', 'desc')
+        ->take(6) // Limitar a los 6 productos más vendidos
+        ->pluck('id_producto');
+
+    // Obtener los detalles de los productos más vendidos
+    $productos = Productos::whereIn('id', $productosMasVendidos)->get();
+
+    return view('tienda', compact('productos'));
+}
+
 
 
 
