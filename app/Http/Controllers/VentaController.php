@@ -17,15 +17,12 @@ class VentaController extends Controller
     {
         $query = $request->input('query');
 
-        // Asegúrate de que el query tenga al menos 1 carácter
         if (strlen($query) > 0) {
-            // Busca las matrículas y carga la relación con persona
-            $resultados = Estudiante::with('persona') // Cargar la relación persona
+            $resultados = Estudiante::with('persona')
             ->where('matricula', 'LIKE', "{$query}%")
                 ->limit(10)
-                ->get(['matricula', 'id_persona']); // Asegúrate de incluir 'id_persona' para obtener la relación
+                ->get(['matricula', 'id_persona']);
 
-            // Mapea los resultados para incluir el nombre de persona
             $resultadosConNombre = $resultados->map(function($estudiante) {
                 return [
                     'matricula' => $estudiante->matricula,
@@ -45,7 +42,7 @@ class VentaController extends Controller
 
     public function limpiarCarrito()
     {
-        session()->forget('carrito'); // Limpia el carrito de la sesión
+        session()->forget('carrito');
 
         return response()->json(['success' => true, 'carritoHtml' => '<li class="list-group-item text-center">No hay productos en el carrito</li>']);
     }
@@ -54,10 +51,9 @@ class VentaController extends Controller
 
     public function store(Request $request)
     {
-        // Obtener el ID del usuario autenticado
+
         $id_usuario = auth()->id();
 
-        // Obtener la información de la persona correspondiente al usuario
         $persona = Persona::where('usuario', $id_usuario)->first();
 
         if ($persona) {
@@ -69,70 +65,56 @@ class VentaController extends Controller
             return redirect()->back()->with('error', 'Usuario no encontrado');
         }
 
-        // Verificar si el usuario es estudiante y validar la existencia de la matrícula
         $es_estudiante = $request->es_estudiante ? 'si' : 'no';
         $matricula = $request->matricula;
 
         if ($es_estudiante === 'si') {
-            // Verificar que la matrícula existe en la tabla de estudiantes
             $estudianteValido = Estudiante::where('matricula', $matricula)->exists();
             if (!$estudianteValido) {
                 return redirect()->back()->with('error', 'El usuario con matricula ' . $matricula . ' no existe');
             }
         } else {
-            // Si no es estudiante, se asigna null a la matrícula
             $matricula = null;
         }
 
-        // Crear un array con los datos del request
         $data = [
             'nombre_comprador' => $request->nombre_comprador,
             'fecha_compra' => now(),
-            'total' => 0, // Total inicial
+            'total' => 0,
             'id_admin' => $id_admin,
             'es_estudiante' => $es_estudiante,
             'matricula' => $matricula,
         ];
 
-        // Intentar crear la venta
         $venta = Ventas::create($data);
 
-        // Verificar si se creó correctamente
         if ($venta) {
-            // Recuperar el carrito
             $carrito = session()->get('carrito', []);
             $total = 0;
 
             foreach ($carrito as $productoId => $detalle) {
-                $producto = Productos::find($productoId); // Obtener el producto para acceder a los precios
-                if ($producto) {
-                    // Determinar el precio aplicado
-                    if ($request->es_estudiante) {
-                        $precio_aplicado = $producto->precio_venta; // Precio para no estudiantes
-                        $descuento = 0; // Sin descuento para no estudiantes
-                    } else {
-                        $precio_aplicado = $producto->precio_lista; // Precio para estudiantes
-                        $descuento = $producto->precio_venta - $precio_aplicado; // Descuento para estudiantes
-                    }
+                $producto = Productos::find($productoId);
 
-                    // Crear el detalle de venta
+                if ($producto) {
+                    $precio_aplicado = $request->es_estudiante ? $producto->precio_lista : $producto->precio_venta;
+
+                    $descuento = $producto->precio_venta - $precio_aplicado;
+
                     DetalleVenta::create([
-                        'id_venta' => $venta->id, // ID de la venta recién creada
+                        'id_venta' => $venta->id,
                         'id_producto' => $productoId,
-                        'cantidad' => $detalle['cantidad'], // Guardar cantidad
+                        'cantidad' => $detalle['cantidad'],
                         'precio_aplicado' => $precio_aplicado,
                         'descuento' => $descuento,
                     ]);
 
-                    // Calcular el total acumulado (precio_aplicado * cantidad)
                     $total += $precio_aplicado * $detalle['cantidad'];
                 }
             }
 
-            // Actualizar el total en la venta
+
             $venta->update(['total' => $total]);
 
-            // Borrar el carrito de la sesión
             session()->forget('carrito');
 
             return redirect()->back()->with('success', 'Venta registrada con éxito');
@@ -151,7 +133,6 @@ class VentaController extends Controller
         $productoId = $request->input('producto_id');
         $cantidad = $request->input('cantidad', 1);
 
-        // Lógica para agregar el producto a la venta en la sesión
         $carrito = session()->get('carrito', []);
         if (isset($carrito[$productoId])) {
             $carrito[$productoId]['cantidad'] += $cantidad;
@@ -176,7 +157,6 @@ class VentaController extends Controller
     {
         $productoId = $request->input('producto_id');
 
-        // Lógica para quitar el producto de la venta en la sesión
         $carrito = session()->get('carrito', []);
         if (isset($carrito[$productoId])) {
             unset($carrito[$productoId]);
