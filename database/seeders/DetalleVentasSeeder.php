@@ -17,6 +17,7 @@ class DetalleVentasSeeder extends Seeder
             DetalleVenta::create([
                 'id_venta' => $ventaIds[array_rand($ventaIds)],
                 'id_producto' => $productoIds[array_rand($productoIds)],
+                'cantidad' => rand(1, 10), // Agregado: Cantidad aleatoria entre 1 y 10
                 'precio_aplicado' => rand(100, 1000) / 1.1,
                 'descuento' => rand(0, 100) / 10,
             ]);
