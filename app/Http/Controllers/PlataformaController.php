@@ -4,71 +4,64 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cursos;
+use App\Models\Certificados;
+
+
 
 
 class PlataformaController extends Controller
 {
-    public function index() {
-        return view('plataforma.index');
-    }
+  
+    
 
-    public function misCursos() {
-        // Supongamos que tienes un modelo Curso
-        $cursos = Cursos::all();
-    
-        // Pasamos los cursos a la vista
-        return view('plataforma.index', compact('cursos'));
-    }
-
-
-    public function destroy($id) {
-        // Encuentra el curso por su ID
-        $curso = Cursos::findOrFail($id);
-        
-        // Elimina el curso
-        $curso->delete();
-    
-        // Redirige a la lista de cursos con un mensaje de éxito
-        return redirect()->route('plataforma.mis-cursos')->with('success', 'Curso eliminado con éxito.');
-    }
-    public function update(Request $request, $id) {
-        // Valida los datos recibidos
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-            'duracion_semanas' => 'required|integer',
-        ]);
-    
-        // Encuentra el curso por su ID
-        $curso = Cursos::findOrFail($id);
-        
-        // Actualiza los campos del curso
-        $curso->nombre = $request->nombre;
-        $curso->descripcion = $request->descripcion;
-        $curso->duracion_semanas = $request->duracion_semanas;
-        $curso->save();
-    
-        // Redirige a la lista de cursos con un mensaje de éxito
-        return redirect()->route('plataforma.mis-cursos')->with('success', 'Curso actualizado con éxito.');
-    }
+ // En PlataformaController.php
+ public function misCursos()
+ {
+     $cursos = Cursos::with('certificado')->get(); // Obtiene cursos con sus certificados
+     $certificados = Certificados::all(); // Obtiene todos los certificados
+     return view('plataforma.index', compact('cursos', 'certificados'));
+ }
+ 
 
     public function store(Request $request)
 {
-    // Validar los datos
-    $validated = $request->validate([
+    $request->validate([
         'nombre' => 'required|string|max:255',
         'descripcion' => 'required|string',
         'duracion_semanas' => 'required|integer|min:1',
+        'id_certificacion' => 'nullable|exists:certificados,id', // Asegúrate de que el ID del certificado exista
     ]);
 
-    // Crear un nuevo curso
-    Cursos::create($validated);
+    // Crea un nuevo curso
+    $curso = Cursos::create([
+        'nombre' => $request->nombre,
+        'descripcion' => $request->descripcion,
+        'duracion_semanas' => $request->duracion_semanas,
+        'id_certificacion' => $request->id_certificacion, // Guarda el ID del certificado
+    ]);
 
-    // Redirigir con un mensaje de éxito
-    return redirect()->route('plataforma.mis-cursos')->with('success', 'Curso agregado exitosamente.');
+    return redirect()->route('plataforma.mis-cursos')->with('success', 'Curso creado con éxito.');
+}
+public function storeCertificado(Request $request)
+{
+    $request->validate([
+        'nombre' => 'required|string|max:255',
+        'descripcion' => 'required|string',
+        'horas' => 'required|integer|min:1',
+        'institucion' => 'required|string|max:255',
+    ]);
+
+    // Crea un nuevo certificado
+    Certificados::create([
+        'nombre' => $request->nombre,
+        'descripcion' => $request->descripcion,
+        'horas' => $request->horas,
+        'institucion' => $request->institucion,
+    ]);
+
+    return redirect()->route('plataforma.mis-cursos')->with('success', 'Certificado creado con éxito.');
 }
 
-    
 
     public function historialCursos() {
         return view('plataforma.index');

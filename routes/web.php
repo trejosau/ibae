@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');
     Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
 });
+Route::post('/cursos', [PlataformaController::class, 'store'])->name('cursos.store');
+Route::post('/certificados', [PlataformaController::class, 'storeCertificado'])->name('certificados.store');
 
 
 Route::get('/contacto', function () {
@@ -61,16 +63,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/plataforma/espacio/mis-pagos', [PlataformaController::class, 'misPagosEspacio'])->name('plataforma.espacio-mis-pagos');
     Route::get('/plataforma/espacio/perfil', [PlataformaController::class, 'perfilEspacio'])->name('plataforma.espacio-perfil');
     });
-
-Route::delete('/plataforma/cursos/{id}', [PlataformaController::class, 'destroy'])->name('cursos.destroy');
-Route::get('/plataforma/cursos/{id}/edit', [PlataformaController::class, 'edit'])->name('cursos.edit');
-Route::put('/plataforma/cursos/{id}', [PlataformaController::class, 'update'])->name('cursos.update');
-Route::post('/cursos', [PlataformaController::class, 'store'])->name('cursos.store');
+    
 
     Route::get('/tienda', [ProductosController::class, 'index'])->name('tienda'); // Ruta para la tienda principal
     Route::post('/catalogo', [ProductosController::class, 'filtrar'])->name('productos.filtrar'); // Filtrar productos desde el formulario
     Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, 'filtrar'])->name('productos.categoria'); // Filtrar productos por categoría desde URL
     Route::get('/producto/{id}', [ProductosController::class, 'mostrarDetalle'])->name('producto.detalle');
+    Route::get('/tienda', [ProductosController::class, 'productosMasVendidos'])->name('tienda');
 
 
 Route::get('/cursos', function () {

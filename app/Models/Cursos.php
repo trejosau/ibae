@@ -20,13 +20,10 @@ class Cursos extends Model
         'id_certificacion',
     ];
 
-    public function certificado() : BelongsTo
-    {
-        return $this->belongsTo(Certificados::class, 'id_certificacion');
-    }
+// En Cursos.php
+public function certificado()
+{
+    return $this->belongsTo(Certificados::class, 'id_certificacion');
+}
 
-    public function cursoApertura() : HasMany
-    {
-        return $this->hasMany(CursoApertura::class, 'id_curso');
-    }
 }
