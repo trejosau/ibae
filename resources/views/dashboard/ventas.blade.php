@@ -408,21 +408,17 @@
     $(document).ready(function() {
         $('#matricula').on('input', function() {
             let query = $(this).val();
-            console.log("Input value:", query); // Verificar el valor del input
 
             // Solo realizar la búsqueda si hay al menos 1 carácter
             if (query.length > 0) {
-                console.log("Buscando matrículas..."); // Indicar que se está realizando la búsqueda
                 $.ajax({
                     url: '{{ route('buscar.matriculas') }}', // Ruta de la API
                     type: 'GET',
                     data: { query: query },
                     success: function(data) {
-                        console.log("Datos recibidos:", data); // Verificar los datos recibidos
                         var dropdown = $('#dropdown-matriculas .dropdown-menu');
-                        dropdown.empty(); // Limpiar el dropdown
+                        dropdown.empty();
 
-                        // Verificar si hay resultados
                         if (data.length > 0) {
                             data.forEach(function(item) {
                                 dropdown.append(`
@@ -431,22 +427,19 @@
                                     </div>
                                 `);
                             });
-                            dropdown.parent().removeClass('d-none'); // Mostrar el dropdown
-                            dropdown.addClass('show'); // Asegúrate de añadir la clase 'show'
-                            console.log("Dropdown mostrado con resultados."); // Indicar que se mostró el dropdown
+                            dropdown.parent().removeClass('d-none');
+                            dropdown.addClass('show');
                         } else {
-                            dropdown.parent().addClass('d-none'); // Ocultar el dropdown si no hay resultados
-                            dropdown.removeClass('show'); // Asegúrate de quitar la clase 'show'
-                            console.log("No se encontraron resultados. Dropdown ocultado."); // Indicar que no se encontraron resultados
+                            dropdown.parent().addClass('d-none');
+                            dropdown.removeClass('show');
                         }
                     },
                     error: function() {
-                        console.error("Error al buscar las matrículas."); // Manejar el error de la solicitud
+                        console.error("Error al buscar las matrículas.");
                     }
                 });
             } else {
                 $('#dropdown-matriculas .dropdown-menu').empty().parent().addClass('d-none'); // Limpiar y ocultar el dropdown si no hay query
-                console.log("Input vacío. Dropdown ocultado."); // Indicar que el input está vacío
             }
         });
 
@@ -456,7 +449,7 @@
             let nombre = $(this).data('nombre');
             let apPaterno = $(this).data('ap-paterno');
 
-            console.log("Matrícula seleccionada:", matricula); // Verificar la matrícula seleccionada
+
 
             // Establecer la matrícula en el input
             $('#matricula').val(matricula);
@@ -468,7 +461,6 @@
             // Limpiar el dropdown y ocultarlo
             $('#dropdown-matriculas .dropdown-menu').empty().parent().addClass('d-none');
             dropdown.removeClass('show'); // Asegúrate de quitar la clase 'show' al cerrar
-            console.log("Dropdown limpiado y ocultado tras la selección."); // Indicar que el dropdown fue ocultado
         });
     });
 </script>
