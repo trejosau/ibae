@@ -282,6 +282,18 @@
         color: #ff69b4;
         border-left: 5px solid #ff69b4;
     }
+    .dropdown {
+        position: absolute; /* Asegúrate de que el dropdown se posicione bien */
+        z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+    }
+
+    .dropdown-menu {
+        display: none; /* Ocultado por defecto */
+    }
+
+    .dropdown-menu.show {
+        display: block; /* Mostrar cuando hay elementos */
+    }
 </style>
 <body>
 

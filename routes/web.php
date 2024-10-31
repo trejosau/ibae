@@ -22,7 +22,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/ventas', [DashboardController::class, 'ventas'])->name('dashboard.ventas');
     Route::post('/ventas/agregar-producto', [VentaController::class, 'agregarProducto'])->name('ventas.agregarProducto');
     Route::post('/ventas/quitar-producto', [VentaController::class, 'quitarProducto'])->name('ventas.quitarProducto');
-    Route::post('/ventas/realizar', [VentaController::class, 'realizarVenta'])->name('ventas.realizar');
+    Route::post('/ventas/realizar', [VentaController::class, 'store'])->name('ventas.store');
+    Route::get('/ventas/limpiarCarrito', [VentaController::class, 'limpiarCarrito'])->name('limpiarCarrito');
+    Route::get('/ventas/buscarMatricula', [VentaController::class, 'buscarMatriculas'])->name('buscar.matriculas');
     Route::get('/dashboard/compras', [DashboardController::class, 'compras'])->name('dashboard.compras');
     Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');
     Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');

@@ -1,4 +1,16 @@
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
 <div class="ventas-section">
+
     <h2 class="text-center mb-4">Sección de Ventas</h2>
 
     <!-- Gráfica de Ventas -->
@@ -16,6 +28,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- Filtros y Búsqueda -->
     <form id="filtro-compras-form" method="GET" action="{{ route('dashboard.compras') }}">
@@ -77,31 +90,48 @@
                             <th>Total</th>
                             <th>Estado</th>
                             <th>Tipo</th>
-                            <th>Estudiante?</th> <!-- Abreviatura para "Es Estudiante" -->
+                            <th>Estudiante?</th>
                             <th>Vendedor</th>
-                            <th>Acc.</th> <!-- Abreviatura para "Acciones" -->
+                            <th>Acc.</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>Juan Pérez</td>
-                            <td>2024-10-05</td>
-                            <td>$250</td>
-                            <td>Completada</td>
-                            <td>ONLINE</td>
-                            <td>Sí</td>
-                            <td>Admin</td>
-                            <td>
-                                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detalle-venta">
-                                    <i class="fas fa-eye"></i> <!-- Icono de ver -->
-                                </button>
-                                <button class="btn btn-danger btn-sm">
-                                    <i class="fas fa-trash"></i> <!-- Icono de eliminar -->
-                                </button>
-                            </td>
-                        </tr>
+                        @foreach($ventas as $venta)
+                            <tr>
+                                <td>{{ $venta->nombre_comprador }}</td>
+                                <td>{{ $venta->fecha_compra }}</td>
+                                <td>${{ $venta->total }}</td>
+                                <td>{{ $venta->estado ?? 'N/A' }}</td>
+                                <td>{{ $venta->tipo ?? 'N/A' }}</td>
+                                <td>{{ $venta->es_estudiante === 'si' ? 'Sí' : 'No' }}</td>
+                                <td>
+                                    @if($venta->administrador && $venta->administrador->persona)
+                                        {{ $venta->administrador->persona->nombre }} {{ $venta->administrador->persona->apellido_pa }}
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detalle-venta">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
                         </tbody>
+
+
                     </table>
+
+
+                    <!-- Paginación -->
+                    <div class="d-flex justify-content-center">
+                        {{ $ventas->links() }}
+                    </div>
+
                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-agregar-venta">Agregar Venta</button>
                 </div>
             </div>
@@ -261,7 +291,6 @@
 
 
     <!-- Modal Agregar Venta -->
-    <!-- Modal Agregar Venta -->
     <div class="modal fade" id="modal-agregar-venta" tabindex="-1" aria-labelledby="modal-agregar-venta-label" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content h-100">
@@ -273,20 +302,31 @@
                     <!-- Sidebar con Información del Comprador y Resumen de la Venta -->
                     <div class="col-3 border-end p-4 d-flex flex-column bg-light">
                         <h5 class="mb-4">Información del Comprador</h5>
-                        <form id="form-venta" action="{{ route('ventas.realizar') }}" method="POST">
+                        <form id="form-venta" action="{{ route('ventas.store') }}" method="POST">
                             @csrf
+                            <input type="hidden" name="es_estudiante" value="false"> <!-- Campo oculto -->
                             <div class="mb-3">
                                 <label for="nombre-comprador-nueva" class="form-label">Nombre del Comprador</label>
-                                <input type="text" class="form-control" name="nombre_comprador" id="nombre-comprador-nueva" placeholder="Ingrese el nombre del comprador" required>
+                                <input type="text" class="form-control" name="nombre_comprador" id="nombre-comprador-nueva" placeholder="Ingrese el nombre del comprador" required autocomplete="off">
                             </div>
+
                             <div class="form-check mb-3">
-                                <input type="checkbox" class="form-check-input" id="es-estudiante" name="es_estudiante" onchange="toggleMatricula()">
+                                <input type="checkbox" class="form-check-input" id="es-estudiante" name="es_estudiante" value="true" onchange="toggleMatricula()">
                                 <label class="form-check-label" for="es-estudiante">¿Es Estudiante?</label>
                             </div>
+
                             <div class="mb-3 d-none" id="div-matricula">
                                 <label for="matricula" class="form-label">Matrícula del Estudiante</label>
-                                <input type="text" class="form-control" name="matricula" id="matricula" placeholder="Ingrese la matrícula">
+                                <input type="text" class="form-control" name="matricula" id="matricula" placeholder="Ingrese la matrícula" autocomplete="off">
+                                <div class="dropdown" id="dropdown-matriculas">
+                                    <div class="dropdown-menu">
+                                        <!-- Aquí se llenarán los elementos del dropdown -->
+                                    </div>
+                                </div>
                             </div>
+
+
+
 
                             <!-- Resumen de la Venta -->
                             <h6 class="text-center mb-3">Resumen de la Venta</h6>
@@ -309,12 +349,17 @@
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <h6 class="mb-0">Total:</h6>
                                 <span class="fw-bold">
-                                ${{ number_format(array_sum(array_map(fn($p) => $p['precio'] * $p['cantidad'], session('carrito', []))), 2) }}
-                            </span>
+            ${{ number_format(array_sum(array_map(fn($p) => $p['precio'] * $p['cantidad'], session('carrito', []))), 2) }}
+        </span>
                             </div>
 
                             <!-- Botón para Enviar al Controlador -->
-                            <button type="submit" class="btn btn-primary mt-3">Realizar Venta</button>
+                            <!-- Botones para realizar la venta y limpiar el carrito -->
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <button type="submit" class="btn btn-primary mt-3">Realizar Venta</button>
+                                <button type="button" class="btn btn-outline-danger mt-3" id="btn-limpiar-carrito">Limpiar Carrito</button>
+                            </div>
+
                         </form>
                     </div>
 
@@ -344,24 +389,111 @@
             </div>
         </div>
     </div>
+    <script>
+        function toggleMatricula() {
+            const checkbox = document.getElementById('es-estudiante');
+            const divMatricula = document.getElementById('div-matricula');
+            const matriculaInput = document.getElementById('matricula');
 
+            divMatricula.classList.toggle('d-none', !checkbox.checked);
 
-
-</div>
-
-
-
-<script>
-    function toggleMatricula() {
-        const checkBox = document.getElementById('es-estudiante');
-        const divMatricula = document.getElementById('div-matricula');
-        if (checkBox.checked) {
-            divMatricula.classList.remove('d-none'); // Muestra el campo de matrícula
-        } else {
-            divMatricula.classList.add('d-none'); // Oculta el campo de matrícula
-            document.getElementById('matricula').value = ''; // Limpia el valor del campo
+            // Establece el atributo required según el estado del checkbox
+            matriculaInput.required = checkbox.checked;
         }
-    }
+    </script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Dropdown de búsqueda de matrículas
+    $(document).ready(function() {
+        $('#matricula').on('input', function() {
+            let query = $(this).val();
+            console.log("Input value:", query); // Verificar el valor del input
+
+            // Solo realizar la búsqueda si hay al menos 1 carácter
+            if (query.length > 0) {
+                console.log("Buscando matrículas..."); // Indicar que se está realizando la búsqueda
+                $.ajax({
+                    url: '{{ route('buscar.matriculas') }}', // Ruta de la API
+                    type: 'GET',
+                    data: { query: query },
+                    success: function(data) {
+                        console.log("Datos recibidos:", data); // Verificar los datos recibidos
+                        var dropdown = $('#dropdown-matriculas .dropdown-menu');
+                        dropdown.empty(); // Limpiar el dropdown
+
+                        // Verificar si hay resultados
+                        if (data.length > 0) {
+                            data.forEach(function(item) {
+                                dropdown.append(`
+                                    <div class="dropdown-item" data-matricula="${item.matricula}" data-nombre="${item.nombre}" data-ap-paterno="${item.ap_paterno}">
+                                        ${item.matricula} | ${item.nombre} ${item.ap_paterno}
+                                    </div>
+                                `);
+                            });
+                            dropdown.parent().removeClass('d-none'); // Mostrar el dropdown
+                            dropdown.addClass('show'); // Asegúrate de añadir la clase 'show'
+                            console.log("Dropdown mostrado con resultados."); // Indicar que se mostró el dropdown
+                        } else {
+                            dropdown.parent().addClass('d-none'); // Ocultar el dropdown si no hay resultados
+                            dropdown.removeClass('show'); // Asegúrate de quitar la clase 'show'
+                            console.log("No se encontraron resultados. Dropdown ocultado."); // Indicar que no se encontraron resultados
+                        }
+                    },
+                    error: function() {
+                        console.error("Error al buscar las matrículas."); // Manejar el error de la solicitud
+                    }
+                });
+            } else {
+                $('#dropdown-matriculas .dropdown-menu').empty().parent().addClass('d-none'); // Limpiar y ocultar el dropdown si no hay query
+                console.log("Input vacío. Dropdown ocultado."); // Indicar que el input está vacío
+            }
+        });
+
+        // Manejar la selección de una matrícula del dropdown
+        $('#dropdown-matriculas').on('click', '.dropdown-item', function() {
+            let matricula = $(this).data('matricula');
+            let nombre = $(this).data('nombre');
+            let apPaterno = $(this).data('ap-paterno');
+
+            console.log("Matrícula seleccionada:", matricula); // Verificar la matrícula seleccionada
+
+            // Establecer la matrícula en el input
+            $('#matricula').val(matricula);
+
+            // Establecer el nombre y apellido en otros campos, si los tienes
+            $('#nombre').val(nombre);
+            $('#ap_paterno').val(apPaterno);
+
+            // Limpiar el dropdown y ocultarlo
+            $('#dropdown-matriculas .dropdown-menu').empty().parent().addClass('d-none');
+            dropdown.removeClass('show'); // Asegúrate de quitar la clase 'show' al cerrar
+            console.log("Dropdown limpiado y ocultado tras la selección."); // Indicar que el dropdown fue ocultado
+        });
+    });
+</script>
+
+
+
+    <script>
+        // Manejar el evento para limpiar el carrito
+        document.getElementById('btn-limpiar-carrito').addEventListener('click', function () {
+            fetch('{{ route('limpiarCarrito') }}', {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Actualiza la lista de productos en el carrito
+                        document.getElementById('lista-productos').innerHTML = `<li class="list-group-item text-center">No hay productos en el carrito</li>`;
+                        document.querySelector('.fw-bold').innerText = '$0.00'; // Resetea el total a 0
+                    }
+                });
+        });
 
     // Agregar producto al carrito
     document.querySelectorAll('.btn-agregar-producto').forEach(button => {
@@ -415,3 +547,5 @@
         }
     });
 </script>
+
+
