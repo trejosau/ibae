@@ -12,6 +12,11 @@
 
 
 <style>
+    .titulo-grande {
+        font-size: 2rem; /* Tamaño de la fuente más grande */
+        font-weight: bold; /* Asegura que el texto sea más visible */
+    }
+
 .contenedor-imagen{
     padding-top: 120px;
 }
@@ -162,7 +167,7 @@ text-align: center;
 </div>
 
 <div class="col-md-12">
-    <h2 class="mt-4">Artículos Más Vendidos</h2>
+    <h2 class="mt-4 text-center titulo-grande">Artículos Más Vendidos</h2>
     <div class="productos-container">
         <div class="productos-wrapper">
             @forelse ($productos as $producto)
@@ -262,6 +267,86 @@ text-align: center;
         productosWrapper.style.transform = `translateX(-${scrollAmount}px)`;
     });
 </script>
+
+
+
+<style>
+    .productos-container {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        padding: 20px 0;
+    }
+
+    .productos-wrapper {
+        display: flex;
+        transition: transform 0.5s ease;
+    }
+
+    .producto-card {
+        min-width: 220px;
+        margin: 0 10px;
+    }
+
+    .carousel-control-prev, .carousel-control-next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        border-radius: 50%;
+        transition: background-color 0.3s ease;
+    }
+
+    .carousel-control-prev:hover, .carousel-control-next:hover {
+        background-color: #0056b3;
+    }
+
+    .carousel-control-prev {
+        left: 10px;
+    }
+
+    .carousel-control-next {
+        right: 10px;
+    }
+</style>
+
+<script>
+    const productosWrapper = document.querySelector('.productos-wrapper');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const productosCards = document.querySelectorAll('.producto-card');
+    const containerWidth = document.querySelector('.productos-container').offsetWidth;
+    const totalScrollWidth = productosWrapper.scrollWidth;
+    let scrollAmount = 0;
+    const scrollStep = 220;
+
+    nextBtn.addEventListener('click', () => {
+        if (scrollAmount + containerWidth < totalScrollWidth) {
+            scrollAmount += scrollStep;
+        } else {
+            scrollAmount = 0; // Reiniciar al principio
+        }
+        productosWrapper.style.transform = `translateX(-${scrollAmount}px)`;
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (scrollAmount > 0) {
+            scrollAmount -= scrollStep;
+        } else {
+            scrollAmount = totalScrollWidth - containerWidth;
+        }
+        productosWrapper.style.transform = `translateX(-${scrollAmount}px)`;
+    });
+</script>
+
+
+
 
 
 

@@ -72,6 +72,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/tienda', [ProductosController::class, 'productosMasVendidos'])->name('tienda');
 
 
+
 Route::get('/cursos', function () {
     return view('cursos');
 })->name('cursos');
