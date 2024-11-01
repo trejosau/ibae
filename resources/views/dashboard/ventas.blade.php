@@ -268,8 +268,6 @@
                             </div>
 
 
-
-
                             <!-- Resumen de la Venta -->
                             <h6 class="text-center mb-3">Resumen de la Venta</h6>
                             <div id="resumen-venta" class="border rounded p-3 bg-white flex-grow-1 overflow-auto" style="max-height: 300px;">
@@ -278,25 +276,27 @@
                                         @foreach (session('carrito') as $productoId => $producto)
                                             <li class="list-group-item d-flex justify-content-between align-items-center p-1" id="producto-{{ $productoId }}">
                                                 <span>{{ $producto['nombre'] }}: {{ $producto['cantidad'] }}</span>
-                                                <span class="badge bg-primary rounded-pill">${{ number_format($producto['precio'] * $producto['cantidad'], 2) }}</span>
+                                                <span class="badge bg-primary rounded-pill">
+                                                  ${{ number_format((float) $producto['precio'] * (int) $producto['cantidad'], 2) }}
+                                                </span>
                                                 <button type="button" class="btn btn-outline-danger btn-sm ms-2 btn-quitar-producto" data-producto-id="{{ $productoId }}">Eliminar</button>
                                             </li>
                                         @endforeach
                                     @else
                                         <li class="list-group-item text-center">No hay productos en el carrito</li>
                                     @endif
+
                                 </ul>
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <h6 class="mb-0">Total:</h6>
-                                <span class="fw-bold">
-            ${{ number_format(array_sum(array_map(fn($p) => $p['precio'] * $p['cantidad'], session('carrito', []))), 2) }}
-        </span>
+                                <span class="fw-bold" id="total-venta">
+        <!-- Aquí va el total dinámicamente -->
+    </span>
                             </div>
 
-                            <!-- Botón para Enviar al Controlador -->
-                            <!-- Botones para realizar la venta y limpiar el carrito -->
+
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <button type="submit" class="btn btn-primary mt-3">Realizar Venta</button>
                                 <button type="button" class="btn btn-outline-danger mt-3" id="btn-limpiar-carrito">Limpiar Carrito</button>
@@ -332,6 +332,8 @@
         </div>
     </div>
 </div>
+
+
 
     <script>
         function toggleMatricula() {
@@ -411,77 +413,159 @@
 
 
 
-    <script>
-        // Manejar el evento para limpiar el carrito
-        document.getElementById('btn-limpiar-carrito').addEventListener('click', function () {
-            fetch('{{ route('limpiarCarrito') }}', {
-                method: 'GET',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Actualiza la lista de productos en el carrito
-                        document.getElementById('lista-productos').innerHTML = `<li class="list-group-item text-center">No hay productos en el carrito</li>`;
-                        document.querySelector('.fw-bold').innerText = '$0.00'; // Resetea el total a 0
-                    }
-                });
+<script>
+    $(document).ready(function() {
+        let debounceTimer;
+
+        // Dropdown de búsqueda de matrículas con debounce
+        $('#matricula').on('input', function() {
+            clearTimeout(debounceTimer);
+            let query = $(this).val();
+
+            // Solo realizar la búsqueda si hay al menos 1 carácter
+            if (query.length > 0) {
+                debounceTimer = setTimeout(() => {
+                    $.ajax({
+                        url: '{{ route('buscar.matriculas') }}',
+                        type: 'GET',
+                        data: { query: query },
+                        success: function(data) {
+                            let dropdown = $('#dropdown-matriculas .dropdown-menu');
+                            dropdown.empty();
+
+                            if (data.length > 0) {
+                                data.forEach(function(item) {
+                                    dropdown.append(`
+                                        <div class="dropdown-item" data-matricula="${item.matricula}" data-nombre="${item.nombre}" data-ap-paterno="${item.ap_paterno}">
+                                            ${item.matricula} | ${item.nombre} ${item.ap_paterno}
+                                        </div>
+                                    `);
+                                });
+                                dropdown.parent().removeClass('d-none');
+                                dropdown.addClass('show');
+                            } else {
+                                dropdown.parent().addClass('d-none');
+                                dropdown.removeClass('show');
+                            }
+                        },
+                        error: function() {
+                            console.error("Error al buscar las matrículas.");
+                        }
+                    });
+                }, 300); // 300 ms de debounce
+            } else {
+                $('#dropdown-matriculas .dropdown-menu').empty().parent().addClass('d-none');
+            }
         });
 
-    // Agregar producto al carrito
-    document.querySelectorAll('.btn-agregar-producto').forEach(button => {
-        button.addEventListener('click', function () {
-            const form = button.closest('form');
-            const productoId = button.getAttribute('data-producto-id');
+        // Selección de una matrícula
+        $('#dropdown-matriculas').on('click', '.dropdown-item', function() {
+            let matricula = $(this).data('matricula');
+            let nombre = $(this).data('nombre');
+            let apPaterno = $(this).data('ap-paterno');
 
-            fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    producto_id: productoId,
-                    cantidad: form.querySelector(`input[name="cantidad"]`).value
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Actualiza la lista de productos en el carrito
-                        document.getElementById('lista-productos').innerHTML = data.carritoHtml;
-                    }
-                });
+            $('#matricula').val(matricula);
+            $('#nombre').val(nombre);
+            $('#ap_paterno').val(apPaterno);
+
+            $('#dropdown-matriculas .dropdown-menu').empty().parent().addClass('d-none');
         });
-    });
 
-    // Delegación de eventos para eliminar producto
-    document.getElementById('lista-productos').addEventListener('click', function (event) {
-        if (event.target.classList.contains('btn-quitar-producto')) {
-            const productoId = event.target.getAttribute('data-producto-id');
-
-            fetch('{{ route('ventas.quitarProducto') }}', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    producto_id: productoId
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Actualiza la lista de productos en el carrito
-                        document.getElementById('lista-productos').innerHTML = data.carritoHtml;
+        // Actualización de total del carrito
+        async function actualizarTotal() {
+            try {
+                const response = await fetch('{{ route('ventas.total') }}', {
+                    method: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     }
                 });
+
+                if (!response.ok) throw new Error(`Error en la respuesta: ${response.status}`);
+
+                const data = await response.json();
+                const totalElement = document.getElementById('total-venta');
+
+                if (totalElement) totalElement.innerText = `$${data.total}`;
+            } catch (error) {
+                console.error('Error al actualizar el total:', error);
+            }
         }
+
+        // Limpiar carrito
+        document.getElementById('btn-limpiar-carrito').addEventListener('click', async function () {
+            try {
+                const response = await fetch('{{ route('limpiarCarrito') }}', {
+                    method: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('lista-productos').innerHTML = `<li class="list-group-item text-center">No hay productos en el carrito</li>`;
+                    document.querySelector('.fw-bold').innerText = '$0.00';
+                }
+                actualizarTotal();
+            } catch (error) {
+                console.error('Error al limpiar el carrito:', error);
+            }
+        });
+
+        // Agregar producto al carrito
+        document.querySelectorAll('.btn-agregar-producto').forEach(button => {
+            button.addEventListener('click', async function () {
+                const form = button.closest('form');
+                const productoId = button.getAttribute('data-producto-id');
+                const cantidad = form.querySelector(`input[name="cantidad"]`).value;
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ producto_id: productoId, cantidad: cantidad })
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        document.getElementById('lista-productos').innerHTML = data.carritoHtml;
+                    }
+                    actualizarTotal();
+                } catch (error) {
+                    console.error('Error al agregar producto:', error);
+                }
+            });
+        });
+
+        // Eliminar producto del carrito
+        document.getElementById('lista-productos').addEventListener('click', async function (event) {
+            if (event.target.classList.contains('btn-quitar-producto')) {
+                const productoId = event.target.getAttribute('data-producto-id');
+
+                try {
+                    const response = await fetch('{{ route('ventas.quitarProducto') }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ producto_id: productoId })
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        document.getElementById('lista-productos').innerHTML = data.carritoHtml;
+                    }
+                    actualizarTotal();
+                } catch (error) {
+                    console.error('Error al quitar producto:', error);
+                }
+            }
+        });
     });
 </script>
-
-

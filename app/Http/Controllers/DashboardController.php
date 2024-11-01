@@ -86,7 +86,7 @@ class DashboardController extends Controller
     {
         $productos = Productos::all();
 
-        $ventas = Ventas::with(['administrador.persona', 'detalles.producto']) // Asegúrate de que esta relación está bien
+        $ventas = Ventas::with(['administrador.persona', 'detalles.producto'])
         ->select('id','nombre_comprador', 'fecha_compra', 'total', 'id_admin', 'es_estudiante', 'matricula')
             ->orderBy('fecha_compra', 'desc')
             ->paginate(10);

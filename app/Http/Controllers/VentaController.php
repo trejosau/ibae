@@ -13,6 +13,17 @@ use Illuminate\Http\Request;
 class VentaController extends Controller
 {
 
+    public function obtenerTotal() {
+        $carrito = session()->get('carrito', []);
+        $total = array_sum(array_map(function($p) {
+            return (float)$p['precio'] * (int)$p['cantidad'];
+        }, $carrito));
+
+        return response()->json(['total' => number_format($total, 2)]);
+    }
+
+
+
     public function buscarMatriculas(Request $request)
     {
         $query = $request->input('query');

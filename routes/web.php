@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/ventas', [DashboardController::class, 'ventas'])->name('dashboard.ventas');
     Route::get('/dashboard/filtrar', [DashboardController::class, 'filtrar'])->name('dashboard.filtrar');
     Route::post('/ventas/agregar-producto', [VentaController::class, 'agregarProducto'])->name('ventas.agregarProducto');
+    Route::get('/ventas/total', [VentaController::class, 'obtenerTotal'])->name('ventas.total');
     Route::post('/ventas/quitar-producto', [VentaController::class, 'quitarProducto'])->name('ventas.quitarProducto');
     Route::post('/ventas/realizar', [VentaController::class, 'store'])->name('ventas.store');
     Route::delete('/ventas/eliminar/{id}', [VentaController::class, 'eliminar'])->name('ventas.destroy');
