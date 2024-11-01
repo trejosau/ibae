@@ -17,7 +17,6 @@ use App\Models\Profesor;
 use App\Models\Ventas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -87,8 +86,8 @@ class DashboardController extends Controller
     {
         $productos = Productos::all();
 
-        $ventas = Ventas::with(['administrador.persona'])
-        ->select('nombre_comprador', 'fecha_compra', 'total', 'id_admin', 'es_estudiante', 'matricula')
+        $ventas = Ventas::with(['administrador.persona', 'detalles.producto']) // Asegúrate de que esta relación está bien
+        ->select('id','nombre_comprador', 'fecha_compra', 'total', 'id_admin', 'es_estudiante', 'matricula')
             ->orderBy('fecha_compra', 'desc')
             ->paginate(10);
 
@@ -97,67 +96,40 @@ class DashboardController extends Controller
             $venta->estado = 'Completada'; // Establecer estado como "Completada"
             return $venta;
         });
+        $administradores = Administrador::with('persona')->get();
 
-        return view('dashboard.index', compact('productos', 'ventas'));
+        return view('dashboard.index', compact('productos', 'ventas', 'administradores'));
     }
 
-
-
-    public function ventasStore(Request $request)
+    public function filtrar(Request $request)
     {
-        // Obtener el ID del usuario autenticado
-        $userId = Auth::id();
+        $query = Ventas::with(['administrador.persona']);
 
-        // Obtener el id_persona del usuario autenticado
-        $persona = Persona::where('usuario', $userId)->first();
-
-        if (!$persona) {
-            return response()->json(['error' => 'Persona no encontrada.'], 404);
+        if ($request->filled('buscadorCompradores')) {
+            $query->where('nombre_comprador', 'like', '%' . $request->buscadorCompradores . '%');
+        }
+        if ($request->filled('fecha_compra')) {
+            $query->whereDate('fecha_compra', $request->fecha_compra);
+        }
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+        if ($request->filled('es_estudiante')) {
+            $query->where('es_estudiante', $request->es_estudiante);
+        }
+        if ($request->filled('tipo_venta')) {
+            $query->where('tipo', $request->tipo_venta);
+        }
+        if ($request->filled('id_admin')) {
+            $query->where('id_admin', $request->id_admin);
         }
 
-        $idPersona = $persona->id;
+        $ventas = $query->orderBy('fecha_compra', 'desc')->get();
 
-        // Obtener el administrador que corresponde a este id_persona
-        $admin = Administrador::where('id_persona', $idPersona)->first();
-
-        if (!$admin) {
-            return response()->json(['error' => 'Administrador no encontrado.'], 404);
-        }
-
-        $adminId = $admin->id; // Obtén el ID del administrador
-
-        // Obtener datos del comprador
-        $nombreComprador = $request->input('nombreComprador');
-        $fechaCompra = now()->toDateString(); // Fecha actual
-        $esEstudiante = $request->input('esEstudiante') ? 'si' : 'no'; // Si está marcado el checkbox
-        $matricula = $esEstudiante === 'si' ? $request->input('matricula') : null; // Obtener matrícula si es estudiante
-
-        // Crear la venta
-        $venta = Venta::create([
-            'id_comprador' => $request->input('id_comprador'), // Asegúrate de enviar este dato en la petición
-            'fecha_compra' => $fechaCompra,
-            'total' => 0, // Inicialmente puedes dejarlo en 0 o calcularlo más adelante
-            'id_admin' => $adminId,
-            'es_estudiante' => $esEstudiante,
-            'matricula' => $matricula,
-        ]);
-
-        // Procesar los detalles de la venta
-        $detalles = $this->procesarDetallesVenta($request->input('carrito'), $venta->id, $esEstudiante);
-
-        // Retornar la respuesta
-        return response()->json([
-            'mensaje' => 'Venta registrada correctamente.',
-            'venta' => [
-                'nombre_comprador' => $nombreComprador,
-                'fecha_compra' => $fechaCompra,
-                'id_admin' => $adminId,
-                'es_estudiante' => $esEstudiante,
-                'matricula' => $matricula,
-                'detalles' => $detalles,
-            ],
-        ]);
+        return response()->json($ventas);
     }
+
+
 
     private function procesarDetallesVenta($carrito, $idVenta, $esEstudiante)
     {

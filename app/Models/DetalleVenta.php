@@ -28,8 +28,8 @@ class DetalleVenta extends Model
     }
 
     // Relación con productos (un detalle tiene muchos productos)
-    public function productos()
+    public function producto()
     {
-        return $this->belongsTo(Productos::class, 'id_producto'); // Asegúrate de que 'id_producto' sea la clave foránea
+        return $this->belongsTo(Productos::class, 'id_producto'); // Cambia a 'id_producto'
     }
 }

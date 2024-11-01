@@ -122,6 +122,12 @@ class VentaController extends Controller
             return redirect()->back()->with('error', 'Error al registrar la venta');
         }
     }
+    public function eliminar(Request $request, $id)
+    {
+        $venta = Ventas::find($id);
+        $venta->delete();
+        return redirect()->back()->with('success', 'Venta eliminada con éxito');
+    }
 
 
 

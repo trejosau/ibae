@@ -31,7 +31,7 @@
 
 
     <!-- Filtros y Búsqueda -->
-    <form id="filtro-compras-form" method="GET" action="{{ route('dashboard.compras') }}">
+    <form id="filtro-compras-form" method="GET" action="{{ route('dashboard.filtrar') }}">
         <div class="row mb-4">
             <div class="col-md-4 mb-3">
                 <input type="text" id="buscadorCompradores" class="form-control" placeholder="Buscar por cliente">
@@ -63,9 +63,13 @@
             <div class="col-md-4 mb-3">
                 <select class="form-select" name="id_admin">
                     <option value="">Todos</option>
-                    <option value="1">Luis</option>
-                    <option value="2">Alberto</option>
-                    <option value="3">Juan</option>
+                    @foreach($administradores as $admin)
+                        @if($admin->persona)
+                            <option value="{{ $admin->id }}">
+                                {{ $admin->persona->nombre }} {{ $admin->persona->apellido_pa }}
+                            </option>
+                        @endif
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -73,7 +77,7 @@
 
 
 
-    <!-- Ventas Recientes -->
+    <!-- Tabla de Ventas Recientes -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card border-success h-100 mb-4">
@@ -112,20 +116,24 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detalle-venta">
+                                    <!-- Botón para abrir modal de detalles de la venta específica -->
+                                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detalle-venta-{{ $venta->id }}">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                    <button class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                    <!-- Botón para eliminar venta específica -->
+                                    <form action="{{ route('ventas.destroy', $venta->id) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger btn-sm" type="submit">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach
+
                         </tbody>
-
-
                     </table>
-
 
                     <!-- Paginación -->
                     <div class="d-flex justify-content-center">
@@ -138,156 +146,90 @@
         </div>
     </div>
 
-
     <!-- Modal ver Venta -->
-    <div class="modal fade" id="modal-detalle-venta" tabindex="-1" aria-labelledby="modal-detalle-venta-label" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content h-100">
-                <div class="modal-header d-flex justify-content-between align-items-start"> <!-- Cambiar align-items-center a align-items-start -->
-                    <div class="d-flex flex-column text-end">
-                        <div class="d-flex flex-wrap mb-0"> <!-- Usar flex-wrap para permitir que los textos largos se ajusten -->
-                            <p class="mb-1 me-2"><strong>Comprador:</strong> Abraham senior</p>
-                            <p class="mb-1 me-2"><strong>Fecha:</strong> 2024-10-30</p>
-                            <p class="mb-1 me-2"><strong>Estudiante?:</strong> No</p>
-                            <p class="mb-1"><strong>Vendedor:</strong> Chuy 0 commits</p>
+    @foreach($ventas as $venta)
+        <div class="modal fade" id="modal-detalle-venta-{{ $venta->id }}" tabindex="-1" aria-labelledby="modal-detalle-venta-label-{{ $venta->id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content h-100">
+                    <div class="modal-header d-flex justify-content-between align-items-start">
+                        <div class="d-flex flex-column text-end">
+                            <div class="d-flex flex-wrap mb-0">
+                                <p class="mb-1 me-2"><strong>Cliente:</strong> {{ $venta->nombre_comprador }}</p>
+                                <p class="mb-1 me-2"><strong>Fecha:</strong> {{ $venta->fecha_compra }}</p>
+                                <p class="mb-1 me-2"><strong>Estudiante?:</strong> {{ $venta->es_estudiante === 'si' ? 'Sí' : 'No' }}</p>
+                                <p class="mb-1"><strong>Vendedor:</strong>
+                                    @if($venta->administrador && $venta->administrador->persona)
+                                        {{ $venta->administrador->persona->nombre }} {{ $venta->administrador->persona->apellido_pa }}
+                                    @else
+                                        N/A
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+
+                    <div class="modal-body">
+                        <div class="row row-cols-5 g-3 overflow-auto" style="max-height: 60vh;">
+                            @foreach($venta->detalles as $detalle)
+                                @php
+                                    $total = $detalle->precio_aplicado * $detalle->cantidad; // Calcular el total por detalle
+                                @endphp
+                                <div class="col">
+                                    <div class="card text-center border-0 shadow-sm">
+                                        <img src="{{ $detalle->producto->main_photo ?? 'https://picsum.photos/100' }}" class="card-img-top rounded" alt="{{ $detalle->producto->nombre ?? 'Producto no disponible' }}">
+                                        <div class="card-body p-1">
+                                            <h6 class="card-title fw-semibold" style="font-size: 1rem;">
+                                                {{ $detalle->producto->nombre ?? 'Producto no disponible' }}
+                                            </h6>
+                                            <p class="card-text mb-1" style="font-size: 0.75rem;">
+                                                Cantidad: {{ $detalle->cantidad }}
+                                            </p>
+                                            <p class="card-text text-primary fw-bold" style="font-size: 0.85rem;">
+                                                Total: ${{ number_format($total, 2) }} <!-- Total calculado -->
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
 
 
-                <div class="modal-body">
-                    <div class="row row-cols-5 g-3 overflow-auto" style="max-height: 60vh;"> <!-- Limitar la altura del contenido del modal -->
-                        <!-- Tarjeta 1 -->
-                        <div class="col">
-                            <div class="card text-center border-0 shadow-sm">
-                                <img src="https://picsum.photos/id/1015/100/100" class="card-img-top rounded" alt="Producto A">
-                                <div class="card-body p-1">
-                                    <h6 class="card-title fw-semibold" style="font-size: 1rem;">Producto A</h6>
-                                    <p class="card-text mb-1" style="font-size: 0.75rem;">Cantidad: 1</p>
-                                    <p class="card-text text-primary fw-bold" style="font-size: 0.85rem;">Total: $500.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Tarjeta 2 -->
-                        <div class="col">
-                            <div class="card text-center border-0 shadow-sm">
-                                <img src="https://picsum.photos/id/1016/100/100" class="card-img-top rounded" alt="Producto B">
-                                <div class="card-body p-1">
-                                    <h6 class="card-title fw-semibold" style="font-size: 1rem;">Producto B</h6>
-                                    <p class="card-text mb-1" style="font-size: 0.75rem;">Cantidad: 2</p>
-                                    <p class="card-text text-primary fw-bold" style="font-size: 0.85rem;">Total: $600.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Tarjeta 3 -->
-                        <div class="col">
-                            <div class="card text-center border-0 shadow-sm">
-                                <img src="https://picsum.photos/id/1016/100/100" class="card-img-top rounded" alt="Producto C">
-                                <div class="card-body p-1">
-                                    <h6 class="card-title fw-semibold" style="font-size: 1rem;">Producto C</h6>
-                                    <p class="card-text mb-1" style="font-size: 0.75rem;">Cantidad: 3</p>
-                                    <p class="card-text text-primary fw-bold" style="font-size: 0.85rem;">Total: $700.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Tarjeta 4 -->
-                        <div class="col">
-                            <div class="card text-center border-0 shadow-sm">
-                                <img src="https://picsum.photos/id/1018/100/100" class="card-img-top rounded" alt="Producto D">
-                                <div class="card-body p-1">
-                                    <h6 class="card-title fw-semibold" style="font-size: 1rem;">Producto D</h6>
-                                    <p class="card-text mb-1" style="font-size: 0.75rem;">Cantidad: 4</p>
-                                    <p class="card-text text-primary fw-bold" style="font-size: 0.85rem;">Total: $800.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Tarjeta 5 -->
-                        <div class="col">
-                            <div class="card text-center border-0 shadow-sm">
-                                <img src="https://picsum.photos/id/1019/100/100" class="card-img-top rounded" alt="Producto E">
-                                <div class="card-body p-1">
-                                    <h6 class="card-title fw-semibold" style="font-size: 1rem;">Producto E</h6>
-                                    <p class="card-text mb-1" style="font-size: 0.75rem;">Cantidad: 5</p>
-                                    <p class="card-text text-primary fw-bold" style="font-size: 0.85rem;">Total: $900.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Tarjeta 6 -->
-                        <div class="col">
-                            <div class="card text-center border-0 shadow-sm">
-                                <img src="https://picsum.photos/id/1020/100/100" class="card-img-top rounded" alt="Producto F">
-                                <div class="card-body p-1">
-                                    <h6 class="card-title fw-semibold" style="font-size: 1rem;">Producto F</h6>
-                                    <p class="card-text mb-1" style="font-size: 0.75rem;">Cantidad: 6</p>
-                                    <p class="card-text text-primary fw-bold" style="font-size: 0.85rem;">Total: $1000.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Tarjeta 7 -->
-                        <div class="col">
-                            <div class="card text-center border-0 shadow-sm">
-                                <img src="https://picsum.photos/id/1021/100/100" class="card-img-top rounded" alt="Producto G">
-                                <div class="card-body p-1">
-                                    <h6 class="card-title fw-semibold" style="font-size: 1rem;">Producto G</h6>
-                                    <p class="card-text mb-1" style="font-size: 0.75rem;">Cantidad: 7</p>
-                                    <p class="card-text text-primary fw-bold" style="font-size: 0.85rem;">Total: $1100.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Tarjeta 8 -->
-                        <div class="col">
-                            <div class="card text-center border-0 shadow-sm">
-                                <img src="https://picsum.photos/id/1022/100/100" class="card-img-top rounded" alt="Producto H">
-                                <div class="card-body p-1">
-                                    <h6 class="card-title fw-semibold" style="font-size: 1rem;">Producto H</h6>
-                                    <p class="card-text mb-1" style="font-size: 0.75rem;">Cantidad: 8</p>
-                                    <p class="card-text text-primary fw-bold" style="font-size: 0.85rem;">Total: $1200.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Tarjeta 9 -->
-                        <div class="col">
-                            <div class="card text-center border-0 shadow-sm">
-                                <img src="https://picsum.photos/id/1023/100/100" class="card-img-top rounded" alt="Producto I">
-                                <div class="card-body p-1">
-                                    <h6 class="card-title fw-semibold" style="font-size: 1rem;">Producto I</h6>
-                                    <p class="card-text mb-1" style="font-size: 0.75rem;">Cantidad: 9</p>
-                                    <p class="card-text text-primary fw-bold" style="font-size: 0.85rem;">Total: $1300.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Tarjeta 10 -->
-                        <div class="col">
-                            <div class="card text-center border-0 shadow-sm">
-                                <img src="https://picsum.photos/id/1024/100/100" class="card-img-top rounded" alt="Producto J">
-                                <div class="card-body p-1">
-                                    <h6 class="card-title fw-semibold" style="font-size: 1rem;">Producto J</h6>
-                                    <p class="card-text mb-1" style="font-size: 0.75rem;">Cantidad: 10</p>
-                                    <p class="card-text text-primary fw-bold" style="font-size: 0.85rem;">Total: $1400.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Tarjeta 11 -->
-                        <div class="col">
-                            <div class="card text-center border-0 shadow-sm">
-                                <img src="https://picsum.photos/id/1025/100/100" class="card-img-top rounded" alt="Producto K">
-                                <div class="card-body p-1">
-                                    <h6 class="card-title fw-semibold" style="font-size: 1rem;">Producto K</h6>
-                                    <p class="card-text mb-1" style="font-size: 0.75rem;">Cantidad: 11</p>
-                                    <p class="card-text text-primary fw-bold" style="font-size: 0.85rem;">Total: $1500.00</p>
-                                </div>
+                    <div class="modal-footer justify-content-center">
+                        <span class="fw-bold" style="font-size: 1.2rem;">Total: ${{ number_format($venta->total, 2) }}</span>
+                        <div class="modal-body">
+                            <div class="row row-cols-5 g-3 overflow-auto" style="max-height: 60vh;">
+                                @foreach($venta->detalles as $detalle)
+                                    @php
+                                        $total = $detalle->precio_aplicado * $detalle->cantidad; // Calcular el total por detalle
+                                    @endphp
+                                    <div class="col">
+                                        <div class="card text-center border-0 shadow-sm">
+                                            <img src="{{ $detalle->producto->main_photo ?? 'https://picsum.photos/100' }}" class="card-img-top rounded" alt="{{ $detalle->producto->nombre ?? 'Producto no disponible' }}">
+                                            <div class="card-body p-1">
+                                                <h6 class="card-title fw-semibold" style="font-size: 1rem;">
+                                                    {{ $detalle->producto->nombre ?? 'Producto no disponible' }}
+                                                </h6>
+                                                <p class="card-text mb-1" style="font-size: 0.75rem;">
+                                                    Cantidad: {{ $detalle->cantidad }}
+                                                </p>
+                                                <p class="card-text text-primary fw-bold" style="font-size: 0.85rem;">
+                                                    Total: ${{ number_format($total, 2) }} <!-- Total calculado -->
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="modal-footer justify-content-center">
-                    <span class="fw-bold" style="font-size: 1.2rem;">Total: $99,999.00</span>
                 </div>
             </div>
         </div>
-    </div>
+    @endforeach
+
 
 
     <!-- Modal Agregar Venta -->
