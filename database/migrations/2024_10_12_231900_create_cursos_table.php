@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->text('descripcion');
             $table->integer('duracion_semanas');
+            $table->enum('estado', ['activo', 'inactivo']);
             $table->foreignId('id_certificacion')->nullable()->constrained('certificados');
             $table->timestamps();
         });

@@ -17,6 +17,7 @@ class Cursos extends Model
         'nombre',
         'descripcion',
         'duracion_semanas',
+        'estado',
         'id_certificacion',
     ];
 
