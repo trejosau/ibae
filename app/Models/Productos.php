@@ -39,4 +39,9 @@ class Productos extends Model
     {
         return $this->hasMany(DetalleVenta::class, 'id_producto'); // Relación inversa
     }
+     // Definir la relación con la tabla `detalle_pedido`
+     public function detallePedidos()
+     {
+         return $this->hasMany(DetallePedido::class, 'id_producto');
+     }
 }

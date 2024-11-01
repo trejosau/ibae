@@ -54,24 +54,28 @@ class ProductosController extends Controller
     }
     
 
-    public function productosMasVendidos()
+    public function mostrar()
     {
-        $productosMasVendidos = DB::table('detalle_pedido')
-            ->select('id_producto', DB::raw('SUM(cantidad) as total_vendido'))
-            ->groupBy('id_producto')    
-            ->orderBy('total_vendido', 'desc')
-            ->take(10) // Limitar a los 10 productos más vendidos
-            ->pluck('id_producto');
-    
-        // Obtener los detalles de los productos más vendidos
-        $productos = Productos::whereIn('id', $productosMasVendidos)->get();
-    
-        // Asegurarse de enviar correctamente la variable a la vista
-        return view('tienda', compact('productos'));
+        // Consulta para los productos más vendidos
+        $productosMasVendidos = Productos::withSum('detallePedidos as cantidad_total_vendida', 'cantidad')
+            ->where('estado', 'activo')
+            ->orderBy('cantidad_total_vendida', 'desc')
+            ->take(10)
+            ->get();
+
+        // Consulta para los productos más recientes
+        $productosMasRecientes = Productos::where('estado', 'activo')
+            ->orderBy('fecha_agregado', 'desc')
+            ->take(10)
+            ->get();
+
+        // Retornar la vista con ambos conjuntos de datos
+        return view('tienda', [
+            'productosMasVendidos' => $productosMasVendidos,
+            'productosMasRecientes' => $productosMasRecientes,
+        ]);
     }
     
-
-
 
     
 }
