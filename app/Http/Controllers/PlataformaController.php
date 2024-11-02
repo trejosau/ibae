@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cursos;
 use App\Models\Certificados;
+use App\Models\CursoApertura;
+
 
 
 
@@ -14,13 +16,15 @@ class PlataformaController extends Controller
   
     
 
- // En PlataformaController.php
- public function misCursos()
- {
-     $cursos = Cursos::with('certificado')->get(); // Obtiene cursos con sus certificados
-     $certificados = Certificados::all(); // Obtiene todos los certificados
-     return view('plataforma.index', compact('cursos', 'certificados'));
- }
+    public function misCursos()
+    {
+        $cursos = Cursos::with('certificado')->get(); 
+        $certificados = Certificados::all(); 
+        $instituciones = ['SEP', 'Otra']; // Enum de instituciones
+    
+        return view('plataforma.index', compact('cursos', 'certificados', 'instituciones'));
+    }
+    
  
 
     public function store(Request $request)
@@ -48,25 +52,51 @@ public function storeCertificado(Request $request)
         'nombre' => 'required|string|max:255',
         'descripcion' => 'required|string',
         'horas' => 'required|integer|min:1',
-        'institucion' => 'required|string|max:255',
+        'institucion' => 'required|string|in:SEP,Otra', // Validación enum
     ]);
 
-    // Crea un nuevo certificado
-    Certificados::create([
-        'nombre' => $request->nombre,
-        'descripcion' => $request->descripcion,
-        'horas' => $request->horas,
-        'institucion' => $request->institucion,
-    ]);
+    Certificados::create($request->all());
 
     return redirect()->route('plataforma.mis-cursos')->with('success', 'Certificado creado con éxito.');
 }
 
 
-    public function historialCursos() {
-        return view('plataforma.index');
-    }
 
+public function historialCursos()
+{
+    $cursosApertura = CursoApertura::with('curso')->get(); // Obtiene los cursos de apertura con el curso relacionado
+    $cursos = Cursos::all(); // Obtiene todos los cursos para llenar el select en el modal
+    return view('plataforma.index', compact('cursosApertura', 'cursos')); // Asegúrate de pasar 'cursos' aquí
+}
+
+public function storeCursoApertura(Request $request)
+{
+    $request->validate([
+        'id_curso' => 'required|exists:cursos,id', // Verifica que el curso exista
+        'fecha_inicio' => 'required|date',
+        'periodo' => 'required|string|max:255',
+        'año' => 'required|integer|min:2000|max:' . date('Y'), // Limita el año a un rango razonable
+    ]);
+
+    // Obtén el curso para obtener su nombre
+    $curso = Cursos::find($request->id_curso);
+
+    // Construye el nombre del curso de apertura
+    $nombreCursoApertura = "{$curso->nombre} - {$request->periodo} {$request->año}";
+
+    // Crea un nuevo curso de apertura
+    CursoApertura::create([
+        'id_curso' => $request->id_curso,
+        'nombre' => $nombreCursoApertura, // Usa el nombre construido
+        'fecha_inicio' => $request->fecha_inicio,
+        'periodo' => $request->periodo,
+        'año' => $request->año,
+    ]);
+
+    return redirect()->route('plataforma.mis-cursos')->with('success', 'Curso de apertura creado con éxito.');
+}
+
+    
     public function listaModulos() {
         return view('plataforma.index');
     }

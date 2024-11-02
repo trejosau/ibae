@@ -14,8 +14,8 @@
     <div class="row">
         @foreach($cursos as $curso)
             <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100 shadow-sm border-light"> <!-- Se quitaron bg-dark y text-white -->
-                    <div class="card-body py-4"> <!-- Se aumentó el padding vertical -->
+                <div class="card h-100 shadow-sm border-light">
+                    <div class="card-body py-4">
                         <h5 class="card-title text-center text-primary">{{ $curso->nombre }}</h5>
                         <p class="card-text">{{ $curso->descripcion }}</p>
                         <p class="card-text"><strong>Duración:</strong> {{ $curso->duracion_semanas }} semanas</p>
@@ -95,7 +95,12 @@
                         </div>
                         <div class="mb-3">
                             <label for="institucion" class="form-label">Institución</label>
-                            <input type="text" class="form-control" id="institucion" name="institucion" required>
+                            <select class="form-select" id="institucion" name="institucion" required>
+                                <option value="">Seleccione una institución</option>
+                                @foreach($instituciones as $institucion)
+                                    <option value="{{ $institucion }}">{{ $institucion }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">

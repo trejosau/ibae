@@ -36,9 +36,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');
     Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
 });
-Route::post('/cursos', [PlataformaController::class, 'store'])->name('cursos.store');
-Route::post('/certificados', [PlataformaController::class, 'storeCertificado'])->name('certificados.store');
-
 
 Route::get('/contacto', function () {
     return view('contacto');
@@ -65,8 +62,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/plataforma/espacio/mis-cursos', [PlataformaController::class, 'misCursosEspacio'])->name('plataforma.espacio-mis-cursos');
     Route::get('/plataforma/espacio/mis-pagos', [PlataformaController::class, 'misPagosEspacio'])->name('plataforma.espacio-mis-pagos');
     Route::get('/plataforma/espacio/perfil', [PlataformaController::class, 'perfilEspacio'])->name('plataforma.espacio-perfil');
+<<<<<<< Updated upstream
     });
 
+=======
+    Route::post('/cursos', [PlataformaController::class, 'store'])->name('cursos.store');
+    Route::post('/certificados', [PlataformaController::class, 'storeCertificado'])->name('certificados.store');
+    Route::get('/plataforma/mis-cursos', [PlataformaController::class, 'misCursos'])->name('plataforma.mis-cursos');
+    Route::post('/plataforma/store-curso-apertura', [PlataformaController::class, 'storeCursoApertura'])->name('plataforma.storeCursoApertura');
+     });
+>>>>>>> Stashed changes
 
     Route::get('/tienda', [ProductosController::class, 'index'])->name('tienda'); // Ruta para la tienda principal
     Route::post('/catalogo', [ProductosController::class, 'filtrar'])->name('productos.filtrar'); // Filtrar productos desde el formulario

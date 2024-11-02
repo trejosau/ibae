@@ -14,7 +14,7 @@ class CursoApertura extends Model
 
     protected $fillable = [
         'id_curso',
-        'nombre',
+        'nombre', // Asegúrate de que esto esté aquí
         'fecha_inicio',
         'periodo',
         'año',

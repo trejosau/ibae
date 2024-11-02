@@ -9,7 +9,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <style>
-    /* Variables de colores */
+.botoncin-ca{
+    margin-top: 10px;
+}
     .titulo{
 font-size: 30px
     }
@@ -18,11 +20,10 @@ font-size: 30px
 }
 .card {
     transition: transform 0.2s; /* Animación suave al hacer hover */
+    border: 2px solid transparent
 }
 
-.card:hover {
-    transform: scale(1.05); /* Aumenta el tamaño de la tarjeta al pasar el ratón */
-}
+
 
 .card-body {
     background-color: #f9f9f9; /* Color de fondo más suave para el contenido de la tarjeta */
