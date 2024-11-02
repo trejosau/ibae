@@ -13,67 +13,76 @@
 
     <h2 class="text-center mb-4">Sección de Ventas</h2>
 
-    <!-- Gráfica de Ventas -->
+
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card border-info h-100 mb-4">
-                <div class="card-body">
-                    <h5 class="card-title text-center">
-                        <i class="fas fa-chart-line fa-2x text-info"></i> Gráfica de Ventas
-                    </h5>
-                    <div id="grafica-ventas" class="text-center">
-                        <div id="chart"></div>
+            <form action="{{ route('dashboard.ventas') }}" method="GET" class="p-3 bg-light rounded shadow-sm">
+                <div class="row g-3 align-items-center">
+                    <!-- Filtrar por Comprador -->
+                    <div class="col-md-2">
+                        <input type="text" name="comprador" class="form-control form-control-sm" placeholder="Comprador" value="{{ request('comprador') }}" style="min-width: 100%;">
+                    </div>
+
+                    <!-- Filtrar por Rango de Fechas -->
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text">Desde</span>
+                            <input type="date" name="fecha_inicio" class="form-control form-control-sm" value="{{ request('fecha_inicio') }}">
+                            <span class="input-group-text">Hasta</span>
+                            <input type="date" name="fecha_fin" class="form-control form-control-sm" value="{{ request('fecha_fin') }}">
+                        </div>
+                    </div>
+
+                    <!-- Filtrar por Estado -->
+                    <div class="col-md-2">
+                        <select name="estado" class="form-select form-select-sm" style="min-width: 100%;">
+                            <option value="">Estado</option>
+                            <option value="completado" {{ request('estado') == 'completado' ? 'selected' : '' }}>Completado</option>
+                            <option value="pendiente" {{ request('estado') == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
+                        </select>
+                    </div>
+
+                    <!-- Filtrar por Tipo -->
+                    <div class="col-md-2">
+                        <select name="tipo" class="form-select form-select-sm" style="min-width: 100%;">
+                            <option value="">Tipo</option>
+                            <option value="online" {{ request('tipo') == 'online' ? 'selected' : '' }}>Online</option>
+                            <option value="presencial" {{ request('tipo') == 'presencial' ? 'selected' : '' }}>Presencial</option>
+                        </select>
+                    </div>
+
+                    <!-- Filtrar por Estudiante -->
+                    <div class="col-md-2">
+                        <select name="es_estudiante" class="form-select form-select-sm" style="min-width: 100%;">
+                            <option value="">Estudiante?</option>
+                            <option value="si" {{ request('es_estudiante') == 'si' ? 'selected' : '' }}>Sí</option>
+                            <option value="no" {{ request('es_estudiante') == 'no' ? 'selected' : '' }}>No</option>
+                        </select>
+                    </div>
+
+                    <!-- Filtrar por Vendedor -->
+                    <div class="col-md-2">
+                        <input type="text" name="vendedor" class="form-control form-control-sm" placeholder="Vendedor" value="{{ request('vendedor') }}" style="min-width: 100%;">
+                    </div>
+
+                    <!-- Botón de Filtrar -->
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-success btn-sm w-100" style="font-weight: bold;">
+                            Filtrar <i class="fas fa-filter ms-1"></i>
+                        </button>
+                    </div>
+
+                    <!-- Botón de Limpiar -->
+                    <div class="col-md-2">
+                        <a href="{{ route('dashboard.ventas') }}" class="btn btn-secondary btn-sm w-100" style="font-weight: bold;">
+                            Limpiar <i class="fas fa-times ms-1"></i>
+                        </a>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 
-
-    <!-- Filtros y Búsqueda -->
-    <form id="filtro-compras-form" method="GET" action="{{ route('dashboard.filtrar') }}">
-        <div class="row mb-4">
-            <div class="col-md-4 mb-3">
-                <input type="text" id="buscadorCompradores" class="form-control" placeholder="Buscar por cliente">
-            </div>
-            <div class="col-md-4 mb-3">
-                <input type="date" class="form-control" name="fecha_compra" placeholder="Fecha de Compra">
-            </div>
-            <div class="col-md-4 mb-3">
-                <select class="form-select" name="estado" >
-                    <option value="">Estado de la Compra</option>
-                    <option value="completada">Completada</option>
-                    <option value="pendiente">Pendiente</option>
-                </select>
-            </div>
-            <div class="col-md-4 mb-3">
-                <select class="form-select" name="es_estudiante" >
-                    <option value="">Todos</option>
-                    <option value="1">Por Estudiantes</option>
-                    <option value="0">Por Público General</option>
-                </select>
-            </div>
-            <div class="col-md-4 mb-3">
-                <select class="form-select" name="tipo_venta">
-                    <option value="">Tipo de Venta</option>
-                    <option value="online">ONLINE</option>
-                    <option value="fisica">FÍSICA</option>
-                </select>
-            </div>
-            <div class="col-md-4 mb-3">
-                <select class="form-select" name="id_admin">
-                    <option value="">Todos</option>
-                    @foreach($administradores as $admin)
-                        @if($admin->persona)
-                            <option value="{{ $admin->id }}">
-                                {{ $admin->persona->nombre }} {{ $admin->persona->apellido_pa }}
-                            </option>
-                        @endif
-                    @endforeach
-                </select>
-            </div>
-        </div>
-    </form>
 
 
 
@@ -146,6 +155,22 @@
         </div>
     </div>
 
+    <!-- Gráfica de Ventas -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-info h-100 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <i class="fas fa-chart-line fa-2x text-info"></i> Gráfica de Ventas
+                    </h5>
+                    <div id="grafica-ventas" class="text-center">
+                        <div id="chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal ver Venta -->
     @foreach($ventas as $venta)
         <div class="modal fade" id="modal-detalle-venta-{{ $venta->id }}" tabindex="-1" aria-labelledby="modal-detalle-venta-label-{{ $venta->id }}" aria-hidden="true">
@@ -199,30 +224,6 @@
 
                     <div class="modal-footer justify-content-center">
                         <span class="fw-bold" style="font-size: 1.2rem;">Total: ${{ number_format($venta->total, 2) }}</span>
-                        <div class="modal-body">
-                            <div class="row row-cols-5 g-3 overflow-auto" style="max-height: 60vh;">
-                                @foreach($venta->detalles as $detalle)
-                                    @php
-                                        $total = $detalle->precio_aplicado * $detalle->cantidad; // Calcular el total por detalle
-                                    @endphp
-                                    <div class="col">
-                                        <div class="card text-center border-0 shadow-sm">
-                                            <img src="{{ $detalle->producto->main_photo ?? 'https://picsum.photos/100' }}" class="card-img-top rounded" alt="{{ $detalle->producto->nombre ?? 'Producto no disponible' }}">
-                                            <div class="card-body p-1">
-                                                <h6 class="card-title fw-semibold" style="font-size: 1rem;">
-                                                    {{ $detalle->producto->nombre ?? 'Producto no disponible' }}
-                                                </h6>
-                                                <p class="card-text mb-1" style="font-size: 0.75rem;">
-                                                    Cantidad: {{ $detalle->cantidad }}
-                                                </p>
-                                                <p class="card-text text-primary fw-bold" style="font-size: 0.85rem;">
-                                                    Total: ${{ number_format($total, 2) }} <!-- Total calculado -->
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
                         </div>
                     </div>
                 </div>

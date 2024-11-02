@@ -85,49 +85,69 @@ class DashboardController extends Controller
     public function ventas(Request $request)
     {
         $productos = Productos::all();
-
-        $ventas = Ventas::with(['administrador.persona', 'detalles.producto'])
-        ->select('id','nombre_comprador', 'fecha_compra', 'total', 'id_admin', 'es_estudiante', 'matricula')
-            ->orderBy('fecha_compra', 'desc')
-            ->paginate(10);
-
-        $ventas->getCollection()->transform(function ($venta) {
-            $venta->tipo = 'Física'; // Establecer tipo como "Física"
-            $venta->estado = 'Completada'; // Establecer estado como "Completada"
-            return $venta;
-        });
         $administradores = Administrador::with('persona')->get();
 
+        // Construcción de la consulta base
+        $ventasQuery = Ventas::with(['administrador.persona', 'detalles.producto'])
+            ->select('id', 'nombre_comprador', 'fecha_compra', 'total', 'id_admin', 'es_estudiante', 'matricula');
+
+        // Aplicar filtros según estén presentes en la solicitud
+        if ($request->filled('comprador')) {
+            $ventasQuery->where('nombre_comprador', 'like', '%' . $request->comprador . '%');
+        }
+
+        // Filtrado por Rango de Fechas
+        if ($request->filled('fecha_inicio') || $request->filled('fecha_fin')) {
+            if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
+                if ($request->fecha_inicio === $request->fecha_fin) {
+                    // Ambas fechas son iguales, filtrar por esa fecha específica
+                    $ventasQuery->whereDate('fecha_compra', $request->fecha_inicio);
+                } else {
+                    // Ambas fechas están presentes y son diferentes
+                    $ventasQuery->whereBetween('fecha_compra', [$request->fecha_inicio, $request->fecha_fin]);
+                }
+            } elseif ($request->filled('fecha_inicio')) {
+                // Solo se proporciona la fecha de inicio
+                $ventasQuery->whereDate('fecha_compra', $request->fecha_inicio);
+            } elseif ($request->filled('fecha_fin')) {
+                // Solo se proporciona la fecha de fin
+                $ventasQuery->whereDate('fecha_compra', $request->fecha_fin);
+            }
+        }
+
+        if ($request->filled('estado')) {
+            $ventasQuery->where('estado', $request->estado);
+        }
+        if ($request->filled('tipo')) {
+            $ventasQuery->where('tipo', $request->tipo);
+        }
+        if ($request->filled('es_estudiante')) {
+            $ventasQuery->where('es_estudiante', $request->es_estudiante);
+        }
+        if ($request->filled('vendedor')) {
+            $ventasQuery->whereHas('administrador.persona', function($query) use ($request) {
+                $query->where('nombre', 'like', '%' . $request->vendedor . '%');
+            });
+        }
+
+        // Ordenar y paginar los resultados
+        $ventas = $ventasQuery->orderBy('fecha_compra', 'desc')->paginate(10);
+
+        // Transformar los resultados para establecer valores predeterminados
+        $ventas->getCollection()->transform(function ($venta) {
+            $venta->tipo = $venta->tipo ?? 'Física'; // Tipo predeterminado
+            $venta->estado = $venta->estado ?? 'Completada'; // Estado predeterminado
+            return $venta;
+        });
+
+        // Devolver la vista con los datos
         return view('dashboard.index', compact('productos', 'ventas', 'administradores'));
     }
 
-    public function filtrar(Request $request)
-    {
-        $query = Ventas::with(['administrador.persona']);
 
-        if ($request->filled('buscadorCompradores')) {
-            $query->where('nombre_comprador', 'like', '%' . $request->buscadorCompradores . '%');
-        }
-        if ($request->filled('fecha_compra')) {
-            $query->whereDate('fecha_compra', $request->fecha_compra);
-        }
-        if ($request->filled('estado')) {
-            $query->where('estado', $request->estado);
-        }
-        if ($request->filled('es_estudiante')) {
-            $query->where('es_estudiante', $request->es_estudiante);
-        }
-        if ($request->filled('tipo_venta')) {
-            $query->where('tipo', $request->tipo_venta);
-        }
-        if ($request->filled('id_admin')) {
-            $query->where('id_admin', $request->id_admin);
-        }
 
-        $ventas = $query->orderBy('fecha_compra', 'desc')->get();
 
-        return response()->json($ventas);
-    }
+
 
 
 
