@@ -3,28 +3,35 @@
     
     <!-- Botón para agregar curso -->
     <div class="text-center my-4">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCourseModal">
-            Agregar Curso
-        </button>
-        <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#addCertificadoModal">
-            Agregar Certificado
-        </button>
+        <div class="text-center my-4">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCourseModal">
+                Agregar Curso
+            </button>
+            <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#addCertificadoModal">
+                Agregar Certificado
+            </button>
+            <button type="button" class="btn btn-warning ms-2" data-bs-toggle="modal" data-bs-target="#changeStatusModal">
+                Cambiar Estado de Curso
+            </button>
     </div>
     
+  
     <div class="row">
         @foreach($cursos as $curso)
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100 shadow-sm border-light">
-                    <div class="card-body py-4">
-                        <h5 class="card-title text-center text-primary">{{ $curso->nombre }}</h5>
-                        <p class="card-text">{{ $curso->descripcion }}</p>
-                        <p class="card-text"><strong>Duración:</strong> {{ $curso->duracion_semanas }} semanas</p>
-                        @if($curso->certificado)
-                            <p class="card-text"><strong>Certificado:</strong> {{ $curso->certificado->nombre }}</p>
-                        @endif
+            @if($curso->estado === 'activo')
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm border-light">
+                        <div class="card-body py-4">
+                            <h5 class="card-title text-center text-primary">{{ $curso->nombre }}</h5>
+                            <p class="card-text">{{ $curso->descripcion }}</p>
+                            <p class="card-text"><strong>Duración:</strong> {{ $curso->duracion_semanas }} semanas</p>
+                            @if($curso->certificado)
+                                <p class="card-text"><strong>Certificado:</strong> {{ $curso->certificado->nombre }}</p>
+                            @endif
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
         @endforeach
     </div>
 
@@ -106,6 +113,42 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-primary">Agregar Certificado</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changeStatusModal" tabindex="-1" aria-labelledby="changeStatusModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changeStatusModalLabel">Cambiar Estado del Curso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('cursos.cambiarEstado') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="curso_id" class="form-label">Seleccionar Curso</label>
+                            <select class="form-select" id="curso_id" name="curso_id" required>
+                                <option value="">Seleccione un curso</option>
+                                @foreach($cursos as $curso)
+                                    <option value="{{ $curso->id }}">{{ $curso->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="estado" class="form-label">Estado</label>
+                            <select class="form-select" id="estado" name="estado" required>
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     </div>
                 </form>
             </div>
