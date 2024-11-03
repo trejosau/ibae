@@ -15,7 +15,6 @@ return new class extends Migration
             $table->boolean('Asistio');
             $table->date('Fecha_de_Pago')->nullable();
             $table->enum('estado', ['pendiente', 'pagado']);
-            $table->decimal('Monto', 10)->nullable();
             $table->foreign('id_estudiante_curso')->references('id')->on('estudiante_curso')->onDelete('cascade');
         });
     }

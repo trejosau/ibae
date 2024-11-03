@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CursoApertura extends Model
 {
-    use HasFactory;
+
+    public $timestamps = false;
 
     protected $table = 'curso_apertura';
 
@@ -16,8 +17,9 @@ class CursoApertura extends Model
         'id_curso',
         'nombre', // Asegúrate de que esto esté aquí
         'fecha_inicio',
-        'periodo',
-        'año',
+        'monto_colegiatura',
+        'dia_clase',
+        'hora_clase',
     ];
 
     public function curso() : BelongsTo

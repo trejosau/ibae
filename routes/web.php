@@ -53,6 +53,7 @@ Route::middleware('auth')->group(function () {
     // Rutas de Cursos
     Route::get('/plataforma/cursos/mis-cursos', [PlataformaController::class, 'misCursos'])->name('plataforma.mis-cursos');
     Route::get('/plataforma/cursos/historial-cursos', [PlataformaController::class, 'historialCursos'])->name('plataforma.historial-cursos');
+    Route::post('/plataforma/cursos/guardar-curso-apertura', [PlataformaController::class, 'storeCursoApertura'])->name('plataforma.storeCursoApertura');
     Route::post('/cursos', [PlataformaController::class, 'store'])->name('cursos.store');
     Route::post('/cursos/cambiar-estado', [PlataformaController::class, 'cambiarEstado'])->name('cursos.cambiarEstado');
     Route::delete('/cursos/{id}', [PlataformaController::class, 'cursoDestroy'])->name('plataforma.cursoDestroy');

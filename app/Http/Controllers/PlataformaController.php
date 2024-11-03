@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Modulos;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Cursos;
 use App\Models\Certificados;
@@ -88,37 +89,53 @@ class PlataformaController extends Controller
 
     public function historialCursos()
     {
-        $cursosApertura = CursoApertura::with('curso')->get(); // Obtiene los cursos de apertura con el curso relacionado
-        $cursos = Cursos::all(); // Obtiene todos los cursos para llenar el select en el modal
-        return view('plataforma.index', compact('cursosApertura', 'cursos')); // Asegúrate de pasar 'cursos' aquí
+        // Obtener los cursos con su relación de aperturas
+        $cursosApertura = CursoApertura::with('curso')->get();
+
+        // Obtener todos los cursos
+        $cursos = Cursos::all();
+
+        // Pasar ambas variables a la vista
+        return view('plataforma.index', compact('cursosApertura', 'cursos'));
     }
+
 
     public function storeCursoApertura(Request $request)
     {
+        // Validar la solicitud entrante
         $request->validate([
-            'id_curso' => 'required|exists:cursos,id', // Verifica que el curso exista
+            'id_curso' => 'required|exists:cursos,id',
             'fecha_inicio' => 'required|date',
-            'periodo' => 'required|string|max:255',
-            'año' => 'required|integer|min:2000|max:' . date('Y'), // Limita el año a un rango razonable
+            'hora_clase' => 'required|date_format:H:i',
+            'monto_colegiatura' => 'required|integer|min:1',
         ]);
 
-        // Obtén el curso para obtener su nombre
+        // Obtener el curso seleccionado
         $curso = Cursos::find($request->id_curso);
+        $duracion_semanas = $curso->duracion_semanas;
 
-        // Construye el nombre del curso de apertura
-        $nombreCursoApertura = "{$curso->nombre} - {$request->periodo} {$request->año}";
+        // Parsear la fecha de inicio
+        $fecha_inicio = Carbon::parse($request->fecha_inicio);
+        $mes_inicio = $fecha_inicio->translatedFormat('F'); // Mes en español
+        $dia_semana = $fecha_inicio->translatedFormat('l'); // Día en español
 
-        // Crea un nuevo curso de apertura
+        // Crear el nombre del registro en el formato deseado
+        $nombreRegistro = "{$dia_semana}, {$curso->nombre}, {$request->hora_clase}, {$mes_inicio}";
+
+        // Crear el registro de apertura de curso
         CursoApertura::create([
             'id_curso' => $request->id_curso,
-            'nombre' => $nombreCursoApertura, // Usa el nombre construido
-            'fecha_inicio' => $request->fecha_inicio,
-            'periodo' => $request->periodo,
-            'año' => $request->año,
+            'nombre' => $nombreRegistro, // Usar el nuevo formato para el nombre
+            'fecha_inicio' => $fecha_inicio,
+            'monto_colegiatura' => $request->monto_colegiatura,
+            'dia_clase' => $dia_semana,
+            'hora_clase' => $request->hora_clase, // Añadir la hora de clase
         ]);
 
-        return redirect()->route('plataforma.historial-cursos')->with('success', 'Curso de apertura creado con éxito.');
+        // Redirigir de vuelta con un mensaje de éxito
+        return redirect()->route('plataforma.historial-cursos')->with('success', 'Curso aperturado exitosamente.');
     }
+
 
 
     public function listaModulos()

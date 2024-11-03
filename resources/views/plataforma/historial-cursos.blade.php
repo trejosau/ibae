@@ -168,78 +168,57 @@
                 <h5 class="modal-title" id="aperturarCursoModalLabel">Aperturar Curso</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="cursoSelect" class="form-label">Selecciona el Curso</label>
-                    <select class="form-select" id="cursoSelect">
-                        <option value="" disabled selected>Seleccione un curso</option>
-                        <option value="cocina">Curso de Cocina</option>
-                        <option value="fotografia">Curso de Fotografía</option>
-                        <option value="pintura">Curso de Pintura</option>
-                    </select>
-                </div>
-
-                <!-- Contenedor de semanas -->
-                <div id="semanasContainer">
-                    <!-- Semana 1 -->
-                    <div class="semana mb-3">
-                        <label class="form-label">Semana 1</label>
-                        <select class="form-select moduloSelect">
-                            <option value="" disabled selected>Selecciona un Módulo</option>
-                            <option value="modulo1">Módulo 1: Introducción</option>
-                            <option value="modulo2">Módulo 2: Técnicas Avanzadas</option>
-                            <option value="modulo3">Módulo 3: Proyectos Prácticos</option>
+            <form id="aperturarCursoForm" method="POST" action="{{ route('plataforma.storeCursoApertura') }}">
+                @csrf <!-- Token CSRF para protección -->
+                <div class="modal-body">
+                    <!-- Selección de Curso -->
+                    <div class="mb-3">
+                        <label for="cursoSelect" class="form-label">Selecciona el Curso</label>
+                        <select class="form-select" id="cursoSelect" name="id_curso" required>
+                            <option value="" disabled selected>Seleccione un curso</option>
+                            @foreach($cursos as $curso)
+                                <option value="{{ $curso->id }}" data-duracion="{{ $curso->duracion_semanas }}">
+                                    {{ $curso->nombre }} ({{ $curso->duracion_semanas }} semanas)
+                                </option>
+                            @endforeach
                         </select>
-                        <div class="temasContainer mt-2">
-                            <label class="form-label">Temas</label>
-                            <div class="input-group">
-                                <select class="form-select temaSelect">
-                                    <option value="" disabled selected>Selecciona un Tema</option>
-                                    <option value="tema1">Tema 1: Conceptos Básicos</option>
-                                    <option value="tema2">Tema 2: Técnicas Especializadas</option>
-                                    <option value="tema3">Tema 3: Proyectos Ejemplo</option>
-                                </select>
-                                <button type="button" class="btn btn-outline-secondary agregarTema" title="Agregar Tema" onclick="agregarTema(this)">
-                                    +
-                                </button>
-                            </div>
-                            <div class="temasList mt-2" style="border: 1px solid #ccc; padding: 10px; min-height: 40px;">
-                                <!-- Lista de temas se ordenarán aquí -->
-                            </div>
-                        </div>
                     </div>
 
-                    <!-- Otras semanas se pueden agregar aquí de forma similar -->
+                    <!-- Campo para la Fecha de Inicio -->
+                    <div class="mb-3">
+                        <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
+                        <input type="date" class="form-control" id="fechaInicio" name="fecha_inicio" required>
+                    </div>
+
+                    <!-- Campo para la Hora de Inicio -->
+                    <div class="mb-3">
+                        <label for="horaClase" class="form-label">Hora de Inicio</label>
+                        <input type="time" class="form-control" id="horaClase" name="hora_clase" required>
+                    </div>
+
+                    <!-- Campo para el Monto de Colegiatura -->
+                    <div class="mb-3">
+                        <label for="montoColegiatura" class="form-label">Monto de Colegiatura</label>
+                        <input type="number" class="form-control" id="montoColegiatura" name="monto_colegiatura" placeholder="Ingrese el monto de colegiatura" required>
+                    </div>
+
+                    <!-- Contenedor de semanas -->
+                    <div id="semanasContainer">
+                        <!-- Semanas generadas dinámicamente -->
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary">Aperturar Curso</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Aperturar Curso</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
-<script>
-    function agregarTema(button) {
-        const temaSelect = button.previousElementSibling;
-        const selectedTema = temaSelect.value;
-        const selectedTemaText = temaSelect.options[temaSelect.selectedIndex].text;
 
-        if (selectedTema) {
-            const temasList = button.closest('.temasContainer').querySelector('.temasList');
-            const newTemaDiv = document.createElement('div');
-            newTemaDiv.textContent = selectedTemaText; // Text of the selected tema
-            newTemaDiv.classList.add('temaItem'); // Add a class for styling if needed
-            temasList.appendChild(newTemaDiv); // Append the new tema to the temas list
 
-            // Optionally, reset the select after adding
-            temaSelect.selectedIndex = 0; // Reset the select to the first option
-        } else {
-            alert('Por favor selecciona un tema para agregar.');
-        }
-    }
-</script>
+
 
 <!-- Modal para gestionar alumnos -->
 <div class="modal fade" id="gestionarAlumnosModal" tabindex="-1" aria-labelledby="gestionarAlumnosModalLabel" aria-hidden="true">
@@ -308,7 +287,7 @@
             <div class="modal-body">
                 <h6>Seleccionar Semana</h6>
                 <div class="mb-3">
-                    <label for="semanaSelect" class="form-label">Semana:</label>
+                    <label for="semanaSelectw" class="form-label">Semana:</label>
                     <select class="form-select" id="semanaSelect">
                         <option>Semana 1</option>
                         <option>Semana 2</option>

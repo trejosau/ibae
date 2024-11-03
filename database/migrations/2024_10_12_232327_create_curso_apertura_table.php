@@ -13,10 +13,9 @@ return new class extends Migration
             $table->foreignId('id_curso')->constrained('cursos')->onDelete('cascade');
             $table->string('nombre');
             $table->date('fecha_inicio');
-            $table->string('periodo')->nullable();
-            $table->year('año');
+            $table->decimal('monto_colegiatura');
             $table->enum('dia_clase', ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']);
-            $table->timestamps();
+            $table->time('hora_clase')->nullable();
         });
     }
 
