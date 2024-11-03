@@ -1,20 +1,25 @@
 <div class="container my-5">
     <h1 class="text-center mb-4" style="font-size: 2rem; color: #6c757d;">Gestión de Pagos por Estudiante</h1>
 
-    <div class="row">
+    <!-- Search Bar -->
+    <div class="mb-4">
+        <input type="text" class="form-control" id="searchInput" placeholder="Buscar por matrícula o nombre..." aria-label="Buscar">
+    </div>
+
+    <div class="row" id="studentsContainer">
         <!-- Estudiante 1 -->
         <div class="col-12">
             <div class="card mb-3 ms-0 border-light">
                 <div class="card-header bg-light text-dark" id="headingAlberto" style="background-color: #e2f0d9;">
                     <h5 class="mb-0">
                         <button class="btn btn-link text-dark w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAlberto" aria-expanded="true" aria-controls="collapseAlberto" style="text-decoration: none;">
-                            Matricula: 001 | Nombre: Alberto | Fecha Inscripción: 01/09/2024 | Monto Inscripción: $500
+                            Matrícula: 001 | Nombre: Alberto | Fecha Inscripción: 01/09/2024 | Monto Inscripción: $500
                         </button>
                     </h5>
                 </div>
                 <div id="collapseAlberto" class="collapse show" aria-labelledby="headingAlberto">
                     <div class="card-body">
-                        <h6 style="font-weight: bold; color: #6c757d;">Cursos Inscritos:</h6>
+                        <h6 class="font-weight-bold" style="color: #6c757d;">Cursos Inscritos:</h6>
                         <!-- Curso 1: Fotografía -->
                         <div class="card mb-2 ms-1 border-light">
                             <div class="card-header" id="headingCursoFotografia" style="background-color: #d1e7dd;">
@@ -26,7 +31,7 @@
                             </div>
                             <div id="collapseCursoFotografia" class="collapse show" aria-labelledby="headingCursoFotografia">
                                 <div class="card-body">
-                                    <h6 style="font-weight: bold; color: #6c757d;">Detalles de Pagos:</h6>
+                                    <h6 class="font-weight-bold" style="color: #6c757d;">Detalles de Pagos:</h6>
                                     <div class="table-responsive">
                                         <table class="table table-striped">
                                             <thead>
@@ -80,7 +85,7 @@
                             </div>
                             <div id="collapseCursoCocina" class="collapse" aria-labelledby="headingCursoCocina">
                                 <div class="card-body">
-                                    <h6 style="font-weight: bold; color: #6c757d;">Detalles de Pagos:</h6>
+                                    <h6 class="font-weight-bold" style="color: #6c757d;">Detalles de Pagos:</h6>
                                     <div class="table-responsive">
                                         <table class="table table-striped">
                                             <thead>
@@ -121,13 +126,13 @@
                 <div class="card-header bg-light text-dark" id="headingJuan" style="background-color: #e2f0d9;">
                     <h5 class="mb-0">
                         <button class="btn btn-link text-dark w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseJuan" aria-expanded="false" aria-controls="collapseJuan" style="text-decoration: none;">
-                            Matricula: 002 | Nombre: Juan | Fecha Inscripción: 05/09/2024 | Monto Inscripción: $600
+                            Matrícula: 002 | Nombre: Juan | Fecha Inscripción: 05/09/2024 | Monto Inscripción: $600
                         </button>
                     </h5>
                 </div>
                 <div id="collapseJuan" class="collapse" aria-labelledby="headingJuan">
                     <div class="card-body">
-                        <h6 style="font-weight: bold; color: #6c757d;">Cursos Inscritos:</h6>
+                        <h6 class="font-weight-bold" style="color: #6c757d;">Cursos Inscritos:</h6>
                         <!-- Curso 1: Diseño Gráfico -->
                         <div class="card mb-2 ms-1 border-light">
                             <div class="card-header" id="headingCursoDiseno" style="background-color: #d1e7dd;">
@@ -139,7 +144,7 @@
                             </div>
                             <div id="collapseCursoDiseno" class="collapse show" aria-labelledby="headingCursoDiseno">
                                 <div class="card-body">
-                                    <h6 style="font-weight: bold; color: #6c757d;">Detalles de Pagos:</h6>
+                                    <h6 class="font-weight-bold" style="color: #6c757d;">Detalles de Pagos:</h6>
                                     <div class="table-responsive">
                                         <table class="table table-striped">
                                             <thead>
@@ -205,7 +210,7 @@
                             </div>
                             <div id="collapseCursoIdiomas" class="collapse" aria-labelledby="headingCursoIdiomas">
                                 <div class="card-body">
-                                    <h6 style="font-weight: bold; color: #6c757d;">Detalles de Pagos:</h6>
+                                    <h6 class="font-weight-bold" style="color: #6c757d;">Detalles de Pagos:</h6>
                                     <div class="table-responsive">
                                         <table class="table table-striped">
                                             <thead>
@@ -225,9 +230,9 @@
                                             </tr>
                                             <tr>
                                                 <td>2</td>
-                                                <td>No</td>
-                                                <td>-</td>
-                                                <td>-</td>
+                                                <td>Sí</td>
+                                                <td>17/10/2024</td>
+                                                <td>$400</td>
                                             </tr>
                                             <tr>
                                                 <td>3</td>
@@ -277,3 +282,15 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        const filter = this.value.toLowerCase();
+        const students = document.getElementsByClassName('col-12');
+
+        Array.from(students).forEach(function(student) {
+            const text = student.innerText.toLowerCase();
+            student.style.display = text.includes(filter) ? '' : 'none';
+        });
+    });
+</script>
