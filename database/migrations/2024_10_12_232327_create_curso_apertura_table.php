@@ -15,6 +15,7 @@ return new class extends Migration
             $table->date('fecha_inicio');
             $table->string('periodo')->nullable();
             $table->year('año');
+            $table->enum('dia_clase', ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']);
             $table->timestamps();
         });
     }

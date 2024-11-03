@@ -19,7 +19,7 @@
                     <span>Volver a Inicio</span>
                 </a>
             </li>
-           
+
             @if(auth()->user()->hasAnyRole(['profesor', 'admin']))
             <!-- Código para la pestaña Cursos -->
             <li class="sidebar-item">
@@ -35,9 +35,9 @@
                 </ul>
             </li>
         @endif
-        
-        
-        
+
+
+
 
             <!-- Sección para Módulos -->
             <li class="sidebar-item">
@@ -48,9 +48,8 @@
                     <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                 </a>
                 <ul id="modulosDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item"><a href="{{route('plataforma.lista-modulos')}}" class="sidebar-link">Ver Módulos</a></li>
-                    <li class="sidebar-item"><a href="{{route('plataforma.temas-modulos')}}" class="sidebar-link">Ver Temas</a></li>
-                </ul>
+                    <li class="sidebar-item"><a href="{{route('plataforma.lista-modulos')}}" class="sidebar-link">Modulos y Temas</a></li>
+                   </ul>
             </li>
 
             <!-- Sección para Estudiantes/Profesores -->
