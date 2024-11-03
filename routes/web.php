@@ -66,7 +66,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/certificados', [PlataformaController::class, 'storeCertificado'])->name('certificados.store');
     Route::post('/cursos/cambiar-estado', [PlataformaController::class, 'cambiarEstado'])->name('cursos.cambiarEstado');
     Route::post('/plataforma/store-curso-apertura', [PlataformaController::class, 'storeCursoApertura'])->name('plataforma.storeCursoApertura');
-     });
+    Route::delete('/cursos/{id}', [PlataformaController::class, 'cursoDestroy'])->name('plataforma.cursoDestroy');
+});
 
 
     Route::get('/tienda', [ProductosController::class, 'index'])->name('tienda'); // Ruta para la tienda principal
@@ -76,9 +77,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/tienda', [ProductosController::class, 'mostrar'])->name('tienda.mostrar');
 
 
-Route::get('/cursos', function () {
-    return view('cursos');
-})->name('cursos');
 
 
 Route::get('auth/google', [loginGoogleController::class, 'redirectToGoogle'])->name('login.google');
@@ -94,3 +92,5 @@ Route::get('/graficas/colegiaturas', [GraficasController::class, 'obtenerTotalPo
 Route::get('/graficas/salon', [GraficasController::class, 'obtenerTotalSalon'])->name('graficas.salon');
 Route::get('/graficas/tienda', [GraficasController::class, 'obtenerTotalVentas'])->name('graficas.tienda');
 Route::get('/graficas/data', [GraficasController::class, 'obtenerData'])->name('graficas.data');
+
+

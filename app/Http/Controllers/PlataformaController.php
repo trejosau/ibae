@@ -13,18 +13,32 @@ use App\Models\CursoApertura;
 
 class PlataformaController extends Controller
 {
-  
-    
+
+
 
     public function misCursos()
     {
-        $cursos = Cursos::with('certificado')->get(); 
-        $certificados = Certificados::all(); 
+        $cursos = Cursos::with('certificado')->get();
+        $certificados = Certificados::all();
         $instituciones = ['SEP', 'Otra']; // Enum de instituciones
-    
+
         return view('plataforma.index', compact('cursos', 'certificados', 'instituciones'));
     }
-    
+
+    public function cursoDestroy(Request $request)
+    {
+        $curso = Cursos::find($request->id);
+
+        if ($curso->curso_aperturas()->exists()) {
+            return redirect()->route('plataforma.mis-cursos')->with('error', 'No se puede eliminar el curso porque tiene aperturas asociadas.');
+        }
+
+        // Si no hay aperturas, eliminar el curso
+        $curso->delete();
+
+        return redirect()->route('plataforma.mis-cursos')->with('success', 'Curso eliminado con éxito.');
+    }
+
     public function store(Request $request)
     {
     $request->validate([
@@ -105,7 +119,7 @@ class PlataformaController extends Controller
         return redirect()->route('plataforma.historial-cursos')->with('success', 'Curso de apertura creado con éxito.');
     }
 
-    
+
     public function listaModulos() {
         return view('plataforma.index');
     }

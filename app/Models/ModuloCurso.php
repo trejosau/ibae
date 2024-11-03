@@ -20,17 +20,18 @@ class ModuloCurso extends Model
         'id_profesor',
     ];
 
-    public function modulo(): BelongsTo
+
+    public function modulo()
     {
         return $this->belongsTo(Modulos::class, 'id_modulo');
     }
 
-    public function curso(): BelongsTo
+    public function cursoApertura()
     {
-        return $this->belongsTo(Cursos::class, 'id_curso');
+        return $this->belongsTo(CursoApertura::class, 'id_curso_apertura');
     }
 
-    public function profesor(): BelongsTo
+    public function profesor()
     {
         return $this->belongsTo(Profesor::class, 'id_profesor');
     }

@@ -1,6 +1,19 @@
 <div class="container my-4">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     <h4 class="text-primary titulo">Cursos</h4>
-    
+
     <!-- Botón para agregar curso -->
     <div class="text-center my-4">
         <div class="text-center my-4">
@@ -14,28 +27,72 @@
                 Cambiar Estado de Curso
             </button>
     </div>
-    
-  
-    <div class="row">
-        @foreach($cursos as $curso)
-            @if($curso->estado === 'activo')
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card h-100 shadow-sm border-light">
-                        <div class="card-body py-4">
-                            <h5 class="card-title text-center text-primary">{{ $curso->nombre }}</h5>
-                            <p class="card-text">{{ $curso->descripcion }}</p>
-                            <p class="card-text"><strong>Duración:</strong> {{ $curso->duracion_semanas }} semanas</p>
-                            @if($curso->certificado)
-                                <p class="card-text"><strong>Certificado:</strong> {{ $curso->certificado->nombre }}</p>
-                            @endif
+
+
+        <div class="row">
+            @foreach($cursos as $curso)
+                @if($curso->estado === 'activo' || $curso->estado === 'inactivo')
+                    <div class="col-12 mb-4">
+                        <div class="card h-100 border-light position-relative">
+                            <div class="card-body p-0">
+                                <div class="row g-0 align-items-stretch" data-bs-toggle="collapse" data-bs-target="#curso-{{ $curso->id }}" aria-expanded="false" aria-controls="curso-{{ $curso->id }}">
+                                    <!-- Icono de curso -->
+                                    <div class="col-2 p-0">
+                                        <div class="bg-primary h-100 d-flex justify-content-center align-items-center">
+                                            <i class="fas fa-book-open fa-lg text-white"></i>
+                                        </div>
+                                    </div>
+                                    <!-- Nombre y duración -->
+                                    <div class="col-8 p-3">
+                                        <h5 class="card-title text-primary m-0">{{ $curso->nombre }}</h5>
+                                        <p class="card-text m-0"><strong>Duración:</strong> {{ $curso->duracion_semanas }} semanas</p>
+                                    </div>
+                                    <!-- Estado -->
+                                    <div class="col-2 p-0 position-relative">
+                                <span class="badge {{ $curso->estado === 'activo' ? 'bg-success' : 'bg-danger' }} position-absolute top-0 end-0" style="transform: translate(50%, -50%);">
+                                    {{ $curso->estado === 'activo' ? 'Activo' : 'Inactivo' }}
+                                </span>
+                                    </div>
+                                </div>
+                                <!-- Contenido del dropdown -->
+                                <div class="collapse" id="curso-{{ $curso->id }}">
+                                    <!-- Header con la descripción -->
+                                    <div class="card-header bg-light">
+                                        <h6 class="m-0">Descripción:</h6>
+                                        <p>{{ $curso->descripcion }}</p>
+                                    </div>
+                                    <!-- Sección para el certificado y cantidades -->
+                                    <div class="card-body bg-light">
+                                       <h6 class="m-0">Certificado: <strong>{{ $curso->certificado->nombre }}</strong></h6>
+
+
+
+                                        <div class="d-flex justify-content-between">
+                                            <small><strong>Cursos pendientes:</strong> 3</small>
+                                            <small><strong>Cursos aperturados:</strong> 1</small>
+                                            <small><strong>Cursos finalizados:</strong> 1</small>
+                                        </div>
+                                    </div>
+                                    <!-- Footer con el botón de eliminar -->
+                                    <div class="card-footer">
+                                        <form action="{{ route('plataforma.cursoDestroy', $curso->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este curso?');">Eliminar curso</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            @endif
-        @endforeach
-    </div>
+                @endif
+            @endforeach
+        </div>
 
-    <!-- Modal para agregar curso -->
+
+
+
+        <!-- Modal para agregar curso -->
     <div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -154,4 +211,5 @@
             </div>
         </div>
     </div>
+</div>
 </div>

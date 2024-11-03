@@ -24,4 +24,9 @@ class Cursos extends Model
     {
         return $this->belongsTo(Certificados::class, 'id_certificacion');  // Relación con el modelo Certificados
     }
+    public function curso_aperturas()
+    {
+        // Suponiendo que 'curso_apertura' es el nombre de la tabla y 'id_curso' es la columna que referencia a Cursos
+        return $this->hasMany(CursoApertura::class, 'id_curso');
+    }
 }

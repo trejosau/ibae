@@ -11,14 +11,15 @@ return new class extends Migration
         Schema::create('modulo_curso', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_modulo');
-            $table->unsignedBigInteger('id_curso');
+            $table->unsignedBigInteger('id_curso_apertura'); // Cambiar a id_curso_apertura
             $table->integer('orden');
             $table->unsignedBigInteger('id_profesor')->nullable();
             $table->foreign('id_profesor')->references('id')->on('profesores')->onDelete('cascade');
             $table->foreign('id_modulo')->references('id')->on('modulos')->onDelete('cascade');
-            $table->foreign('id_curso')->references('id')->on('cursos')->onDelete('cascade');
+            $table->foreign('id_curso_apertura')->references('id')->on('curso_apertura')->onDelete('cascade');
             $table->timestamps();
         });
+
     }
 
     public function down(): void
