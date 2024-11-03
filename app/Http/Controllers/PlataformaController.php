@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Modulos;
 use Illuminate\Http\Request;
 use App\Models\Cursos;
 use App\Models\Certificados;
@@ -120,8 +121,10 @@ class PlataformaController extends Controller
     }
 
 
-    public function listaModulos() {
-        return view('plataforma.index');
+    public function listaModulos()
+    {
+        $modulos = Modulos::all()->groupBy('categoria');
+        return view('plataforma.index', compact('modulos'));
     }
 
     public function temasModulos() {

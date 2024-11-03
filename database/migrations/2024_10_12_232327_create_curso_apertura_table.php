@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('curso_apertura', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_curso')->constrained('cursos');
+            $table->foreignId('id_curso')->constrained('cursos')->onDelete('cascade');
             $table->string('nombre');
             $table->date('fecha_inicio');
             $table->string('periodo')->nullable();

@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('modulos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
+            $table->enum('categoria', ['Barberia', 'Belleza']);
             $table->integer('duracion');
         });
     }

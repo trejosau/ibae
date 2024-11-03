@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Modulos;
-use App\Models\Cursos;
+use App\Models\CursoApertura; // Asegúrate de que este modelo esté importado
 use App\Models\Profesor;
 use App\Models\ModuloCurso;
 
@@ -12,18 +12,18 @@ class ModuloCursoSeeder extends Seeder
 {
     public function run()
     {
-        // Obtiene todos los IDs de módulos, cursos y profesores
+        // Obtiene todos los IDs de módulos, curso apertura y profesores
         $moduloIds = Modulos::pluck('id')->toArray();
-        $cursoIds = Cursos::pluck('id')->toArray();
+        $cursoAperturaIds = CursoApertura::pluck('id')->toArray(); // Cambia 'curso_apertura' a 'id'
         $profesorIds = Profesor::pluck('id')->toArray();
 
-        // Verifica que haya módulos, cursos y profesores disponibles
-        if (empty($moduloIds) || empty($cursoIds) || empty($profesorIds)) {
-            $this->command->info('No hay módulos, cursos o profesores para asignar.');
+        // Verifica que haya módulos, curso apertura y profesores disponibles
+        if (empty($moduloIds) || empty($cursoAperturaIds) || empty($profesorIds)) {
+            $this->command->info('No hay módulos, cursos de apertura o profesores para asignar.');
             return;
         }
 
-        foreach ($cursoIds as $cursoId) {
+        foreach ($cursoAperturaIds as $cursoAperturaId) {
             // Orden inicial para cada módulo en el curso
             $orden = 1;
 
@@ -38,7 +38,7 @@ class ModuloCursoSeeder extends Seeder
             foreach ($modulosAsignados as $moduloIndex) {
                 ModuloCurso::create([
                     'id_modulo' => $moduloIds[$moduloIndex],
-                    'id_curso' => $cursoId,
+                    'id_curso_apertura' => $cursoAperturaId, // Asegúrate de usar 'id_curso_apertura'
                     'orden' => $orden++,
                     'id_profesor' => $profesorIds[array_rand($profesorIds)],
                 ]);
