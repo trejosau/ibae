@@ -4,8 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Colegiaturas;
 use Illuminate\Database\Seeder;
-use App\Models\EstudianteCurso; // Asegúrate de que esta importación sea correcta
-use Faker\Factory as Faker;
+use App\Models\EstudianteCurso; use Faker\Factory as Faker;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ColegiaturasSeeder extends Seeder
 {
@@ -14,23 +15,18 @@ class ColegiaturasSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Faker::create();
-        $estudiante_cursos = EstudianteCurso::all();
+        // Suponiendo que existen estudiantes_cursos con IDs válidos en tu base de datos
+        $estudiantesCursosIds = DB::table('estudiante_curso')->pluck('id')->toArray();
 
-        foreach ($estudiante_cursos as $estudiante_curso) {
-            for ($i = 1; $i <= 10; $i++) { // Colegiatura para 10 semanas
-                // Asignar estado con 80% "pagado" y 20% "pendiente"
-                $estado = random_int(1, 10) <= 8 ? 'pagado' : 'pendiente';
-
-                // Generar una fecha de pago en 2024 si el estado es "pagado"
-                $fechaPago = $estado === 'pagado' ? $faker->date('Y-m-d', '2024-12-31') : null;
-
+        // Creamos datos de muestra para varias semanas
+        foreach ($estudiantesCursosIds as $idEstudianteCurso) {
+            for ($semana = 1; $semana <= 12; $semana++) {
                 Colegiaturas::create([
-                    'id_estudiante_curso' => $estudiante_curso->id, // Asegúrate de que 'id' se refiera correctamente
-                    'semana' => $i,
-                    'Asistio' => $faker->boolean, // Asistencia aleatoria
-                    'Fecha_de_Pago' => $fechaPago, // Fecha de pago opcional
-                    'estado' => $estado, // Estado con 80% "pagado"
+                    'id_estudiante_curso' => $idEstudianteCurso,
+                    'semana' => $semana,
+                    'asistio' => rand(0, 1), // Random para simular asistencia
+                    'colegiatura' => rand(0, 1), // Random para simular si fue pagada o no
+                    'fecha_pago' => rand(0, 1) ? Carbon::now()->subWeeks($semana) : null, // Fecha de pago si está pagada
                 ]);
             }
         }

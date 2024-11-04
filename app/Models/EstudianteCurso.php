@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EstudianteCurso extends Model
 {
-    use HasFactory;
 
     protected $table = 'estudiante_curso';
 
@@ -21,12 +20,12 @@ class EstudianteCurso extends Model
 
     public $timestamps = false; // Desactiva los timestamps
 
-    public function estudiante(): BelongsTo
+    public function estudiante()
     {
-        return $this->belongsTo(Estudiante::class, 'id_estudiante', 'matricula');
+        return $this->belongsTo(Estudiante::class, 'id_estudiante');
     }
 
-    public function cursoApertura(): BelongsTo
+    public function cursoApertura()
     {
         return $this->belongsTo(CursoApertura::class, 'id_curso_apertura');
     }

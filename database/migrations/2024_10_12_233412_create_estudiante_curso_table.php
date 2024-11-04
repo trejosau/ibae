@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('estudiante_curso', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_estudiante');
+            $table->enum('estado', ['cursando','graduado', 'baja'])->default('cursando');
             $table->unsignedBigInteger('id_curso_apertura');
             $table->date('fecha_inscripcion');
             $table->integer('asistencia')->default(0);

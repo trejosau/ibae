@@ -9,12 +9,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('colegiaturas', function (Blueprint $table) {
-            $table->id('ID_Colegiatura');
+            $table->id();
             $table->unsignedBigInteger('id_estudiante_curso');
-            $table->integer('semana')->nullable();
-            $table->boolean('Asistio');
-            $table->date('Fecha_de_Pago')->nullable();
-            $table->enum('estado', ['pendiente', 'pagado']);
+            $table->integer('semana')->comment('Número de la semana');
+            $table->tinyInteger('asistio')->default(0)->comment('1 = Asistió, 0 = No asistió');
+            $table->tinyInteger('colegiatura')->default(0)->comment('1 = Pagado, 0 = Pendiente');
+            $table->date('fecha_pago')->nullable()->comment('Fecha en que se realizó el pago');
             $table->foreign('id_estudiante_curso')->references('id')->on('estudiante_curso')->onDelete('cascade');
         });
     }

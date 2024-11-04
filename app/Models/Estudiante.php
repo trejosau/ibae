@@ -10,9 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Estudiante extends Model
 {
-    use HasFactory;
 
-
+    protected $primaryKey = 'matricula';
     protected $table = 'estudiantes';
 
 
@@ -33,11 +32,19 @@ class Estudiante extends Model
 
     public function persona()
     {
-        return $this->belongsTo(Persona::class, 'id_persona', 'id');
+        return $this->belongsTo(Persona::class, 'id_persona');
     }
 
-    public function inscripcion() : BelongsTo
+    public function cursosApertura()
+    {
+        return $this->belongsToMany(CursoApertura::class, 'estudiante_curso', 'id_estudiante', 'id_curso_apertura')
+            ->withPivot('estado');
+    }
+
+    // Relación con la tabla de inscripciones (si hay un modelo Inscripcion)
+    public function inscripcion()
     {
         return $this->belongsTo(Inscripcion::class, 'id_inscripcion');
     }
+
 }

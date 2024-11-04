@@ -18,5 +18,9 @@ class Certificados extends Model
         'institucion',
     ];
 
+    public function cursos()
+    {
+        return $this->hasMany(Cursos::class, 'id_certificacion'); // Inverse relationship
+    }
 
 }

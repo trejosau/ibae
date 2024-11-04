@@ -20,9 +20,15 @@ class CursoApertura extends Model
         'monto_colegiatura',
         'dia_clase',
         'hora_clase',
+        'estado',
     ];
 
-    public function curso() : BelongsTo
+    public function estudiantes()
+    {
+        return $this->belongsToMany(Estudiante::class, 'estudiante_curso', 'id_curso_apertura', 'id_estudiante');
+    }
+    // Relación con la tabla curso (si hay un modelo Curso)
+    public function curso()
     {
         return $this->belongsTo(Cursos::class, 'id_curso');
     }
