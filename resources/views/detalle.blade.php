@@ -112,12 +112,12 @@
 
 /* Precio y botones */
 .precio {
-    color: #ff5722;
+    color: #dc3545;
     font-size: 1.2rem;
 }
 
 .text-danger {
-    color: #ff5722 !important;
+    color: #dc3545 !important;
 }
 
 .btn-warning {
@@ -136,12 +136,60 @@
     padding-top: 90px;
 }
 
-/* Título */
+/* Títulos */
 .titulo-grande {
     font-size: 2rem;
     color: #333;
     font-weight: bold;
     margin-bottom: 30px;
+}
+
+.producto-nombre {
+    font-size: 2rem; /* Aumentar tamaño de fuente para el nombre del producto */
+    font-weight: bold;
+}
+
+.producto-descripcion {
+    font-size: 1.2rem; /* Aumentar tamaño de fuente para la descripción */
+    color: #666; /* Color más suave para la descripción */
+}
+
+/* Información de stock */
+.stock-info {
+    font-size: 0.9rem; /* Tamaño más pequeño */
+    color: #888; /* Color gris */
+    margin-top: 10px; /* Espaciado superior */
+}
+
+
+.cantidad-container {
+    margin-top: 20px;
+    display: flex;
+    align-items: center; /* Centrar verticalmente */
+}
+
+/* Estilo para el campo de cantidad */
+.cantidad-input {
+    width: 80px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+    margin: 0 10px; /* Espaciado lateral */
+}
+
+/* Botones de + y - */
+.btn-cantidad {
+    padding: 10px 15px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-cantidad:hover {
+    background-color: #e0e0e0;
 }
 </style>
 
@@ -160,10 +208,20 @@
         </div>
 
         <div class="col-md-6 pt-3">
-            <h2 class="mb-3 fw-bold">{{ $producto->nombre }}</h2>
-            <p class="text-muted mb-4">{{ $producto->descripcion }}</p>
+            <h2 class="producto-nombre mb-3">{{ $producto->nombre }}</h2>
+            <p class="producto-descripcion mb-4">{{ $producto->descripcion }}</p>
             <h4 class="mb-4 text-danger fw-bold">Precio: ${{ number_format($producto->precio_venta, 2) }}</h4>
-            <button type="submit" class="btn btn-warning btn-lg fw-bold text-white">Agregar al carrito</button>
+            
+            <!-- Mostrar información de stock -->
+            <p class="stock-info">Stock disponible: {{ $producto->stock }} unidades</p>
+
+            <div class="cantidad-container">
+                <button class="btn-cantidad" id="decrementar">-</button>
+                <input type="number" id="cantidad" class="cantidad-input" value="1" min="1" max="{{ $producto->stock }}" />
+                <button class="btn-cantidad" id="incrementar">+</button>
+            </div>
+            
+            <button type="submit" class="btn btn-warning btn-lg fw-bold text-white mt-3">Agregar al carrito</button>
         </div>
     </div>
 
@@ -200,5 +258,28 @@
 
 @include('components.footer')
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const cantidadInput = document.getElementById('cantidad');
+    const incrementarBtn = document.getElementById('incrementar');
+    const decrementarBtn = document.getElementById('decrementar');
+
+    // Incrementar cantidad
+    incrementarBtn.addEventListener('click', () => {
+        if (parseInt(cantidadInput.value) < parseInt(cantidadInput.max)) {
+            cantidadInput.value = parseInt(cantidadInput.value) + 1;
+        }
+    });
+
+    // Decrementar cantidad
+    decrementarBtn.addEventListener('click', () => {
+        if (parseInt(cantidadInput.value) > 1) {
+            cantidadInput.value = parseInt(cantidadInput.value) - 1;
+        }
+    });
+});
+</script>
+
 </body>
+
 </html>
