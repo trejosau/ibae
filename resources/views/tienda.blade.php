@@ -165,41 +165,20 @@ text-align: center;
         <div class="tittle"><h2>Maquillaje</h2></div>
     </div>
 </div>
+
 <div class="col-md-12">
     <h2 class="mt-4 text-center titulo-grande pt-5 pb-3">Artículos Más Vendidos</h2>
     <div class="productos-container">
-        <div class="productos-wrapper">
+        <div class="productos-wrapper" id="wrapper1">
             @forelse ($productosMasVendidos as $producto)
-           
-            <div class="producto-card"> 
-                <div class="card h-100 shadow-sm border-0">
-                    <img src="{{ $producto->main_photo }}" class="card-img-top img-fluid" alt="{{ $producto->nombre }}">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title fw-bold text-dark">{{ $producto->nombre }}</h5>
-                        <p class="card-text text-muted">{{ $producto->descripcion }}</p>
-                        <p class="card-text text-success fw-bold mb-4">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
-                        <a href="{{ route('producto.detalle', $producto->id) }}" class="btn btn-outline-primary mt-auto fw-bold">Ver más</a>
-                    </div>
-                </div>
-            </div>
-        @empty
-            <div class="col-md-12">
-                <p class="text-center text-muted">No se encontraron productos recientes.</p>
-            </div>
-        
-            @endforelse
-
-              @forelse ($productosMasRecientes as $producto)
                 <div class="producto-card"> 
-                    <div class="card h-100 shadow-sm border-0">
+                    <a href="{{ route('producto.detalle', $producto->id) }}" class="card h-100 shadow-sm border-0">
                         <img src="{{ $producto->main_photo }}" class="card-img-top img-fluid" alt="{{ $producto->nombre }}">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title fw-bold text-dark">{{ $producto->nombre }}</h5>
-                            <p class="card-text text-muted">{{ $producto->descripcion }}</p>
-                            <p class="card-text text-success fw-bold mb-4">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
-                            <a href="{{ route('producto.detalle', $producto->id) }}" class="btn btn-outline-primary mt-auto fw-bold">Ver más</a>
+                            <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
                         </div>
-                    </div>
+                    </a>
                 </div>
             @empty
                 <div class="col-md-12">
@@ -207,26 +186,24 @@ text-align: center;
                 </div>
             @endforelse
         </div>
-        <button class="btn btn-primary carousel-control-prev" id="prevBtn1"><i class="bi bi-arrow-left"></i></button>
-        <button class="btn btn-primary carousel-control-next" id="nextBtn1"><i class="bi bi-arrow-right"></i></button>
+        <button class="btn btn-warning carousel-control-prev" id="prevBtn1"><i class="bi bi-arrow-left"></i></button>
+        <button class="btn btn-warning carousel-control-next" id="nextBtn1"><i class="bi bi-arrow-right"></i></button>
     </div>
 </div>
 
 <div class="col-md-12">
     <h2 class="mt-4 text-center titulo-grande pt-5 pb-3">Productos Más Recientes</h2>
     <div class="productos-container">
-        <div class="productos-wrapper">
+        <div class="productos-wrapper" id="wrapper2">
             @forelse ($productosMasRecientes as $producto)
                 <div class="producto-card"> 
-                    <div class="card h-100 shadow-sm border-0">
+                    <a href="{{ route('producto.detalle', $producto->id) }}" class="card h-100 shadow-sm border-0">
                         <img src="{{ $producto->main_photo }}" class="card-img-top img-fluid" alt="{{ $producto->nombre }}">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title fw-bold text-dark">{{ $producto->nombre }}</h5>
-                            <p class="card-text text-muted">{{ $producto->descripcion }}</p>
-                            <p class="card-text text-success fw-bold mb-4">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
-                            <a href="{{ route('producto.detalle', $producto->id) }}" class="btn btn-outline-primary mt-auto fw-bold">Ver más</a>
+                            <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
                         </div>
-                    </div>
+                    </a>
                 </div>
             @empty
                 <div class="col-md-12">
@@ -234,8 +211,8 @@ text-align: center;
                 </div>
             @endforelse
         </div>
-        <button class="btn btn-primary carousel-control-prev" id="prevBtn2"><i class="bi bi-arrow-left"></i></button>
-        <button class="btn btn-primary carousel-control-next" id="nextBtn2"><i class="bi bi-arrow-right"></i></button>
+        <button class="btn btn-warning carousel-control-prev" id="prevBtn2"><i class="bi bi-arrow-left"></i></button>
+        <button class="btn btn-warning carousel-control-next" id="nextBtn2"><i class="bi bi-arrow-right"></i></button>
     </div>
 </div>
 
@@ -257,11 +234,26 @@ text-align: center;
         margin: 0 10px;
     }
 
+    .card {
+        text-decoration: none; /* Evita subrayado en el enlace */
+        transition: transform 0.3s, box-shadow 0.3s; /* Transiciones para el hover */
+    }
+
+    .card:hover {
+        transform: scale(1.05); /* Aumenta el tamaño en hover */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra en hover */
+    }
+
+    .precio {
+        color: #ff5722; /* Color vibrante para el precio */
+        font-size: 1.2rem; /* Tamaño de fuente más grande para el precio */
+    }
+
     .carousel-control-prev, .carousel-control-next {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        background-color: #007bff;
+        background-color: #ffc107; /* Color amarillo brillante para los botones */
         color: white;
         border: none;
         cursor: pointer;
@@ -273,7 +265,7 @@ text-align: center;
     }
 
     .carousel-control-prev:hover, .carousel-control-next:hover {
-        background-color: #0056b3;
+        background-color: #e0a800; /* Color más oscuro al pasar el mouse sobre los botones */
     }
 
     .carousel-control-prev {
@@ -285,15 +277,16 @@ text-align: center;
     }
 </style>
 
+
 <script>
-    function initializeCarousel(prevBtnId, nextBtnId) {
-        const productosWrapper = document.querySelector('.productos-wrapper');
+    function initializeCarousel(wrapperId, prevBtnId, nextBtnId) {
+        const productosWrapper = document.getElementById(wrapperId);
         const prevBtn = document.getElementById(prevBtnId);
         const nextBtn = document.getElementById(nextBtnId);
-        const containerWidth = document.querySelector('.productos-container').offsetWidth;
+        const containerWidth = productosWrapper.parentNode.offsetWidth; // Ancho del contenedor padre
         const totalScrollWidth = productosWrapper.scrollWidth;
         let scrollAmount = 0;
-        const scrollStep = 220;
+        const scrollStep = 220; // Ajusta este valor según el ancho de cada tarjeta
 
         nextBtn.addEventListener('click', () => {
             if (scrollAmount + containerWidth < totalScrollWidth) {
@@ -314,10 +307,11 @@ text-align: center;
         });
     }
 
-    // Inicializar los carruseles
-    initializeCarousel('prevBtn1', 'nextBtn1');
-    initializeCarousel('prevBtn2', 'nextBtn2');
+    // Inicializar los carruseles con los IDs correspondientes
+    initializeCarousel('wrapper1', 'prevBtn1', 'nextBtn1');
+    initializeCarousel('wrapper2', 'prevBtn2', 'nextBtn2');
 </script>
+
 
 
 
