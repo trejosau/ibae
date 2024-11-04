@@ -17,45 +17,57 @@
     <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#aperturarCursoModal">
         Aperturar Curso
     </button>
-    <table class="table table-striped table-bordered mt-3">
-        <thead>
-        <tr>
-            <th>Nombre del Curso</th>
-            <th>Día de Clases</th>
-            <th>Hora de Clase</th>
-            <th>Fecha de Inicio</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
+    <div class="row mt-4">
         @foreach ($cursosApertura as $apertura)
-            <tr>
-                <td>{{ $apertura->curso->nombre }}</td>
-                <td>{{ $apertura->dia_clase }}</td>
-                <td>{{ $apertura->hora_clase }}</td>
-                <td>{{ $apertura->fecha_inicio }}</td>
-                <td>
-                    @if($apertura->estado == 'finalizado')
-                        <span class="badge bg-success">Terminado</span>
-                    @elseif($apertura->estado == 'en curso')
-                        <span class="badge bg-warning">En Curso</span>
-                    @else
-                        <span class="badge bg-secondary">Programado</span>
-                    @endif
-                </td>
-                <td>
-                    @if($apertura->estado == 'programado')
-                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#inscribirAlumnosModal-{{ $apertura->id }}">Inscribir Alumnos</button>
-                    @elseif($apertura->estado == 'en curso')
-                        <a href="{{ route('plataforma.registrarAsistencia', $apertura->id) }}" class="btn btn-info">Registrar Asistencia/Pagos</a>
-
-                   @endif
-                </td>
-            </tr>
+            <div class="col-12 mb-4">
+                <div class="card shadow-sm curso-card" style="font-size: 0.9rem; border: 1px solid #D32F2F; overflow: hidden; position: relative;" data-bs-toggle="collapse" data-bs-target="#dropdown-{{ $apertura->id }}">
+                    <div class="card-body" style="padding: 15px;">
+                        <h5 class="card-title" style="font-size: 1.2rem; color: #333; margin-bottom: 10px;">{{ $apertura->curso->nombre }}</h5>
+                        <p class="card-text mb-1">
+                            <strong>Día de Clase:</strong> {{ $apertura->dia_clase }}<br>
+                            <strong>Hora de Clase:</strong> {{ $apertura->hora_clase }}<br>
+                            <strong>Fecha de Inicio:</strong> {{ $apertura->fecha_inicio }}
+                        </p>
+                        <p class="card-text mb-2">
+                        <span class="badge
+                            @if($apertura->estado == 'finalizado') bg-success
+                            @elseif($apertura->estado == 'en curso') bg-warning
+                            @else bg-secondary @endif" style="font-size: 0.85rem; color: #fff;">
+                            {{ ucfirst($apertura->estado) }}
+                        </span>
+                        </p>
+                        @if($apertura->estado == 'programado')
+                            <button class="btn btn-danger btn-sm" style="position: absolute; top: 10px; right: 10px;" data-bs-toggle="modal" data-bs-target="#inscribirAlumnosModal-{{ $apertura->id }}">Inscribir</button>
+                        @elseif($apertura->estado == 'en curso')
+                            <a href="{{ route('plataforma.registrarAsistencia', $apertura->id) }}" class="btn btn-info btn-sm" style="position: absolute; top: 10px; right: 10px;">Registrar</a>
+                        @endif
+                    </div>
+                    <div id="dropdown-{{ $apertura->id }}" class="collapse">
+                        <div class="card-body" style="padding-top: 10px;">
+                            @for ($i = 1; $i <= $apertura->curso->duracion_semanas; $i++)
+                                <div style="margin: 15px 0; padding: 10px;">
+                                    <h6 style="margin: 0; font-size: 1.2rem; color: #333;">Semana {{ $i }}</h6>
+                                    <hr style="border: 2px solid #C2185B; margin: 5px 0;">
+                                    <p class="mt-1" style="margin: 0; font-size: 1rem; color: #C2185B;">
+                                    <span class="badge" style="background-color: #FFABAB; color: #333; border-radius: 4px; border: 1px solid #C2185B;">
+                                        Módulo: Módulo ABC
+                                    </span>
+                                    </p>
+                                    <p class="mt-1" style="margin: 0; margin-left: 10px; font-size: 0.9rem; color: #555; border-left: 2px solid #C2185B; padding-left: 10px;">
+                                        Tema 1: Introducción al Curso
+                                    </p>
+                                    <p class="mt-1" style="margin: 0; margin-left: 10px; font-size: 0.9rem; color: #555; border-left: 2px solid #C2185B; padding-left: 10px;">
+                                        Tema 2: Objetivos del Curso
+                                    </p>
+                                </div>
+                            @endfor
+                        </div>
+                    </div>
+                </div>
+            </div>
         @endforeach
-        </tbody>
-    </table>
+    </div>
+
 
     <!-- Modals -->
     @foreach ($cursosApertura as $apertura)
