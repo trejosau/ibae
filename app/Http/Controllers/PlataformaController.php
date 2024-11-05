@@ -407,25 +407,6 @@ class PlataformaController extends Controller
         
         return redirect()->back()->with('success', 'Tema agregado correctamente.');
     }
-     // Método para modificar un módulo
-     public function modificarModulo(Request $request, $id)
-     {
-         // Validar los datos recibidos
-         $request->validate([
-             'nombre' => 'required|string|max:255',
-             'categoria' => 'required|string',
-             'duracion' => 'required|integer|min:1',
-         ]);
- 
-         // Buscar el módulo por ID y actualizarlo
-         $modulo = Modulos::findOrFail($id);
-         $modulo->nombre = $request->input('nombre');
-         $modulo->categoria = $request->input('categoria');
-         $modulo->duracion = $request->input('duracion');
-         $modulo->save();
- 
-         return redirect()->route('plataforma.lista-modulos')->with('success', 'Módulo modificado correctamente.');
-     }
  
      // Método para eliminar un módulo
      public function eliminarModulo($id)
@@ -437,23 +418,7 @@ class PlataformaController extends Controller
          return redirect()->route('plataforma.lista-modulos')->with('success', 'Módulo eliminado correctamente.');
      }
  
-     // Método para modificar un tema
-     public function modificarTema(Request $request, $id)
-     {
-         // Validar los datos recibidos
-         $request->validate([
-             'nombre' => 'required|string|max:255',
-             'descripcion' => 'required|string|max:100',
-         ]);
- 
-         // Buscar el tema por ID y actualizarlo
-         $tema = Temas::findOrFail($id);
-         $tema->nombre = $request->input('nombre');
-         $tema->descripcion = $request->input('descripcion');
-         $tema->save();
- 
-         return redirect()->route('plataforma.lista-modulos')->with('success', 'Tema modificado correctamente.');
-     }
+   
  
      // Método para eliminar un tema
      public function eliminarTema($id)
@@ -464,6 +429,22 @@ class PlataformaController extends Controller
  
          return redirect()->route('plataforma.lista-modulos')->with('success', 'Tema eliminado correctamente.');
      }
+
+
+     public function actualizarModulo(Request $request, $id)
+{
+    $modulo = Modulos::findOrFail($id);
+    $modulo->update($request->only(['nombre', 'categoria', 'duracion']));
+    return redirect()->back()->with('success', 'Módulo actualizado con éxito.');
+}
+
+public function actualizarTema(Request $request, $id)
+{
+    $tema = Temas::findOrFail($id);
+    $tema->update($request->only(['nombre', 'descripcion']));
+    return redirect()->back()->with('success', 'Tema actualizado con éxito.');
+}
+
     
     
     public function temasModulos() {
