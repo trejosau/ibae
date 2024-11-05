@@ -216,28 +216,31 @@
                         </div>
 
                         <script>
+                            // Obtener la fecha actual
+                            const hoy = new Date();
+                            const año = hoy.getFullYear();
+                            const mes = (hoy.getMonth() + 1).toString().padStart(2, '0'); // Mes actual, con formato de dos dígitos
+                            const día = hoy.getDate().toString().padStart(2, '0'); // Día actual, con formato de dos dígitos
+
+                            // Establecer el atributo 'min' del campo de fecha
+                            document.getElementById('fechaInicio').setAttribute('min', `${año}-${mes}-${día}`);
+
+                            // Mostrar el día de la semana cuando se selecciona una fecha
                             document.getElementById('fechaInicio').addEventListener('change', function() {
-                                // Dividir la fecha en componentes (año, mes, día)
                                 const partesFecha = this.value.split('-');
                                 const año = parseInt(partesFecha[0], 10);
                                 const mes = parseInt(partesFecha[1], 10) - 1; // Meses en JavaScript van de 0 a 11
                                 const día = parseInt(partesFecha[2], 10);
 
-                                // Crear la fecha usando el constructor de Date con componentes
                                 const fechaSeleccionada = new Date(año, mes, día);
 
-                                // Lista de días de la semana en español
                                 const diasSemana = [
                                     'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'
                                 ];
-
-                                // Obtener el día de la semana
                                 const diaSemana = diasSemana[fechaSeleccionada.getDay()];
 
-                                // Mostrar el día de la semana en el elemento
                                 document.getElementById('diaSemana').textContent = diaSemana ? `Día seleccionado: ${diaSemana}` : '';
                             });
-
                         </script>
 
                         <!-- Campo para la Hora de Clase -->
