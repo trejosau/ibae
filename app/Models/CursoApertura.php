@@ -32,4 +32,9 @@ class CursoApertura extends Model
     {
         return $this->belongsTo(Cursos::class, 'id_curso');
     }
+
+    public function moduloCursos()
+    {
+        return $this->hasMany(ModuloCurso::class, 'id_curso_apertura'); // 'id_curso_apertura' es la clave foránea
+    }
 }

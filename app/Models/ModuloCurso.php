@@ -14,7 +14,7 @@ class ModuloCurso extends Model
 
     protected $fillable = [
         'id_modulo',
-        'id_curso',
+        'id_curso_apertura',
         'orden',
         'id_profesor',
     ];
