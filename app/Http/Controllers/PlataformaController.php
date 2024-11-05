@@ -8,6 +8,7 @@ use App\Models\EstudianteCurso;
 use App\Models\ModuloCurso;
 use App\Models\Modulos;
 use App\Models\ModuloTemas;
+use App\Models\Profesor;
 use App\Models\Temas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -207,14 +208,18 @@ class PlataformaController extends Controller
         $todosCursos = Cursos::all();
         $todosCursosApertura = CursoApertura::with(['moduloCursos.modulo.temas']) // Carga los módulos y sus temas
         ->get();
-        $modulosConTemas = Modulos::has('temas')->get(['id', 'nombre']);
+        $modulosConTemas = Modulos::with('temas:id,nombre')->has('temas')->get(['id', 'nombre']);
+
+        $profesores = Profesor::with('persona')->get();
+
         // Pasar los datos a la vista
         return view('plataforma.index', [
             'resultado' => array_values($resultado),
             'estudiantes' => $todosEstudiantes,
             'cursos' => $todosCursos,
             'cursosApertura' => $todosCursosApertura,
-            'modulosConTemas' => $modulosConTemas
+            'modulosConTemas' => $modulosConTemas,
+            'profesores' => $profesores,
         ]);
     }
 
@@ -267,60 +272,56 @@ class PlataformaController extends Controller
 
     public function storeCursoApertura(Request $request)
     {
-
         // Validar la solicitud entrante
-        $request->validate([
+        $validatedData = $request->validate([
             'id_curso' => 'required|exists:cursos,id',
             'fecha_inicio' => 'required|date',
-            'hora_clase' => 'required|date_format:H:i', // Asegúrate de que el nombre sea correcto
+            'hora_clase' => 'required|date_format:H:i', // Asegúrate de que el formato sea correcto
             'monto_colegiatura' => 'required|integer|min:1',
             'modulos' => 'required|array',
-            ]);
-
+            'id_profesor' => 'required|exists:profesores,id', // Validación para el id_profesor
+        ], [
+            'id_curso.required' => 'El curso es obligatorio.',
+            'id_curso.exists' => 'El curso seleccionado no es válido.',
+            'fecha_inicio.required' => 'La fecha de inicio es obligatoria.',
+            'fecha_inicio.date' => 'La fecha de inicio debe ser una fecha válida.',
+            'hora_clase.required' => 'La hora de clase es obligatoria.',
+            'hora_clase.date_format' => 'La hora de clase debe estar en el formato HH:mm.',
+            'monto_colegiatura.required' => 'El monto de la colegiatura es obligatorio.',
+            'monto_colegiatura.integer' => 'El monto de la colegiatura debe ser un número entero.',
+            'monto_colegiatura.min' => 'El monto de la colegiatura debe ser al menos 1.',
+            'modulos.required' => 'Debe seleccionar al menos un módulo para cada semana.',
+            'modulos.array' => 'Los módulos deben estar en un formato de arreglo.',
+            'id_profesor.required' => 'Debe seleccionar un profesor.',
+            'id_profesor.exists' => 'El profesor seleccionado no es válido.',
+        ]);
 
         // Obtener el curso seleccionado
-        $curso = Cursos::find($request->id_curso);
+        $curso = Cursos::find($validatedData['id_curso']);
 
         // Parsear la fecha de inicio
-        $fecha_inicio = Carbon::parse($request->fecha_inicio);
+        $fecha_inicio = Carbon::parse($validatedData['fecha_inicio']);
         $mes_inicio = $fecha_inicio->translatedFormat('F'); // Mes en español
         $dia_semana = $fecha_inicio->translatedFormat('l'); // Día en español
 
         // Crear el nombre del registro en el formato deseado
-        $nombreRegistro = "{$dia_semana}, {$curso->nombre}, {$request->hora_clase}, {$mes_inicio}";
+        $nombreRegistro = "{$dia_semana}, {$curso->nombre}, {$validatedData['hora_clase']}, {$mes_inicio}";
 
+        // Usar el id_profesor del select
+        $id_profesor = $validatedData['id_profesor'];
 
         // Crear el registro de apertura de curso
-
-
-        $usuario = Auth::user();
-
-        if (!$usuario) {
-            return redirect()->route('login')->with('error', 'Debes iniciar sesión para continuar.');
-        }
-
-        $persona = $usuario->persona;
-        if (!$persona) {
-            return redirect()->back()->with('error', 'No se encontró la persona asociada al usuario.');
-        }
-
-        $profesor = $persona->profesor;
-        if (!$profesor) {
-            return redirect()->back()->with('error', 'No se encontró el profesor asociado a la persona.');
-        }
-
-        $id_profesor = $profesor->id;
-
-        $cursoApertura =CursoApertura::create([
-            'id_curso' => $request->id_curso,
+        $cursoApertura = CursoApertura::create([
+            'id_curso' => $validatedData['id_curso'],
             'nombre' => $nombreRegistro,
             'fecha_inicio' => $fecha_inicio,
-            'monto_colegiatura' => $request->monto_colegiatura,
+            'monto_colegiatura' => $validatedData['monto_colegiatura'],
             'dia_clase' => $dia_semana,
-            'hora_clase' => $request->hora_clase,
+            'hora_clase' => $validatedData['hora_clase'],
         ]);
 
-        foreach ($request->modulos as $semana => $moduloId) {
+        // Crear los registros de módulos asociados al curso
+        foreach ($validatedData['modulos'] as $semana => $moduloId) {
             ModuloCurso::create([
                 'id_modulo' => $moduloId,
                 'id_curso_apertura' => $cursoApertura->id,
@@ -332,6 +333,7 @@ class PlataformaController extends Controller
         // Redirigir de vuelta con un mensaje de éxito
         return redirect()->route('plataforma.historial-cursos')->with('success', 'Curso aperturado exitosamente.');
     }
+
 
     public function registrarAsistencia($idApertura)
     {
@@ -360,7 +362,7 @@ class PlataformaController extends Controller
     public function listaModulos()
     {
         $modulos = Modulos::all();
-        $temas = Temas::all(); 
+        $temas = Temas::all();
         return view('plataforma.index', compact('modulos', 'temas'));
         $modulos = Modulos::all()->groupBy('categoria');
 
@@ -368,7 +370,7 @@ class PlataformaController extends Controller
         return view('plataforma.index', compact('modulos'));
     }
 
-  
+
 
     public function crearModulo(Request $request)
     {
@@ -394,39 +396,39 @@ class PlataformaController extends Controller
         $messages = [
             'descripcion.max' => 'Has alcanzado el máximo de caracteres permitidos en la descripción.',
         ];
-    
+
         $validatedData = $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string|max:100',
         ], $messages);
-    
+
         $tema = new Temas();
         $tema->nombre = $validatedData['nombre'];
         $tema->descripcion = $validatedData['descripcion'];
         $tema->save();
-        
+
         return redirect()->back()->with('success', 'Tema agregado correctamente.');
     }
- 
+
      // Método para eliminar un módulo
      public function eliminarModulo($id)
      {
          // Buscar el módulo por ID y eliminarlo
          $modulo = Modulos::findOrFail($id);
          $modulo->delete();
- 
+
          return redirect()->route('plataforma.lista-modulos')->with('success', 'Módulo eliminado correctamente.');
      }
- 
-   
- 
+
+
+
      // Método para eliminar un tema
      public function eliminarTema($id)
      {
          // Buscar el tema por ID y eliminarlo
          $tema = Temas::findOrFail($id);
          $tema->delete();
- 
+
          return redirect()->route('plataforma.lista-modulos')->with('success', 'Tema eliminado correctamente.');
      }
 
@@ -445,8 +447,8 @@ public function actualizarTema(Request $request, $id)
     return redirect()->back()->with('success', 'Tema actualizado con éxito.');
 }
 
-    
-    
+
+
     public function temasModulos() {
         return view('plataforma.index');
     }

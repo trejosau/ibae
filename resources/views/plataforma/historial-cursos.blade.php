@@ -171,7 +171,6 @@
     @endforeach
 
 
-    <!-- Modal para aperturar un curso -->
     <div class="modal fade" id="aperturarCursoModal" tabindex="-1" aria-labelledby="aperturarCursoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -185,7 +184,8 @@
                         <!-- Selección de Curso -->
                         <div class="mb-3">
                             <label for="cursoSelect" class="form-label">Selecciona el Curso</label>
-                            <select class="form-select" id="cursoSelect" name="id_curso" required>
+                            <select class="form-select" id="cursoSelect" name="id_curso" required
+                                    style="background-color: #fdfdfe; border-color: #d3d3e3; color: #5a5a6e;">
                                 <option value="" disabled selected>Seleccione un curso</option>
                                 @foreach($cursos as $curso)
                                     <option value="{{ $curso->id }}" data-duracion="{{ $curso->duracion_semanas }}">
@@ -195,11 +195,50 @@
                             </select>
                         </div>
 
+                        <!-- Select para Profesores -->
+                        <div class="mb-3">
+                            <label for="id_profesor" class="form-label">Profesor</label>
+                            <select class="form-select" id="id_profesor" name="id_profesor" required>
+                                <option value="">Seleccione un profesor</option>
+                                @foreach($profesores as $profesor)
+                                    <option value="{{ $profesor->id }}">
+                                        {{ $profesor->persona->nombre }} {{ $profesor->persona->apellido_pa }} {{ $profesor->persona->apellido_ma }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <!-- Campo para la Fecha de Inicio -->
                         <div class="mb-3">
                             <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
                             <input type="date" class="form-control" id="fechaInicio" name="fecha_inicio" required>
+                            <small id="diaSemana" class="text-muted"></small> <!-- Elemento para mostrar el día de la semana -->
                         </div>
+
+                        <script>
+                            document.getElementById('fechaInicio').addEventListener('change', function() {
+                                // Dividir la fecha en componentes (año, mes, día)
+                                const partesFecha = this.value.split('-');
+                                const año = parseInt(partesFecha[0], 10);
+                                const mes = parseInt(partesFecha[1], 10) - 1; // Meses en JavaScript van de 0 a 11
+                                const día = parseInt(partesFecha[2], 10);
+
+                                // Crear la fecha usando el constructor de Date con componentes
+                                const fechaSeleccionada = new Date(año, mes, día);
+
+                                // Lista de días de la semana en español
+                                const diasSemana = [
+                                    'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'
+                                ];
+
+                                // Obtener el día de la semana
+                                const diaSemana = diasSemana[fechaSeleccionada.getDay()];
+
+                                // Mostrar el día de la semana en el elemento
+                                document.getElementById('diaSemana').textContent = diaSemana ? `Día seleccionado: ${diaSemana}` : '';
+                            });
+
+                        </script>
 
                         <!-- Campo para la Hora de Clase -->
                         <div class="mb-3">
@@ -210,7 +249,8 @@
                         <!-- Campo para el Monto de Colegiatura -->
                         <div class="mb-3">
                             <label for="montoColegiatura" class="form-label">Monto de Colegiatura</label>
-                            <input type="number" class="form-control" id="montoColegiatura" name="monto_colegiatura" placeholder="Ingrese el monto de colegiatura" required>
+                            <input type="number" class="form-control" id="montoColegiatura" name="monto_colegiatura"
+                                   placeholder="Ingrese el monto de colegiatura" required>
                         </div>
 
                         <!-- Contenedor de semanas -->
@@ -223,63 +263,94 @@
                         <button type="submit" class="btn btn-primary">Aperturar Curso</button>
                     </div>
                 </form>
-
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        const cursoSelect = document.getElementById('cursoSelect');
-                        const semanasContainer = document.getElementById('semanasContainer');
-
-                        cursoSelect.addEventListener('change', function () {
-                            // Limpiar el contenedor antes de agregar nuevas semanas
-                            semanasContainer.innerHTML = '';
-
-                            // Obtener la duración del curso seleccionado
-                            const duracion = this.options[this.selectedIndex].dataset.duracion;
-
-                            for (let i = 1; i <= duracion; i++) {
-                                // Crear un div para la semana
-                                const semanaDiv = document.createElement('div');
-                                semanaDiv.classList.add('semana');
-
-                                // Crear el divider
-                                const divider = document.createElement('hr');
-                                semanaDiv.appendChild(divider);
-
-                                // Crear el título de la semana
-                                const semanaTitle = document.createElement('h5');
-                                semanaTitle.innerText = `Semana ${i}`;
-                                semanaDiv.appendChild(semanaTitle);
-
-                                // Crear el select para módulos
-                                const moduloSelect = document.createElement('select');
-                                moduloSelect.classList.add('form-select');
-                                moduloSelect.name = `modulos[semana_${i}]`; // Nombre del select por semana
-
-                                // Agregar opción por defecto
-                                const defaultOption = document.createElement('option');
-                                defaultOption.value = '';
-                                defaultOption.disabled = true;
-                                defaultOption.selected = true;
-                                defaultOption.innerText = 'Seleccione un módulo';
-                                moduloSelect.appendChild(defaultOption);
-
-                                // Agregar los módulos disponibles al select
-                                @foreach($modulosConTemas as $modulo)
-                                const option = document.createElement('option');
-                                option.value = '{{ $modulo->id }}';
-                                option.innerText = '{{ $modulo->nombre }}';
-                                moduloSelect.appendChild(option);
-                                @endforeach
-
-                                // Agregar el select al div de semana
-                                semanaDiv.appendChild(moduloSelect);
-                                semanasContainer.appendChild(semanaDiv);
-                            }
-                        });
-                    });
-                </script>
-
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('cursoSelect').addEventListener('change', function() {
+            // Obtener el valor de data-duracion del curso seleccionado
+            const duracionSemanas = this.options[this.selectedIndex].getAttribute('data-duracion');
+            const semanasContainer = document.getElementById('semanasContainer');
+
+            // Limpiar el contenido anterior
+            semanasContainer.innerHTML = '';
+
+            // Obtener los módulos y temas desde la variable pasada del backend
+            const modulosConTemas = @json($modulosConTemas);
+
+            // Generar los divs y selects para cada semana
+            for (let i = 1; i <= duracionSemanas; i++) {
+                // Crear un div para la semana
+                const semanaDiv = document.createElement('div');
+                semanaDiv.classList.add('mb-3');
+
+                // Crear una etiqueta para la semana
+                const semanaLabel = document.createElement('label');
+                semanaLabel.classList.add('form-label');
+                semanaLabel.textContent = `Semana ${i}`;
+
+                // Crear un select para los módulos
+                const semanaSelect = document.createElement('select');
+                semanaSelect.classList.add('form-select');
+                semanaSelect.name = `modulos[semana_${i}]`; // Adaptado para enviar correctamente
+                semanaSelect.required = true;
+                semanaSelect.style = "background-color: #fdfdfe; border-color: #d3d3e3; color: #5a5a6e;";
+
+                // Añadir una opción vacía al select
+                const emptyOption = document.createElement('option');
+                emptyOption.value = '';
+                emptyOption.textContent = 'Seleccione un módulo';
+                emptyOption.disabled = true;
+                emptyOption.selected = true;
+                semanaSelect.appendChild(emptyOption);
+
+                // Añadir los módulos como opciones al select
+                modulosConTemas.forEach(modulo => {
+                    const option = document.createElement('option');
+                    option.value = modulo.id;
+                    option.textContent = modulo.nombre;
+                    semanaSelect.appendChild(option);
+                });
+
+                // Contenedor para mostrar los temas
+                const temasContainer = document.createElement('div');
+                temasContainer.classList.add('mt-2');
+
+                // Evento para actualizar los temas al seleccionar un módulo
+                semanaSelect.addEventListener('change', function() {
+                    // Limpiar temas anteriores
+                    temasContainer.innerHTML = '';
+
+                    // Obtener el módulo seleccionado
+                    const moduloId = this.value;
+                    const modulo = modulosConTemas.find(m => m.id == moduloId);
+
+                    // Añadir los temas del módulo
+                    if (modulo && modulo.temas) {
+                        modulo.temas.forEach(tema => {
+                            const temaSpan = document.createElement('span');
+                            temaSpan.classList.add('tema-visible');
+                            temaSpan.style = "display: inline-block; padding: 5px 10px; margin: 2px; border-radius: 5px; background-color: #ffebee; color: #c62828; font-size: 0.9em;";
+                            temaSpan.textContent = tema.nombre;
+                            temasContainer.appendChild(temaSpan);
+                        });
+                    }
+                });
+
+                // Agregar la etiqueta, el select y los temas al div de la semana
+                semanaDiv.appendChild(semanaLabel);
+                semanaDiv.appendChild(semanaSelect);
+                semanaDiv.appendChild(temasContainer);
+
+                // Añadir el div al contenedor
+                semanasContainer.appendChild(semanaDiv);
+            }
+
+            // Mostrar el número de semanas en la consola
+            console.log(`Duración del curso seleccionado: ${duracionSemanas} semanas`);
+        });
+    </script>
+
+
 </div>
