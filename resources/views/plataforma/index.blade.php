@@ -9,6 +9,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <style>
+  
 .botoncin-ca{
     margin-top: 10px;
 }

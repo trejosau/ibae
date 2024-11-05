@@ -19,28 +19,32 @@
                 <thead>
                 <tr>
                     <th scope="col">Nombre del Módulo</th>
+                    <th scope="col" class="text-center">Categorias</th>
+                    <th scope="col" class="text-center">Duración</th>
                     <th scope="col" class="text-center">Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Módulo 1: Técnicas de Corte</td>
-                    <td class="text-center">
-                        <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editModuleModal">Modificar</button>
-                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModuleModal">Eliminar</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Módulo 2: Maquillaje Profesional</td>
-                    <td class="text-center">
-                        <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editModuleModal">Modificar</button>
-                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModuleModal">Eliminar</button>
-                    </td>
-                </tr>
-                <!-- Más módulos aquí -->
+                    @foreach ($modulos as $modulo)
+                    <tr>
+                        <td>{{ $modulo->nombre}}</td>
+                        <td>{{ $modulo->categoria}}</td>
+                        <td>{{ $modulo->duracion}} Horas</td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editModuleModal">Modificar</button>
+                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModuleModal">Eliminar</button>
+                            </div>
+                        </td>
+                        
+                    </tr>
+                    @endforeach
                 </tbody>
+                
             </table>
-            <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addModuleModal">Agregar Módulo</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarModulo">
+                Agregar Módulo
+            </button>
         </div>
 
         <!-- Temas -->
@@ -50,32 +54,100 @@
                 <thead>
                 <tr>
                     <th scope="col">Nombre del Tema</th>
+                    <th scope="col" class="text-center">Descripción</th>
                     <th scope="col" class="text-center">Acciones</th>
                 </tr>
                 </thead>
-                <tbody>
+                @foreach($temas as $tema)
                 <tr>
-                    <td>Tema 1: Técnicas de Desvanecimiento</td>
+                    <td>{{ $tema->nombre}}</td>
+                    <td style="width: 300px;">{{ $tema->descripcion}}</td>
                     <td class="text-center">
-                        <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editThemeModal">Modificar</button>
-                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteThemeModal">Eliminar</button>
+                        <div class="d-flex justify-content-center gap-2">
+                            <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editModuleModal">Modificar</button>
+                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModuleModal">Eliminar</button>
+                        </div>
                     </td>
+                    
                 </tr>
-                <tr>
-                    <td>Tema 2: Técnicas de Contorno</td>
-                    <td class="text-center">
-                        <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editThemeModal">Modificar</button>
-                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteThemeModal">Eliminar</button>
-                    </td>
-                </tr>
-                <!-- Más temas aquí -->
-                </tbody>
+            @endforeach
+            
+                
             </table>
-            <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addThemeModal">Agregar Tema</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarTema">
+                Agregar Tema
+            </button>
         </div>
     </div>
 
-    <!-- Modales -->
+
+
+    <div class="modal fade" id="modalAgregarModulo" tabindex="-1" aria-labelledby="modalAgregarModuloLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAgregarModuloLabel">Agregar Módulo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('plataforma.crearModulo') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="moduleName" class="form-label">Nombre del Módulo</label>
+                            <input type="text" name="nombre" class="form-control" id="moduleName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="moduleCategory" class="form-label">Categoría</label>
+                            <select name="categoria" class="form-select" id="moduleCategory" required>
+                                <option value="" selected disabled>Selecciona una categoría</option>
+                                <option value="barberia">Barbería</option>
+                                <option value="belleza">Belleza</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="moduleDuration" class="form-label">Duración (Horas)</label>
+                            <input type="number" name="duracion" class="form-control" id="moduleDuration" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalAgregarTema" tabindex="-1" aria-labelledby="modalAgregarTemaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAgregarTemaLabel">Agregar Tema</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formAgregarTema" action="{{ route('plataforma.crearTema') }}" method="POST" onsubmit="return validarFormulario()">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="themeName" class="form-label">Nombre del Tema</label>
+                            <input type="text" name="nombre" class="form-control" id="themeName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="themeDescription" class="form-label">Descripción</label>
+                            <textarea name="descripcion" class="form-control" id="themeDescription" required oninput="contarCaracteres()" maxlength="100"></textarea>
+                            <small id="caracteresRestantes" class="form-text" style="margin-top: 300px;">100 caracteres restantes</small>
+                            <div class="text-danger" id="errorDescripcion" style="display: none;">La descripción excede el límite de 100 caracteres.</div>
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
     <!-- Agregar Módulo -->
     <div class="modal fade" id="addModuleModal" tabindex="-1" aria-labelledby="addModuleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -194,3 +266,51 @@
         </div>
     </div>
 </div>
+
+<script>
+    function validarFormulario() {
+        const descripcion = document.getElementById('themeDescription').value;
+        const errorDescripcion = document.getElementById('errorDescripcion');
+        const maxCaracteres = 100; // Cambia este valor al máximo que necesites
+
+        // Comprobar si la descripción excede el máximo de caracteres
+        if (descripcion.length > maxCaracteres) {
+            errorDescripcion.style.display = 'block'; // Muestra el mensaje de error
+            return false; // Evita el envío del formulario
+        } else {
+            errorDescripcion.style.display = 'none'; // Oculta el mensaje de error
+            return true; // Permite el envío del formulario
+        }
+    }
+    function contarCaracteres() {
+    const descripcion = document.getElementById('themeDescription').value;
+    const caracteresRestantes = document.getElementById('caracteresRestantes');
+    const maxCaracteres = 100; // Cambia este valor al máximo que necesites
+
+    // Actualiza el texto de caracteres restantes
+    caracteresRestantes.innerText = (maxCaracteres - descripcion.length) + " caracteres restantes";
+
+    // Comprobar si la descripción excede el máximo de caracteres
+    const errorDescripcion = document.getElementById('errorDescripcion');
+    if (descripcion.length > maxCaracteres) {
+        errorDescripcion.style.display = 'block'; // Muestra el mensaje de error
+    } else {
+        errorDescripcion.style.display = 'none'; // Oculta el mensaje de error
+    }
+}
+
+function validarFormulario() {
+    const descripcion = document.getElementById('themeDescription').value;
+    const errorDescripcion = document.getElementById('errorDescripcion');
+    const maxCaracteres = 100; // Cambia este valor al máximo que necesites
+
+    // Comprobar si la descripción excede el máximo de caracteres
+    if (descripcion.length > maxCaracteres) {
+        errorDescripcion.style.display = 'block'; // Muestra el mensaje de error
+        return false; // Evita el envío del formulario
+    } else {
+        errorDescripcion.style.display = 'none'; // Oculta el mensaje de error
+        return true; // Permite el envío del formulario
+    }
+}
+</script>

@@ -12,6 +12,7 @@ use App\Models\Cursos;
 use App\Models\Certificados;
 use App\Models\CursoApertura;
 use Illuminate\Support\Facades\DB;
+use App\Models\Temas;
 
 
 class PlataformaController extends Controller
@@ -250,13 +251,55 @@ class PlataformaController extends Controller
 
 
 
-
     public function listaModulos()
     {
-        $modulos = Modulos::all()->groupBy('categoria');
-        return view('plataforma.index', compact('modulos'));
+        $modulos = Modulos::all();
+        $temas = Temas::all(); 
+        return view('plataforma.index', compact('modulos', 'temas'));
     }
 
+  
+
+    public function crearModulo(Request $request)
+    {
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'categoria' => 'required|string|max:255',
+            'duracion' => 'required|integer|min:1',
+        ]);
+
+        $modulo = new Modulos();
+        $modulo->nombre = $validatedData['nombre'];
+        $modulo->categoria = $validatedData['categoria'];
+        $modulo->duracion = $validatedData['duracion'];
+        $modulo->save();
+
+        return redirect()->back()->with('success', 'Módulo agregado correctamente.');
+    }
+
+
+
+    public function crearTema(Request $request)
+    {
+        $messages = [
+            'descripcion.max' => 'Has alcanzado el máximo de caracteres permitidos en la descripción.',
+        ];
+    
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'required|string|max:100',
+        ], $messages);
+    
+        $tema = new Temas();
+        $tema->nombre = $validatedData['nombre'];
+        $tema->descripcion = $validatedData['descripcion'];
+        $tema->save();
+        
+        return redirect()->back()->with('success', 'Tema agregado correctamente.');
+    }
+    
+    
+    
     public function temasModulos() {
         return view('plataforma.index');
     }

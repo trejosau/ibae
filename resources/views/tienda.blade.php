@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Document</title>
-    <link>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-
 
 
 <style>
@@ -311,10 +309,6 @@ text-align: center;
     initializeCarousel('wrapper1', 'prevBtn1', 'nextBtn1');
     initializeCarousel('wrapper2', 'prevBtn2', 'nextBtn2');
 </script>
-
-
-
-
 
 
 

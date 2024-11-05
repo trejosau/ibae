@@ -13,11 +13,10 @@ class Modulos extends Model
 
     protected $fillable = [
         'nombre',
+        'categoria',
         'duracion',
     ];
 
-    public function curso(): BelongsTo
-    {
-        return $this->belongsTo(Cursos::class, 'id_curso');
-    }
+
+
 }

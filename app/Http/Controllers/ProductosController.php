@@ -47,7 +47,7 @@ class ProductosController extends Controller
         // Suponiendo que tienes una lógica para obtener productos relacionados
         $productosRelacionados = Productos::where('id_categoria', $producto->id_categoria)
             ->where('id', '!=', $id) // Excluir el producto actual
-            ->take(3) // Limitar a 3 productos relacionados
+            ->take(4) // Limitar a 3 productos relacionados
             ->get();
     
         return view('detalle', compact('producto', 'productosRelacionados'));

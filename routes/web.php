@@ -68,6 +68,12 @@ Route::middleware('auth')->group(function () {
     Route::put('/plataforma/modulos/{id}', [PlataformaController::class, 'moduloUpdate'])->name('plataforma.moduloUpdate');
     Route::delete('/plataforma/modulos/{id}', [PlataformaController::class, 'moduloDestroy'])->name('plataforma.moduloDestroy');
     Route::get('/plataforma/modulos/temas', [PlataformaController::class, 'temasModulos'])->name('plataforma.temas-modulos');
+    Route::post('/modulos', [PlataformaController::class, 'crearModulo'])->name('plataforma.crearModulo');
+
+
+    // Rutas de Temas
+    Route::post('/temas', [PlataformaController::class, 'crearTema'])->name('plataforma.crearTema');
+
 
     // Rutas de Personal
     Route::get('/plataforma/personal/estudiantes', [PlataformaController::class, 'estudiantes'])->name('plataforma.estudiantes');
@@ -86,6 +92,7 @@ Route::middleware('auth')->group(function () {
     // Rutas adicionales
     Route::post('/certificados', [PlataformaController::class, 'storeCertificado'])->name('certificados.store');
     Route::post('/plataforma/store-curso-apertura', [PlataformaController::class, 'storeCursoApertura'])->name('plataforma.storeCursoApertura');
+    
 });
 
 
@@ -95,22 +102,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, 'filtrar'])->name('productos.categoria'); // Filtrar productos por categoría desde URL
     Route::get('/producto/{id}', [ProductosController::class, 'mostrarDetalle'])->name('producto.detalle');
     Route::get('/tienda', [ProductosController::class, 'mostrar'])->name('tienda.mostrar');
+    Route::get('auth/google', [loginGoogleController::class, 'redirectToGoogle'])->name('login.google');
+    Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleCallback'])->name('login.google.callback');
 
 
-
-
-Route::get('auth/google', [loginGoogleController::class, 'redirectToGoogle'])->name('login.google');
-Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleCallback'])->name('login.google.callback');
-
-Route::middleware('auth')->group(function () {
+    Route::middleware('auth')->group(function () {
     Route::get('/salon', [SalonController::class, 'index'])->name('salon.index');
     Route::get('/salon/agendar', [SalonController::class, 'agendar'])->name('salon.agendar');
     Route::get('/salon/confirmar', [SalonController::class, 'confirmar'])->name('salon.confirmar');
 });
 
-Route::get('/graficas/colegiaturas', [GraficasController::class, 'obtenerTotalPorMesAcademia'])->name('graficas.colegiaturas');
-Route::get('/graficas/salon', [GraficasController::class, 'obtenerTotalSalon'])->name('graficas.salon');
-Route::get('/graficas/tienda', [GraficasController::class, 'obtenerTotalVentas'])->name('graficas.tienda');
-Route::get('/graficas/data', [GraficasController::class, 'obtenerData'])->name('graficas.data');
+    Route::get('/graficas/colegiaturas', [GraficasController::class, 'obtenerTotalPorMesAcademia'])->name('graficas.colegiaturas');
+    Route::get('/graficas/salon', [GraficasController::class, 'obtenerTotalSalon'])->name('graficas.salon');
+    Route::get('/graficas/tienda', [GraficasController::class, 'obtenerTotalVentas'])->name('graficas.tienda');
+    Route::get('/graficas/data', [GraficasController::class, 'obtenerData'])->name('graficas.data');
 
 
