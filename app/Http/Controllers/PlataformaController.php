@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Colegiaturas;
 use App\Models\Estudiante;
 use App\Models\EstudianteCurso;
+use App\Models\ModuloCurso;
 use App\Models\Modulos;
+use App\Models\ModuloTemas;
+use App\Models\Temas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Cursos;
@@ -16,9 +19,79 @@ use Illuminate\Support\Facades\DB;
 
 class PlataformaController extends Controller
 {
-    public function guardarAsistencia(Request $request)
+    public function asignarTemas(Request $request)
     {
+        // Validación de los datos de entrada
+        $validated = $request->validate([
+            'modulo_id' => 'required|exists:modulos,id',
+            'tema_ids' => 'required|array',
+            'tema_ids.*' => 'exists:temas,id',
+        ]);
+
+        // Recoge el ID del módulo y los IDs de los temas
+        $moduloId = $validated['modulo_id'];
+        $temaIds = $validated['tema_ids'];
+
+        // Obtener el nombre del módulo
+        $moduloNombre = Modulos::find($moduloId)->nombre; // Asegúrate de que el campo 'nombre' exista en la tabla 'modulos'
+
+        $successMessages = [];
+        $errorMessages = [];
+
+        foreach ($temaIds as $temaId) {
+            // Inserta el tema en la tabla modulo_temas
+            $created = ModuloTemas::create([
+                'id_modulo' => $moduloId,
+                'id_tema' => $temaId,
+            ]);
+
+            // Obtener el nombre del tema
+            $temaNombre = Temas::find($temaId)->nombre; // Asegúrate de que el campo 'nombre' exista en la tabla 'temas'
+
+            // Verifica si se creó correctamente
+            if ($created) {
+                $successMessages[] = "Tema '$temaNombre' asignado correctamente al módulo '$moduloNombre'.";
+            } else {
+                $errorMessages[] = "Error al asignar el tema '$temaNombre' al módulo '$moduloNombre'.";
+            }
+        }
+
+        // Mensajes de éxito o error
+        $messages = array_merge($successMessages, $errorMessages);
+
+        // Redirecciona con mensajes
+        return redirect()->back()->with('messages', $messages);
     }
+
+    public function ligarModulosATemas()
+    {
+        // Obtener todos los módulos con sus temas y agruparlos por categoría
+        $modulos = Modulos::with('temas')->get()->groupBy('categoria');
+
+        // Obtener todos los módulos que no tienen temas asociados
+        $modulosSinTemas = DB::table('modulos AS m')
+            ->leftJoin('modulo_temas AS mt', 'm.id', '=', 'mt.id_modulo')
+            ->select('m.*')
+            ->whereNull('mt.id_modulo')
+            ->get();
+
+
+
+        // Obtener todos los temas disponibles
+        $todosLosTemas = Temas::all();
+
+        // Agrupar los temas por categoría
+        $temasPorCategoria = [];
+        foreach ($todosLosTemas as $tema) {
+            $temasPorCategoria[$tema->categoria][] = $tema;
+        }
+
+        // Pasar los módulos y los temas a la vista
+        return view('plataforma.temas-modulos', compact('modulos', 'todosLosTemas', 'temasPorCategoria', 'modulosSinTemas'));
+    }
+
+
+
 
 
     public function misCursos()

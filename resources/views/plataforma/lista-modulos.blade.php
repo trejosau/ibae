@@ -1,6 +1,8 @@
 <div class="container my-4">
     <h2 class="text-center mb-4">Gestión de Módulos y Temas</h2>
 
+    <a href="{{ route('ligarTemasModulo') }}" class="btn btn-primary">Plan de estudios</a>
+
     <!-- Filtro por Categoría -->
     <div class="mb-4">
         <label for="categoryFilter" class="form-label">Filtrar por Categoría</label>

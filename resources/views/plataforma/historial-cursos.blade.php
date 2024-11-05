@@ -224,6 +224,31 @@
                         <button type="submit" class="btn btn-primary">Aperturar Curso</button>
                     </div>
                 </form>
+
+                <!-- Agrega el siguiente script para manejar la generación de semanas -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const cursoSelect = document.getElementById('cursoSelect');
+                        const semanasContainer = document.getElementById('semanasContainer');
+
+                        cursoSelect.addEventListener('change', function () {
+                            // Limpiar el contenedor de semanas antes de agregar nuevos
+                            semanasContainer.innerHTML = '';
+
+                            // Obtener la duración en semanas del curso seleccionado
+                            const selectedOption = cursoSelect.options[cursoSelect.selectedIndex];
+                            const duracionSemanas = selectedOption.getAttribute('data-duracion');
+
+                            // Generar dividers para cada semana
+                            for (let i = 1; i <= duracionSemanas; i++) {
+                                const semanaDiv = document.createElement('div');
+                                semanaDiv.className = 'week-divider';
+                                semanaDiv.innerHTML = `<h5>Semana ${i}</h5><hr>`; // Dividir por semana
+                                semanasContainer.appendChild(semanaDiv);
+                            }
+                        });
+                    });
+                </script>
             </div>
         </div>
     </div>
