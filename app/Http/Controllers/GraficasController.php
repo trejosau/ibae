@@ -13,9 +13,9 @@ class GraficasController extends Controller
 {
     public function obtenerTotalPorMesAcademia(Request $request)
     {
-        $colegiaturasPorMes = Colegiaturas::selectRaw('MONTH(Fecha_de_Pago) as Mes, SUM(Monto) as Monto_Total')
-            ->where('estado', 'pagado')
-            ->whereYear('Fecha_de_Pago', now()->year)
+        $colegiaturasPorMes = Colegiaturas::selectRaw('MONTH(fecha_pago) as Mes, SUM(Monto) as Monto_Total')
+            ->where('colegiatura', 1)
+            ->whereYear('fecha_pago', now()->year)
             ->groupBy('Mes')
             ->orderBy('Mes')
             ->get()

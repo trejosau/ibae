@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\Cursos;
 use App\Models\Certificados;
 use App\Models\CursoApertura;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -187,8 +188,7 @@ class PlataformaController extends Controller
 
             // Agregar cursos al estudiante
             foreach ($estudiante->cursosApertura as $curso) {
-                // Obtenemos el estado desde la relación pivot
-                $estado = $curso->pivot->estado; // Accediendo al estado desde el pivot
+                $estado = $curso->pivot->estado;
 
                 $resultado[$matricula]['cursos'][] = [
                     'id_curso_apertura' => $curso->id,
@@ -197,7 +197,7 @@ class PlataformaController extends Controller
                     'monto_colegiatura' => $curso->monto_colegiatura,
                     'dia_clase' => $curso->dia_clase,
                     'hora_clase' => $curso->hora_clase,
-                    'estado' => $estado // Agregamos el estado aquí
+                    'estado' => $estado
                 ];
             }
         }
@@ -205,7 +205,8 @@ class PlataformaController extends Controller
         // Obtener todos los estudiantes y cursos
         $todosEstudiantes = Estudiante::all();
         $todosCursos = Cursos::all();
-        $todosCursosApertura = CursoApertura::all();
+        $todosCursosApertura = CursoApertura::with(['moduloCursos.modulo.temas']) // Carga los módulos y sus temas
+        ->get();
         $modulosConTemas = Modulos::has('temas')->get(['id', 'nombre']);
         // Pasar los datos a la vista
         return view('plataforma.index', [
@@ -266,18 +267,19 @@ class PlataformaController extends Controller
 
     public function storeCursoApertura(Request $request)
     {
+
         // Validar la solicitud entrante
         $request->validate([
             'id_curso' => 'required|exists:cursos,id',
             'fecha_inicio' => 'required|date',
             'hora_clase' => 'required|date_format:H:i', // Asegúrate de que el nombre sea correcto
             'monto_colegiatura' => 'required|integer|min:1',
-        ]);
+            'modulos' => 'required|array',
+            ]);
 
 
         // Obtener el curso seleccionado
         $curso = Cursos::find($request->id_curso);
-        $duracion_semanas = $curso->duracion_semanas;
 
         // Parsear la fecha de inicio
         $fecha_inicio = Carbon::parse($request->fecha_inicio);
@@ -289,7 +291,27 @@ class PlataformaController extends Controller
 
 
         // Crear el registro de apertura de curso
-        CursoApertura::create([
+
+
+        $usuario = Auth::user();
+
+        if (!$usuario) {
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión para continuar.');
+        }
+
+        $persona = $usuario->persona;
+        if (!$persona) {
+            return redirect()->back()->with('error', 'No se encontró la persona asociada al usuario.');
+        }
+
+        $profesor = $persona->profesor;
+        if (!$profesor) {
+            return redirect()->back()->with('error', 'No se encontró el profesor asociado a la persona.');
+        }
+
+        $id_profesor = $profesor->id;
+
+        $cursoApertura =CursoApertura::create([
             'id_curso' => $request->id_curso,
             'nombre' => $nombreRegistro,
             'fecha_inicio' => $fecha_inicio,
@@ -297,6 +319,15 @@ class PlataformaController extends Controller
             'dia_clase' => $dia_semana,
             'hora_clase' => $request->hora_clase,
         ]);
+
+        foreach ($request->modulos as $semana => $moduloId) {
+            ModuloCurso::create([
+                'id_modulo' => $moduloId,
+                'id_curso_apertura' => $cursoApertura->id,
+                'orden' => str_replace('semana_', '', $semana),
+                'id_profesor' => $id_profesor,
+            ]);
+        }
 
         // Redirigir de vuelta con un mensaje de éxito
         return redirect()->route('plataforma.historial-cursos')->with('success', 'Curso aperturado exitosamente.');

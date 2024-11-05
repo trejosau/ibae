@@ -36,7 +36,7 @@ class DashboardController extends Controller
         $totalInscripciones = Inscripcion::join('estudiantes', 'inscripciones.id', '=', 'estudiantes.id_inscripcion')
             ->sum('inscripciones.precio');
 
-        $totalColegiaturas = Colegiaturas::where('estado', 'pagado')->sum('Monto');
+        $totalColegiaturas = Colegiaturas::where('colegiatura', 1)->sum('Monto');
 
         $totalAcademia = $totalInscripciones + $totalColegiaturas;
 
@@ -115,17 +115,14 @@ class DashboardController extends Controller
             }
         }
 
-        if ($request->filled('estado')) {
-            $ventasQuery->where('estado', $request->estado);
-        }
-        if ($request->filled('tipo')) {
-            $ventasQuery->where('tipo', $request->tipo);
-        }
+        // Filtrar si es estudiante
         if ($request->filled('es_estudiante')) {
             $ventasQuery->where('es_estudiante', $request->es_estudiante);
         }
+
+        // Filtrar por Vendedor (nombre del administrador)
         if ($request->filled('vendedor')) {
-            $ventasQuery->whereHas('administrador.persona', function($query) use ($request) {
+            $ventasQuery->whereHas('administrador.persona', function ($query) use ($request) {
                 $query->where('nombre', 'like', '%' . $request->vendedor . '%');
             });
         }
@@ -133,16 +130,10 @@ class DashboardController extends Controller
         // Ordenar y paginar los resultados
         $ventas = $ventasQuery->orderBy('fecha_compra', 'desc')->paginate(10);
 
-        // Transformar los resultados para establecer valores predeterminados
-        $ventas->getCollection()->transform(function ($venta) {
-            $venta->tipo = $venta->tipo ?? 'Física'; // Tipo predeterminado
-            $venta->estado = $venta->estado ?? 'Completada'; // Estado predeterminado
-            return $venta;
-        });
-
         // Devolver la vista con los datos
         return view('dashboard.index', compact('productos', 'ventas', 'administradores'));
     }
+
 
 
 

@@ -33,24 +33,6 @@
                         </div>
                     </div>
 
-                    <!-- Filtrar por Estado -->
-                    <div class="col-md-2">
-                        <select name="estado" class="form-select form-select-sm" style="min-width: 100%;">
-                            <option value="">Estado</option>
-                            <option value="completado" {{ request('estado') == 'completado' ? 'selected' : '' }}>Completado</option>
-                            <option value="pendiente" {{ request('estado') == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
-                        </select>
-                    </div>
-
-                    <!-- Filtrar por Tipo -->
-                    <div class="col-md-2">
-                        <select name="tipo" class="form-select form-select-sm" style="min-width: 100%;">
-                            <option value="">Tipo</option>
-                            <option value="online" {{ request('tipo') == 'online' ? 'selected' : '' }}>Online</option>
-                            <option value="presencial" {{ request('tipo') == 'presencial' ? 'selected' : '' }}>Presencial</option>
-                        </select>
-                    </div>
-
                     <!-- Filtrar por Estudiante -->
                     <div class="col-md-2">
                         <select name="es_estudiante" class="form-select form-select-sm" style="min-width: 100%;">
@@ -80,6 +62,7 @@
                     </div>
                 </div>
             </form>
+
         </div>
     </div>
 
@@ -101,8 +84,7 @@
                             <th>Comprador</th>
                             <th>Fecha</th>
                             <th>Total</th>
-                            <th>Estado</th>
-                            <th>Tipo</th>
+
                             <th>Estudiante?</th>
                             <th>Vendedor</th>
                             <th>Acc.</th>
@@ -114,8 +96,6 @@
                                 <td>{{ $venta->nombre_comprador }}</td>
                                 <td>{{ $venta->fecha_compra }}</td>
                                 <td>${{ $venta->total }}</td>
-                                <td>{{ $venta->estado ?? 'N/A' }}</td>
-                                <td>{{ $venta->tipo ?? 'N/A' }}</td>
                                 <td>{{ $venta->es_estudiante === 'si' ? 'Sí' : 'No' }}</td>
                                 <td>
                                     @if($venta->administrador && $venta->administrador->persona)
