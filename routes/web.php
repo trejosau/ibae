@@ -68,12 +68,16 @@ Route::middleware('auth')->group(function () {
     Route::put('/plataforma/modulos/{id}', [PlataformaController::class, 'moduloUpdate'])->name('plataforma.moduloUpdate');
     Route::delete('/plataforma/modulos/{id}', [PlataformaController::class, 'moduloDestroy'])->name('plataforma.moduloDestroy');
     Route::get('/plataforma/modulos/temas', [PlataformaController::class, 'temasModulos'])->name('plataforma.temas-modulos');
+    Route::get('/temas-modulos', [PlataformaController::class, 'ligarModulosATemas'])->name('ligarTemasModulo');
+    Route::post('/plataforma/asignar-temas', [PlataformaController::class, 'asignarTemas'])->name('asignar.temas');
     Route::post('/modulos', [PlataformaController::class, 'crearModulo'])->name('plataforma.crearModulo');
+    Route::get('/modulo/modificar/{id}', [PlataformaController::class, 'modificarModulo'])->name('plataforma.modificarModulo');
+    Route::delete('/modulo/eliminar/{id}', [PlataformaController::class, 'eliminarModulo'])->name('plataforma.eliminarModulo');
 
-
-    // Rutas de Temas
+// Rutas para temas
+    Route::get('/tema/modificar/{id}', [PlataformaController::class, 'modificarTema'])->name('plataforma.modificarTema');
+    Route::delete('/tema/eliminar/{id}', [PlataformaController::class, 'eliminarTema'])->name('plataforma.eliminarTema');
     Route::post('/temas', [PlataformaController::class, 'crearTema'])->name('plataforma.crearTema');
-
 
     // Rutas de Personal
     Route::get('/plataforma/personal/estudiantes', [PlataformaController::class, 'estudiantes'])->name('plataforma.estudiantes');

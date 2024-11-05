@@ -14,6 +14,9 @@ class Temas extends Model
         'descripcion',
     ];
 
-   
+    public function modulos()
+    {
+        return $this->belongsToMany(Modulos::class, 'modulos_temas');
+    }
 }
 

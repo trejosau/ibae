@@ -17,6 +17,12 @@ class Modulos extends Model
         'duracion',
     ];
 
-
-
+    public function curso(): BelongsTo
+    {
+        return $this->belongsTo(Cursos::class, 'id_curso');
+    }
+    public function temas()
+    {
+        return $this->belongsToMany(Temas::class, 'modulo_temas', 'id_modulo', 'id_tema');
+    }
 }

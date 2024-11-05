@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ModuloCurso extends Model
 {
-    use HasFactory;
 
     protected $table = 'modulo_curso';
     public $timestamps = false;
