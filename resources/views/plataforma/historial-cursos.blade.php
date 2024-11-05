@@ -225,30 +225,61 @@
                     </div>
                 </form>
 
-                <!-- Agrega el siguiente script para manejar la generación de semanas -->
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
                         const cursoSelect = document.getElementById('cursoSelect');
                         const semanasContainer = document.getElementById('semanasContainer');
 
                         cursoSelect.addEventListener('change', function () {
-                            // Limpiar el contenedor de semanas antes de agregar nuevos
+                            // Limpiar el contenedor antes de agregar nuevas semanas
                             semanasContainer.innerHTML = '';
 
-                            // Obtener la duración en semanas del curso seleccionado
-                            const selectedOption = cursoSelect.options[cursoSelect.selectedIndex];
-                            const duracionSemanas = selectedOption.getAttribute('data-duracion');
+                            // Obtener la duración del curso seleccionado
+                            const duracion = this.options[this.selectedIndex].dataset.duracion;
 
-                            // Generar dividers para cada semana
-                            for (let i = 1; i <= duracionSemanas; i++) {
+                            for (let i = 1; i <= duracion; i++) {
+                                // Crear un div para la semana
                                 const semanaDiv = document.createElement('div');
-                                semanaDiv.className = 'week-divider';
-                                semanaDiv.innerHTML = `<h5>Semana ${i}</h5><hr>`; // Dividir por semana
+                                semanaDiv.classList.add('semana');
+
+                                // Crear el divider
+                                const divider = document.createElement('hr');
+                                semanaDiv.appendChild(divider);
+
+                                // Crear el título de la semana
+                                const semanaTitle = document.createElement('h5');
+                                semanaTitle.innerText = `Semana ${i}`;
+                                semanaDiv.appendChild(semanaTitle);
+
+                                // Crear el select para módulos
+                                const moduloSelect = document.createElement('select');
+                                moduloSelect.classList.add('form-select');
+                                moduloSelect.name = `modulo_semana_${i}`; // Nombre del select por semana
+
+                                // Agregar opción por defecto
+                                const defaultOption = document.createElement('option');
+                                defaultOption.value = '';
+                                defaultOption.disabled = true;
+                                defaultOption.selected = true;
+                                defaultOption.innerText = 'Seleccione un módulo';
+                                moduloSelect.appendChild(defaultOption);
+
+                                // Agregar los módulos disponibles al select
+                                @foreach($modulosConTemas as $modulo)
+                                const option = document.createElement('option');
+                                option.value = '{{ $modulo->id }}';
+                                option.innerText = '{{ $modulo->nombre }}';
+                                moduloSelect.appendChild(option);
+                                @endforeach
+
+                                // Agregar el select al div de semana
+                                semanaDiv.appendChild(moduloSelect);
                                 semanasContainer.appendChild(semanaDiv);
                             }
                         });
                     });
                 </script>
+
             </div>
         </div>
     </div>

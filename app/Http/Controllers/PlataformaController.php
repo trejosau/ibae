@@ -205,13 +205,14 @@ class PlataformaController extends Controller
         $todosEstudiantes = Estudiante::all();
         $todosCursos = Cursos::all();
         $todosCursosApertura = CursoApertura::all();
-
+        $modulosConTemas = Modulos::has('temas')->get(['id', 'nombre']);
         // Pasar los datos a la vista
         return view('plataforma.index', [
             'resultado' => array_values($resultado),
             'estudiantes' => $todosEstudiantes,
             'cursos' => $todosCursos,
-            'cursosApertura' => $todosCursosApertura
+            'cursosApertura' => $todosCursosApertura,
+            'modulosConTemas' => $modulosConTemas
         ]);
     }
 
@@ -285,6 +286,7 @@ class PlataformaController extends Controller
         // Crear el nombre del registro en el formato deseado
         $nombreRegistro = "{$dia_semana}, {$curso->nombre}, {$request->hora_clase}, {$mes_inicio}";
 
+
         // Crear el registro de apertura de curso
         CursoApertura::create([
             'id_curso' => $request->id_curso,
@@ -327,6 +329,8 @@ class PlataformaController extends Controller
     public function listaModulos()
     {
         $modulos = Modulos::all()->groupBy('categoria');
+
+
         return view('plataforma.index', compact('modulos'));
     }
 
