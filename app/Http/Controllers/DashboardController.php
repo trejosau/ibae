@@ -36,7 +36,7 @@ class DashboardController extends Controller
         $totalInscripciones = Inscripcion::join('estudiantes', 'inscripciones.id', '=', 'estudiantes.id_inscripcion')
             ->sum('inscripciones.precio');
 
-        $totalColegiaturas = Colegiaturas::where('estado', 'pagado')->sum('Monto');
+        $totalColegiaturas = Colegiaturas::where('colegiatura', 1)->sum('Monto');
 
         $totalAcademia = $totalInscripciones + $totalColegiaturas;
 
