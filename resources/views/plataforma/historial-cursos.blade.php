@@ -215,6 +215,12 @@
                             <small id="diaSemana" class="text-muted"></small> <!-- Elemento para mostrar el día de la semana -->
                         </div>
 
+                        <!-- Campo para la Hora de Clase -->
+                        <div class="mb-3">
+                            <label for="horaClase" class="form-label">Hora de Clase</label>
+                            <input type="time" class="form-control" id="horaClase" name="hora_clase" >
+                        </div>
+
                         <script>
                             // Obtener la fecha actual
                             const hoy = new Date();
@@ -242,12 +248,6 @@
                                 document.getElementById('diaSemana').textContent = diaSemana ? `Día seleccionado: ${diaSemana}` : '';
                             });
                         </script>
-
-                        <!-- Campo para la Hora de Clase -->
-                        <div class="mb-3">
-                            <label for="horaClase" class="form-label">Hora de Clase</label>
-                            <input type="time" class="form-control" id="horaClase" name="hora_clase" required>
-                        </div>
 
                         <!-- Campo para el Monto de Colegiatura -->
                         <div class="mb-3">
