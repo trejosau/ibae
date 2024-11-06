@@ -43,9 +43,10 @@
                                 Inscribir
                             </button>
                         @elseif($apertura->estado == 'en curso')
-                            <a href="{{ route('plataforma.registrarAsistencia', $apertura->id) }}" class="btn btn-info btn-sm registrar-btn" style="position: absolute; top: 10px; right: 10px; z-index: 15;">
-                                Registrar
+                            <a href="{{ route('plataforma.registrarAsistencia', $apertura->id) }}" class="btn btn-info btn-sm registrar-btn" style="position: absolute; top: 10px; right: 10px; z-index: 15;" target="_blank">
+                                Asistencia/Colegiaturas
                             </a>
+
                         @endif
                     </div>
                     <!-- Nuevo botón para colapsar -->
