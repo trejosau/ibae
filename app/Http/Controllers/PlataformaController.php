@@ -333,11 +333,43 @@ class PlataformaController extends Controller
         return redirect()->route('plataforma.historial-cursos')->with('success', 'Curso aperturado exitosamente.');
     }
 
+
     public function guardarAsistencia($curso_apertura_id, Request $request)
     {
+        $asistencia = $request->input('asistencia');
+        $colegiatura = $request->input('colegiatura');
 
-        dd($request->all());
+        foreach ($asistencia as $matricula => $semanasAsistencia) {
+            $estudianteCurso = EstudianteCurso::whereHas('estudiante', function($query) use ($matricula) {
+                $query->where('matricula', $matricula);
+            })
+                ->where('id_curso_apertura', $curso_apertura_id)
+                ->first();
+
+
+            foreach ($semanasAsistencia as $semana => $estadoAsistencia) {
+                $estadoColegiatura = isset($colegiatura[$matricula][$semana]) ? $colegiatura[$matricula][$semana] : 'off';
+
+                Colegiaturas::updateOrCreate(
+                    [
+                        'id_estudiante_curso' => $estudianteCurso->id,
+                        'semana' => $semana,
+                    ],
+                    [
+                        'asistio' => $estadoAsistencia == 'on' ? 1 : 0,
+
+                        'colegiatura' => $estadoColegiatura == 'on' ? 1 : 0,
+
+                         'fecha_pago' => Carbon::now(),
+                    ]
+                );
+            }
+        }
+
+        // Retornar una respuesta de éxito con los datos recibidos
+        return redirect()->back()->with('success', 'Datos de asistencia guardados correctamente.');
     }
+
 
 
 
