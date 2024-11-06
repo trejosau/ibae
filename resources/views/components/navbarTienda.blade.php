@@ -1,3 +1,4 @@
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <style>
     .cart-sidebar {
@@ -215,7 +216,6 @@
                 <button id="close-sidebar">X</button>
             </div>
             <div class="cart-content">
-                <!-- Aquí se mostrarán los productos del carrito -->
             </div>
             <div class="cart-footer">
                 <a href="{{ route('carrito.ver') }}" class="btn btn-primary">Finalizar compra</a>
@@ -393,17 +393,25 @@
             .catch(error => console.error('Error al actualizar el total del carrito:', error));
     }
 
-    // Función para eliminar un producto del carrito
     function removeFromCart(productId) {
-        fetch(`/carrito/${productId}`, { method: 'DELETE' })
-            .then(response => {
-                if (response.ok) {
-                    cargarContenidoCarrito(); // Recargar el contenido del carrito
-                    actualizarTotalCarrito(); // Actualizar el total
-                } else {
-                    console.error('Error al eliminar el producto del carrito');
-                }
-            })
-            .catch(error => console.error('Error al eliminar el producto del carrito:', error));
-    }
+    fetch(`/carrito/${productId}`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => {
+        console.log(response.status);
+        if (response.ok) {
+            cargarContenidoCarrito();
+            actualizarTotalCarrito();
+        } else {
+            console.error('Error al eliminar el producto del carrito');
+        }
+    })
+    .catch(error => console.error('Error al eliminar el producto del carrito:', error));
+}
+
+
 </script>
