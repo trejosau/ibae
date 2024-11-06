@@ -189,22 +189,34 @@
             @foreach ($estudiantesInscritos as $matricula => $estudiante)
                 <tr>
                     <td>{{ $matricula }}</td>
-                    <td>{{ $estudiante['nombre'] }} }}</td>
+                    <td>{{ $estudiante['nombre'] }}</td>
 
                     @for ($i = 1; $i <= $cantidad_semanas; $i++)
                         <td>
+                            <!-- Hidden input to ensure the "off" state is sent for asistencia -->
+                            <input type="hidden" name="asistencia[{{ $matricula }}][{{ $i }}]" value="off">
+
                             <div class="checkbox-container checkbox-asistio">
                                 <input type="checkbox" name="asistencia[{{ $matricula }}][{{ $i }}]"
                                     {{ isset($estudiante['semanas'][$i]['asistio']) && $estudiante['semanas'][$i]['asistio'] ? 'checked' : '' }}
                                     {{ $estudiante['estado'] == 'baja' ? 'disabled' : '' }}>
                                 <label>Asistió</label>
                             </div>
+
+                            <!-- Hidden input to ensure the "off" state is sent for colegiatura -->
+                            <input type="hidden" name="colegiatura[{{ $matricula }}][{{ $i }}]" value="off">
+
                             <div class="checkbox-container checkbox-colegiatura">
                                 <input type="checkbox" name="colegiatura[{{ $matricula }}][{{ $i }}]"
                                     {{ isset($estudiante['semanas'][$i]['colegiatura']) && $estudiante['semanas'][$i]['colegiatura'] ? 'checked' : '' }}
                                     {{ $estudiante['estado'] == 'baja' ? 'disabled' : '' }}>
                                 <label>Colegiatura</label>
                             </div>
+
+                            <!-- Hidden input for collegiatura ID -->
+                            @if (isset($estudiante['semanas'][$i]['id_colegiatura']))
+                                <input type="hidden" name="colegiatura_id[{{ $matricula }}][{{ $i }}]" value="{{ $estudiante['semanas'][$i]['id_colegiatura'] }}">
+                            @endif
                         </td>
                     @endfor
 
@@ -253,6 +265,7 @@
 
         <button type="submit" class="btn-guardar">Guardar Cambios</button>
     </form>
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

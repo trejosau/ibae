@@ -333,10 +333,13 @@ class PlataformaController extends Controller
         return redirect()->route('plataforma.historial-cursos')->with('success', 'Curso aperturado exitosamente.');
     }
 
-    public function guardarAsistencia(Request $request)
+    public function guardarAsistencia($curso_apertura_id, Request $request)
     {
 
+        dd($request->all());
     }
+
+
 
 
 
@@ -351,9 +354,8 @@ class PlataformaController extends Controller
             ->join('personas as p', 'e.id_persona', '=', 'p.id')
             ->join('colegiaturas as c', 'ec.id', '=', 'c.id_estudiante_curso')
             ->where('ec.id_curso_apertura', $idApertura)
-            ->select('e.matricula', 'p.nombre', 'p.ap_paterno', 'p.ap_materno', 'ec.estado', 'ec.id as id_estudiante_curso', 'c.semana', 'c.asistio', 'c.colegiatura')
+            ->select('e.matricula', 'p.nombre', 'p.ap_paterno', 'p.ap_materno', 'ec.estado', 'ec.id as id_estudiante_curso', 'c.id', 'c.semana', 'c.asistio', 'c.colegiatura')
             ->get();
-
 
 
         // Agrupar los datos por estudiante

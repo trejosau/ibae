@@ -19,34 +19,37 @@
             <h3>Lista de Módulos</h3>
             <table class="table table-striped table-bordered">
                 <thead>
-                    <tr>
-                        <th scope="col">Nombre del Módulo</th>
-                        <th scope="col" class="text-center">Categorías</th>
-                        <th scope="col" class="text-center">Duración</th>
-                        <th scope="col" class="text-center">Acciones</th>
-                    </tr>
+                <tr>
+                    <th scope="col">Nombre del Módulo</th>
+                    <th scope="col" class="text-center">Categorías</th>
+                    <th scope="col" class="text-center">Duración</th>
+                    <th scope="col" class="text-center">Acciones</th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach ($modulos as $modulo)
-                    <tr>
-                        <td>{{ $modulo->nombre }}</td>
-                        <td>{{ $modulo->categoria }}</td>
-                        <td>{{ $modulo->duracion }} Horas</td>
-                        <td class="text-center">
-                            <div class="d-flex justify-content-center gap-2">
-                            <!-- Botón de Modificar Módulo -->
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarModulo-{{ $modulo->id }}">Modificar</button>
-                                <form action="{{ route('plataforma.eliminarModulo', $modulo->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este módulo?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
+                @foreach ($modulos as $categoria => $moduloCollection)
+                    @foreach ($moduloCollection as $modulo)
+                        <tr>
+                            <td>{{ $modulo->nombre }}</td>
+                            <td>{{ $modulo->categoria }}</td>
+                            <td>{{ $modulo->duracion }} Horas</td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <!-- Botón de Modificar Módulo -->
+                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarModulo-{{ $modulo->id }}">Modificar</button>
+                                    <form action="{{ route('plataforma.eliminarModulo', $modulo->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este módulo?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
                     @endforeach
+                @endforeach
                 </tbody>
             </table>
+
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarModulo">
                 Agregar Módulo
             </button>
