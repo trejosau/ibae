@@ -93,7 +93,7 @@ class ProductosController extends Controller
             } else {
                 $carrito[$id] = [
                     "nombre" => $producto->nombre,
-                    "precio" => $producto->precio,
+                    "precio" => $producto->precio_venta,
                     "cantidad" => $cantidad
                 ];
             }
@@ -110,7 +110,7 @@ public function verCarrito(Request $request)
 {
     $carrito = session()->get('carrito', []);
     $subtotal = array_reduce($carrito, function ($total, $item) {
-        return $total + $item['precio'] * $item['cantidad'];
+        return $total + $item['precio_venta'] * $item['cantidad'];
     }, 0);
 
     if ($request->wantsJson()) {
