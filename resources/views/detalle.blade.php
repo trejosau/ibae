@@ -9,6 +9,37 @@
 </head>
 <body>
 <style>
+
+.mensaje-ajax {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(20px); /* Animación de entrada */
+}
+
+.mensaje-ajax.exito {
+    background-color: #4CAF50; /* Verde para éxito */
+}
+
+.mensaje-ajax.error {
+    background-color: #f44336; /* Rojo para error */
+}
+
+.mensaje-ajax.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
 /* Navbar */
 .navbar-brand:hover {
     color: #ffd700;
@@ -310,13 +341,36 @@ function agregarAlCarrito(productoId) {
         if (data.success) {
             actualizarTotalCarrito();
             cargarContenidoCarrito();
-            alert('Producto agregado al carrito');
+            mostrarMensaje('Producto agregado al carrito', 'exito');
         } else {
-            alert('Hubo un problema al agregar el producto al carrito');
+            mostrarMensaje('Hubo un problema al agregar el producto al carrito', 'error');
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        mostrarMensaje('Error al procesar la solicitud', 'error');
+    });
 }
+
+function mostrarMensaje(mensaje, tipo) {
+    const mensajeDiv = document.createElement('div');
+    mensajeDiv.className = `mensaje-ajax ${tipo}`;
+    mensajeDiv.textContent = mensaje;
+    
+    document.body.appendChild(mensajeDiv);
+    
+    // Activa la animación después de un breve retraso
+    setTimeout(() => {
+        mensajeDiv.classList.add('show');
+    }, 10);
+    
+    // Elimina el mensaje después de 3 segundos
+    setTimeout(() => {
+        mensajeDiv.remove();
+    }, 3000);
+}
+
+
 
 </script>
 
