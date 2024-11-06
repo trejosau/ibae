@@ -336,45 +336,12 @@ class PlataformaController extends Controller
         return redirect()->route('plataforma.historial-cursos')->with('success', 'Curso aperturado exitosamente.');
     }
 
-
-    public function guardarAsistencia($curso_apertura_id, Request $request)
+    public function guardarAsistencia(Request $request)
     {
         $asistencia = $request->input('asistencia');
         $colegiatura = $request->input('colegiatura');
 
-        foreach ($asistencia as $matricula => $semanasAsistencia) {
-            $estudianteCurso = EstudianteCurso::whereHas('estudiante', function($query) use ($matricula) {
-                $query->where('matricula', $matricula);
-            })
-                ->where('id_curso_apertura', $curso_apertura_id)
-                ->first();
-
-
-            foreach ($semanasAsistencia as $semana => $estadoAsistencia) {
-                $estadoColegiatura = isset($colegiatura[$matricula][$semana]) ? $colegiatura[$matricula][$semana] : 'off';
-
-                Colegiaturas::updateOrCreate(
-                    [
-                        'id_estudiante_curso' => $estudianteCurso->id,
-                        'semana' => $semana,
-                    ],
-                    [
-                        'asistio' => $estadoAsistencia == 'on' ? 1 : 0,
-
-                        'colegiatura' => $estadoColegiatura == 'on' ? 1 : 0,
-
-                         'fecha_pago' => Carbon::now(),
-                    ]
-                );
-            }
-        }
-
-        // Retornar una respuesta de éxito con los datos recibidos
-        return redirect()->back()->with('success', 'Datos de asistencia guardados correctamente.');
     }
-
-
-
 
 
 
@@ -389,8 +356,9 @@ class PlataformaController extends Controller
             ->join('personas as p', 'e.id_persona', '=', 'p.id')
             ->join('colegiaturas as c', 'ec.id', '=', 'c.id_estudiante_curso')
             ->where('ec.id_curso_apertura', $idApertura)
-            ->select('e.matricula', 'p.nombre', 'p.ap_paterno', 'p.ap_materno', 'ec.estado', 'ec.id as id_estudiante_curso', 'c.id', 'c.semana', 'c.asistio', 'c.colegiatura')
+            ->select('e.matricula', 'p.nombre', 'p.ap_paterno', 'p.ap_materno', 'ec.estado', 'ec.id as id_estudiante_curso', 'c.semana', 'c.asistio', 'c.colegiatura')
             ->get();
+
 
 
         // Agrupar los datos por estudiante
@@ -434,16 +402,26 @@ class PlataformaController extends Controller
 
 
 
-    public function listaModulos()
+    public function listaModulos(Request $request)
     {
+        // Recuperar la categoría seleccionada desde el request
+        $categoria = $request->input('categoria', ''); // Si no hay categoría, se devuelve un valor vacío (lo que no aplicará filtro)
+    
+        // Filtrar los módulos según la categoría seleccionada
+        $modulos = Modulos::when($categoria, function ($query, $categoria) {
+            return $query->where('categoria', $categoria);
+        })->get()->groupBy('categoria'); // Agrupar los módulos por categoría
+    
+        // Obtener todos los temas (sin filtro)
         $temas = Temas::all();
-        $modulos = Modulos::all()->groupBy('categoria');
-
-
-        return view('plataforma.index', compact('modulos', 'temas' ));
+    
+        // Retornar la vista con los módulos y temas filtrados o completos
+        return view('plataforma.index', compact('modulos', 'temas'));
     }
+    
 
-
+    
+    
 
     public function crearModulo(Request $request)
     {
@@ -519,6 +497,7 @@ public function actualizarTema(Request $request, $id)
     $tema->update($request->only(['nombre', 'descripcion']));
     return redirect()->back()->with('success', 'Tema actualizado con éxito.');
 }
+
 
 
 
