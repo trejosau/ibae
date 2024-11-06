@@ -1,5 +1,43 @@
-<style>
 
+<style>
+    .cart-sidebar {
+    position: fixed;
+    right: -300px;
+    top: 0;
+    width: 300px;
+    height: 100%;
+    background: #fff;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    transition: right 0.3s ease;
+    z-index: 1000;
+}
+
+.cart-sidebar.active {
+    right: 0;
+}
+
+.cart-header, .cart-footer {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-header h3 {
+    margin: 0;
+}
+
+.cart-content {
+    padding: 15px;
+    overflow-y: auto;
+    height: calc(100% - 120px); /* Ajuste según el header y footer */
+}
+
+#close-sidebar {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    float: right;
+}
 
     .navbar {
         position: fixed;
@@ -86,10 +124,9 @@
     .mega-menu .col-md-3:last-child,
     .mega-menu .col-md-2:last-child,
     .mega-menu .col-md-5:last-child {
-        border-right: none; /
+        border-right: none;
         margin-right: 0;
     }
-
 
     .mega-menu h3 {
         margin-top: 0;
@@ -149,31 +186,51 @@
         border-color: #d99db7;
     }
 
-    .logo{
+    .logo {
         width: auto;
         height: 60px;
     }
-
 </style>
 
 <nav class="navbar navbar-expand-lg p-0">
     <div class="container p-0">
-        <a class="navbar-brand" href="{{route('home')}}"><img class="logo" src="{{asset('images/logo.png')}}" alt="Logo" class="img-fluid"></a>
+        <a class="navbar-brand" href="{{ route('home') }}">
+            <img class="logo" src="{{ asset('images/logo.png') }}" alt="Logo" class="img-fluid">
+        </a>
         <div class="form-inline">
             <input type="text" placeholder="Buscar productos...">
             <button type="button">Buscar</button>
         </div>
+
         <div class="nav-icons">
-            <a href="#"><span>$0.00</span> <i class="fas fa-shopping-cart"></i></a>
+            <a href="#" id="cart-icon">
+                <span id="cart-total">$0.00</span> <i class="fas fa-shopping-cart"></i>
+            </a>
         </div>
+        
+        <!-- Sidebar para el carrito -->
+        <div id="cart-sidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3>Mi Carrito</h3>
+                <button id="close-sidebar">X</button>
+            </div>
+            <div class="cart-content">
+                <!-- Aquí se mostrarán los productos del carrito -->
+            </div>
+            <div class="cart-footer">
+                <a href="{{ route('carrito.ver') }}" class="btn btn-primary">Finalizar compra</a>
+            </div>
+        </div>
+        
+        
         <div class="login-link">
-            <a href="{{route('login')}}" class="btn">Iniciar Sesión</a>
+            <a href="{{ route('login') }}" class="btn">Iniciar Sesión</a>
         </div>
     </div>
 </nav>
 
-
 <nav class="navegacion">
+
     <div class="navegacion-item">
         <a href="#">Tintes</a>
         <div class="mega-menu clearfix">
@@ -269,12 +326,84 @@
                     <a href="#">Tratamientos para uñas</a>
                 </div>
                 <div class="col-md-5">
-                    <h3>HERRAMIENTAS</h3>
-                    <a href="#">Pinceles</a>
-                    <a href="#">Esponjas</a>
+                    <h3>Accesorios</h3>
                     <a href="#">Limas</a>
+                    <a href="#">Pinceless</a>
                 </div>
             </div>
         </div>
     </div>
 </nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Actualizar el subtotal al cargar la página
+        actualizarTotalCarrito();
+
+        // Abrir el carrito al hacer clic en el ícono
+        document.getElementById('cart-icon').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('cart-sidebar').classList.add('active');
+
+            // Cargar productos en el carrito
+            cargarContenidoCarrito();
+        });
+
+        // Cerrar el sidebar del carrito
+        document.getElementById('close-sidebar').addEventListener('click', function() {
+            document.getElementById('cart-sidebar').classList.remove('active');
+        });
+    });
+
+    // Función para cargar el contenido del carrito
+    function cargarContenidoCarrito() {
+        fetch('/carrito/contenido') // Cambié la ruta a `/carrito/contenido` como mencionaste
+            .then(response => response.json())
+            .then(data => {
+                let cartContent = document.querySelector('.cart-content');
+                cartContent.innerHTML = '';
+
+                if (data.carrito && Object.keys(data.carrito).length > 0) {
+                    // Itera sobre los productos en el carrito y los agrega al sidebar
+                    Object.entries(data.carrito).forEach(([id, product]) => {
+                        cartContent.innerHTML += `
+                            <div class="cart-item">
+                                <p>${product.nombre} - $${product.precio} x ${product.cantidad}</p>
+                                <button onclick="removeFromCart(${id})">Eliminar</button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    cartContent.innerHTML = '<p>Tu carrito está vacío.</p>';
+                }
+
+                // Actualiza el subtotal
+                document.getElementById('cart-total').innerText = `$${data.subtotal.toFixed(2)}`;
+            })
+            .catch(error => console.error('Error al cargar el contenido del carrito:', error));
+    }
+
+    // Función para actualizar el total del carrito
+    function actualizarTotalCarrito() {
+        fetch('/carrito/contenido') // Cambié la ruta a `/carrito/contenido` para obtener el subtotal
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('cart-total').innerText = `$${data.subtotal.toFixed(2)}`;
+            })
+            .catch(error => console.error('Error al actualizar el total del carrito:', error));
+    }
+
+    // Función para eliminar un producto del carrito
+    function removeFromCart(productId) {
+        fetch(`/carrito/${productId}`, { method: 'DELETE' })
+            .then(response => {
+                if (response.ok) {
+                    cargarContenidoCarrito(); // Recargar el contenido del carrito
+                    actualizarTotalCarrito(); // Actualizar el total
+                } else {
+                    console.error('Error al eliminar el producto del carrito');
+                }
+            })
+            .catch(error => console.error('Error al eliminar el producto del carrito:', error));
+    }
+</script>

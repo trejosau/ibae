@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -221,8 +222,21 @@
                 <button class="btn-cantidad" id="incrementar">+</button>
             </div>
             
-            <button type="submit" class="btn btn-warning btn-lg fw-bold text-white mt-3">Agregar al carrito</button>
-        </div>
+            <form id="agregar-carrito-form">
+                @csrf
+                <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
+                <button type="button" class="btn btn-warning btn-lg fw-bold text-white mt-3" 
+                        aria-label="Agregar {{ $producto->nombre }} al carrito" 
+                        onclick="agregarAlCarrito({{ $producto->id }})">
+                    <i class="fas fa-shopping-cart"></i> Agregar al carrito
+                </button>
+            </form>
+            
+            
+            
+            
+            
+                    </div>
     </div>
 
     <hr class="my-4">
@@ -278,6 +292,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+function agregarAlCarrito(productoId) {
+    const cantidad = document.getElementById('cantidad').value;
+    const token = document.querySelector('input[name="_token"]').value;
+
+    fetch(`/producto/${productoId}/agregar-al-carrito`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': token
+        },
+        body: JSON.stringify({ cantidad: cantidad })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            actualizarTotalCarrito();
+            cargarContenidoCarrito();
+            alert('Producto agregado al carrito');
+        } else {
+            alert('Hubo un problema al agregar el producto al carrito');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
 </script>
 
 </body>
