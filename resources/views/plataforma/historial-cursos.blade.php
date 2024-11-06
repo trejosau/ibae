@@ -187,6 +187,7 @@
                             <select class="form-select" id="cursoSelect" name="id_curso" required
                                     style="background-color: #fdfdfe; border-color: #d3d3e3; color: #5a5a6e;">
                                 <option value="" disabled selected>Seleccione un curso</option>
+
                                 @foreach($cursos as $curso)
                                     <option value="{{ $curso->id }}" data-duracion="{{ $curso->duracion_semanas }}">
                                         {{ $curso->nombre }} ({{ $curso->duracion_semanas }} semanas)

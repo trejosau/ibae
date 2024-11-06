@@ -205,7 +205,7 @@ class PlataformaController extends Controller
 
         // Obtener todos los estudiantes y cursos
         $todosEstudiantes = Estudiante::all();
-        $todosCursos = Cursos::all();
+        $todosCursos = Cursos::where('estado', 'activo')->get();
         $todosCursosApertura = CursoApertura::with(['moduloCursos.modulo.temas']) // Carga los módulos y sus temas
         ->get();
         $modulosConTemas = Modulos::with('temas:id,nombre')->has('temas')->get(['id', 'nombre']);
