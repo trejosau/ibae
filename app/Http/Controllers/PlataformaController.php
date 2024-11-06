@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CursoAperturaRequest;
 use App\Models\Colegiaturas;
 use App\Models\Estudiante;
 use App\Models\EstudianteCurso;
@@ -272,31 +273,10 @@ class PlataformaController extends Controller
 
 
 
-    public function storeCursoApertura(Request $request)
+    public function storeCursoApertura(CursoAperturaRequest $request)
     {
-        // Validar la solicitud entrante
-        $validatedData = $request->validate([
-            'id_curso' => 'required|exists:cursos,id',
-            'fecha_inicio' => 'required|date',
-            'hora_clase' => 'required|date_format:H:i', // Asegúrate de que el formato sea correcto
-            'monto_colegiatura' => 'required|integer|min:1',
-            'modulos' => 'required|array',
-            'id_profesor' => 'required|exists:profesores,id', // Validación para el id_profesor
-        ], [
-            'id_curso.required' => 'El curso es obligatorio.',
-            'id_curso.exists' => 'El curso seleccionado no es válido.',
-            'fecha_inicio.required' => 'La fecha de inicio es obligatoria.',
-            'fecha_inicio.date' => 'La fecha de inicio debe ser una fecha válida.',
-            'hora_clase.required' => 'La hora de clase es obligatoria.',
-            'hora_clase.date_format' => 'La hora de clase debe estar en el formato HH:mm.',
-            'monto_colegiatura.required' => 'El monto de la colegiatura es obligatorio.',
-            'monto_colegiatura.integer' => 'El monto de la colegiatura debe ser un número entero.',
-            'monto_colegiatura.min' => 'El monto de la colegiatura debe ser al menos 1.',
-            'modulos.required' => 'Debe seleccionar al menos un módulo para cada semana.',
-            'modulos.array' => 'Los módulos deben estar en un formato de arreglo.',
-            'id_profesor.required' => 'Debe seleccionar un profesor.',
-            'id_profesor.exists' => 'El profesor seleccionado no es válido.',
-        ]);
+        // Los datos ya están validados, los puedes obtener directamente
+        $validatedData = $request->validated();
 
         // Obtener el curso seleccionado
         $curso = Cursos::find($validatedData['id_curso']);
