@@ -244,17 +244,20 @@ class PlataformaController extends Controller
 
     public function quitarAlumnoCurso(Request $request)
     {
+        // Recuperar el estudiante según la matrícula
         $estudiante = Estudiante::where('matricula', $request->matricula)->first();
 
+        // Verificar si el estudiante existe
         if (!$estudiante) {
             return back()->with('error', 'Estudiante no encontrado.');
         }
 
+        // Verificar si el estudiante está inscrito en el curso
         $estudianteCurso = EstudianteCurso::where('id_estudiante', $estudiante->matricula)
             ->where('id_curso_apertura', $request->apertura_id)
             ->first();
 
-
+        // Si el estudiante está inscrito en el curso, se cambia su estado a "baja"
         if ($estudianteCurso) {
             $estudianteCurso->estado = 'baja';
             $estudianteCurso->save();

@@ -153,6 +153,8 @@
             background-color: #f1f1f1; /* Color gris cuando está deshabilitado */
             cursor: not-allowed;
         }
+
+
     </style>
 </head>
 <body>
@@ -183,99 +185,119 @@
             <p><i class="fa fa-clock"></i> Hora de clase: <strong>{{ $apertura->hora_clase }}</strong></p>
         </div>
     </div>
+
     <!-- Tabla de asistencia -->
     <h3 class="my-4">Lista de Estudiantes Inscritos</h3>
     <form id="formAsistencia" action="{{ route('guardarAsistencia', ['curso_apertura_id' => $idApertura]) }}" method="POST">
         @csrf
         <!-- Tabla de Asistencia -->
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Matricula</th>
-                <th>Nombre</th>
-                @for ($i = 1; $i <= $cantidad_semanas; $i++)
-                    <th>Semana {{ $i }}</th>
-                @endfor
-                <th>Acciones</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach ($estudiantesInscritos as $matricula => $estudiante)
+        <div class="form-group">
+            <label for="searchInput">Buscar Estudiantes:</label>
+            <input type="text" class="form-control" id="searchInput" placeholder="Buscar por matrícula o nombre">
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table class="table">
+                <thead>
                 <tr>
-                    <td>{{ $matricula }}</td>
-                    <td>{{ $estudiante['nombre'] }}</td>
-
+                    <th>Matricula</th>
+                    <th>Nombre</th>
                     @for ($i = 1; $i <= $cantidad_semanas; $i++)
+                        <th>Semana {{ $i }}</th>
+                    @endfor
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach ($estudiantesInscritos as $matricula => $estudiante)
+                    <tr>
+                        <td>{{ $matricula }}</td>
+                        <td>{{ $estudiante['nombre'] }}</td>
+
+                        @for ($i = 1; $i <= $cantidad_semanas; $i++)
+                            <td>
+                                <!-- Hidden input to ensure the "off" state is sent for asistencia -->
+                                <input type="hidden" name="asistencia[{{ $matricula }}][{{ $i }}]" value="off">
+
+                                <div class="checkbox-container checkbox-asistio">
+                                    <input type="checkbox" name="asistencia[{{ $matricula }}][{{ $i }}]"
+                                        {{ isset($estudiante['semanas'][$i]['asistio']) && $estudiante['semanas'][$i]['asistio'] ? 'checked' : '' }}
+                                        {{ $estudiante['estado'] == 'baja' ? 'disabled' : '' }}>
+                                    <label>Asistió</label>
+                                </div>
+
+                                <!-- Hidden input to ensure the "off" state is sent for colegiatura -->
+                                <input type="hidden" name="colegiatura[{{ $matricula }}][{{ $i }}]" value="off">
+
+                                <div class="checkbox-container checkbox-colegiatura">
+                                    <input type="checkbox" name="colegiatura[{{ $matricula }}][{{ $i }}]"
+                                        {{ isset($estudiante['semanas'][$i]['colegiatura']) && $estudiante['semanas'][$i]['colegiatura'] ? 'checked' : '' }}
+                                        {{ $estudiante['estado'] == 'baja' ? 'disabled' : '' }}>
+                                    <label>Colegiatura</label>
+                                </div>
+
+                                <!-- Hidden input for collegiatura ID -->
+                                @if (isset($estudiante['semanas'][$i]['id_colegiatura']))
+                                    <input type="hidden" name="colegiatura_id[{{ $matricula }}][{{ $i }}]" value="{{ $estudiante['semanas'][$i]['id_colegiatura'] }}">
+                                @endif
+                            </td>
+                        @endfor
+
                         <td>
-                            <!-- Hidden input to ensure the "off" state is sent for asistencia -->
-                            <input type="hidden" name="asistencia[{{ $matricula }}][{{ $i }}]" value="off">
-
-                            <div class="checkbox-container checkbox-asistio">
-                                <input type="checkbox" name="asistencia[{{ $matricula }}][{{ $i }}]"
-                                    {{ isset($estudiante['semanas'][$i]['asistio']) && $estudiante['semanas'][$i]['asistio'] ? 'checked' : '' }}
-                                    {{ $estudiante['estado'] == 'baja' ? 'disabled' : '' }}>
-                                <label>Asistió</label>
-                            </div>
-
-                            <!-- Hidden input to ensure the "off" state is sent for colegiatura -->
-                            <input type="hidden" name="colegiatura[{{ $matricula }}][{{ $i }}]" value="off">
-
-                            <div class="checkbox-container checkbox-colegiatura">
-                                <input type="checkbox" name="colegiatura[{{ $matricula }}][{{ $i }}]"
-                                    {{ isset($estudiante['semanas'][$i]['colegiatura']) && $estudiante['semanas'][$i]['colegiatura'] ? 'checked' : '' }}
-                                    {{ $estudiante['estado'] == 'baja' ? 'disabled' : '' }}>
-                                <label>Colegiatura</label>
-                            </div>
-
-                            <!-- Hidden input for collegiatura ID -->
-                            @if (isset($estudiante['semanas'][$i]['id_colegiatura']))
-                                <input type="hidden" name="colegiatura_id[{{ $matricula }}][{{ $i }}]" value="{{ $estudiante['semanas'][$i]['id_colegiatura'] }}">
+                            @if ($estudiante['estado'] != 'baja')
+                                <button type="button" class="btn-baja" data-toggle="modal" data-target="#bajaModal{{ $matricula }}">
+                                    Dar de baja
+                                </button>
+                            @else
+                                <span class="badge badge-danger">Baja</span>
                             @endif
                         </td>
-                    @endfor
+                    </tr>
 
-                    <td>
-                        @if ($estudiante['estado'] != 'baja')
-                            <!-- Botón de dar de baja que abre el modal -->
-                            <button type="button" class="btn-baja" data-toggle="modal" data-target="#bajaModal{{ $matricula }}">
-                                Dar de baja
-                            </button>
-                        @else
-                            <span class="badge badge-danger">Baja</span>
-                        @endif
-                    </td>
-                </tr>
+                    <!-- Modal para confirmación de baja -->
+                    <div class="modal fade" id="bajaModal{{ $matricula }}" tabindex="-1" role="dialog" aria-labelledby="bajaModalLabel{{ $matricula }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="bajaModalLabel{{ $matricula }}">Confirmar Baja de {{ $estudiante['nombre'] }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Está seguro que desea dar de baja a este estudiante? Esta acción no se puede deshacer.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
 
-                <!-- Modal para confirmación de baja -->
-                <div class="modal fade" id="bajaModal{{ $matricula }}" tabindex="-1" role="dialog" aria-labelledby="bajaModalLabel{{ $matricula }}" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="bajaModalLabel{{ $matricula }}">Confirmar Baja de {{ $estudiante['nombre'] }}</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                ¿Está seguro que desea dar de baja a este estudiante? Esta acción no se puede deshacer.
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-
-                                <!-- Formulario para enviar la solicitud de baja -->
-                                <form action="{{ route('darDeBaja') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="matricula" value="{{ $matricula }}">
-                                    <input type="hidden" name="apertura_id" value="{{ $idApertura }}">
-                                    <button type="submit" class="btn btn-danger">Confirmar Baja</button>
-                                </form>
+                                    <!-- Enlace que redirige al controlador con los parámetros necesarios -->
+                                    <a href="{{ route('darDeBaja', ['matricula' => $matricula, 'apertura_id' => $idApertura]) }}" class="btn btn-danger">Confirmar Baja</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
-            </tbody>
-        </table>
+
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <script>
+            document.getElementById('searchInput').addEventListener('input', function () {
+                let filter = this.value.toLowerCase();
+                let rows = document.querySelectorAll('table tbody tr');
+                rows.forEach(row => {
+                    let matricula = row.cells[0].textContent.toLowerCase();
+                    let nombre = row.cells[1].textContent.toLowerCase();
+                    if (matricula.includes(filter) || nombre.includes(filter)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        </script>
+
 
         <button type="submit" class="btn-guardar">Guardar Cambios</button>
     </form>
