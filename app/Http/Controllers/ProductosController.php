@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use App\Models\Productos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+
 
 class ProductosController extends Controller
 {
@@ -75,9 +77,80 @@ class ProductosController extends Controller
             'productosMasRecientes' => $productosMasRecientes,
         ]);
     }
+
+
+
+    
+    public function agregarAlCarrito(Request $request, $id)
+    {
+        $producto = Productos::find($id);
+        $cantidad = $request->cantidad;
+    
+        if ($producto) {
+            $carrito = session()->get('carrito', []);
+            if (isset($carrito[$id])) {
+                $carrito[$id]['cantidad'] += $cantidad;
+            } else {
+                $carrito[$id] = [
+                    "nombre" => $producto->nombre,
+                    "precio" => $producto->precio_venta,
+                    "cantidad" => $cantidad
+                ];
+            }
+            session()->put('carrito', $carrito);
+            return response()->json(['success' => true, 'carrito' => $carrito]);
+        }
+    
+        return response()->json(['success' => false]);
+    }
     
     
+
+public function verCarrito(Request $request)
+{
+    $carrito = session()->get('carrito', []);
+    $subtotal = array_reduce($carrito, function ($total, $item) {
+        return $total + $item['precio_venta'] * $item['cantidad'];
+    }, 0);
+
+    if ($request->wantsJson()) {
+        return response()->json([
+            'carrito' => $carrito,
+            'subtotal' => $subtotal
+        ]);
+    }
+
+    return view('carrito', compact('carrito'));
+}
+
+
+public function eliminarDelCarrito($id)
+{
+    $carrito = session()->get('carrito', []);
+
+    if (isset($carrito[$id])) {
+        unset($carrito[$id]);
+        session()->put('carrito', $carrito);
+        return response()->json(['success' => true, 'message' => 'Producto eliminado del carrito.']);
+    }
+
+    return response()->json(['success' => false, 'message' => 'Producto no encontrado en el carrito.'], 404);
+}
+
+
+    public function cargarContenidoCarrito()
+{
+    $carrito = session()->get('carrito', []);
+    $subtotal = array_reduce($carrito, function ($total, $item) {
+        return $total + $item['precio'] * $item['cantidad'];
+    }, 0);
+
+    return response()->json([
+        'carrito' => $carrito,
+        'subtotal' => $subtotal
+    ]);
+}
+
 
     
 }
-

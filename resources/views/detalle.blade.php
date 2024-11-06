@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,6 +9,37 @@
 </head>
 <body>
 <style>
+
+.mensaje-ajax {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(20px); /* Animación de entrada */
+}
+
+.mensaje-ajax.exito {
+    background-color: #4CAF50; /* Verde para éxito */
+}
+
+.mensaje-ajax.error {
+    background-color: #f44336; /* Rojo para error */
+}
+
+.mensaje-ajax.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
 /* Navbar */
 .navbar-brand:hover {
     color: #ffd700;
@@ -221,8 +253,21 @@
                 <button class="btn-cantidad" id="incrementar">+</button>
             </div>
             
-            <button type="submit" class="btn btn-warning btn-lg fw-bold text-white mt-3">Agregar al carrito</button>
-        </div>
+            <form id="agregar-carrito-form">
+                @csrf
+                <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
+                <button type="button" class="btn btn-warning btn-lg fw-bold text-white mt-3" 
+                        aria-label="Agregar {{ $producto->nombre }} al carrito" 
+                        onclick="agregarAlCarrito({{ $producto->id }})">
+                    <i class="fas fa-shopping-cart"></i> Agregar al carrito
+                </button>
+            </form>
+            
+            
+            
+            
+            
+                    </div>
     </div>
 
     <hr class="my-4">
@@ -278,6 +323,55 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+function agregarAlCarrito(productoId) {
+    const cantidad = document.getElementById('cantidad').value;
+    const token = document.querySelector('input[name="_token"]').value;
+
+    fetch(`/producto/${productoId}/agregar-al-carrito`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': token
+        },
+        body: JSON.stringify({ cantidad: cantidad })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            actualizarTotalCarrito();
+            cargarContenidoCarrito();
+            mostrarMensaje('Producto agregado al carrito', 'exito');
+        } else {
+            mostrarMensaje('Hubo un problema al agregar el producto al carrito', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        mostrarMensaje('Error al procesar la solicitud', 'error');
+    });
+}
+
+function mostrarMensaje(mensaje, tipo) {
+    const mensajeDiv = document.createElement('div');
+    mensajeDiv.className = `mensaje-ajax ${tipo}`;
+    mensajeDiv.textContent = mensaje;
+    
+    document.body.appendChild(mensajeDiv);
+    
+    // Activa la animación después de un breve retraso
+    setTimeout(() => {
+        mensajeDiv.classList.add('show');
+    }, 10);
+    
+    // Elimina el mensaje después de 3 segundos
+    setTimeout(() => {
+        mensajeDiv.remove();
+    }, 3000);
+}
+
+
+
 </script>
 
 </body>

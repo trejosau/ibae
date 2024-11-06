@@ -112,6 +112,12 @@ Route::middleware('auth')->group(function () {
     Route::get('auth/google', [loginGoogleController::class, 'redirectToGoogle'])->name('login.google');
     Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleCallback'])->name('login.google.callback');
 
+    Route::get('/productos', [ProductosController::class, 'index'])->name('productos.index');
+    Route::get('/carrito', [ProductosController::class, 'verCarrito'])->name('carrito.ver');
+    Route::post('/producto/{id}/agregar-al-carrito', [ProductosController::class, 'agregarAlCarrito'])->name('producto.agregar');
+    Route::delete('/carrito/{id}', [ProductosController::class, 'eliminarDelCarrito'])->name('carrito.eliminar');
+    Route::get('/carrito/contenido', [ProductosController::class, 'cargarContenidoCarrito'])->name('carrito.contenido');
+
 
     Route::middleware('auth')->group(function () {
     Route::get('/salon', [SalonController::class, 'index'])->name('salon.index');
