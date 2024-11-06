@@ -3,199 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toma de Asistencia y Pagos</title>
+    <title>{{ $apertura->nombre }} - Asistencia y Colegiatura</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         body {
-            background-color: #f2f5f7;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #444;
+            background-color: #fce4ec; /* Fondo rosa claro */
+            font-family: 'Arial', sans-serif;
         }
         .container {
-            background-color: #ffffff;
-            border-radius: 12px;
+            margin-top: 40px;
+            overflow-x: auto; /* Scroll horizontal */
+        }
+
+        .header {
+            background-color: #f48fb1; /* Rosa pastel suave */
             padding: 20px;
-            max-width: 100%;
-            margin: 30px auto;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            overflow-x: auto;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #6d8a96;
-        }
-        .search-container {
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: flex-end;
-        }
-        .search-input {
-            width: 250px;
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid #c7d0d5;
-        }
-        .table-container {
-            overflow-x: auto;
-            max-width: 100%;
-        }
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1000px;
-            white-space: nowrap;
-        }
-        .table th, .table td {
-            padding: 12px;
-            text-align: center;
-            border: 1px solid #e3e7ea;
-        }
-        .table th {
-            background-color: #d7e3ea;
-            color: #4a5b68;
-        }
-        .nombre-completo {
+            border-radius: 12px 12px 0 0;
+            color: white;
             text-align: left;
-            line-height: 1.5;
+            margin-bottom: 20px;
         }
-        .nombre-completo span {
-            display: block;
+
+        .header i {
+            font-size: 24px; /* Reduzco el tamaño de los iconos */
+            margin-right: 10px;
         }
-        .nombre-completo .bold {
-            font-weight: bold;
-            color: #4f758b;
+
+        .header h1 {
+            font-size: 26px;
+            margin-top: 10px;
+            font-weight: 600;
         }
-        .form-check {
-            margin: 5px 0;
+
+        .header p {
+            font-size: 16px; /* Ajusto el tamaño de la fuente */
+            margin: 5px 0; /* Ajusto el espaciado entre párrafos */
         }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
+
+        .table th, .table td {
             text-align: center;
+            vertical-align: middle;
+            white-space: nowrap; /* Evitar salto de línea en celdas */
+        }
+
+        .table {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-bordered th, .table-bordered td {
+            border-color: #f1f8fe;
+        }
+
+        .table th {
+            background-color: #f8bbd0; /* Rosa claro para el encabezado */
+            color: #333;
+            font-weight: bold;
+        }
+
+        .table td {
+            background-color: #fce4ec; /* Fondo rosa claro para las celdas */
+        }
+
+        .btn-baja {
+            background-color: #f06292; /* Rosa más intenso */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
             cursor: pointer;
         }
-        .btn-primary {
-            background-color: #7ea8be;
-            color: #fff;
+
+        .btn-baja:hover {
+            background-color: #ec407a; /* Rosa más oscuro */
+        }
+
+        .btn-guardar {
+            background-color: #ab47bc; /* Rosa más oscuro */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 20px;
             border: none;
+            cursor: pointer;
         }
-        .btn-secondary {
-            background-color: #9baab4;
-            color: #fff;
-            border: none;
-            text-decoration: none;
+
+        .btn-guardar:hover {
+            background-color: #8e24aa; /* Rosa más oscuro */
         }
-        .btn-danger {
-            background-color: #e74c3c;
-            color: #fff;
-            border: none;
+
+        .badge {
+            font-size: 14px;
         }
-        .btn-secondary:hover, .btn-primary:hover, .btn-danger:hover {
-            opacity: 0.9;
+
+        .bg-danger {
+            background-color: #f8d7da !important;
+            color: #721c24;
         }
-        .disabled-row {
-            background-color: #f8b0b3; /* Fondo rojo pastel */
-            color: #6c757d;
-            border-left: 4px solid #8b0000; /* Borde rojo guinda */
+
+        /* Estilos mejorados para los checkboxes */
+        .checkbox-container {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 5px;
+            justify-content: center;
         }
-        .disabled-row .form-check-input {
-            pointer-events: none;
-            background-color: #f8b0b3; /* Fondo rojo pastel en checkbox */
-            color: #6c757d;
-            border-color: #8b0000; /* Borde rojo guinda en checkbox */
+
+        .checkbox-container input[type="checkbox"] {
+            width: 18px; /* Ajusta el tamaño del checkbox */
+            height: 18px;
+            margin-right: 6px; /* Espaciado entre el checkbox y la etiqueta */
+            cursor: pointer;
+            border-radius: 3px; /* Bordes redondeados para los checkboxes */
+            border: 2px solid transparent; /* Asegura que los checkboxes tengan bordes */
+            background-color: #e1f5fe; /* Azul pastel claro por defecto */
         }
-        .form-check-input:disabled {
-            background-color: #f8b0b3;
-            border-color: #8b0000;
+
+        /* Color Azul para Asistió (sin marcar y marcado) */
+        .checkbox-asistio input[type="checkbox"]:checked {
+            background-color: #42a5f5; /* Azul más fuerte cuando está marcado */
+            border-color: #42a5f5;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zY2hlbWUvZ3JhcGhpY3MiIHZpZXdCb3g9IjAgMCAxMCAxMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiPjxwYXRoIGQ9Ik02IDcuMTE5TDIuNDI3IDMuNDI3TDEgMCAwLjQwNTQuMTkwMiA3LjEyNTEuODUzMC0zLjM3OTg2Ljk1NzEtLjk5OTg1LTEuNzI3MjAwNC0yLjk3MTEuM7J4ZmFjdC0w.'); /* Palomita de color negro */
+        }
+        .checkbox-asistio input[type="checkbox"]:checked ~ .checkbox-label {
+            color: #42a5f5; /* Texto azul más oscuro para Asistió cuando está marcado */
+        }
+
+        /* Color Verde para Colegiatura */
+        .checkbox-colegiatura input[type="checkbox"]:checked {
+            background-color: #388e3c; /* Verde cuando marcado */
+            border-color: #388e3c;
+        }
+        .checkbox-colegiatura input[type="checkbox"]:checked ~ .checkbox-label {
+            color: #388e3c; /* Verde para el texto cuando marcado */
+        }
+
+        .checkbox-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin: 0;
+        }
+
+        .disabled-checkbox {
+            background-color: #f1f1f1; /* Color gris cuando está deshabilitado */
+            cursor: not-allowed;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Toma de Asistencia y Pagos - {{ $apertura->curso->nombre }}</h1>
 
-    <div class="search-container">
-        <input type="text" id="searchInput" class="search-input" placeholder="Buscar por matrícula...">
+    <!-- Header de la página -->
+    <div class="header">
+        <div>
+            <i class="fa fa-graduation-cap"></i>
+            <h1>{{ $apertura->nombre }} - Asistencia y Colegiatura</h1>
+            <p><i class="fa fa-calendar-day"></i> Fecha de inicio: <strong>{{ $apertura->fecha_inicio }}</strong></p>
+            <p><i class="fa fa-dollar"></i> Monto de colegiatura: <strong>${{ $apertura->monto_colegiatura }}</strong></p>
+            <p><i class="fa fa-calendar"></i> Día de clase: <strong>{{ $apertura->dia_clase }}</strong></p>
+            <p><i class="fa fa-clock"></i> Hora de clase: <strong>{{ $apertura->hora_clase }}</strong></p>
+        </div>
     </div>
-
-    <div class="table-container">
-        <form action="{{ route('guardarAsistencia', $apertura->id) }}" method="POST">
-            @csrf
-            <table class="table" id="studentsTable">
-                <thead>
+    <!-- Tabla de asistencia -->
+    <h3 class="my-4">Lista de Estudiantes Inscritos</h3>
+    <form id="formAsistencia" action="{{ route('guardarAsistencia', ['curso_apertura_id' => $idApertura]) }}" method="POST">
+        @csrf
+        <!-- Tabla de Asistencia -->
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Matricula</th>
+                <th>Nombre</th>
+                @for ($i = 1; $i <= $cantidad_semanas; $i++)
+                    <th>Semana {{ $i }}</th>
+                @endfor
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach ($estudiantesInscritos as $matricula => $estudiante)
                 <tr>
-                    <th>Matrícula</th>
-                    <th>Nombre Completo</th>
-                    @for ($semana = 1; $semana <= $apertura->curso->duracion_semanas; $semana++)
-                        <th>Semana {{ $semana }}<br>
-                            <small>Colegiatura / Asistencia</small>
-                        </th>
-                    @endfor
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach ($estudiantesInscritos as $estudiante)
-                    <tr class="{{ $estudiante->estado === 'baja' ? 'disabled-row' : '' }}">
-                        <td>{{ $estudiante->matricula }}</td>
-                        <td class="nombre-completo">
-                            <span class="bold">Nombres: {{ $estudiante->nombre }}</span>
-                            <span class="bold">Paterno: {{ $estudiante->ap_paterno }}</span>
-                            <span class="bold">Materno: {{ $estudiante->ap_materno }}</span>
-                        </td>
-                        @for ($semana = 1; $semana <= $apertura->curso->duracion_semanas; $semana++)
-                            <td>
-                                <div class="form-check">
-                                    <label for="colegiatura-{{ $estudiante->matricula }}-semana{{ $semana }}">Colegiatura</label>
-                                    <input class="form-check-input" type="checkbox" name="colegiatura[{{ $estudiante->matricula }}][semana{{ $semana }}]" id="colegiatura-{{ $estudiante->matricula }}-semana{{ $semana }}" {{ $estudiante->estado === 'baja' ? 'disabled' : '' }}>
-                                </div>
-                                <div class="form-check">
-                                    <label for="asistencia-{{ $estudiante->matricula }}-semana{{ $semana }}">Asistencia</label>
-                                    <input class="form-check-input" type="checkbox" name="asistencia[{{ $estudiante->matricula }}][semana{{ $semana }}]" id="asistencia-{{ $estudiante->matricula }}-semana{{ $semana }}" {{ $estudiante->estado === 'baja' ? 'disabled' : '' }}>
-                                </div>
-                            </td>
-                        @endfor
+                    <td>{{ $matricula }}</td>
+                    <td>{{ $estudiante['nombre'] }} }}</td>
+
+                    @for ($i = 1; $i <= $cantidad_semanas; $i++)
                         <td>
-                            @if ($estudiante->estado === 'baja')
-                                <span class="badge bg-danger">Alumno baja</span>
-                            @else
-                                <form action="{{ route('darDeBaja') }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    <input type="hidden" name="matricula" value="{{ $estudiante->matricula }}">
-                                    <input type="hidden" name="curso_apertura_id" value="{{ $apertura->id }}">
-                                    <button type="submit" class="btn btn-danger btn-sm">Dar de baja <i class="fa fa-times"></i></button>
-                                </form>
-                            @endif
+                            <div class="checkbox-container checkbox-asistio">
+                                <input type="checkbox" name="asistencia[{{ $matricula }}][{{ $i }}]"
+                                    {{ isset($estudiante['semanas'][$i]['asistio']) && $estudiante['semanas'][$i]['asistio'] ? 'checked' : '' }}
+                                    {{ $estudiante['estado'] == 'baja' ? 'disabled' : '' }}>
+                                <label>Asistió</label>
+                            </div>
+                            <div class="checkbox-container checkbox-colegiatura">
+                                <input type="checkbox" name="colegiatura[{{ $matricula }}][{{ $i }}]"
+                                    {{ isset($estudiante['semanas'][$i]['colegiatura']) && $estudiante['semanas'][$i]['colegiatura'] ? 'checked' : '' }}
+                                    {{ $estudiante['estado'] == 'baja' ? 'disabled' : '' }}>
+                                <label>Colegiatura</label>
+                            </div>
                         </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-            <button type="submit" class="btn btn-primary">Guardar Asistencias y Pagos</button>
-        </form>
-    </div>
+                    @endfor
 
+                    <td>
+                        @if ($estudiante['estado'] != 'baja')
+                            <!-- Botón de dar de baja que abre el modal -->
+                            <button type="button" class="btn-baja" data-toggle="modal" data-target="#bajaModal{{ $matricula }}">
+                                Dar de baja
+                            </button>
+                        @else
+                            <span class="badge badge-danger">Baja</span>
+                        @endif
+                    </td>
+                </tr>
 
-    <a href="{{ route('plataforma.historial-cursos') }}" class="btn btn-secondary">Volver a Plataforma</a>
+                <!-- Modal para confirmación de baja -->
+                <div class="modal fade" id="bajaModal{{ $matricula }}" tabindex="-1" role="dialog" aria-labelledby="bajaModalLabel{{ $matricula }}" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="bajaModalLabel{{ $matricula }}">Confirmar Baja de {{ $estudiante['nombre'] }}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                ¿Está seguro que desea dar de baja a este estudiante? Esta acción no se puede deshacer.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+
+                                <!-- Formulario para enviar la solicitud de baja -->
+                                <form action="{{ route('darDeBaja') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="matricula" value="{{ $matricula }}">
+                                    <input type="hidden" name="apertura_id" value="{{ $idApertura }}">
+                                    <button type="submit" class="btn btn-danger">Confirmar Baja</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn-guardar">Guardar Cambios</button>
+    </form>
 </div>
 
-<script>
-    document.getElementById('searchInput').addEventListener('keyup', function() {
-        const filter = this.value.toLowerCase();
-        const rows = document.querySelectorAll('#studentsTable tbody tr');
-
-        rows.forEach(row => {
-            const matricula = row.cells[0].textContent.toLowerCase();
-            if (matricula.indexOf(filter) > -1) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-    });
-</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

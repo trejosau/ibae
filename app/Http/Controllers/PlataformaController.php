@@ -79,7 +79,6 @@ class PlataformaController extends Controller
             ->get();
 
 
-
         // Obtener todos los temas disponibles
         $todosLosTemas = Temas::all();
 
@@ -92,9 +91,6 @@ class PlataformaController extends Controller
         // Pasar los módulos y los temas a la vista
         return view('plataforma.temas-modulos', compact('modulos', 'todosLosTemas', 'temasPorCategoria', 'modulosSinTemas'));
     }
-
-
-
 
 
     public function misCursos()
@@ -224,7 +220,6 @@ class PlataformaController extends Controller
     }
 
 
-
     public function storeAlumnoCurso(Request $request)
     {
         $request->validate([
@@ -249,23 +244,27 @@ class PlataformaController extends Controller
 
     public function quitarAlumnoCurso(Request $request)
     {
-        $request->validate([
-            'matricula' => 'required|exists:estudiantes,matricula',
-            'curso_apertura_id' => 'required|exists:curso_apertura,id',
-        ]);
-
         $estudiante = Estudiante::where('matricula', $request->matricula)->first();
-        $cursoApertura = CursoApertura::find($request->curso_apertura_id);
 
-        if ($estudiante && $cursoApertura) {
-            // Actualizar el estado a 'baja' en la relación
-            $estudiante->cursosApertura()->updateExistingPivot($cursoApertura->id, ['estado' => 'baja']);
-
-            return back()->with('success', 'El alumno con matrícula ' . $estudiante->matricula . ' ha sido dado de baja del curso ' . $cursoApertura->curso->nombre);
+        if (!$estudiante) {
+            return back()->with('error', 'Estudiante no encontrado.');
         }
 
-        return back()->with('error', 'Error al dar de baja al alumno.');
+        $estudianteCurso = EstudianteCurso::where('id_estudiante', $estudiante->matricula)
+            ->where('id_curso_apertura', $request->apertura_id)
+            ->first();
+
+
+        if ($estudianteCurso) {
+            $estudianteCurso->estado = 'baja';
+            $estudianteCurso->save();
+
+            return back()->with('success', 'El alumno con matrícula ' . $estudiante->matricula . ' ha sido dado de baja del curso.');
+        }
+
+        return back()->with('error', 'El estudiante no está inscrito en este curso.');
     }
+
 
 
 
@@ -334,6 +333,12 @@ class PlataformaController extends Controller
         return redirect()->route('plataforma.historial-cursos')->with('success', 'Curso aperturado exitosamente.');
     }
 
+    public function guardarAsistencia(Request $request)
+    {
+
+    }
+
+
 
     public function registrarAsistencia($idApertura)
     {
@@ -344,30 +349,61 @@ class PlataformaController extends Controller
         $estudiantesInscritos = DB::table('estudiante_curso as ec')
             ->join('estudiantes as e', 'ec.id_estudiante', '=', 'e.matricula')
             ->join('personas as p', 'e.id_persona', '=', 'p.id')
+            ->join('colegiaturas as c', 'ec.id', '=', 'c.id_estudiante_curso')
             ->where('ec.id_curso_apertura', $idApertura)
-            ->select('e.matricula', 'p.nombre', 'p.ap_paterno', 'p.ap_materno', 'ec.estado') // Asegúrate de incluir 'ec.estado'
+            ->select('e.matricula', 'p.nombre', 'p.ap_paterno', 'p.ap_materno', 'ec.estado', 'ec.id as id_estudiante_curso', 'c.semana', 'c.asistio', 'c.colegiatura')
             ->get();
 
 
-        // Pasar los datos a la vista
+
+        // Agrupar los datos por estudiante
+        $estudiantesAgrupados = [];
+        foreach ($estudiantesInscritos as $estudiante) {
+            $matricula = $estudiante->matricula;
+            if (!isset($estudiantesAgrupados[$matricula])) {
+                $estudiantesAgrupados[$matricula] = [
+                    'nombre' => $estudiante->nombre . ' ' . $estudiante->ap_paterno . ' ' . $estudiante->ap_materno,
+                    'estado' => $estudiante->estado,
+                    'semanas' => []
+                ];
+            }
+            // Agrupar por semana
+            $estudiantesAgrupados[$matricula]['semanas'][$estudiante->semana] = [
+                'asistio' => (bool) $estudiante->asistio,
+                'colegiatura' => (bool) $estudiante->colegiatura,
+            ];
+        }
+
+        // Calcular la cantidad de semanas (basado en los datos de las semanas disponibles)
+        $cantidad_semanas = 0;
+        foreach ($estudiantesAgrupados as $estudiante) {
+            if (!empty($estudiante['semanas'])) {
+                $cantidad_semanas = max($cantidad_semanas, max(array_keys($estudiante['semanas'])));
+            }
+        }
+
+        // Retornar la respuesta a la vista
         return view('plataforma.tomaAsistencia', [
             'apertura' => $apertura,
-            'estudiantesInscritos' => $estudiantesInscritos,
+            'estudiantesInscritos' => $estudiantesAgrupados,
+            'cantidad_semanas' => $cantidad_semanas,
+            'idApertura' => $idApertura
         ]);
     }
 
 
 
 
+
+
+
     public function listaModulos()
     {
-        $modulos = Modulos::all();
         $temas = Temas::all();
-        return view('plataforma.index', compact('modulos', 'temas'));
         $modulos = Modulos::all()->groupBy('categoria');
 
 
-        return view('plataforma.index', compact('modulos'));
+        return view('plataforma.index', compact('modulos', 'temas' ));
     }
 
 

@@ -14,10 +14,11 @@ class Colegiaturas extends Model
     protected $fillable = [
         'id_estudiante_curso',
         'semana',
-        'Asistio',
-        'Fecha_de_Pago',
-        'estado',
+        'asistio',
+        'colegiatura',
         'Monto',
+        'fecha_pago',
+
     ];
 
     public $timestamps = false;

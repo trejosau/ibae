@@ -9,16 +9,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class EstudianteCurso extends Model
 {
 
+
+
+    public $timestamps = false; // Desactiva los timestamps
+
     protected $table = 'estudiante_curso';
 
     protected $fillable = [
-        'id_estudiante',
-        'id_curso_apertura',
-        'fecha_inscripcion',
-        'asistencia',
+        'id_estudiante', 'estado', 'id_curso_apertura', 'fecha_inscripcion', 'asistencia'
     ];
-
-    public $timestamps = false; // Desactiva los timestamps
 
     public function estudiante()
     {

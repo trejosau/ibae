@@ -57,7 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/inscribir-alumno', [PlataformaController::class, 'storeAlumnoCurso'])->name('inscribirAlumno');
     Route::post('/quitar-alumno', [PlataformaController::class, 'quitarAlumnoCurso'])->name('darDeBaja');
     Route::get('/plataforma/cursos/ver-asistencia/{curso_apertura_id}', [PlataformaController::class, 'registrarAsistencia'])->name('plataforma.registrarAsistencia');
-    Route::post('/plataforma/cursos/guardar-asistencia/{curso_apertura_id}', [PlataformaController::class, 'guardarAsistencia'])->name('guardarAsistencia');
+    Route::post('/plataforma/cursos/guardar-asistencia/', [PlataformaController::class, 'guardarAsistencia'])->name('guardarAsistencia');
     Route::post('/cursos', [PlataformaController::class, 'store'])->name('cursos.store');
     Route::post('/cursos/cambiar-estado', [PlataformaController::class, 'cambiarEstado'])->name('cursos.cambiarEstado');
     Route::delete('/cursos/{id}', [PlataformaController::class, 'cursoDestroy'])->name('plataforma.cursoDestroy');
@@ -96,7 +96,7 @@ Route::middleware('auth')->group(function () {
     // Rutas adicionales
     Route::post('/certificados', [PlataformaController::class, 'storeCertificado'])->name('certificados.store');
     Route::post('/plataforma/store-curso-apertura', [PlataformaController::class, 'storeCursoApertura'])->name('plataforma.storeCursoApertura');
-    
+
     Route::put('/plataforma/actualizarModulo/{id}', [PlataformaController::class, 'actualizarModulo'])->name('plataforma.actualizarModulo');
     Route::put('/plataforma/actualizarTema/{id}', [PlataformaController::class, 'actualizarTema'])->name('plataforma.actualizarTema');
 
