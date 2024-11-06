@@ -293,13 +293,14 @@
             <button type="button">Buscar</button>
         </div>
 
-        <div class="nav-icons">
-            <a href="#" id="cart-icon">
-                <span id="cart-total">$0.00</span> <i class="fas fa-shopping-cart"></i>
-            </a>
-        </div>
-        
-        <!-- Sidebar para el carrito -->
+   <!-- Icono del carrito -->
+<div class="nav-icons">
+    <a href="#" id="cart-icon">
+        <span id="cart-icon-total">$0.00</span> <i class="fas fa-shopping-cart"></i>
+    </a>
+</div>
+
+<!-- Sidebar para el carrito -->
 <div id="cart-sidebar" class="cart-sidebar">
     <div class="cart-header">
         <h3>Mi Carrito</h3>
@@ -307,9 +308,9 @@
     </div>
     <div class="cart-content"></div>
     <div class="cart-footer">
-        <!-- Subtotal Display -->
+        <!-- Subtotal Display en el Sidebar -->
         <div class="cart-subtotal">
-            <p id="cart-total" class="subtotal-text">Total: $0.00</p>
+            <p id="cart-total-sidebar" class="subtotal-text">Total: $0.00</p>
         </div>
         <a href="{{ route('carrito.ver') }}" class="btn btn-primary checkout-btn">Finalizar compra</a>
     </div>
@@ -451,7 +452,7 @@
 });
 
 
-    function cargarContenidoCarrito() {
+function cargarContenidoCarrito() {
     fetch('/carrito/contenido')
         .then(response => response.json())
         .then(data => {
@@ -478,15 +479,18 @@
                     `;
                 });
 
-                // Actualiza el subtotal en el DOM
-                document.getElementById('cart-total').innerText = `Total: $${subtotal.toFixed(2)}`;
+                // Actualiza el subtotal en ambos elementos (icono y sidebar)
+                document.getElementById('cart-icon-total').innerText = `$${subtotal.toFixed(2)}`;
+                document.getElementById('cart-total-sidebar').innerText = `Total: $${subtotal.toFixed(2)}`;
             } else {
                 cartContent.innerHTML = '<p>Tu carrito está vacío.</p>';
-                document.getElementById('cart-total').innerText = 'Total: $0.00';
+                document.getElementById('cart-icon-total').innerText = '$0.00';
+                document.getElementById('cart-total-sidebar').innerText = 'Total: $0.00';
             }
         })
         .catch(error => console.error('Error al cargar el contenido del carrito:', error));
 }
+
 
 
     // Función para actualizar el total del carrito
