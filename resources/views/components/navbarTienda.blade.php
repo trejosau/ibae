@@ -213,8 +213,8 @@
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
+    color: #333;
 }
-
 
 .cart-header {
     display: flex;
@@ -232,15 +232,77 @@
 
 .cart-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+.product-image-container {
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-right: 15px;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.no-image {
+    font-size: 16px;
+    padding: 20px;
+    background-color: #ffeb3b;
+    color: #856404;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.no-image i {
+    font-size: 24px;
+    margin-right: 5px;
+    color: #856404;
+}
+
+
 .cart-item-details {
-    display: flex;
-    flex-direction: column;
+    flex-grow: 1;
+}
+
+.remove-btn {
+    background-color: transparent;
+    border: none;
+    color: #d9534f;
+    cursor: pointer;
+    font-size: 18px;
+    transition: color 0.2s ease;
+}
+
+.remove-btn:hover {
+    color: #c82333;
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 20px;
+    color: #999;
+}
+
+.empty-cart-icon {
+    font-size: 48px;
+    color: #cccccc;
+    margin-bottom: 10px;
+}
+
+.empty-cart-text {
+    font-size: 18px;
+    color: #666;
 }
 
 .item-name {
@@ -250,15 +312,6 @@
 
 .item-quantity-price, .item-total {
     color: #666;
-}
-
-.remove-btn {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 4px;
 }
 
 .cart-footer {
@@ -280,6 +333,9 @@
     border-radius: 4px;
 }
 
+.checkout-btn:hover {
+    background-color: #0056b3;
+}
 
 </style>
 
@@ -452,6 +508,8 @@
 });
 
 
+
+
 function cargarContenidoCarrito() {
     fetch('/carrito/contenido')
         .then(response => response.json())
@@ -460,36 +518,53 @@ function cargarContenidoCarrito() {
             cartContent.innerHTML = '';
 
             if (data.carrito && Object.keys(data.carrito).length > 0) {
-                let subtotal = 0; // Inicializa el subtotal
+                let subtotal = 0;
 
-                // Itera sobre los productos en el carrito y los agrega al sidebar
                 Object.entries(data.carrito).forEach(([id, product]) => {
-                    let totalPorProducto = product.precio * product.cantidad; // Calcula el total por producto
-                    subtotal += totalPorProducto; // Suma al subtotal
+                    let totalPorProducto = product.precio * product.cantidad;
+                    subtotal += totalPorProducto;
 
                     cartContent.innerHTML += `
                         <div class="cart-item">
+                            <div class="product-image-container">
+                                ${product.main_photo ? 
+                                    `<img src="${product.main_photo}" alt="${product.nombre}" class="product-image">` : 
+                                    `<div class="no-image">
+                                        <i class="fas fa-exclamation-circle"></i> Imagen no disponible
+                                    </div>`
+                                }
+                            </div>
+
                             <div class="cart-item-details">
                                 <span class="item-name">${product.nombre}</span>
                                 <span class="item-quantity-price">$${product.precio} x ${product.cantidad}</span>
                                 <span class="item-total">= $${totalPorProducto.toFixed(2)}</span>
                             </div>
-                            <button class="remove-btn" onclick="removeFromCart(${id})">Eliminar</button>
+
+                            <button class="remove-btn" onclick="removeFromCart(${id})">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
                         </div>
                     `;
                 });
 
-                // Actualiza el subtotal en ambos elementos (icono y sidebar)
                 document.getElementById('cart-icon-total').innerText = `$${subtotal.toFixed(2)}`;
                 document.getElementById('cart-total-sidebar').innerText = `Total: $${subtotal.toFixed(2)}`;
             } else {
-                cartContent.innerHTML = '<p>Tu carrito está vacío.</p>';
+                cartContent.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart empty-cart-icon"></i>
+                        <p class="empty-cart-text">Tu carrito está vacío.</p>
+                    </div>
+                `;
                 document.getElementById('cart-icon-total').innerText = '$0.00';
                 document.getElementById('cart-total-sidebar').innerText = 'Total: $0.00';
             }
         })
         .catch(error => console.error('Error al cargar el contenido del carrito:', error));
 }
+
+
 
 
 
