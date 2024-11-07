@@ -109,8 +109,15 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/tienda', [ProductosController::class, 'index'])->name('tienda'); // Ruta para la tienda principal
-    Route::post('/catalogo', [ProductosController::class, 'filtrar'])->name('productos.filtrar'); // Filtrar productos desde el formulario
-    Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, 'filtrar'])->name('productos.categoria'); // Filtrar productos por categoría desde URL
+    // Mostrar todos los productos sin filtros
+Route::get('/catalogo', [ProductosController::class, 'catalogo'])->name('catalogo');
+
+// Filtrar productos desde el formulario
+Route::post('/catalogo', [ProductosController::class, 'filtrar'])->name('productos.filtrar');
+
+// Filtrar productos por categoría desde URL
+Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, 'filtrar'])->name('productos.categoria');
+    
     Route::get('/producto/{id}', [ProductosController::class, 'mostrarDetalle'])->name('producto.detalle');
     Route::get('/buscar', [ProductosController::class, 'buscar'])->name('buscar');
     Route::get('/tienda', [ProductosController::class, 'mostrar'])->name('tienda.mostrar');
