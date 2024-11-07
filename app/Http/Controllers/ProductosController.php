@@ -94,7 +94,8 @@ class ProductosController extends Controller
                 $carrito[$id] = [
                     "nombre" => $producto->nombre,
                     "precio" => $producto->precio_venta,
-                    "cantidad" => $cantidad
+                    "cantidad" => $cantidad,
+                    "main_photo" => $producto->main_photo  // Agregar la imagen aquí
                 ];
             }
             session()->put('carrito', $carrito);

@@ -1,44 +1,6 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <style>
-    .cart-sidebar {
-    position: fixed;
-    right: -300px;
-    top: 0;
-    width: 300px;
-    height: 100%;
-    background: #fff;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-    transition: right 0.3s ease;
-    z-index: 1000;
-}
-
-.cart-sidebar.active {
-    right: 0;
-}
-
-.cart-header, .cart-footer {
-    padding: 15px;
-    border-bottom: 1px solid #ddd;
-}
-
-.cart-header h3 {
-    margin: 0;
-}
-
-.cart-content {
-    padding: 15px;
-    overflow-y: auto;
-    height: calc(100% - 120px); /* Ajuste según el header y footer */
-}
-
-#close-sidebar {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    float: right;
-}
 
     .navbar {
         position: fixed;
@@ -192,20 +154,34 @@
         height: 60px;
     }
 
-    .cart-sidebar {
-    width: 300px;
+
+
+
+
+
+
+
+
+
+
+/*Estilos carrito de compras*/
+
+/* Estilo general para el sidebar del carrito */
+.cart-sidebar {
+    width: 400px;
     padding: 20px;
     background-color: #f8f9fa;
     position: fixed;
-    right: -320px; /* Sidebar oculto inicialmente */
+    right: -420px;
     top: 0;
     bottom: 0;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
-    transition: right 0.3s ease; /* Animación para mostrar/ocultar */
+    transition: right 0.3s ease;
+    z-index: 1000;
 }
 
 .cart-sidebar.active {
-    right: 0; /* Mostrar el sidebar cuando tiene la clase active */
+    right: 0;
 }
 
 .close-btn {
@@ -213,63 +189,114 @@
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
+    color: #333;
 }
 
-
+/* Encabezado del carrito */
 .cart-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #ddd;
     padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
+/* Contenido del carrito */
 .cart-content {
-    margin-top: 20px;
-    max-height: 300px;
+    max-height: 60vh;
     overflow-y: auto;
 }
 
+/* Estilo de cada item en el carrito */
 .cart-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.cart-item-details {
+/* Imagen del producto */
+.product-image-container {
+    width: 80px;
+    height: 80px;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-right: 15px;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Detalles del producto */
+.cart-item-details {
+    flex-grow: 1;
 }
 
 .item-name {
     font-weight: bold;
     color: #333;
+    font-size: 1.1em;
 }
 
 .item-quantity-price, .item-total {
     color: #666;
+    font-size: 0.9em;
 }
 
+/* Botón de eliminar */
 .remove-btn {
-    background-color: #dc3545;
-    color: white;
+    background-color: transparent;
     border: none;
-    padding: 5px 10px;
+    color: #d9534f;
     cursor: pointer;
-    border-radius: 4px;
+    font-size: 18px;
+    transition: color 0.2s ease;
 }
 
+.remove-btn:hover {
+    color: #c82333;
+}
+
+/* Estilo para carrito vacío */
+.empty-cart {
+    text-align: center;
+    padding: 20px;
+    color: #999;
+}
+
+.empty-cart-icon {
+    font-size: 48px;
+    color: #cccccc;
+    margin-bottom: 10px;
+}
+
+.empty-cart-text {
+    font-size: 18px;
+    color: #666;
+}
+
+/* Subtotal y botón de checkout */
 .cart-footer {
     margin-top: 20px;
     text-align: center;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
 }
 
 .cart-subtotal {
-    margin-bottom: 15px;
     font-size: 1.2em;
     font-weight: bold;
+    margin-bottom: 15px;
 }
 
 .checkout-btn {
@@ -278,6 +305,40 @@
     padding: 10px 20px;
     text-decoration: none;
     border-radius: 4px;
+    font-size: 1rem;
+    display: inline-block;
+}
+
+.checkout-btn:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+
+
+.mensaje-eliminacion {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #dc3545; /* Rojo para alerta */
+    color: #fff;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 18px; /* Tamaño de texto más grande */
+    font-weight: bold;
+    z-index: 1000;
+    opacity: 0;
+    animation: aparecerDesaparecer 3s ease forwards;
+}
+
+@keyframes aparecerDesaparecer {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
 }
 
 
@@ -429,30 +490,25 @@
         </div>
     </div>
 </nav>
-
 <script>
-   
-   document.addEventListener('DOMContentLoaded', function () {
-    // Actualizar el subtotal al cargar la página
-    actualizarTotalCarrito();
-
-    // Abrir el carrito al hacer clic en el ícono
-    document.getElementById('cart-icon').addEventListener('click', function(event) {
-        event.preventDefault();
-        document.getElementById('cart-sidebar').classList.add('active');
-
-        // Cargar productos en el carrito
-        cargarContenidoCarrito();
+    document.addEventListener('DOMContentLoaded', function () {
+        // Actualizar el subtotal al cargar la página
+        actualizarTotalCarrito();
+    
+        // Abrir el carrito al hacer clic en el ícono
+        document.getElementById('cart-icon').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('cart-sidebar').classList.add('active');
+            cargarContenidoCarrito();
+        });
+    
+        // Cerrar el sidebar del carrito al hacer clic en el botón "X"
+        document.getElementById('close-sidebar').addEventListener('click', function() {
+            document.getElementById('cart-sidebar').classList.remove('active');
+        });
     });
-
-    // Cerrar el sidebar del carrito al hacer clic en el botón "X"
-    document.getElementById('close-sidebar').addEventListener('click', function() {
-        document.getElementById('cart-sidebar').classList.remove('active');
-    });
-});
-
-
-function cargarContenidoCarrito() {
+    
+    function cargarContenidoCarrito() {
     fetch('/carrito/contenido')
         .then(response => response.json())
         .then(data => {
@@ -460,50 +516,87 @@ function cargarContenidoCarrito() {
             cartContent.innerHTML = '';
 
             if (data.carrito && Object.keys(data.carrito).length > 0) {
-                let subtotal = 0; // Inicializa el subtotal
+                let subtotal = 0;
 
-                // Itera sobre los productos en el carrito y los agrega al sidebar
                 Object.entries(data.carrito).forEach(([id, product]) => {
-                    let totalPorProducto = product.precio * product.cantidad; // Calcula el total por producto
-                    subtotal += totalPorProducto; // Suma al subtotal
+                    let totalPorProducto = product.precio * product.cantidad;
+                    subtotal += totalPorProducto;
 
+                    // Agregar producto al contenido del carrito con verificación de imagen
                     cartContent.innerHTML += `
                         <div class="cart-item">
+                            <div class="product-image-container">
+                                <img 
+                                    src="${product.main_photo || '/ruta/a/imagen-placeholder.jpg'}" 
+                                    alt="${product.nombre}" 
+                                    class="img-fluid rounded shadow mb-4"
+                                    onerror="this.src='/ruta/a/imagen-placeholder.jpg'; this.alt='Imagen no disponible';"
+                                >
+                            </div>
+
                             <div class="cart-item-details">
                                 <span class="item-name">${product.nombre}</span>
                                 <span class="item-quantity-price">$${product.precio} x ${product.cantidad}</span>
                                 <span class="item-total">= $${totalPorProducto.toFixed(2)}</span>
                             </div>
-                            <button class="remove-btn" onclick="removeFromCart(${id})">Eliminar</button>
+
+                            <button class="remove-btn" onclick="removeFromCart(${id})">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
                         </div>
                     `;
                 });
 
-                // Actualiza el subtotal en ambos elementos (icono y sidebar)
                 document.getElementById('cart-icon-total').innerText = `$${subtotal.toFixed(2)}`;
                 document.getElementById('cart-total-sidebar').innerText = `Total: $${subtotal.toFixed(2)}`;
             } else {
-                cartContent.innerHTML = '<p>Tu carrito está vacío.</p>';
-                document.getElementById('cart-icon-total').innerText = '$0.00';
-                document.getElementById('cart-total-sidebar').innerText = 'Total: $0.00';
+                mostrarCarritoVacio(cartContent);
             }
         })
         .catch(error => console.error('Error al cargar el contenido del carrito:', error));
 }
 
-
-
+    
+    // Función para mostrar un mensaje cuando el carrito está vacío
+    function mostrarCarritoVacio(cartContent) {
+        cartContent.innerHTML = `
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart empty-cart-icon"></i>
+                <p class="empty-cart-text">Tu carrito está vacío.</p>
+            </div>
+        `;
+        document.getElementById('cart-icon-total').innerText = '$0.00';
+        document.getElementById('cart-total-sidebar').innerText = 'Total: $0.00';
+    }
+    
     // Función para actualizar el total del carrito
     function actualizarTotalCarrito() {
-        fetch('/carrito/contenido') // Cambié la ruta a `/carrito/contenido` para obtener el subtotal
+        fetch('/carrito/contenido')
             .then(response => response.json())
             .then(data => {
-                document.getElementById('cart-total').innerText = `$${data.subtotal.toFixed(2)}`;
+                if (data.subtotal !== undefined) {
+                    document.getElementById('cart-total').innerText = `$${data.subtotal.toFixed(2)}`;
+                } else {
+                    document.getElementById('cart-total').innerText = '$0.00';
+                }
             })
             .catch(error => console.error('Error al actualizar el total del carrito:', error));
     }
+    
+    function mostrarMensajeEliminacion(mensaje) {
+    const mensajeElemento = document.createElement('div');
+    mensajeElemento.textContent = mensaje;
+    mensajeElemento.className = 'mensaje-eliminacion';
+    
+    document.body.appendChild(mensajeElemento);
+    
+    // Eliminar el mensaje después de 3 segundos
+    setTimeout(() => {
+        mensajeElemento.remove();
+    }, 3000);
+}
 
-    function removeFromCart(productId) {
+function removeFromCart(productId) {
     fetch(`/carrito/${productId}`, {
         method: 'DELETE',
         headers: {
@@ -512,10 +605,10 @@ function cargarContenidoCarrito() {
         }
     })
     .then(response => {
-        console.log(response.status);
         if (response.ok) {
-            cargarContenidoCarrito();
-            actualizarTotalCarrito();
+            cargarContenidoCarrito(); // Actualizar la vista del carrito
+            actualizarTotalCarrito(); // Actualizar el subtotal
+            mostrarMensajeEliminacion('Artículo eliminado del carrito');
         } else {
             console.error('Error al eliminar el producto del carrito');
         }
@@ -524,4 +617,5 @@ function cargarContenidoCarrito() {
 }
 
 
-</script>
+    </script>
+    
