@@ -396,12 +396,6 @@ class PlataformaController extends Controller
         ]);
     }
 
-
-
-
-
-
-
     public function listaModulos(Request $request)
     {
         // Recuperar la categoría seleccionada desde el request
@@ -500,13 +494,11 @@ public function actualizarTema(Request $request, $id)
 
 
 
-
-    public function temasModulos() {
-        return view('plataforma.index');
-    }
-
     public function estudiantes() {
-        return view('plataforma.index');
+        $estudiantes = Estudiante::with(['persona'])->get();
+
+      
+        return view('plataforma.index', compact('estudiantes'));
     }
 
     public function inscripciones() {

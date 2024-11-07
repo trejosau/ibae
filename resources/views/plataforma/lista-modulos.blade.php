@@ -16,10 +16,9 @@
 </form>
 
     <div class="row">
-      
         <div class="col-md-6">
-            <h3>Lista de Módulos</h3>
-            <button type="button" class="btn btn-primary botoncin-ca" data-bs-toggle="modal" data-bs-target="#modalAgregarModulo">
+            <h3 class="titulito">Lista de Módulos</h3>
+            <button type="button" class="btn botoncin-ca" data-bs-toggle="modal" data-bs-target="#modalAgregarModulo">
                 Agregar Módulo
             </button>
             <table class="table table-striped table-bordered">
@@ -57,8 +56,8 @@
 
         <!-- Temas -->
         <div class="col-md-6">
-            <h3>Lista de Temas</h3>
-            <button type="button" class="btn btn-primary botoncin-ca" data-bs-toggle="modal" data-bs-target="#modalAgregarTema">
+            <h3 class="titulito">Lista de Temas</h3>
+            <button type="button" class="btn  botoncin-ca" data-bs-toggle="modal" data-bs-target="#modalAgregarTema">
                 Agregar Tema
             </button>
             <table class="table table-striped table-bordered">

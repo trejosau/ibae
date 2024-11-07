@@ -9,16 +9,40 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <style>
-
-  
-.botoncin-ca{
-    margin-top: 10px;
-    margin-block-end: 10px;
-    background-color: #081444;
+.titulito{
+    font-size: 20px;
+    color
 }
-    .titulo{
-font-size: 30px
-    }
+  
+.botoncin-ca {
+    background-color: #081444; /* Color de fondo azul */
+    color: white; /* Color de texto blanco */
+    border: 1px solid #007bff; /* Borde del mismo color que el fondo */ /* Espaciado interno del botón */
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 14px; /* Tamaño de fuente */
+    font-weight: bold; /* Negrita en el texto */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Transiciones suaves */
+    margin-top: 10px;
+    margin-inline-end: 10px;
+}
+
+.botoncin-ca:hover {
+    background-color: white; /* Color de fondo al pasar el cursor (más oscuro) */
+    border-color:#081444; /* Color de borde al pasar el cursor */
+}
+
+.botoncin-ca:focus {
+    outline: none; /* Eliminar el borde de enfoque por defecto */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra azul al enfocarse */
+}
+
+.botoncin-ca:active {
+    background-color: #004085; /* Color al hacer clic (aún más oscuro) */
+    border-color: #003366; /* Color de borde al hacer clic */
+}
+
+    
 .card-text{
     margin-top: 10px; 
 }
