@@ -27,69 +27,12 @@
 text-align: center;
 }
 
-
     .imagen-circular {
     width: 150px;      /* Ajusta el tamaño de la imagen según sea necesario */
     height: 150px;     /* La altura debe coincidir con el ancho para un círculo perfecto */
     border-radius: 50%; /* Esto hace que la imagen sea circular */
     object-fit: cover;  /* Asegura que la imagen cubra el área sin distorsionarse */
 }
-
-
-        .navbar-brand:hover {
-            color: #ffd700;
-        }
-
-        .form-inline {
-            flex: 1; /* Permite que el buscador ocupe el espacio disponible */
-            display: flex;
-            justify-content: center; /* Centra el buscador */
-        }
-
-        .form-inline input {
-            width: 70%; /* Ancho del buscador */
-            padding: 10px; /* Espaciado interno */
-            border: 1px solid #ddd; /* Borde del buscador */
-            border-radius: 20px; /* Bordes redondeados */
-            outline: none; /* Sin contorno al seleccionar */
-        }
-
-        .form-inline button {
-            margin-left: 10px; /* Espacio entre el buscador y el botón */
-            padding: 10px 15px; /* Espaciado interno */
-            background-color: #ffd700; /* Color del botón */
-            border: none; /* Sin borde */
-            border-radius: 20px; /* Bordes redondeados */
-            color: #333; /* Color del texto */
-            cursor: pointer; /* Cambia el cursor al pasar el mouse */
-        }
-
-        .form-inline button:hover {
-            background-color: #ffc107; /* Color al pasar el mouse */
-        }
-
-        .nav-icons {
-            display: flex;
-            align-items: center;
-            margin-left: 20px; /* Espacio entre el buscador y los iconos */
-        }
-
-        .nav-icons a {
-            color: #fff; /* Color de los iconos */
-            margin-left: 15px; /* Espacio entre los iconos */
-            position: relative; /* Posición relativa para el badge */
-        }
-
-        .badge {
-            background-color: #dc3545; /* Color del badge */
-            color: #fff; /* Color del texto en el badge */
-            border-radius: 50%; /* Badge redondeado */
-            padding: 5px 10px; /* Espaciado interno del badge */
-            position: absolute; /* Posiciona el badge sobre el icono */
-            top: -10px; /* Ajusta la posición vertical del badge */
-            right: -10px; /* Ajusta la posición horizontal del badge */
-            font-size: 12px; /* Tamaño del texto del badge */
-        }
 
 
 </style>

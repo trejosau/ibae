@@ -42,64 +42,93 @@
         }
 
         /* Contenedor de productos */
-        .products-container {
-            display: flex;
-            flex-wrap: wrap;
-            margin-left: 20px; /* Espacio entre la barra lateral y los productos */
-        }
-
-        /* Ajuste en las tarjetas de productos */
-        .products-container .col-md-4 {
-            flex: 1 1 calc(33.333% - 20px); /* Tres productos por fila */
-            margin-bottom: 20px;
-        }
-
         .products-container .card {
-            transition: transform 0.2s;
-            border-radius: 10px;
-            width: 100%;
-            height: 600px; /* Altura aumentada del card de productos */
-            overflow: hidden; /* Para evitar que el contenido se desborde */
-        }
+    border: 1px solid #ddd; /* Contorno alrededor de cada tarjeta */
+    border-radius: 10px;
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
 
-        .products-container .card img {
-            max-height: 400px; /* Altura de la imagen ajustada */
-            object-fit: cover;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-        }
+.products-container .card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra en hover */
+}
 
-        .products-container .card-body {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 100%; /* Se asegura de que el cuerpo ocupe todo el espacio */
-        }
+.products-container .card img {
+    max-height: 400px;
+    object-fit: cover;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    transition: transform 0.3s ease;
+}
 
-        /* Estilo para mantener el contenido centrado */
-        .container {
-            max-width: 1200px; /* Ajusta este valor para aumentar el ancho del contenedor */
-            margin: 0 auto; /* Centra el contenedor en la página */
-            padding: 20px; /* Agrega padding alrededor del contenedor */
-        }
+.products-container .card:hover img {
+    transform: scale(1.1); /* Solo agrandar la imagen en hover */
+}
 
-        .padding {
-            padding-top: 120px; 
-        }
-        
+.products-container .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.precio {
+    color: #ff5722;
+    font-size: 1.2rem;
+}
+
+/* Estilo para el botón "Agregar al carrito" */
+.btn-agg {
+    background-color: #ff5a5f; /* Color de fondo */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Botón ancho */
+}
+
+.btn-agg:hover {
+    background-color: #ff4146; /* Color de fondo en hover */
+}
+
+
+    .padding{
+    padding-top: 150px;        
+         }
+    .padl
+    {padding-left: 400px;}
+
+    .btn-filtro{
+    background-color: #333;
+    color: white;
+    }
+    .btn-filtro:hover{
+    background-color: #f1c6d4;
+    color: #333;
+    }
+
     </style>
+
 </head>
 <body>
 
     @include('components.navbarTienda')
     
     <div class="padding">
+
+
         <div class="container my-5">
-            <h2 class="text-center mb-4 fw-bold text-uppercase" style="color: #0d6efd;">Catálogo de Productos</h2>
+            <h2 class="text-center mb-4 fw-bold text-uppercase padl" style="color: #333;">Catálogo de Productos</h2>
+
+
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <div class="sidebar">
-                        <div class="card">
+                        <div class="">
                             <form id="filterForm" method="POST" action="{{ route('productos.filtrar') }}">
                                 @csrf
                                 <label for="id_categoria" class="form-label">Categoría:</label>
@@ -117,7 +146,7 @@
                                 <label for="precio_max" class="form-label">Precio máximo:</label>
                                 <input type="number" id="precio_max" name="precio_max" min="0" value="{{ old('precio_max') }}" class="form-control" placeholder="$500">
 
-                                <button type="submit" class="btn btn-primary mt-3">Aplicar Filtros</button>
+                                <button type="submit" class="btn btn-filtro mt-3">Aplicar Filtros</button>
                             </form>
                         </div>
                     </div>
@@ -129,14 +158,26 @@
                         <div class="row">
                             @forelse ($productos as $producto)
                                 <div class="col-md-4 mb-4"> <!-- Tres productos por fila -->
-                                    <div class="card h-100 shadow-sm border-0">
-                                        <img src="{{ $producto->main_photo }}" class="card-img-top img-fluid" alt="{{ $producto->nombre }}">
-                                        <div class="card-body d-flex flex-column">
-                                            <h5 class="card-title fw-bold text-dark">{{ $producto->nombre }}</h5>
-                                            <p class="card-text text-muted">{{ $producto->descripcion }}</p>
-                                            <p class="card-text text-success fw-bold mb-4">Precio: ${{ $producto->precio_venta }}</p>
-                                            <a href="{{ route('producto.detalle', $producto->id) }}" class="btn btn-outline-primary mt-auto fw-bold">Ver más</a>
-                                        </div>
+                                    <div class="producto-card">
+                                        <!-- Enlace al detalle del producto -->
+                                        <a href="{{ route('producto.detalle', $producto->id) }}" class="card h-100 shadow-sm border-0">
+                                            <img src="{{ $producto->main_photo }}" class="card-img-top img-fluid" alt="{{ $producto->nombre }}">
+                                            <div class="card-body d-flex flex-column">
+                                                <h5 class="card-title fw-bold text-dark">{{ $producto->nombre }}</h5>
+                                                <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
+                                            </div>
+                                        </a>
+                    
+                                        <!-- Formulario para agregar al carrito fuera del enlace -->
+                                        <form id="agregar-carrito-form">
+                                            @csrf
+                                            <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
+                                            <button type="button" class="btn btn-agg btn-lg fw-bold mt-3" 
+                                                    aria-label="Agregar {{ $producto->nombre }} al carrito" 
+                                                    onclick="agregarAlCarrito({{ $producto->id }})">
+                                                <i class="fas fa-shopping-cart"></i> Agregar al carrito
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             @empty
@@ -146,12 +187,74 @@
                             @endforelse
                         </div>
                     </div>
+                    
+                    </div>
+                    
+                    
                 </div>
+
+
             </div>
+
+
         </div>
+
+
+
     </div>
+
+    
 
     @include('components.footer')
 
+    <script>
+        function agregarAlCarrito(productoId) {
+            const cantidad = document.getElementById('cantidad-input').value;
+            const token = document.querySelector('input[name="_token"]').value;
+    
+            fetch(`/producto/${productoId}/agregar-al-carrito`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify({ cantidad: cantidad })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    actualizarTotalCarrito();
+                    cargarContenidoCarrito();
+                    mostrarMensaje('Producto agregado al carrito', 'exito');
+                } else {
+                    mostrarMensaje('Hubo un problema al agregar el producto al carrito', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                mostrarMensaje('Error al procesar la solicitud', 'error');
+            });
+        }
+    
+        function mostrarMensaje(mensaje, tipo) {
+            const mensajeDiv = document.createElement('div');
+            mensajeDiv.className = `mensaje-ajax ${tipo}`;
+            mensajeDiv.textContent = mensaje;
+            
+            document.body.appendChild(mensajeDiv);
+            
+            // Activa la animación después de un breve retraso
+            setTimeout(() => {
+                mensajeDiv.classList.add('show');
+            }, 10);
+            
+            // Elimina el mensaje después de 3 segundos
+            setTimeout(() => {
+                mensajeDiv.remove();
+            }, 3000);
+        }
+    </script>
+    
+    
 </body>
 </html>
