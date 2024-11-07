@@ -136,51 +136,9 @@ class DashboardController extends Controller
 
     public function pedidos(Request $request)
     {
-        // Construcción de la consulta base para pedidos
-        $pedidosQuery = Pedidos::with('comprador') // Relación con el comprador
-        ->select('id', 'total', 'fecha_pedido', 'estado', 'clave_entrega', 'id_comprador', 'es_estudiante');
-
-        // Filtrar por nombre del comprador
-        if ($request->filled('comprador')) {
-            $pedidosQuery->whereHas('comprador', function ($query) use ($request) {
-                $query->where('nombre', 'like', '%' . $request->comprador . '%');
-            });
-        }
-
-        // Filtrado por Rango de Fechas
-        if ($request->filled('fecha_inicio') || $request->filled('fecha_fin')) {
-            if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
-                if ($request->fecha_inicio === $request->fecha_fin) {
-                    // Ambas fechas son iguales, filtrar por esa fecha específica
-                    $pedidosQuery->whereDate('fecha_pedido', $request->fecha_inicio);
-                } else {
-                    // Ambas fechas están presentes y son diferentes
-                    $pedidosQuery->whereBetween('fecha_pedido', [$request->fecha_inicio, $request->fecha_fin]);
-                }
-            } elseif ($request->filled('fecha_inicio')) {
-                // Solo se proporciona la fecha de inicio
-                $pedidosQuery->whereDate('fecha_pedido', $request->fecha_inicio);
-            } elseif ($request->filled('fecha_fin')) {
-                // Solo se proporciona la fecha de fin
-                $pedidosQuery->whereDate('fecha_pedido', $request->fecha_fin);
-            }
-        }
-
-        // Filtrar si es estudiante
-        if ($request->filled('es_estudiante')) {
-            $pedidosQuery->where('es_estudiante', $request->es_estudiante);
-        }
-
-        // Filtrar por estado de pedido
-        if ($request->filled('estado')) {
-            $pedidosQuery->where('estado', $request->estado);
-        }
-
-        // Ordenar y paginar los resultados
-        $pedidos = $pedidosQuery->orderBy('fecha_pedido', 'desc')->paginate(10);
 
         // Devolver la vista con los datos
-        return view('dashboard.pedidos', compact('pedidos'));
+        return view('dashboard.index');
     }
 
 
