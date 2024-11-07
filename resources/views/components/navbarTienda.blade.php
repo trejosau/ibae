@@ -1,44 +1,6 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <style>
-    .cart-sidebar {
-    position: fixed;
-    right: -300px;
-    top: 0;
-    width: 300px;
-    height: 100%;
-    background: #fff;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-    transition: right 0.3s ease;
-    z-index: 1000;
-}
-
-.cart-sidebar.active {
-    right: 0;
-}
-
-.cart-header, .cart-footer {
-    padding: 15px;
-    border-bottom: 1px solid #ddd;
-}
-
-.cart-header h3 {
-    margin: 0;
-}
-
-.cart-content {
-    padding: 15px;
-    overflow-y: auto;
-    height: calc(100% - 120px); /* Ajuste según el header y footer */
-}
-
-#close-sidebar {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    float: right;
-}
 
     .navbar {
         position: fixed;
@@ -192,20 +154,34 @@
         height: 60px;
     }
 
-    .cart-sidebar {
-    width: 300px;
+
+
+
+
+
+
+
+
+
+
+/*Estilos carrito de compras*/
+
+/* Estilo general para el sidebar del carrito */
+.cart-sidebar {
+    width: 400px;
     padding: 20px;
     background-color: #f8f9fa;
     position: fixed;
-    right: -320px; /* Sidebar oculto inicialmente */
+    right: -420px;
     top: 0;
     bottom: 0;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
-    transition: right 0.3s ease; /* Animación para mostrar/ocultar */
+    transition: right 0.3s ease;
+    z-index: 1000;
 }
 
 .cart-sidebar.active {
-    right: 0; /* Mostrar el sidebar cuando tiene la clase active */
+    right: 0;
 }
 
 .close-btn {
@@ -216,33 +192,40 @@
     color: #333;
 }
 
+/* Encabezado del carrito */
 .cart-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #ddd;
     padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
+/* Contenido del carrito */
 .cart-content {
-    margin-top: 20px;
-    max-height: 300px;
+    max-height: 60vh;
     overflow-y: auto;
 }
 
+/* Estilo de cada item en el carrito */
 .cart-item {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
     padding: 10px;
-    background-color: #fff;
+    background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Imagen del producto */
 .product-image-container {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
     border-radius: 8px;
     margin-right: 15px;
@@ -252,29 +235,25 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 8px;
 }
 
-.no-image {
-    font-size: 16px;
-    padding: 20px;
-    background-color: #ffeb3b;
-    color: #856404;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.no-image i {
-    font-size: 24px;
-    margin-right: 5px;
-    color: #856404;
-}
-
-
+/* Detalles del producto */
 .cart-item-details {
     flex-grow: 1;
 }
 
+.item-name {
+    font-weight: bold;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.item-quantity-price, .item-total {
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Botón de eliminar */
 .remove-btn {
     background-color: transparent;
     border: none;
@@ -288,6 +267,7 @@
     color: #c82333;
 }
 
+/* Estilo para carrito vacío */
 .empty-cart {
     text-align: center;
     padding: 20px;
@@ -305,24 +285,18 @@
     color: #666;
 }
 
-.item-name {
-    font-weight: bold;
-    color: #333;
-}
-
-.item-quantity-price, .item-total {
-    color: #666;
-}
-
+/* Subtotal y botón de checkout */
 .cart-footer {
     margin-top: 20px;
     text-align: center;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
 }
 
 .cart-subtotal {
-    margin-bottom: 15px;
     font-size: 1.2em;
     font-weight: bold;
+    margin-bottom: 15px;
 }
 
 .checkout-btn {
@@ -331,6 +305,8 @@
     padding: 10px 20px;
     text-decoration: none;
     border-radius: 4px;
+    font-size: 1rem;
+    display: inline-block;
 }
 
 .checkout-btn:hover {
@@ -485,32 +461,25 @@
         </div>
     </div>
 </nav>
-
 <script>
-   
-   document.addEventListener('DOMContentLoaded', function () {
-    // Actualizar el subtotal al cargar la página
-    actualizarTotalCarrito();
-
-    // Abrir el carrito al hacer clic en el ícono
-    document.getElementById('cart-icon').addEventListener('click', function(event) {
-        event.preventDefault();
-        document.getElementById('cart-sidebar').classList.add('active');
-
-        // Cargar productos en el carrito
-        cargarContenidoCarrito();
+    document.addEventListener('DOMContentLoaded', function () {
+        // Actualizar el subtotal al cargar la página
+        actualizarTotalCarrito();
+    
+        // Abrir el carrito al hacer clic en el ícono
+        document.getElementById('cart-icon').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('cart-sidebar').classList.add('active');
+            cargarContenidoCarrito();
+        });
+    
+        // Cerrar el sidebar del carrito al hacer clic en el botón "X"
+        document.getElementById('close-sidebar').addEventListener('click', function() {
+            document.getElementById('cart-sidebar').classList.remove('active');
+        });
     });
-
-    // Cerrar el sidebar del carrito al hacer clic en el botón "X"
-    document.getElementById('close-sidebar').addEventListener('click', function() {
-        document.getElementById('cart-sidebar').classList.remove('active');
-    });
-});
-
-
-
-
-function cargarContenidoCarrito() {
+    
+    function cargarContenidoCarrito() {
     fetch('/carrito/contenido')
         .then(response => response.json())
         .then(data => {
@@ -524,15 +493,16 @@ function cargarContenidoCarrito() {
                     let totalPorProducto = product.precio * product.cantidad;
                     subtotal += totalPorProducto;
 
+                    // Agregar producto al contenido del carrito con verificación de imagen
                     cartContent.innerHTML += `
                         <div class="cart-item">
                             <div class="product-image-container">
-                                ${product.main_photo ? 
-                                    `<img src="${product.main_photo}" alt="${product.nombre}" class="product-image">` : 
-                                    `<div class="no-image">
-                                        <i class="fas fa-exclamation-circle"></i> Imagen no disponible
-                                    </div>`
-                                }
+                                <img 
+                                    src="${product.main_photo || '/ruta/a/imagen-placeholder.jpg'}" 
+                                    alt="${product.nombre}" 
+                                    class="img-fluid rounded shadow mb-4"
+                                    onerror="this.src='/ruta/a/imagen-placeholder.jpg'; this.alt='Imagen no disponible';"
+                                >
                             </div>
 
                             <div class="cart-item-details">
@@ -551,52 +521,57 @@ function cargarContenidoCarrito() {
                 document.getElementById('cart-icon-total').innerText = `$${subtotal.toFixed(2)}`;
                 document.getElementById('cart-total-sidebar').innerText = `Total: $${subtotal.toFixed(2)}`;
             } else {
-                cartContent.innerHTML = `
-                    <div class="empty-cart">
-                        <i class="fas fa-shopping-cart empty-cart-icon"></i>
-                        <p class="empty-cart-text">Tu carrito está vacío.</p>
-                    </div>
-                `;
-                document.getElementById('cart-icon-total').innerText = '$0.00';
-                document.getElementById('cart-total-sidebar').innerText = 'Total: $0.00';
+                mostrarCarritoVacio(cartContent);
             }
         })
         .catch(error => console.error('Error al cargar el contenido del carrito:', error));
 }
 
-
-
-
-
+    
+    // Función para mostrar un mensaje cuando el carrito está vacío
+    function mostrarCarritoVacio(cartContent) {
+        cartContent.innerHTML = `
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart empty-cart-icon"></i>
+                <p class="empty-cart-text">Tu carrito está vacío.</p>
+            </div>
+        `;
+        document.getElementById('cart-icon-total').innerText = '$0.00';
+        document.getElementById('cart-total-sidebar').innerText = 'Total: $0.00';
+    }
+    
     // Función para actualizar el total del carrito
     function actualizarTotalCarrito() {
-        fetch('/carrito/contenido') // Cambié la ruta a `/carrito/contenido` para obtener el subtotal
+        fetch('/carrito/contenido')
             .then(response => response.json())
             .then(data => {
-                document.getElementById('cart-total').innerText = `$${data.subtotal.toFixed(2)}`;
+                if (data.subtotal !== undefined) {
+                    document.getElementById('cart-total').innerText = `$${data.subtotal.toFixed(2)}`;
+                } else {
+                    document.getElementById('cart-total').innerText = '$0.00';
+                }
             })
             .catch(error => console.error('Error al actualizar el total del carrito:', error));
     }
-
+    
+    // Función para eliminar un producto del carrito
     function removeFromCart(productId) {
-    fetch(`/carrito/${productId}`, {
-        method: 'DELETE',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'Content-Type': 'application/json',
-        }
-    })
-    .then(response => {
-        console.log(response.status);
-        if (response.ok) {
-            cargarContenidoCarrito();
-            actualizarTotalCarrito();
-        } else {
-            console.error('Error al eliminar el producto del carrito');
-        }
-    })
-    .catch(error => console.error('Error al eliminar el producto del carrito:', error));
-}
-
-
-</script>
+        fetch(`/carrito/${productId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                cargarContenidoCarrito(); // Actualizar la vista del carrito
+                actualizarTotalCarrito(); // Actualizar el subtotal
+            } else {
+                console.error('Error al eliminar el producto del carrito');
+            }
+        })
+        .catch(error => console.error('Error al eliminar el producto del carrito:', error));
+    }
+    </script>
+    
