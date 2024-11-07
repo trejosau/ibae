@@ -34,7 +34,7 @@ class LoginGoogleController extends Controller
                     'password' => Hash::make(uniqid()),
                 ]);
 
-                $user->assignRole('Comprador');
+                $user->assignRole('cliente');
             }
 
             Auth::login($user);
