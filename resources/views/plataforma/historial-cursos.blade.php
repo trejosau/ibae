@@ -17,6 +17,9 @@
     <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#aperturarCursoModal">
         Aperturar Curso
     </button>
+    <a href="{{ route('plataforma.iniciarCursos') }}" class="btn btn-primary mb-3">
+        Iniciar Cursos
+    </a>
     <div class="row mt-4">
         @foreach ($cursosApertura as $apertura)
             <div class="col-12 mb-4">

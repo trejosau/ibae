@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_comprador');
             $table->boolean('es_estudiante');
             $table->foreign('id_comprador')->references('id')->on('compradores')->onDelete('cascade');
+            $table->foreign('id_estudiante')->references('matricula')->on('estudiantes')->onDelete('cascade');
         });
     }
 
