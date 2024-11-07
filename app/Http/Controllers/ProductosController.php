@@ -16,6 +16,14 @@ class ProductosController extends Controller
         return view('tienda', compact('productos'));
     }
 
+
+    public function catalogo()
+    {
+        $productos = Productos::all(); // Obtiene todos los productos
+        return view('catalogo', compact('productos')); // Devuelve la vista con todos los productos
+    }
+    
+
     public function filtrar(Request $request)
     {
         $query = Productos::query();
