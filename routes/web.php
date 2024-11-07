@@ -20,6 +20,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard/inicio', [DashboardController::class, 'inicio'])->name('dashboard.inicio');
     Route::get('/dashboard/ventas', [DashboardController::class, 'ventas'])->name('dashboard.ventas');
+    Route::get('/dashboard/pedidos', [DashboardController::class, 'pedidos'])->name('dashboard.pedidos');
     Route::get('/dashboard/filtrar', [DashboardController::class, 'filtrar'])->name('dashboard.filtrar');
     Route::post('/ventas/agregar-producto', [VentaController::class, 'agregarProducto'])->name('ventas.agregarProducto');
     Route::get('/ventas/total', [VentaController::class, 'obtenerTotal'])->name('ventas.total');
@@ -61,6 +62,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/cursos', [PlataformaController::class, 'store'])->name('cursos.store');
     Route::post('/cursos/cambiar-estado', [PlataformaController::class, 'cambiarEstado'])->name('cursos.cambiarEstado');
     Route::delete('/cursos/{id}', [PlataformaController::class, 'cursoDestroy'])->name('plataforma.cursoDestroy');
+    Route::get('/plataforma/cursos/iniciar-cursos', [PlataformaController::class, 'iniciarCursosHoy'])->name('plataforma.iniciarCursos');
+
 
     // Rutas de Módulos
     Route::get('/plataforma/modulos/lista', [PlataformaController::class, 'listaModulos'])->name('plataforma.lista-modulos');

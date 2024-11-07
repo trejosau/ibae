@@ -354,132 +354,69 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (window.location.pathname === '/dashboard/ventas') {
 
-            // Aquí puedes colocar los datos de las fechas y valores
-        var dates = [
-            ['2020-01-01', 150],
-            ['2020-02-01', 120],
-            ['2020-03-01', 130],
-            ['2020-04-01', 160],
-            ['2020-05-01', 200],
-            ['2020-06-01', 300],  // Pico por inicio del verano
-            ['2020-07-01', 350],  // Pico de verano
-            ['2020-08-01', 250],
-            ['2020-09-01', 180],
-            ['2020-10-01', 160],
-            ['2020-11-01', 220],
-            ['2020-12-01', 400],  // Pico por temporada navideña
-            ['2021-01-01', 180],
-            ['2021-02-01', 130],
-            ['2021-03-01', 140],
-            ['2021-04-01', 170],
-            ['2021-05-01', 210],
-            ['2021-06-01', 320],  // Pico por inicio del verano
-            ['2021-07-01', 370],  // Pico de verano
-            ['2021-08-01', 260],
-            ['2021-09-01', 190],
-            ['2021-10-01', 170],
-            ['2021-11-01', 230],
-            ['2021-12-01', 450],  // Pico por temporada navideña
-            ['2022-01-01', 190],
-            ['2022-02-01', 140],
-            ['2022-03-01', 150],
-            ['2022-04-01', 180],
-            ['2022-05-01', 220],
-            ['2022-06-01', 330],  // Pico por inicio del verano
-            ['2022-07-01', 380],  // Pico de verano
-            ['2022-08-01', 280],
-            ['2022-09-01', 200],
-            ['2022-10-01', 180],
-            ['2022-11-01', 240],
-            ['2022-12-01', 470],  // Pico por temporada navideña
-            ['2023-01-01', 200],
-            ['2023-02-01', 150],
-            ['2023-03-01', 160],
-            ['2023-04-01', 190],
-            ['2023-05-01', 230],
-            ['2023-06-01', 340],  // Pico por inicio del verano
-            ['2023-07-01', 390],  // Pico de verano
-            ['2023-08-01', 290],
-            ['2023-09-01', 210],
-            ['2023-10-01', 190],
-            ['2023-11-01', 250],
-            ['2023-12-01', 500],  // Pico por temporada navideña
-            ['2024-01-01', 210],
-            ['2024-02-01', 160],
-            ['2024-03-01', 170],
-            ['2024-04-01', 200],
-            ['2024-05-01', 240],
-            ['2024-06-01', 350],  // Pico por inicio del verano
-            ['2024-07-01', 400],  // Pico de verano
-            ['2024-08-01', 300],
-            ['2024-09-01', 220],
-            ['2024-10-01', 200],
-            ['2024-11-01', 260],
-            ['2024-12-01', 520]   // Pico por temporada navideña
-        ];
+        // Realizar una solicitud fetch a la ruta /graficas/tienda
+        fetch('/graficas/tienda')
+            .then(response => response.json()) // Parsear la respuesta como JSON
+            .then(data => {
+                // Convertir los datos de ventas para que ApexCharts los pueda usar
+                var dates = data.map(function(item) {
+                    var date = new Date(2024, item.Mes - 1, 1); // Año 2024, usando el mes de la data
+                    return [date.getTime(), item.Total]; // [timestamp, Total]
+                });
 
-
-
-        var options = {
-            series: [{
-                name: 'IBA&E',
-                data: dates
-            }],
-            chart: {
-                type: 'area',
-                stacked: false,
-                height: 350,
-                zoom: {
-                    type: 'x',
-                    enabled: true,
-                    autoScaleYaxis: true
-                },
-                toolbar: {
-                    autoSelected: 'zoom'
-                }
-            },
-            dataLabels: {
-                enabled: false
-            },
-            markers: {
-                size: 0,
-            },
-
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shadeIntensity: 1,
-                    inverseColors: false,
-                    opacityFrom: 0.5,
-                    opacityTo: 0,
-                    stops: [0, 90, 100]
-                },
-            },
-            yaxis: {
-                labels: {
-                    formatter: function (val) {
-                        return (val / 1000000).toFixed(0);
+                var options = {
+                    series: [{
+                        name: 'Ventas Mensuales',
+                        data: dates
+                    }],
+                    chart: {
+                        type: 'line',
+                        height: 350
                     },
-                },
-                title: {
-                    text: 'Price'
-                },
-            },
-            xaxis: {
-                type: 'datetime',
-            },
-            tooltip: {
-                shared: false,
-                y: {
-                    formatter: function (val) {
-                        return val.toFixed(2); // Ajusta los decimales en el tooltip
+                    dataLabels: {
+                        enabled: false
+                    },
+                    markers: {
+                        size: 5
+                    },
+                    xaxis: {
+                        type: 'datetime',
+                        labels: {
+                            formatter: function (value) {
+                                var date = new Date(value);
+                                return `${date.getMonth() + 1}-${date.getFullYear()}`; // Formato mes-año
+                            }
+                        }
+                    },
+                    yaxis: {
+                        title: {
+                            text: 'Total en Ventas'
+                        },
+                        labels: {
+                            formatter: function (val) {
+                                return '$' + val.toFixed(2); // Formatear como moneda
+                            }
+                        }
+                    },
+                    tooltip: {
+                        x: {
+                            format: 'MMM yyyy' // Formato de fecha en tooltip
+                        },
+                        y: {
+                            formatter: function (val) {
+                                return '$' + val.toFixed(2); // Formatear como moneda en el tooltip
+                            }
+                        }
                     }
-                }
-            }
-        };
+                };
 
-        var chart = new ApexCharts(document.querySelector("#chart"), options);
-        chart.render();
+                var chart = new ApexCharts(document.querySelector("#chart"), options);
+                chart.render();
+
+            })
+            .catch(error => {
+                console.error('Error al obtener los datos:', error);
+            });
     }
 
 

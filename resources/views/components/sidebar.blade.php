@@ -1,15 +1,3 @@
-@php
-    // Simulación de datos del usuario
-    $usuario = [
-        'nombre_completo' => 'Juan Pérez',
-        'email' => 'juan.perez@example.com',
-        'telefono' => '123-456-7890',
-        'direccion' => 'Calle Falsa 123',
-        'foto' => 'https://th.bing.com/th/id/OIP.ptWtXRl15WkFas1-030N0gHaEJ?rs=1&pid=ImgDetMain',
-        'dos_factor' => false,
-        'roles' => ['Usuario', 'Administrador'],
-    ];
-@endphp
 
 <div class="wrapper">
     <aside id="sidebar">
@@ -43,6 +31,12 @@
                 <a href="{{ route('dashboard.ventas') }}" class="sidebar-link">
                     <i class="fa-solid fa-shop"></i>
                     <span>Ventas</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{{ route('dashboard.pedidos') }}" class="sidebar-link">
+                    <i class="fa-solid fa-shop"></i>
+                    <span>Pedidos</span>
                 </a>
             </li>
             <li class="sidebar-item">
@@ -97,15 +91,12 @@
                 <ul id="profileDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                     <li class="sidebar-item">
                         <a href="" class="sidebar-link">Información</a>
-                    </li>
+                    </li>v
                     <li class="sidebar-item">
                         <a href="" class="sidebar-link">Configuración</a>
                     </li>
                     <li class="sidebar-item">
                         <a href="" class="sidebar-link">Notificaciones</a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="" class="sidebar-link">{{ $usuario['dos_factor'] ? 'Deshabilitar 2FA' : 'Habilitar 2FA' }}</a>
                     </li>
                 </ul>
             </li>

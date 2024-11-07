@@ -23,6 +23,33 @@ use Illuminate\Support\Facades\DB;
 
 class PlataformaController extends Controller
 {
+    public function iniciarCursosHoy()
+    {
+        $hoy = Carbon::today();
+
+        $cursosIniciados = CursoApertura::where('fecha_inicio', $hoy)
+            ->where('estado', 'programado')
+            ->get();
+
+        foreach ($cursosIniciados as $curso) {
+            $curso->estado = 'en curso';
+            $curso->save();
+        }
+
+        if ($cursosIniciados->isEmpty()) {
+            return response()->json([
+                'message' => 'No hay cursos que necesiten iniciar hoy.',
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'Cursos iniciados con éxito.',
+            'cursos' => $cursosIniciados,
+        ], 200);
+    }
+
+
+
     public function asignarTemas(Request $request)
     {
         // Validación de los datos de entrada
@@ -386,22 +413,22 @@ class PlataformaController extends Controller
     {
         // Recuperar la categoría seleccionada desde el request
         $categoria = $request->input('categoria', ''); // Si no hay categoría, se devuelve un valor vacío (lo que no aplicará filtro)
-    
+
         // Filtrar los módulos según la categoría seleccionada
         $modulos = Modulos::when($categoria, function ($query, $categoria) {
             return $query->where('categoria', $categoria);
         })->get()->groupBy('categoria'); // Agrupar los módulos por categoría
-    
+
         // Obtener todos los temas (sin filtro)
         $temas = Temas::all();
-    
+
         // Retornar la vista con los módulos y temas filtrados o completos
         return view('plataforma.index', compact('modulos', 'temas'));
     }
-    
 
-    
-    
+
+
+
 
     public function crearModulo(Request $request)
     {
