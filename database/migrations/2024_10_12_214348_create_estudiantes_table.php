@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('estudiantes', function (Blueprint $table) {
             $table->id('matricula');
+            $table->enum('estado', ['activo', 'baja'])->default('activo');
             $table->unsignedBigInteger('id_persona');
             $table->unsignedBigInteger('id_inscripcion');
             $table->date('fecha_inscripcion');
