@@ -1,17 +1,76 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
-
 <style>
-
+    /* Navbar */
     .navbar {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         z-index: 1000;
-        background-color: rgb(255, 105, 135);
+        background-color: white;
         padding: 10px 20px;
     }
 
+    .navbar-brand:hover {
+        color: #f1c6d4; /* Rosa clarito */
+        transition: color 0.3s ease;
+    }
+
+    .form-inline {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+    }
+
+    .form-inline input {
+        width: 70%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        outline: none;
+        transition: box-shadow 0.3s ease;
+    }
+
+    .form-inline input:focus {
+        box-shadow: 0 0 8px rgba(255, 182, 193, 0.5); /* Rosa clarito */
+    }
+
+    .form-inline button {
+        margin-left: 10px;
+        padding: 10px 15px;
+        background-color: #333; /* Rosa clarito */
+        border: none;
+        border-radius: 20px;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .form-inline button:hover {
+        background-color: #f4d1db; 
+        color: #333;
+        transform: scale(1.05);
+    }
+
+    /* Iconos de navegación */
+    .nav-icons {
+        display: flex;
+        align-items: center;
+        margin-left: 20px;
+    }
+
+    .nav-icons a {
+        color: #333;
+        margin-left: 15px;
+        position: relative;
+        transition: color 0.3s ease;
+    }
+
+    .nav-icons a:hover {
+        color: #f1c6d4; /* Rosa clarito */
+    }
+
+    /* Navegación */
     .navegacion {
         position: fixed;
         top: 60px;
@@ -38,7 +97,7 @@
     }
 
     .navegacion a:hover {
-        color: #e63946;
+        color: #f1c6d4; /* Rosa clarito */
     }
 
     .navegacion-item {
@@ -80,7 +139,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: normal;
-        background-color: #ffeef8;
+        background-color: #ffeef8; /* Rosa clarito */
     }
 
     .mega-menu .col-md-4:last-child,
@@ -95,7 +154,7 @@
         margin-top: 0;
         margin-bottom: 10px;
         font-size: 18px;
-        background-color: #f0c4d0;
+        background-color: #f0c4d0; /* Rosa clarito */
         padding: 5px;
         border-radius: 4px;
         color: #333;
@@ -113,12 +172,12 @@
 
     .mega-menu a:before {
         content: "•";
-        color: #e63946;
+        color: #e63946; /* Rojo */
         margin-right: 5px;
     }
 
     .mega-menu a:hover {
-        background-color: #f0e1e5;
+        background-color: #f0e1e5; /* Rosa más claro */
     }
 
     .navegacion-item:hover .mega-menu {
@@ -131,13 +190,14 @@
         clear: both;
     }
 
+    /* Login Link */
     .login-link {
         margin-left: 20px;
     }
 
     .login-link a {
         color: #fff;
-        background-color: #e63946;
+        background-color: #333; /* Rojo */
         padding: 10px 15px;
         border-radius: 5px;
         text-decoration: none;
@@ -145,7 +205,7 @@
     }
 
     .login-link a:hover {
-        background-color: #d99db7;
+        background-color: #d99db7; /* Rosa clarito */
         border-color: #d99db7;
     }
 
@@ -154,192 +214,181 @@
         height: 60px;
     }
 
+    /* Carrito de compras */
+
+    .cart-sidebar {
+        width: 400px;
+        padding: 20px;
+        background-color: #fff;
+        position: fixed;
+        right: -420px;
+        top: 0;
+        bottom: 0;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+        transition: right 0.3s ease;
+        z-index: 1000;
+    }
+
+    .cart-sidebar.active {
+        right: 0;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #333;
+    }
+
+    .cart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .cart-content {
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+
+    .cart-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image-container {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border-radius: 8px;
+        margin-right: 15px;
+    }
+
+    .product-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .cart-item-details {
+        flex-grow: 1;
+    }
+
+    .item-name {
+        font-weight: bold;
+        color: #333;
+        font-size: 1.1em;
+    }
+
+    .item-quantity-price, .item-total {
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .remove-btn {
+        background-color: transparent;
+        border: none;
+        color: #333; /* Rojo */
+        cursor: pointer;
+        font-size: 18px;
+        transition: color 0.2s ease;
+    }
+
+    .remove-btn:hover {
+        color: #d99db7; /* Rojo más fuerte */
+    }
+
+    .empty-cart {
+        text-align: center;
+        padding: 20px;
+        color: #999;
+    }
+
+    .empty-cart-icon {
+        font-size: 48px;
+        color: #cccccc;
+        margin-bottom: 10px;
+    }
+
+    .empty-cart-text {
+        font-size: 18px;
+        color: #666;
+    }
+
+    .total-price {
+        font-size: 1.4em;
+        font-weight: bold;
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .cart-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .checkout-btn {
+        background-color: #333; /* Rojo */
+        border: none;
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 1.1em;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .checkout-btn:hover {
+        background-color: #d99db7; /* Rosa clarito */
+    }
+
+    .view-cart-btn {
+        text-decoration: none;
+        color: #e63946; /* Rojo */
+        font-weight: bold;
+    }
+
+    /* Carrito y navegación */
+    .cart-sidebar.active .navegacion {
+        display: none;
+    }
 
 
-
-
-
-
-
-
-
-
-/*Estilos carrito de compras*/
-
-/* Estilo general para el sidebar del carrito */
-.cart-sidebar {
-    width: 400px;
-    padding: 20px;
-    background-color: #f8f9fa;
-    position: fixed;
-    right: -420px;
-    top: 0;
-    bottom: 0;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
-    transition: right 0.3s ease;
-    z-index: 1000;
-}
-
-.cart-sidebar.active {
-    right: 0;
-}
-
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #333;
-}
-
-/* Encabezado del carrito */
-.cart-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-
-/* Contenido del carrito */
-.cart-content {
-    max-height: 60vh;
-    overflow-y: auto;
-}
-
-/* Estilo de cada item en el carrito */
-.cart-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-    padding: 10px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Imagen del producto */
-.product-image-container {
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border-radius: 8px;
-    margin-right: 15px;
-}
-
-.product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Detalles del producto */
-.cart-item-details {
-    flex-grow: 1;
-}
-
-.item-name {
-    font-weight: bold;
-    color: #333;
-    font-size: 1.1em;
-}
-
-.item-quantity-price, .item-total {
-    color: #666;
-    font-size: 0.9em;
-}
-
-/* Botón de eliminar */
-.remove-btn {
-    background-color: transparent;
-    border: none;
-    color: #d9534f;
-    cursor: pointer;
-    font-size: 18px;
-    transition: color 0.2s ease;
-}
-
-.remove-btn:hover {
-    color: #c82333;
-}
-
-/* Estilo para carrito vacío */
-.empty-cart {
-    text-align: center;
-    padding: 20px;
-    color: #999;
-}
-
-.empty-cart-icon {
-    font-size: 48px;
-    color: #cccccc;
-    margin-bottom: 10px;
-}
-
-.empty-cart-text {
-    font-size: 18px;
-    color: #666;
-}
-
-/* Subtotal y botón de checkout */
-.cart-footer {
-    margin-top: 20px;
-    text-align: center;
-    padding-top: 15px;
-    border-top: 1px solid #ddd;
-}
-
-.cart-subtotal {
-    font-size: 1.2em;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.checkout-btn {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    display: inline-block;
-}
-
-.checkout-btn:hover {
-    background-color: #0056b3;
-}
-
-
-
-
-
-
-.mensaje-eliminacion {
+    .mensaje-ajax {
     position: fixed;
     bottom: 20px;
     left: 20px;
-    background-color: #dc3545; /* Rojo para alerta */
+    background-color: #333; /* Rojo para mensaje */
     color: #fff;
-    padding: 15px 25px;
+    padding: 15px 30px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    font-size: 18px; /* Tamaño de texto más grande */
-    font-weight: bold;
-    z-index: 1000;
+    font-size: 16px;
     opacity: 0;
-    animation: aparecerDesaparecer 3s ease forwards;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(20px); /* Animación de entrada */
 }
 
-@keyframes aparecerDesaparecer {
-    0% { opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { opacity: 0; }
+.mensaje-ajax.show {
+    opacity: 1;
+    transform: translateY(0);
 }
+
 
 
 </style>
@@ -586,15 +635,21 @@
     function mostrarMensajeEliminacion(mensaje) {
     const mensajeElemento = document.createElement('div');
     mensajeElemento.textContent = mensaje;
-    mensajeElemento.className = 'mensaje-eliminacion';
+    mensajeElemento.className = 'mensaje-ajax';
     
     document.body.appendChild(mensajeElemento);
-    
+
+    // Mostrar el mensaje
+    setTimeout(() => {
+        mensajeElemento.classList.add('show');
+    }, 100); // Le damos un pequeño delay para que se aplique la animación
+
     // Eliminar el mensaje después de 3 segundos
     setTimeout(() => {
         mensajeElemento.remove();
     }, 3000);
 }
+
 
 function removeFromCart(productId) {
     fetch(`/carrito/${productId}`, {
@@ -608,7 +663,7 @@ function removeFromCart(productId) {
         if (response.ok) {
             cargarContenidoCarrito(); // Actualizar la vista del carrito
             actualizarTotalCarrito(); // Actualizar el subtotal
-            mostrarMensajeEliminacion('Artículo eliminado del carrito');
+            mostrarMensajeEliminacion('Producto eliminado del carrito');
         } else {
             console.error('Error al eliminar el producto del carrito');
         }

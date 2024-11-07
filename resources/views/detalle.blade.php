@@ -8,222 +8,159 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-<style>
 
-.mensaje-ajax {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background-color: #333;
-    color: #fff;
-    padding: 15px 30px;
-    border-radius: 8px;
-    font-size: 16px;
-    opacity: 0;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    z-index: 1000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transform: translateY(20px); /* Animación de entrada */
-}
-
-.mensaje-ajax.exito {
-    background-color: #4CAF50; /* Verde para éxito */
-}
-
-.mensaje-ajax.error {
-    background-color: #f44336; /* Rojo para error */
-}
-
-.mensaje-ajax.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-
-/* Navbar */
-.navbar-brand:hover {
-    color: #ffd700;
-    transition: color 0.3s ease;
-}
-
-.form-inline {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-}
-
-.form-inline input {
-    width: 70%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    outline: none;
-    transition: box-shadow 0.3s ease;
-}
-
-.form-inline input:focus {
-    box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
-}
-
-.form-inline button {
-    margin-left: 10px;
-    padding: 10px 15px;
-    background-color: #ffd700;
-    border: none;
-    border-radius: 20px;
-    color: #333;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.form-inline button:hover {
-    background-color: #ffc107;
-    transform: scale(1.05);
-}
-
-/* Iconos de navegación */
-.nav-icons {
-    display: flex;
-    align-items: center;
-    margin-left: 20px;
-}
-
-.nav-icons a {
-    color: #fff;
-    margin-left: 15px;
-    position: relative;
-    transition: color 0.3s ease;
-}
-
-.nav-icons a:hover {
-    color: #ffd700;
-}
-
-/* Badge */
-.badge {
-    background-color: #dc3545;
-    color: #fff;
-    border-radius: 50%;
-    padding: 5px 10px;
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    font-size: 12px;
-}
-
-/* Productos relacionados */
-.productos-container {
-    padding: 20px 0;
-    background-color: #f8f9fa;
-}
-
-.productos-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
-
-.producto-card {
-    flex: 1 1 220px;
-    margin: 0 10px;
-}
-
-.card {
-    transition: transform 0.3s, box-shadow 0.3s;
-    color: inherit;
-    border-radius: 10px;
-    overflow: hidden;
-    background-color: #fff;
-}
-
-.card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-
-/* Precio y botones */
-.precio {
-    color: #dc3545;
-    font-size: 1.2rem;
-}
-
-.text-danger {
-    color: #dc3545 !important;
-}
-
-.btn-warning {
-    background-color: #ff9800;
-    border-color: #ff9800;
-    font-weight: bold;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.btn-warning:hover {
-    background-color: #e68900;
-    box-shadow: 0 4px 12px rgba(230, 137, 0, 0.3);
-}
-
-.padding {
-    padding-top: 90px;
-}
-
-/* Títulos */
-.titulo-grande {
-    font-size: 2rem;
-    color: #333;
-    font-weight: bold;
-    margin-bottom: 30px;
-}
-
-.producto-nombre {
-    font-size: 2rem; /* Aumentar tamaño de fuente para el nombre del producto */
-    font-weight: bold;
-}
-
-.producto-descripcion {
-    font-size: 1.2rem; /* Aumentar tamaño de fuente para la descripción */
-    color: #666; /* Color más suave para la descripción */
-}
-
-/* Información de stock */
-.stock-info {
-    font-size: 0.9rem; /* Tamaño más pequeño */
-    color: #888; /* Color gris */
-    margin-top: 10px; /* Espaciado superior */
-}
+    <style>
+        /* Mensaje de estado */
+        .mensaje-ajax {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #333;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px); /* Animación de entrada */
+        }
+        
+        .mensaje-ajax.exito {
+            background-color: #333; /* Verde para éxito */
+        }
+        
+        .mensaje-ajax.error {
+            background-color: #f44336; /* Rojo para error */
+        }
+        
+        .mensaje-ajax.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Productos relacionados */
+        .productos-container {
+            padding: 20px 0;
+            background-color: #fff;
+        }
+        
+        .productos-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .producto-card {
+            flex: 1 1 220px;
+            margin: 0 10px;
+        }
+        
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            color: inherit;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #fff;
+        }
+        
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Precio y botones */
+        .precio {
+            color: #e63946; /* Rojo */
+            font-size: 1.2rem;
+        }
+        
+        .text-danger {
+            color: #e63946 !important; /* Rojo */
+        }
+        
+        .btn-agg {
+            background-color: #333; 
+            font-weight: bold;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            color: #fff; 
+        }
+        
+        .btn-agg:hover {
+            background-color: #e0a2a2;
+            color: #333;     
+            box-shadow: 0 4px 64px #dfadc3
+        }
+        
+        .padding {
+            padding-top: 90px;
+        }
+        
+        /* Títulos */
+        .titulo-grande {
+            font-size: 2rem;
+            color: #333; /* Negro */
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        
+        .producto-nombre {
+            font-size: 2rem; /* Aumentar tamaño de fuente para el nombre del producto */
+            font-weight: bold;
+            color: #333; /* Negro */
+        }
+        
+        .producto-descripcion {
+            font-size: 1.2rem; /* Aumentar tamaño de fuente para la descripción */
+            color: #666; /* Gris */
+        }
+        
+        /* Información de stock */
+        .stock-info {
+            font-size: 0.9rem; /* Tamaño más pequeño */
+            color: #888; /* Gris */
+            margin-top: 10px; /* Espaciado superior */
+        }
+        
+        .cantidad-container {
+            margin-top: 20px;
+            display: flex;
+            align-items: center; /* Centrar verticalmente */
+        }
+        
+        /* Estilo para el campo de cantidad */
+        .cantidad-input {
+            width: 80px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            margin: 0 10px; /* Espaciado lateral */
+        }
+        
+        /* Botones de + y - */
+        .btn-cantidad {
+            padding: 10px 15px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-cantidad:hover {
+            background-color: #e0e0e0;
+        }
 
 
-.cantidad-container {
-    margin-top: 20px;
-    display: flex;
-    align-items: center; /* Centrar verticalmente */
-}
-
-/* Estilo para el campo de cantidad */
-.cantidad-input {
-    width: 80px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    text-align: center;
-    margin: 0 10px; /* Espaciado lateral */
-}
-
-/* Botones de + y - */
-.btn-cantidad {
-    padding: 10px 15px;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn-cantidad:hover {
-    background-color: #e0e0e0;
-}
-</style>
+        .precio-producto{
+            color: #333;
+            font-size: 20px;
+        }
+        </style>
+        
 
 @include('components.navbarTienda')
 
@@ -242,7 +179,7 @@
         <div class="col-md-6 pt-3">
             <h2 class="producto-nombre mb-3">{{ $producto->nombre }}</h2>
             <p class="producto-descripcion mb-4">{{ $producto->descripcion }}</p>
-            <h4 class="mb-4 text-danger fw-bold">Precio: ${{ number_format($producto->precio_venta, 2) }}</h4>
+            <h4 class="mb-4 precio-producto fw-bold">Precio: ${{ number_format($producto->precio_venta, 2) }}</h4>
             
             <!-- Mostrar información de stock -->
             <p class="stock-info">Stock disponible: {{ $producto->stock }} unidades</p>
@@ -256,7 +193,7 @@
             <form id="agregar-carrito-form">
                 @csrf
                 <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
-                <button type="button" class="btn btn-warning btn-lg fw-bold text-white mt-3" 
+                <button type="button" class="btn btn-agg btn-lg fw-bold  mt-3" 
                         aria-label="Agregar {{ $producto->nombre }} al carrito" 
                         onclick="agregarAlCarrito({{ $producto->id }})">
                     <i class="fas fa-shopping-cart"></i> Agregar al carrito
