@@ -17,40 +17,50 @@
     }
 
     .form-inline {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-    }
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding-left:200px;  /* Centramos el formulario en el contenedor */
+}
 
-    .form-inline input {
-        width: 70%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 20px;
-        outline: none;
-        transition: box-shadow 0.3s ease;
-    }
+.form-inline form {
+    margin-left: 20px; /* Agregamos espacio a la izquierda del formulario */
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
 
-    .form-inline input:focus {
-        box-shadow: 0 0 8px rgba(255, 182, 193, 0.5); /* Rosa clarito */
-    }
+.form-inline input {
+    width: 70%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+    transition: box-shadow 0.3s ease;
+}
 
-    .form-inline button {
-        margin-left: 10px;
-        padding: 10px 15px;
-        background-color: #333; /* Rosa clarito */
-        border: none;
-        border-radius: 20px;
-        color: white;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.3s ease;
-    }
+.form-inline input:focus {
+    box-shadow: 0 0 8px rgba(255, 182, 193, 0.5); /* Rosa clarito */
+}
 
-    .form-inline button:hover {
-        background-color: #f4d1db; 
-        color: #333;
-        transform: scale(1.05);
-    }
+.form-inline button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    background-color: #333; /* Fondo oscuro para el botón */
+    border: none;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.form-inline button:hover {
+    background-color: #f4d1db; 
+    color: #333;
+    transform: scale(1.05);
+}
+
+
 
     /* Iconos de navegación */
     .nav-icons {
@@ -391,6 +401,7 @@
 
 
 
+
 </style>
 
 <nav class="navbar navbar-expand-lg p-0">
@@ -398,10 +409,19 @@
         <a class="navbar-brand" href="{{ route('home') }}">
             <img class="logo" src="{{ asset('images/logo.png') }}" alt="Logo" class="img-fluid">
         </a>
+
+
         <div class="form-inline">
-            <input type="text" placeholder="Buscar productos...">
-            <button type="button">Buscar</button>
+            <form action="{{ route('buscar') }}" method="GET" class="d-flex align-items-center w-100">
+                <input type="text" name="query" class="search-input" placeholder="Buscar productos..." required>
+                <button type="submit" class="btn btn-primary ml-2">Buscar</button>
+            </form>
         </div>
+        
+        
+        
+        
+        
 
    <!-- Icono del carrito -->
 <div class="nav-icons">

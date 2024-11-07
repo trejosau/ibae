@@ -153,5 +153,23 @@ public function eliminarDelCarrito($id)
 }
 
 
+
+public function buscar(Request $request)
+{
+    $query = $request->input('query');
     
+    // Busca en la base de datos productos que coincidan con el nombre exacto
+    $producto = Productos::where('nombre', $query)->first();
+    
+    if ($producto) {
+        // Redirige a la vista de detalles del producto si se encuentra
+        return redirect()->route('producto.detalle', ['id' => $producto->id]);
+    } else {
+        // Si no encuentra ningún producto, redirige a la tienda con un mensaje de error
+        return redirect()->route('tienda')->with('error', 'Producto no encontrado');
+    }
+}
+
+
+
 }
