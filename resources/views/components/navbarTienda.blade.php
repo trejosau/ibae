@@ -313,6 +313,35 @@
     background-color: #0056b3;
 }
 
+
+
+
+
+
+.mensaje-eliminacion {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #dc3545; /* Rojo para alerta */
+    color: #fff;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 18px; /* Tamaño de texto más grande */
+    font-weight: bold;
+    z-index: 1000;
+    opacity: 0;
+    animation: aparecerDesaparecer 3s ease forwards;
+}
+
+@keyframes aparecerDesaparecer {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+
 </style>
 
 <nav class="navbar navbar-expand-lg p-0">
@@ -554,24 +583,39 @@
             .catch(error => console.error('Error al actualizar el total del carrito:', error));
     }
     
-    // Función para eliminar un producto del carrito
-    function removeFromCart(productId) {
-        fetch(`/carrito/${productId}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Content-Type': 'application/json',
-            }
-        })
-        .then(response => {
-            if (response.ok) {
-                cargarContenidoCarrito(); // Actualizar la vista del carrito
-                actualizarTotalCarrito(); // Actualizar el subtotal
-            } else {
-                console.error('Error al eliminar el producto del carrito');
-            }
-        })
-        .catch(error => console.error('Error al eliminar el producto del carrito:', error));
-    }
+    function mostrarMensajeEliminacion(mensaje) {
+    const mensajeElemento = document.createElement('div');
+    mensajeElemento.textContent = mensaje;
+    mensajeElemento.className = 'mensaje-eliminacion';
+    
+    document.body.appendChild(mensajeElemento);
+    
+    // Eliminar el mensaje después de 3 segundos
+    setTimeout(() => {
+        mensajeElemento.remove();
+    }, 3000);
+}
+
+function removeFromCart(productId) {
+    fetch(`/carrito/${productId}`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            cargarContenidoCarrito(); // Actualizar la vista del carrito
+            actualizarTotalCarrito(); // Actualizar el subtotal
+            mostrarMensajeEliminacion('Artículo eliminado del carrito');
+        } else {
+            console.error('Error al eliminar el producto del carrito');
+        }
+    })
+    .catch(error => console.error('Error al eliminar el producto del carrito:', error));
+}
+
+
     </script>
     
