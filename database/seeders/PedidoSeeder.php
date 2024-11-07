@@ -6,6 +6,7 @@ use App\Models\Administrador;
 use App\Models\Entregas;
 use App\Models\DetallePedido;
 use App\Models\Comprador;
+use App\Models\Estudiante;
 use App\Models\Pedidos;
 use App\Models\Productos;
 use Carbon\Carbon;
@@ -20,14 +21,19 @@ class PedidoSeeder extends Seeder
         $compradores = Comprador::all();
         $productos = Productos::all();
         $admins = Administrador::all();
+        $estudiantes = Estudiante::all();
 
-        if ($compradores->isEmpty() || $productos->isEmpty() || $admins->isEmpty()) {
-            return; // Verifica que existan datos básicos en compradores, productos y admins
+        if ($compradores->isEmpty() || $productos->isEmpty() || $admins->isEmpty() || $estudiantes->isEmpty()) {
+            return; // Verifica que existan datos básicos en compradores, productos, admins y estudiantes
         }
 
         // Iterar sobre cada mes del año 2024
         foreach (range(1, 12) as $month) {
             foreach ($compradores as $comprador) {
+                // Determina si el pedido es para un estudiante
+                $esEstudiante = $faker->boolean ? 1 : 0;
+                $idEstudiante = $esEstudiante ? $estudiantes->random()->id : null;
+
                 // Crear un pedido para cada comprador en el mes correspondiente
                 $pedido = Pedidos::create([
                     'total' => 0, // Inicialmente en 0; luego se actualizará con el total de los detalles
@@ -35,7 +41,8 @@ class PedidoSeeder extends Seeder
                     'estado' => $faker->randomElement(['entregado', 'listo para entrega', 'preparando para entrega']),
                     'clave_entrega' => $faker->bothify('##??##??'),
                     'id_comprador' => $comprador->id,
-                    'es_estudiante' => $faker->boolean ? 1 : 0, // 1 = Si, 0 = No
+                    'id_estudiante' => $idEstudiante, // Asigna el id del estudiante o null
+                    'es_estudiante' => $esEstudiante, // 1 = Si, 0 = No
                 ]);
 
                 // Crear detalles para el pedido
@@ -47,12 +54,7 @@ class PedidoSeeder extends Seeder
                     $cantidad = rand(1, 3);
 
                     // Determinar el precio aplicado según si es estudiante
-                    if ($pedido->es_estudiante) {
-                        $precioAplicado = $producto->precio_lista; // Para estudiantes
-                    } else {
-                        $precioAplicado = $producto->precio_venta; // Para no estudiantes
-                    }
-
+                    $precioAplicado = $esEstudiante ? $producto->precio_lista : $producto->precio_venta;
                     $descuento = $faker->randomFloat(2, 0, 10);
 
                     $detallePedido = DetallePedido::create([
