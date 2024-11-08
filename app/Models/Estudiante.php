@@ -32,9 +32,13 @@ class Estudiante extends Model
 
     public function persona()
     {
-        return $this->belongsTo(Persona::class, 'id_persona');
+        return $this->belongsTo(Persona::class, 'id_persona', 'id');
     }
-    
+
+    // Definir la relación con el modelo Inscripcion
+
+
+
 
     public function cursosApertura()
     {
@@ -47,7 +51,9 @@ class Estudiante extends Model
     {
         return $this->belongsTo(Inscripcion::class, 'id_inscripcion', 'id');
     }
-    
+
+
+
 
     public function pedidos()
     {

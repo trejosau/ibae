@@ -17,15 +17,17 @@ class Persona extends Model
         'usuario',
     ];
 
+
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'usuario', 'id');
+    }
+
     public function estudiante()
     {
         return $this->hasOne(Estudiante::class, 'id_persona', 'id');
     }
 
-    public function usuario()
-    {
-        return $this->hasOne(User::class, 'usuario', 'id'); 
-    }
 
     public function profesor()
     {

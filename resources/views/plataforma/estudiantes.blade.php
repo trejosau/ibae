@@ -1,6 +1,6 @@
 <div class="container mt-4">
     <h2 class="text-center mb-4">Gestión de Estudiantes</h2>
-    
+
     <div class="row">
         @foreach($estudiantes as $estudiante)
         <div class="col-md-4 mb-4">
@@ -15,12 +15,12 @@
                         {{ $estudiante->persona->nombre }} {{ $estudiante->persona->ap_paterno }} {{ $estudiante->persona->ap_materno }}
                     </h5>
                     <p class="card-text" style="color: #8c7a71; margin-block-end: 10px;">Matrícula: {{ $estudiante->matricula }}</p>
-                    
+
                     <!-- Mostrar el correo del usuario relacionado -->
                     <p class="card-text" style="color: #8c7a71;">
-                        Correo: {{ $estudiante->persona->usuario->email ?? 'No disponible' }}
+                        Correo: {{ $estudiante->email }}
                     </p>
-                    
+
                     <!-- Botones de acción -->
                     <button class="btn btn-info" style="background-color: #b5a8a1; border: none;" data-toggle="modal" data-target="#modalEstudiante{{ $estudiante->matricula }}">Ver más</button>
                     <button class="btn btn-danger" style="background-color: #e6b0aa; border: none;" onclick="darDeBaja({{ $estudiante->matricula }})">Dar de baja</button>

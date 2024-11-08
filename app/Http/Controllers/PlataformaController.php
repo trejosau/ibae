@@ -499,18 +499,28 @@ public function actualizarTema(Request $request, $id)
     $tema->update($request->only(['nombre', 'descripcion']));
     return redirect()->back()->with('success', 'Tema actualizado con éxito.');
 }
-public function estudiantes()
-{
- $estudiantes = Estudiante::with([
-        'persona',
-        'inscripcion'
-    ])->get();
+    public function estudiantes()
+    {
+        // Obtener estudiantes con las relaciones de persona e inscripcion
+        $estudiantes = Estudiante::with([
+            'persona',
+            'inscripcion'
+        ])->get();
 
-    
-    
+        // Obtener el correo electrónico de cada estudiante usando el procedimiento almacenado
+        foreach ($estudiantes as $estudiante) {
+            // Llamar al procedimiento para obtener el email usando el id de la persona
+            $resultado = DB::select('CALL ObtenerEmailPorPersona(?)', [$estudiante->persona->id]);
+            // Asignar el email al estudiante si se encontró
+            if (!empty($resultado)) {
+                $estudiante->email = $resultado[0]->email;
+            }
+        }
 
-    return view('plataforma.index', compact('estudiantes'));
-}
+        return view('plataforma.index', compact('estudiantes'));
+    }
+
+
 
 
 
