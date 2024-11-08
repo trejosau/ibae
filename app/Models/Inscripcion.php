@@ -18,9 +18,11 @@ class Inscripcion extends Model
         'descripcion',
         'material_incluido',
     ];
-    public function estudiantes() : HasMany
+   public function estudiantes()
     {
-        return $this->hasMany(Estudiante::class, 'id_inscripcion');
+        return $this->hasMany(Estudiante::class, 'id_inscripcion', 'id');
     }
+
+
 
 }

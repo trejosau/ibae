@@ -34,6 +34,7 @@ class Estudiante extends Model
     {
         return $this->belongsTo(Persona::class, 'id_persona');
     }
+    
 
     public function cursosApertura()
     {
@@ -41,10 +42,11 @@ class Estudiante extends Model
             ->withPivot('estado');
     }
 
-    // Relación con la tabla de inscripciones (si hay un modelo Inscripcion)
+
     public function inscripcion()
     {
-        return $this->belongsTo(Inscripcion::class, 'id_inscripcion');
+        return $this->belongsTo(Inscripcion::class, 'id_inscripcion', 'id');
     }
+    
 
 }

@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Persona extends Model
 {
@@ -16,13 +16,19 @@ class Persona extends Model
         'telefono',
         'usuario',
     ];
+
     public function estudiante()
     {
         return $this->hasOne(Estudiante::class, 'id_persona', 'id');
     }
+
+    public function usuario()
+    {
+        return $this->hasOne(User::class, 'usuario', 'id'); 
+    }
+
     public function profesor()
     {
         return $this->hasOne(Profesor::class, 'id_persona');
     }
-
 }

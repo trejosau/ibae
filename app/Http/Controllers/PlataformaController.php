@@ -10,6 +10,7 @@ use App\Models\ModuloCurso;
 use App\Models\Modulos;
 use App\Models\ModuloTemas;
 use App\Models\Profesor;
+use App\Models\User;
 use App\Models\Temas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -498,15 +499,37 @@ public function actualizarTema(Request $request, $id)
     $tema->update($request->only(['nombre', 'descripcion']));
     return redirect()->back()->with('success', 'Tema actualizado con éxito.');
 }
+public function estudiantes()
+{
+ $estudiantes = Estudiante::with([
+        'persona',
+        'inscripcion'
+    ])->get();
+
+    
+    
+
+    return view('plataforma.index', compact('estudiantes'));
+}
 
 
 
-    public function estudiantes() {
-        $estudiantes = Estudiante::with(['persona'])->get();
 
-      
-        return view('plataforma.index', compact('estudiantes'));
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function inscripciones() {
         return view('plataforma.index');
