@@ -1,12 +1,14 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Document</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
     <style>
-        /* Efecto hover en las tarjetas de productos */
+
         .sidebar {
             background-color: transparent; /* Puede ser transparente si estás usando la clase card */
             padding: 0; /* Sin padding adicional, ya que la tarjeta manejará esto */
@@ -43,77 +45,77 @@
 
         /* Contenedor de productos */
         .products-container .card {
-    border: 1px solid #ddd; /* Contorno alrededor de cada tarjeta */
-    border-radius: 10px;
-    width: 100%;
-    height: 600px;
-    overflow: hidden;
-    transition: box-shadow 0.3s ease;
-}
+        border: 1px solid #ddd; /* Contorno alrededor de cada tarjeta */
+        border-radius: 10px;
+        width: 100%;
+        height: 600px;
+        overflow: hidden;
+        transition: box-shadow 0.3s ease;
+        }
 
-.products-container .card:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra en hover */
-}
+        .products-container .card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra en hover */
+        }
 
-.products-container .card img {
-    max-height: 400px;
-    object-fit: cover;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    transition: transform 0.3s ease;
-}
+        .products-container .card img {
+            max-height: 400px;
+            object-fit: cover;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            transition: transform 0.3s ease;
+        }
 
-.products-container .card:hover img {
-    transform: scale(1.1); /* Solo agrandar la imagen en hover */
-}
+        .products-container .card:hover img {
+            transform: scale(1.1); /* Solo agrandar la imagen en hover */
+        }
 
-.products-container .card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-}
+        .products-container .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
 
-.precio {
-    color: #ff5722;
-    font-size: 1.2rem;
-}
+        .precio {
+            color: #ff5722;
+            font-size: 1.2rem;
+        }
 
-/* Estilo para el botón "Agregar al carrito" */
-.btn-agg {
-    background-color: #ff5a5f; /* Color de fondo */
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-    width: 100%; /* Botón ancho */
-}
+        /* Estilo para el botón "Agregar al carrito" */
+        .btn-agg {
+            background-color: #ff5a5f; /* Color de fondo */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            width: 100%; /* Botón ancho */
+        }
 
-.btn-agg:hover {
-    background-color: #ff4146; /* Color de fondo en hover */
-}
+        .btn-agg:hover {
+            background-color: #ff4146; /* Color de fondo en hover */
+        }
 
+        .padding{
+        padding-top: 150px;        
+            }
+        .padl
+        {padding-left: 400px;}
 
-    .padding{
-    padding-top: 150px;        
-         }
-    .padl
-    {padding-left: 400px;}
-
-    .btn-filtro{
-    background-color: #333;
-    color: white;
-    }
-    .btn-filtro:hover{
-    background-color: #f1c6d4;
-    color: #333;
-    }
+        .btn-filtro{
+        background-color: #333;
+        color: white;
+        }
+        .btn-filtro:hover{
+        background-color: #f1c6d4;
+        color: #333;
+        }
 
     </style>
 
 </head>
+
 <body>
 
     @include('components.navbarTienda')
