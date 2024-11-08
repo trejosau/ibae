@@ -109,6 +109,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/inscripciones', [PlataformaController::class, 'storeInscripcion'])->name('plataforma.storeInscripcion');
 
     Route::put('/inscripciones/{id}', [PlataformaController::class, 'update'])->name('plataforma.updateInscripcion');
+    Route::post('/plataforma/bajaProfesor/{id}', [PlataformaController::class, 'bajaProfesor'])->name('plataforma.bajaProfesor');
 
 
 

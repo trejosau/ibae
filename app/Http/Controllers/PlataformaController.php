@@ -498,15 +498,15 @@ public function actualizarTema(Request $request, $id)
     $tema->update($request->only(['nombre', 'descripcion']));
     return redirect()->back()->with('success', 'Tema actualizado con éxito.');
 }
-    public function estudiantes()
-    {
+public function estudiantes()
+{
         // Obtener estudiantes con las relaciones de persona e inscripcion
         $estudiantes = Estudiante::with([
             'persona.usuario',
             'inscripcion'
         ])->get();
         return view('plataforma.index', compact('estudiantes'));
-    }
+}
 
 
     public function darDeBaja($matricula)
@@ -525,11 +525,6 @@ public function actualizarTema(Request $request, $id)
     }
 
 
-
-
-
-
- 
     public function inscripciones() {
         $inscripciones = Inscripcion::all();
         return view('plataforma.index', compact('inscripciones'));
@@ -558,36 +553,61 @@ public function actualizarTema(Request $request, $id)
         // Redirigir con un mensaje de éxito
         return redirect()->back()->with('success', 'Inscripción agregada correctamente.');
     }
-    
-public function update(Request $request, $id)
-{
-    // Validar los datos del formulario
-    $validatedData = $request->validate([
-        'nombre' => 'required|string|max:255',
-        'precio' => 'required|numeric',
-        'descripcion' => 'required|string',
-        'material_incluido' => 'required|boolean',
-    ]);
+        
+    public function update(Request $request, $id)
+    {
+        // Validar los datos del formulario
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'precio' => 'required|numeric',
+            'descripcion' => 'required|string',
+            'material_incluido' => 'required|boolean',
+        ]);
 
-    // Encontrar la inscripción por ID
-    $inscripcion = Inscripcion::findOrFail($id);
+        // Encontrar la inscripción por ID
+        $inscripcion = Inscripcion::findOrFail($id);
 
-    // Actualizar los campos con los nuevos valores
-    $inscripcion->update([
-        'nombre' => $validatedData['nombre'],
-        'precio' => $validatedData['precio'],
-        'descripcion' => $validatedData['descripcion'],
-        'material_incluido' => $validatedData['material_incluido'],
-    ]);
+        // Actualizar los campos con los nuevos valores
+        $inscripcion->update([
+            'nombre' => $validatedData['nombre'],
+            'precio' => $validatedData['precio'],
+            'descripcion' => $validatedData['descripcion'],
+            'material_incluido' => $validatedData['material_incluido'],
+        ]);
 
-    // Redirigir a la lista de inscripciones o a otra vista con un mensaje de éxito
-    return redirect()->route('plataforma.inscripciones')->with('success', 'Inscripción actualizada correctamente.');
-}
-
+        // Redirigir a la lista de inscripciones o a otra vista con un mensaje de éxito
+        return redirect()->route('plataforma.inscripciones')->with('success', 'Inscripción actualizada correctamente.');
+    }
 
     public function profesores() {
-        return view('plataforma.index');
+        // Obtener los profesores con la relación 'persona' y 'usuario'
+        $profesores = Profesor::with(['persona.usuario'])->get();
+        
+        // Retornar la vista pasando los datos de los profesores
+        return view('plataforma.index', compact('profesores'));
     }
+
+    
+
+
+    public function bajaProfesor($id)
+{
+    // Buscar al profesor por su ID
+    $profesor = Profesor::find($id);
+
+    // Verificar que el profesor exista
+    if (!$profesor) {
+        return redirect()->back()->with('error', 'Profesor no encontrado.');
+    }
+
+    // Cambiar su estado a 'inactivo'
+    $profesor->estado = 'inactivo';
+    $profesor->save();
+
+    // Redirigir con un mensaje de éxito
+    return redirect()->route('plataforma.profesores')->with('success', 'Profesor dado de baja correctamente.');
+}
+
 
     public function pagos() {
         return view('plataforma.index');
