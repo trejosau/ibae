@@ -80,7 +80,7 @@
                             <p><strong>Fecha de Pedido:</strong> {{ $pedido->fecha_pedido }}</p>
                         </div>
                         <div class="col-12">
-                            <p><strong>Estado:</strong> {{ $pedido->estado }}</p>
+                            <p><strong>Estado:</strong> {{ ucfirst($pedido->estado) }}</p>
                         </div>
                         <div class="col-12">
                             <p><strong>Clave de Entrega:</strong> {{ $pedido->clave_entrega }}</p>
@@ -108,30 +108,49 @@
                         </div>
                     </div>
 
-                    <!-- Pedido Details -->
+                    <!-- Pedido Details with Scroll -->
                     <h6 class="mb-3">Detalles del Pedido:</h6>
-                    <ul class="list-group">
-                        @foreach ($pedido->detalles as $detalle)
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <strong>{{ $detalle->producto->nombre }}</strong>
-                                        <br>Cantidad: {{ $detalle->cantidad }}
+                    <div style="max-height: 300px; overflow-y: auto;">
+                        <ul class="list-group">
+                            @foreach ($pedido->detalles as $detalle)
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <strong>{{ $detalle->producto->nombre }}</strong>
+                                            <br>Cantidad: {{ $detalle->cantidad }}
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <p>Precio Aplicado: ${{ number_format($detalle->precio_aplicado, 2) }}</p>
+                                            <p>Descuento: ${{ number_format($detalle->descuento, 2) }}</p>
+                                        </div>
                                     </div>
-                                    <div class="col-4 text-end">
-                                        <p>Precio Aplicado: ${{ number_format($detalle->precio_aplicado, 2) }}</p>
-                                        <p>Descuento: ${{ number_format($detalle->descuento, 2) }}</p>
-                                    </div>
-                                </div>
-                            </li>
-                        @endforeach
-                    </ul>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    <!-- Input for Recipient Name when ready for delivery or delivered -->
+                    @if($pedido->estado == 'listo para entrega' || $pedido->estado == 'entregado')
+                        <div class="mt-3">
+                            <label for="nombreRecogido{{ $pedido->id }}" class="form-label"><strong>Nombre de quien recoge:</strong></label>
+                            <input type="text" id="nombreRecogido{{ $pedido->id }}" name="nombreRecogido" class="form-control"
+                                   value="{{ $pedido->entrega->nombre_recolector ?? '' }}"
+                                   @if($pedido->estado == 'entregado') readonly style="background-color: #e9ecef;" @else placeholder="Ingrese el nombre" @endif>
+                        </div>
+                    @endif
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    @if ($pedido->estado == 'listo para entrega' && empty($pedido->entrega->nombre_recolector))
+                        <!-- Button to save the recipient name and mark as delivered -->
+                        <button type="button" class="btn btn-success">Marcar como Entregado</button>
+                    @elseif($pedido->estado == 'preparando para entrega')
+                        <!-- Show button to mark as ready for delivery -->
+                        <button type="button" class="btn btn-primary">Marcar como Listo para Entrega</button>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
 @endforeach
-
