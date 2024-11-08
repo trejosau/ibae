@@ -136,10 +136,22 @@ class DashboardController extends Controller
 
     public function pedidos(Request $request)
     {
+        $query = Pedidos::with(['comprador', 'detalles.producto', 'entrega', 'estudiante']);
 
-        // Devolver la vista con los datos
-        return view('dashboard.index');
+        if ($request->has('search') && $request->search) {
+            $query->where('id', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('estado') && $request->estado) {
+            $query->where('estado', $request->estado);
+        }
+
+        $pedidos = $query->paginate(8); // Adjust the number for pagination
+
+        return view('dashboard.index', compact('pedidos'));
     }
+
+
 
 
 

@@ -49,9 +49,8 @@ class CreateNewUser implements CreatesNewUsers
                 'required',
                 'string',
                 Password::default(),
-                'confirmed', // Agregar la regla de confirmación
+                'confirmed',
             ],
         ]);
     }
-
 }
