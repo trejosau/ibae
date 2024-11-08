@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Comprador extends Model
 {
-    use HasFactory;
-
     protected $table = 'compradores';
 
     protected $fillable = [

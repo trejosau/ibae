@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Certificados extends Model
 {
-    use HasFactory;
 
     protected $table = 'certificados';
 

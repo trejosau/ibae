@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DetalleUnas extends Model
 {
-    use HasFactory;
 
     public $timestamps = false;
 

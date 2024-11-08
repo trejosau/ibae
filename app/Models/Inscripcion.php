@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Inscripcion extends Model
 {
-    use HasFactory;
 
     protected $table = 'inscripciones';
 

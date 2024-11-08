@@ -10,15 +10,21 @@ return new class extends Migration
     {
         Schema::create('categorias', function (Blueprint $table) {
             $table->id();
-            $table->enum('nombre', ['Tintes', 'Cabello', 'Barbería', 'Maquillaje', 'Accesorios', 'Uñas', 'Herramientas']);
-            $table->text('descripcion')->nullable();
-            $table->timestamps();
+            $table->string('nombre')->unique();
+        });
+
+        Schema::create('subcategorias', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre');
+            $table->foreignId('categoria_id')->constrained('categorias')->onDelete('cascade');
         });
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('subcategorias');
         Schema::dropIfExists('categorias');
     }
+
 };
 

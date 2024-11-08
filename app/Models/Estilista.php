@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Estilista extends Model
 {
-    use HasFactory;
 
     protected $table = 'estilistas';
 

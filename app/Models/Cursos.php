@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Cursos extends Model
 {
-    use HasFactory;
 
     protected $table = 'cursos';
 

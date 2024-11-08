@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DetallePedido extends Model
 {
-    use HasFactory;
 
     protected $table = 'detalle_pedido';
 

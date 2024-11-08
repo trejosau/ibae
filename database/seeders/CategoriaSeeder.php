@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Categoria;
 use App\Models\Categorias;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Subcategoria;
 use Illuminate\Database\Seeder;
 
 class CategoriaSeeder extends Seeder
@@ -11,20 +12,38 @@ class CategoriaSeeder extends Seeder
     public function run(): void
     {
         $categorias = [
+            'Barbería',
             'Tintes',
             'Cabello',
-            'Barbería',
             'Maquillaje',
             'Accesorios',
             'Uñas',
-            'Herramientas'
+            'Herramientas',
         ];
 
-        foreach ($categorias as $categoria) {
-            Categorias::create([
-                'nombre' => $categoria,
-                'descripcion' => "Descripción para la categoría $categoria",
-            ]);
+        foreach ($categorias as $nombreCategoria) {
+            Categorias::create(['nombre' => $nombreCategoria]);
+        }
+
+        $subcategorias = [
+            'Barbería' => ['Máquinas', 'Cremas', 'Afeitación'],
+            'Tintes' => ['Tintes Naturales', 'Tintes Temporales'],
+            'Cabello' => ['Shampoo', 'Acondicionador', 'Tratamientos'],
+            'Maquillaje' => ['Base', 'Sombras', 'Labiales'],
+            'Accesorios' => ['Cepillos', 'Peines', 'Gomas'],
+            'Uñas' => ['Esmaltes', 'Herramientas', 'Decoraciones'],
+            'Herramientas' => ['Tijeras', 'Cortadoras', 'Secadores'],
+        ];
+
+        foreach ($subcategorias as $categoriaNombre => $subcategoriaNombres) {
+            $categoria = Categorias::where('nombre', $categoriaNombre)->first();
+
+            foreach ($subcategoriaNombres as $nombreSubcategoria) {
+                Subcategoria::create([
+                    'nombre' => $nombreSubcategoria,
+                    'categoria_id' => $categoria->id,
+                ]);
+            }
         }
     }
 }
