@@ -505,11 +505,7 @@ public function actualizarTema(Request $request, $id)
             'persona.usuario',
             'inscripcion'
         ])->get();
-
-       
-        
-
-return view('plataforma.index', compact('estudiantes'));
+        return view('plataforma.index', compact('estudiantes'));
     }
 
 
@@ -539,6 +535,55 @@ return view('plataforma.index', compact('estudiantes'));
         return view('plataforma.index', compact('inscripciones'));
 
     }
+
+
+    public function storeInscripcion(Request $request)
+    {
+        // Validación de datos
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'precio' => 'required|numeric',
+            'descripcion' => 'nullable|string',
+            'material_incluido' => 'required|boolean',
+        ]);
+    
+        // Crear la nueva inscripción
+        Inscripcion::create([
+            'nombre' => $request->nombre,
+            'precio' => $request->precio,
+            'descripcion' => $request->descripcion,
+            'material_incluido' => $request->material_incluido,
+        ]);
+    
+        // Redirigir con un mensaje de éxito
+        return redirect()->back()->with('success', 'Inscripción agregada correctamente.');
+    }
+    
+public function update(Request $request, $id)
+{
+    // Validar los datos del formulario
+    $validatedData = $request->validate([
+        'nombre' => 'required|string|max:255',
+        'precio' => 'required|numeric',
+        'descripcion' => 'required|string',
+        'material_incluido' => 'required|boolean',
+    ]);
+
+    // Encontrar la inscripción por ID
+    $inscripcion = Inscripcion::findOrFail($id);
+
+    // Actualizar los campos con los nuevos valores
+    $inscripcion->update([
+        'nombre' => $validatedData['nombre'],
+        'precio' => $validatedData['precio'],
+        'descripcion' => $validatedData['descripcion'],
+        'material_incluido' => $validatedData['material_incluido'],
+    ]);
+
+    // Redirigir a la lista de inscripciones o a otra vista con un mensaje de éxito
+    return redirect()->route('plataforma.inscripciones')->with('success', 'Inscripción actualizada correctamente.');
+}
+
 
     public function profesores() {
         return view('plataforma.index');
