@@ -47,4 +47,9 @@ class Estudiante extends Model
         return $this->belongsTo(Inscripcion::class, 'id_inscripcion');
     }
 
+    public function pedidos()
+    {
+        return $this->hasMany(Pedidos::class);
+    }
+
 }

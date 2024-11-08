@@ -24,4 +24,19 @@ class Pedidos extends Model
     {
         return $this->belongsTo(Comprador::class, 'id_comprador');
     }
+
+    public function detalles()
+    {
+        return $this->hasMany(DetallePedido::class, 'id_pedido'); // Cambia Detalle::class por el nombre correcto del modelo
+    }
+
+    public function entrega()
+    {
+        return $this->hasOne(Entregas::class, 'id_pedido'); // Cambia Entrega::class por el nombre correcto del modelo
+    }
+    public function estudiante()
+    {
+        return $this->belongsTo(Estudiante::class, 'id_estudiante');
+    }
+
 }
