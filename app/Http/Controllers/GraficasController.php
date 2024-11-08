@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Citas;
@@ -29,7 +28,7 @@ class GraficasController extends Controller
             ->get()
             ->keyBy('Mes');
 
-        return $this->formatearResultados($colegiaturasPorMes, $inscripcionesPorMes);
+        return $this->formatearResultadosAcademia($colegiaturasPorMes, $inscripcionesPorMes);
     }
 
     public function obtenerTotalSalon(Request $request)
@@ -41,7 +40,7 @@ class GraficasController extends Controller
             ->get()
             ->keyBy('Mes');
 
-        return $this->formatearResultados($citasPorMes);
+        return $this->formatearResultadosSalon($citasPorMes);
     }
 
     public function obtenerTotalVentas(Request $request)
@@ -58,7 +57,7 @@ class GraficasController extends Controller
             ->orderBy('Mes')
             ->get()->keyBy('Mes');
 
-        return $this->formatearResultados($ventasPorMes, $pedidosPorMes);
+        return $this->formatearResultadosVentas($ventasPorMes, $pedidosPorMes);
     }
 
     public function obtenerData(Request $request)
@@ -76,18 +75,56 @@ class GraficasController extends Controller
         return response()->json($resultados);
     }
 
-    private function formatearResultados($data1, $data2 = null)
+    // Formato para los resultados de Academia
+    private function formatearResultadosAcademia($colegiaturasPorMes, $inscripcionesPorMes)
     {
         $resultados = [];
-        for ($mes = 1; $mes <= 12; $mes++) {
-            $montoData1 = $data1->get($mes)->Monto_Total ?? 0;
 
-            // Verificamos si $data2 existe y no es null
-            $montoData2 = $data2 ? ($data2->get($mes)->Total_Pedidos ?? 0) : 0;
+        // Iteramos por los meses del 1 al 12
+        for ($mes = 1; $mes <= 12; $mes++) {
+            $montoColegiaturas = isset($colegiaturasPorMes[$mes]) ? $colegiaturasPorMes[$mes]->Monto_Total : 0;
+            $montoInscripciones = isset($inscripcionesPorMes[$mes]) ? $inscripcionesPorMes[$mes]->Monto_Total : 0;
 
             $resultados[] = [
                 'Mes' => $mes,
-                'Total' => $montoData1 + $montoData2
+                'Total' => $montoColegiaturas + $montoInscripciones
+            ];
+        }
+
+        return response()->json($resultados);
+    }
+
+    // Formato para los resultados de Salon (Citas)
+    private function formatearResultadosSalon($citasPorMes)
+    {
+        $resultados = [];
+
+        // Iteramos por los meses del 1 al 12
+        for ($mes = 1; $mes <= 12; $mes++) {
+            $montoCitas = isset($citasPorMes[$mes]) ? $citasPorMes[$mes]->Monto_Total : 0;
+
+            $resultados[] = [
+                'Mes' => $mes,
+                'Total' => $montoCitas
+            ];
+        }
+
+        return response()->json($resultados);
+    }
+
+    // Formato para los resultados de Tienda (Ventas y Pedidos)
+    private function formatearResultadosVentas($ventasPorMes, $pedidosPorMes)
+    {
+        $resultados = [];
+
+        // Iteramos por los meses del 1 al 12
+        for ($mes = 1; $mes <= 12; $mes++) {
+            $montoVentas = isset($ventasPorMes[$mes]) ? $ventasPorMes[$mes]->Total_Ventas : 0;
+            $montoPedidos = isset($pedidosPorMes[$mes]) ? $pedidosPorMes[$mes]->Total_Pedidos : 0;
+
+            $resultados[] = [
+                'Mes' => $mes,
+                'Total' => $montoVentas + $montoPedidos
             ];
         }
 
