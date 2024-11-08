@@ -3,20 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CursoAperturaRequest;
-use App\Models\Colegiaturas;
 use App\Models\Estudiante;
 use App\Models\EstudianteCurso;
 use App\Models\ModuloCurso;
 use App\Models\Modulos;
 use App\Models\ModuloTemas;
 use App\Models\Profesor;
-use App\Models\User;
 use App\Models\Temas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Cursos;
 use App\Models\Certificados;
 use App\Models\CursoApertura;
+use App\Models\Inscripcion ;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -503,21 +502,30 @@ public function actualizarTema(Request $request, $id)
     {
         // Obtener estudiantes con las relaciones de persona e inscripcion
         $estudiantes = Estudiante::with([
-            'persona',
+            'persona.usuario',
             'inscripcion'
         ])->get();
 
-        // Obtener el correo electrónico de cada estudiante usando el procedimiento almacenado
-        foreach ($estudiantes as $estudiante) {
-            // Llamar al procedimiento para obtener el email usando el id de la persona
-            $resultado = DB::select('CALL ObtenerEmailPorPersona(?)', [$estudiante->persona->id]);
-            // Asignar el email al estudiante si se encontró
-            if (!empty($resultado)) {
-                $estudiante->email = $resultado[0]->email;
-            }
-        }
+       
+        
 
-        return view('plataforma.index', compact('estudiantes'));
+return view('plataforma.index', compact('estudiantes'));
+    }
+
+
+    public function darDeBaja($matricula)
+    {
+        $estudiante = Estudiante::where('matricula', $matricula)->first();
+    
+        if (!$estudiante) {
+            return redirect()->back()->with('error', 'Estudiante no encontrado.');
+        }
+    
+        // Cambiar el estado a baja
+        $estudiante->estado = 'baja';  // Asumiendo que el campo 'estado' es 'activo' o 'baja'
+        $estudiante->save();
+    
+        return redirect()->route('plataforma.estudiantes')->with('success', 'Estudiante dado de baja correctamente.');
     }
 
 
@@ -525,24 +533,11 @@ public function actualizarTema(Request $request, $id)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
     public function inscripciones() {
-        return view('plataforma.index');
+        $inscripciones = Inscripcion::all();
+        return view('plataforma.index', compact('inscripciones'));
+
     }
 
     public function profesores() {

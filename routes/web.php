@@ -104,6 +104,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/plataforma/actualizarModulo/{id}', [PlataformaController::class, 'actualizarModulo'])->name('plataforma.actualizarModulo');
     Route::put('/plataforma/actualizarTema/{id}', [PlataformaController::class, 'actualizarTema'])->name('plataforma.actualizarTema');
 
+    Route::post('/estudiante/{matricula}/baja', [PlataformaController::class, 'darDeBaja'])->name('plataforma.baja');
+
+
 });
 
 
