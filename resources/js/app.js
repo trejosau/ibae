@@ -21,6 +21,8 @@ import ApexCharts from 'apexcharts';
 
 
 
+
+
 document.addEventListener('DOMContentLoaded', function () {
     if (window.location.pathname === '/') {
         // Animación por frames

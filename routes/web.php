@@ -22,7 +22,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/inicio', [DashboardController::class, 'inicio'])->name('dashboard.inicio');
     Route::get('/dashboard/ventas', [DashboardController::class, 'ventas'])->name('dashboard.ventas');
     Route::get('/dashboard/pedidos', [DashboardController::class, 'pedidos'])->name('dashboard.pedidos');
-    Route::get('/dashboard/filtrar', [DashboardController::class, 'filtrar'])->name('dashboard.filtrar');
     Route::post('/ventas/agregar-producto', [VentaController::class, 'agregarProducto'])->name('ventas.agregarProducto');
     Route::get('/ventas/total', [VentaController::class, 'obtenerTotal'])->name('ventas.total');
     Route::post('/ventas/quitar-producto', [VentaController::class, 'quitarProducto'])->name('ventas.quitarProducto');
@@ -33,6 +32,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/pedidos/marcar-listo/{id}', [PedidoController::class, 'marcarListo'])->name('pedido.marcarListo');
     Route::post('/pedidos/marcar-entregado/{id}', [PedidoController::class, 'marcarEntregado'])->name('pedido.marcarEntregado');
     Route::get('/dashboard/compras', [DashboardController::class, 'compras'])->name('dashboard.compras');
+    Route::post('/dashboard/compras/proveedores', [DashboardController::class, 'proveedoresCreate'])->name('proveedores.store');
+    Route::put('/dashboard/compras/proveedores/{id}/update', [DashboardController::class, 'proveedoresUpdate'])->name('proveedores.update');
+    Route::delete('/dashboard/compras/proveedores/{id}', [DashboardController::class, 'proveedoresDestroy'])->name('proveedores.destroy');
+    Route::post('/dashboard/compras/cancelar/{id}', [DashboardController::class, 'compraCancelar'])->name('compra.cancelar');
+    Route::post('/dashboard/compras/recibida/{id}', [DashboardController::class, 'compraRecibida'])->name('compra.recibida');
     Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');
     Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');
     Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');

@@ -3,32 +3,124 @@
 
     <!-- Proveedores y Notificaciones -->
     <div class="row mb-4">
-        <!-- Proveedores (col-md-7) -->
         <div class="col-md-7">
             <div class="card border-secondary h-100">
                 <div class="card-body">
-                    <h5 class="card-title text-center">Proveedores</h5>
-                    <table class="table table-bordered text-center" id="tabla-proveedores">
-                        <thead>
+                    <h5 class="card-title text-start mb-3" style="font-size: 1.5rem; color: #6c757d;">Proveedores</h5>
+
+                    <table class="table table-bordered table-striped table-hover text-center" id="tabla-proveedores">
+                        <thead style="background-color: #e9ecef;">
                         <tr>
-                            <th>Nombre del Proveedor</th>
+                            <th>Nombre Persona</th>
+                            <th>Nombre Empresa</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>Distribuidora XYZ</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-proveedor">Modificar</button>
-                                <button class="btn btn-danger btn-sm" onclick="eliminarProveedor(this)">Eliminar</button>
-                            </td>
-                        </tr>
+                        @foreach($proveedores as $proveedor)
+                            <tr style="cursor: pointer; background-color: #f9f9f9;">
+                                <td>{{ $proveedor->nombre_persona }}</td>
+                                <td>{{ $proveedor->nombre_empresa }}</td>
+                                <td>
+                                    <!-- Botón "Ver más" que abrirá el modal con la información del proveedor -->
+                                    <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modal-ver-mas-{{ $proveedor->id }}">
+                                        <i class="fas fa-info-circle"></i> Ver más
+                                    </button>
+
+                                    <!-- Botón "Eliminar" -->
+                                    <form action="{{ route('proveedores.destroy', $proveedor->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Seguro que quieres eliminar este proveedor?')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+
+                            <!-- Modal para ver y modificar información del proveedor -->
+                            <div class="modal fade" id="modal-ver-mas-{{ $proveedor->id }}" tabindex="-1" aria-labelledby="modal-ver-mas-label-{{ $proveedor->id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modal-ver-mas-label-{{ $proveedor->id }}">Información del Proveedor: {{ $proveedor->nombre_persona }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{{ route('proveedores.update', $proveedor->id) }}" method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                <div class="mb-3">
+                                                    <label for="nombre_persona_{{ $proveedor->id }}" class="form-label">Nombre Persona</label>
+                                                    <input type="text" class="form-control" id="nombre_persona_{{ $proveedor->id }}" name="nombre_persona" value="{{ $proveedor->nombre_persona }}" required readonly disabled>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="nombre_empresa_{{ $proveedor->id }}" class="form-label">Nombre Empresa</label>
+                                                    <input type="text" class="form-control" id="nombre_empresa_{{ $proveedor->id }}" name="nombre_empresa" value="{{ $proveedor->nombre_empresa }}" required readonly disabled>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="contacto_telefono_{{ $proveedor->id }}" class="form-label">Teléfono</label>
+                                                    <input type="text" class="form-control" id="contacto_telefono_{{ $proveedor->id }}" name="contacto_telefono" value="{{ $proveedor->contacto_telefono }}" required readonly disabled>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="contacto_correo_{{ $proveedor->id }}" class="form-label">Correo</label>
+                                                    <input type="email" class="form-control" id="contacto_correo_{{ $proveedor->id }}" name="contacto_correo" value="{{ $proveedor->contacto_correo }}" required readonly disabled>
+                                                </div>
+
+                                                <!-- Edit Button -->
+                                                <button type="button" class="btn btn-primary" id="btn-editar-{{ $proveedor->id }}" onclick="habilitarCampos({{ $proveedor->id }})">
+                                                    <i class="fas fa-pencil-alt"></i> Editar
+                                                </button>
+
+                                                <!-- Hidden Update Button (initially hidden) -->
+                                                <button type="submit" class="btn btn-success" id="btn-actualizar-{{ $proveedor->id }}" style="display: none;">
+                                                    <i class="fas fa-save"></i> Actualizar
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                        <script>
+                                            function habilitarCampos(proveedorId) {
+                                                // Get the fields by their IDs using the provider's ID to make them unique
+                                                const nombrePersona = document.getElementById(`nombre_persona_${proveedorId}`);
+                                                const nombreEmpresa = document.getElementById(`nombre_empresa_${proveedorId}`);
+                                                const telefono = document.getElementById(`contacto_telefono_${proveedorId}`);
+                                                const correo = document.getElementById(`contacto_correo_${proveedorId}`);
+
+                                                // Remove the readonly and disabled attributes
+                                                nombrePersona.removeAttribute('readonly');
+                                                nombrePersona.removeAttribute('disabled');
+                                                nombreEmpresa.removeAttribute('readonly');
+                                                nombreEmpresa.removeAttribute('disabled');
+                                                telefono.removeAttribute('readonly');
+                                                telefono.removeAttribute('disabled');
+                                                correo.removeAttribute('readonly');
+                                                correo.removeAttribute('disabled');
+
+                                                // Change the button to a "Guardar" button or similar if necessary
+                                                const editarBtn = document.getElementById(`btn-editar-${proveedorId}`);
+                                                editarBtn.style.display = 'none';  // Hide the Edit button
+
+                                                const actualizarBtn = document.getElementById(`btn-actualizar-${proveedorId}`);
+                                                actualizarBtn.style.display = 'inline-block';  // Show the Update button
+                                            }
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                         </tbody>
                     </table>
-                    <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modal-agregar-proveedor">Agregar Proveedor</button>
 
-                    <!-- Botón para ver gráfica de stock dentro de Proveedores -->
-                    <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modal-grafica">Ver Gráfica de Stock</button>
+                    <!-- Paginación -->
+                    <div class="d-flex justify-content-between mt-3">
+                        <div>
+                            {{ $proveedores->links('pagination::bootstrap-5') }}
+                        </div>
+                        <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modal-agregar-proveedor">
+                            <i class="fas fa-plus-circle"></i> Agregar Proveedor
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -41,8 +133,6 @@
                         <i class="fas fa-bell fa-2x text-primary"></i> Notificaciones
                     </h5>
                     <ul class="list-group">
-                        <li class="list-group-item">Nueva compra pendiente de aprobación</li>
-                        <li class="list-group-item">Stock bajo en productos XYZ</li>
                         <!-- Añade más notificaciones aquí -->
                     </ul>
                 </div>
@@ -52,7 +142,7 @@
 
     <!-- Compras Recientes -->
     <div class="row mb-4">
-        <div class="col-12">
+        <div class="col-md-6">
             <div class="card border-primary mb-4">
                 <div class="card-body">
                     <h5 class="card-title text-center">
@@ -69,194 +159,252 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>Distribuidora XYZ</td>
-                            <td>2024-10-15</td>
-                            <td>$4,500.00</td>
-                            <td>Pendiente</td>
-                            <td>
-                                <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detallar-productos">Detallar</button>
-                                <button class="btn btn-danger btn-sm">Cancelar</button>
-                            </td>
-                        </tr>
+                        @foreach($compras as $compra)
+                            <tr>
+                                <td>{{ $compra->proveedor->nombre_empresa }}</td>
+                                <td>{{ $compra->fecha_compra }}</td>
+                                <td>${{ number_format($compra->total, 2) }}</td>
+                                <td>
+                                    @if($compra->estado == 'entregado')
+                                        <span class="badge" style="background-color: #a8e6cf; color: #2d6a4f;">Entregado</span>
+                                    @elseif($compra->estado == 'pendiente')
+                                        <span class="badge" style="background-color: #ffe156; color: #d3a300;">Pendiente</span>
+                                    @elseif($compra->estado == 'cancelado')
+                                        <span class="badge" style="background-color: #ff6f61; color: #3f4348;">Cancelado</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($compra->estado == 'entregado')
+                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detallar-productos-{{ $compra->id }}">Ver Detalle</button>
+                                    @elseif($compra->estado == 'pendiente')
+                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detallar-productos-{{ $compra->id }}">Detallar</button>
+                                    @elseif($compra->estado == 'cancelado')
+                                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-motivo-cancelacion-{{ $compra->id }}">Ver Motivo</button>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
+
+                    <!-- Paginación -->
+                    <div class="d-flex justify-content-center">
+                        {{ $compras->links('pagination::bootstrap-5') }}
+                    </div>
+
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-agregar-compra">Agregar Compra</button>
                 </div>
             </div>
+
         </div>
-    </div>
 
-    <!-- Modal para Agregar Compra -->
-    <div class="modal fade" id="modal-agregar-compra" tabindex="-1" aria-labelledby="modal-agregar-compra-label" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-agregar-compra-label">Agregar Compra</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="proveedor-compra" class="form-label">Seleccionar Proveedor</label>
-                            <select class="form-select" id="proveedor-compra">
-                                <option value="" selected disabled>Seleccione un Proveedor</option>
-                                <option value="1">Distribuidora XYZ</option>
-                                <option value="2">Proveedores ABC</option>
-                                <!-- Agrega más proveedores aquí -->
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="fecha-compra" class="form-label">Fecha</label>
-                            <input type="date" class="form-control" id="fecha-compra">
-                        </div>
-                        <button type="button" class="btn btn-primary">Agregar Compra</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para Agregar Proveedor -->
-    <div class="modal fade" id="modal-agregar-proveedor" tabindex="-1" aria-labelledby="modal-agregar-proveedor-label" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-agregar-proveedor-label">Agregar Proveedor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="form-agregar-proveedor">
-                        <div class="mb-3">
-                            <label for="nuevo-proveedor" class="form-label">Nombre del Proveedor</label>
-                            <input type="text" class="form-control" id="nuevo-proveedor" placeholder="Nombre del Proveedor" required>
-                        </div>
-                        <button type="button" class="btn btn-primary" onclick="agregarProveedor()">Agregar Proveedor</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para Editar Proveedor -->
-    <div class="modal fade" id="modal-editar-proveedor" tabindex="-1" aria-labelledby="modal-editar-proveedor-label" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-editar-proveedor-label">Modificar Proveedor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="form-editar-proveedor">
-                        <div class="mb-3">
-                            <label for="proveedor-modificar" class="form-label">Nombre del Proveedor</label>
-                            <input type="text" class="form-control" id="proveedor-modificar" required>
-                        </div>
-                        <button type="button" class="btn btn-warning" onclick="modificarProveedor()">Modificar Proveedor</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para Detallar Productos -->
-    <div class="modal fade" id="modal-detallar-productos" tabindex="-1" aria-labelledby="modal-detallar-productos-label" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-detallar-productos-label">Catálogo de Productos</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Filtros de búsqueda -->
-                    <div class="row mb-4">
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" id="busqueda-productos" placeholder="Buscar productos...">
-                        </div>
-                        <div class="col-md-4">
-                            <select class="form-select" id="filtro-stock">
-                                <option value="">Filtrar por Stock</option>
-                                <option value="con-stock">Con Stock</option>
-                                <option value="sin-stock">Sin Stock</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Catálogo de productos -->
-                    <div class="row" id="catalogo-productos">
-                        <!-- Suponiendo que este catálogo se llena dinámicamente con productos del proveedor seleccionado -->
-                        <!-- Producto 1 -->
-                        <div class="col-md-3 mb-4">
-                            <div class="card">
-                                <img src="https://assets.unileversolutions.com/v1/61844691.png" class="card-img-top" alt="Shampoo">
-                                <div class="card-body">
-                                    <h5 class="card-title">Shampoo</h5>
-                                    <p class="card-text">Precio: $150.00</p>
-                                    <p class="text-muted">Stock: 20 unidades</p>
-                                    <input type="number" class="form-control mb-2" min="1" value="1">
-                                    <button class="btn btn-success w-100">Agregar</button>
+        <!-- Modal para Detallar Compra (Estado: Pendiente / Entregado) -->
+        @foreach($compras as $compra)
+            @if($compra->estado == 'pendiente' || $compra->estado == 'entregado')
+                <!-- Modal principal de detalle de la compra -->
+                <div class="modal fade" id="modal-detallar-productos-{{ $compra->id }}" tabindex="-1" aria-labelledby="modal-detallar-productos-{{ $compra->id }}-label" aria-hidden="true">
+                    <div class="modal-dialog" style="max-width: 95%; max-height: 90%; margin: auto;">
+                        <div class="modal-content" style="border-radius: 10px; background-color: #f9f9f9;">
+                            <div class="modal-header" style="background-color: #f7c8d7; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                <h5 class="modal-title" id="modal-detallar-productos-{{ $compra->id }}-label" style="color: #5a5a5a;">Detalle de Compra</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" style="padding: 20px; color: #333;">
+                                <h6 style="color: #7d4e88; font-weight: bold;">Catálogo de Productos del Proveedor: {{ $compra->proveedor->nombre_empresa }}</h6>
+                                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-3">
+                                    @foreach($compra->productos as $producto)
+                                        <div class="col">
+                                            <div class="card" style="border: 1px solid #ddd; border-radius: 10px; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); cursor: pointer; max-width: 100%; margin: 0 auto;" data-bs-toggle="collapse" data-bs-target="#producto-detalles-{{ $producto->id }}" aria-expanded="false" aria-controls="producto-detalles-{{ $producto->id }}">
+                                                <img src="{{ $producto->main_photo }}" class="card-img-top" alt="{{ $producto->nombre }}" style="height: 150px; object-fit: contain; width: 100%; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                                <div class="card-body" style="padding: 15px; height: 120px;">
+                                                    <h5 class="card-title" style="font-size: 16px; color: #5a5a5a; font-weight: bold;">{{ $producto->nombre }}</h5>
+                                                    <p class="card-text" style="font-size: 14px; color: #8c8c8c;">
+                                                        <strong>Cantidad:</strong> {{ $producto->pivot->cantidad }}
+                                                    </p>
+                                                    <p class="card-text" style="font-size: 14px; color: #8c8c8c;">
+                                                        <strong>Precio Proveedor:</strong> ${{ number_format($producto->precio_proveedor, 2) }}
+                                                    </p>
+                                                    <div class="collapse" id="producto-detalles-{{ $producto->id }}">
+                                                        <p class="card-text" style="font-size: 14px; color: #8c8c8c;">
+                                                            <strong>Stock:</strong> {{ $producto->stock }}
+                                                        </p>
+                                                        <p class="card-text" style="font-size: 14px; color: #8c8c8c;">
+                                                            <strong>Precio Venta:</strong> ${{ number_format($producto->precio_venta, 2) }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
-                        </div>
+                            <div class="modal-footer" style="background-color: #f7c8d7; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                                @if($compra->estado == 'pendiente')
+                                    <!-- Botón de Cancelar que abre el segundo modal -->
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-cancelar-compra-{{ $compra->id }}">Cancelar</button>
 
-                        <!-- Producto 2 -->
-                        <div class="col-md-3 mb-4">
-                            <div class="card">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvOPtNV3kYNDc-awdzYYXc07qBvLij-ug1D03Pj_d60g&s" class="card-img-top" alt="Acondicionador">
-                                <div class="card-body">
-                                    <h5 class="card-title">Acondicionador</h5>
-                                    <p class="card-text">Precio: $130.00</p>
-                                    <p class="text-muted">Stock: 15 unidades</p>
-                                    <input type="number" class="form-control mb-2" min="1" value="1">
-                                    <button class="btn btn-success w-100">Agregar</button>
-                                </div>
+                                    <!-- Botón de Marcar como Recibido -->
+                                    <form method="POST" action="{{ route('compra.recibida', $compra->id) }}" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success">Marcar como Recibido</button>
+                                    </form>
+                                @endif
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- Agrega más productos aquí -->
+                <!-- Modal de Cancelación para solicitar motivo -->
+                <div class="modal fade" id="modal-cancelar-compra-{{ $compra->id }}" tabindex="-1" aria-labelledby="modal-cancelar-compra-{{ $compra->id }}-label" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content" style="border-radius: 10px; background-color: #f9f9f9;">
+                            <div class="modal-header" style="background-color: #f7c8d7; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                <h5 class="modal-title" id="modal-cancelar-compra-{{ $compra->id }}-label" style="color: #5a5a5a;">Cancelar Compra</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" style="padding: 20px;">
+                                <p style="color: #333;">Por favor, indique el motivo de la cancelación:</p>
+                                <form method="POST" action="{{ route('compra.cancelar', $compra->id) }}">
+                                    @csrf
+                                    <div class="mb-3">
+                                        <textarea name="motivo" class="form-control" placeholder="Escriba el motivo de la cancelación" rows="3" required></textarea>
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="submit" class="btn btn-danger">Confirmar Cancelación</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endforeach
+
+
+        <!-- Modal para Ver Motivo de Cancelación (Estado: Cancelado) -->
+        @foreach($compras as $compra)
+            @if($compra->estado == 'cancelado')
+                <div class="modal fade" id="modal-motivo-cancelacion-{{ $compra->id }}" tabindex="-1" aria-labelledby="modal-motivo-cancelacion-{{ $compra->id }}-label" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modal-motivo-cancelacion-{{ $compra->id }}-label">Motivo de Cancelación</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <textarea class="form-control" rows="4" readonly>{{ $compra->motivo }}</textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endforeach
+
+
+        <!-- Tabla de Stock (col-md-6) -->
+        <div class="col-md-6">
+            <div class="card border-secondary mb-4" style="border-color: #d8bfd8;">
+                <div class="card-body" style="background-color: #fdf7ff;">
+                    <h5 class="card-title text-center" style="color: #8b5e83;">Tabla de Stock</h5>
+                    <table class="table table-bordered text-center">
+                        <thead style="background-color: #f7d6e0;">
+                        <tr>
+                            <th>Producto</th>
+                            <th>Stock Actual</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($productos as $producto)
+                            @php
+                                // Definición de colores según el stock
+                                $bgColor = '';
+                                if ($producto->stock <= 5) {
+                                    $bgColor = '#ffc1c1';
+                                } elseif ($producto->stock <= 15) {
+                                    $bgColor = '#ffecb3';
+                                } else {
+                                    $bgColor = '#d4edda';
+                                }
+                            @endphp
+                            <tr>
+                                <td style="color: #5a5a5a; background-color: {{ $bgColor }};">{{ $producto->nombre }}</td>
+                                <td style="color: #5a5a5a; background-color: {{ $bgColor }};">{{ $producto->stock }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    <!-- Paginación -->
+                    <div class="d-flex justify-content-center">
+                        {{ $productos->links('pagination::bootstrap-5') }}
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
-
-    <!-- Modal para Ver Gráfica -->
-    <div class="modal fade" id="modal-grafica" tabindex="-1" aria-labelledby="modal-grafica-label" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-detallar-productos-label">Catálogo de Productos</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body text-center">
-                    <!-- Filtros y Búsqueda -->
-                    <div class="mb-3">
-                        <label for="filtro-select" class="form-label">Ordenar por:</label>
-                        <select id="filtro-select" class="form-select" aria-label="Filtro de productos" onchange="ordenarDatos()">
-                            <option value="">Seleccione un criterio</option>
-                            <option value="stock-mayor">Stock Mayor a Menor</option>
-                            <option value="stock-menor">Stock Menor a Mayor</option>
-                            <option value="calificacion-alta">Calificación Alta a Baja</option>
-                            <option value="calificacion-baja">Calificación Baja a Alta</option>
-                            <option value="alfabetico-asc">Orden Alfabético (A-Z)</option>
-                            <option value="alfabetico-desc">Orden Alfabético (Z-A)</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="busqueda-input" class="form-label">Buscar:</label>
-                        <input type="text" id="busqueda-input" class="form-control" placeholder="Ingrese su búsqueda" oninput="filtrarDatos()">
-                    </div>
-
-                    <div>GRAFICA STOCK DE PRODUCTOS</div>
-                    <div id="chart"></div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
+<!-- Modal para agregar proveedor -->
+<div class="modal fade" id="modal-agregar-proveedor" tabindex="-1" aria-labelledby="modal-agregar-proveedor-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-agregar-proveedor-label">Agregar Nuevo Proveedor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('proveedores.store') }}" method="POST">
+                    @csrf
+                    <!-- Campo Nombre Persona -->
+                    <div class="mb-3">
+                        <label for="nombre_persona" class="form-label">Nombre Persona</label>
+                        <input type="text" class="form-control" id="nombre_persona" name="nombre_persona" required>
+                    </div>
+
+                    <!-- Campo Nombre Empresa -->
+                    <div class="mb-3">
+                        <label for="nombre_empresa" class="form-label">Nombre Empresa</label>
+                        <input type="text" class="form-control" id="nombre_empresa" name="nombre_empresa" required>
+                    </div>
+
+                    <!-- Campo Teléfono con la librería intl-tel-input -->
+                    <div class="mb-3">
+                        <label for="contacto_telefono" class="form-label">Teléfono</label>
+                        <input type="tel" id="contacto_telefono" name="contacto_telefono" class="form-control" required>
+                    </div>
+
+                    <!-- Campo Correo -->
+                    <div class="mb-3">
+                        <label for="contacto_correo" class="form-label">Correo</label>
+                        <input type="email" class="form-control" id="contacto_correo" name="contacto_correo" required>
+                    </div>
+
+                    <!-- Botón Guardar -->
+                    <button type="submit" class="btn btn-primary w-100">Guardar Proveedor</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const input = document.querySelector("#contacto_telefono");
+
+        if (input) {
+            const iti = window.intlTelInput(input, {
+                nationalMode: false, // Desactiva el modo nacional
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+                preferredCountries: ["us", "mx", "es"],
+            });
+        }
+    });
+</script>
+
+
+

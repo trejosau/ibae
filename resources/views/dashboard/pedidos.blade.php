@@ -84,7 +84,7 @@
 
         <!-- Pagination -->
         <div class="d-flex justify-content-center">
-            {{ $pedidos->links() }}
+            {{ $pedidos->links('pagination::bootstrap-5')}}
         </div>
 
         @foreach ($pedidos as $pedido)

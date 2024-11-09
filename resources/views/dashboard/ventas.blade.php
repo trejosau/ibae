@@ -126,7 +126,7 @@
 
                     <!-- Paginación -->
                     <div class="d-flex justify-content-center">
-                        {{ $ventas->links() }}
+                        {{ $ventas->links('pagination::bootstrap-5') }}
                     </div>
 
                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-agregar-venta">Agregar Venta</button>
