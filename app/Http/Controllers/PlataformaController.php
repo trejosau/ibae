@@ -3,20 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CursoAperturaRequest;
-use App\Models\Colegiaturas;
 use App\Models\Estudiante;
 use App\Models\EstudianteCurso;
 use App\Models\ModuloCurso;
 use App\Models\Modulos;
 use App\Models\ModuloTemas;
 use App\Models\Profesor;
-use App\Models\User;
 use App\Models\Temas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Cursos;
 use App\Models\Certificados;
 use App\Models\CursoApertura;
+use App\Models\Inscripcion ;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -499,55 +498,116 @@ public function actualizarTema(Request $request, $id)
     $tema->update($request->only(['nombre', 'descripcion']));
     return redirect()->back()->with('success', 'Tema actualizado con éxito.');
 }
-    public function estudiantes()
-    {
+public function estudiantes()
+{
         // Obtener estudiantes con las relaciones de persona e inscripcion
         $estudiantes = Estudiante::with([
-            'persona',
+            'persona.usuario',
             'inscripcion'
         ])->get();
-
-        // Obtener el correo electrónico de cada estudiante usando el procedimiento almacenado
-        foreach ($estudiantes as $estudiante) {
-            // Llamar al procedimiento para obtener el email usando el id de la persona
-            $resultado = DB::select('CALL ObtenerEmailPorPersona(?)', [$estudiante->persona->id]);
-            // Asignar el email al estudiante si se encontró
-            if (!empty($resultado)) {
-                $estudiante->email = $resultado[0]->email;
-            }
-        }
-
         return view('plataforma.index', compact('estudiantes'));
+}
+
+
+    public function darDeBaja($matricula)
+    {
+        $estudiante = Estudiante::where('matricula', $matricula)->first();
+    
+        if (!$estudiante) {
+            return redirect()->back()->with('error', 'Estudiante no encontrado.');
+        }
+    
+        // Cambiar el estado a baja
+        $estudiante->estado = 'baja';  // Asumiendo que el campo 'estado' es 'activo' o 'baja'
+        $estudiante->save();
+    
+        return redirect()->route('plataforma.estudiantes')->with('success', 'Estudiante dado de baja correctamente.');
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public function inscripciones() {
-        return view('plataforma.index');
+        $inscripciones = Inscripcion::all();
+        return view('plataforma.index', compact('inscripciones'));
+
+    }
+
+
+    public function storeInscripcion(Request $request)
+    {
+        // Validación de datos
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'precio' => 'required|numeric',
+            'descripcion' => 'nullable|string',
+            'material_incluido' => 'required|boolean',
+        ]);
+    
+        // Crear la nueva inscripción
+        Inscripcion::create([
+            'nombre' => $request->nombre,
+            'precio' => $request->precio,
+            'descripcion' => $request->descripcion,
+            'material_incluido' => $request->material_incluido,
+        ]);
+    
+        // Redirigir con un mensaje de éxito
+        return redirect()->back()->with('success', 'Inscripción agregada correctamente.');
+    }
+        
+    public function update(Request $request, $id)
+    {
+        // Validar los datos del formulario
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'precio' => 'required|numeric',
+            'descripcion' => 'required|string',
+            'material_incluido' => 'required|boolean',
+        ]);
+
+        // Encontrar la inscripción por ID
+        $inscripcion = Inscripcion::findOrFail($id);
+
+        // Actualizar los campos con los nuevos valores
+        $inscripcion->update([
+            'nombre' => $validatedData['nombre'],
+            'precio' => $validatedData['precio'],
+            'descripcion' => $validatedData['descripcion'],
+            'material_incluido' => $validatedData['material_incluido'],
+        ]);
+
+        // Redirigir a la lista de inscripciones o a otra vista con un mensaje de éxito
+        return redirect()->route('plataforma.inscripciones')->with('success', 'Inscripción actualizada correctamente.');
     }
 
     public function profesores() {
-        return view('plataforma.index');
+        // Obtener los profesores con la relación 'persona' y 'usuario'
+        $profesores = Profesor::with(['persona.usuario'])->get();
+        
+        // Retornar la vista pasando los datos de los profesores
+        return view('plataforma.index', compact('profesores'));
     }
+
+    
+
+
+    public function bajaProfesor($id)
+{
+    // Buscar al profesor por su ID
+    $profesor = Profesor::find($id);
+
+    // Verificar que el profesor exista
+    if (!$profesor) {
+        return redirect()->back()->with('error', 'Profesor no encontrado.');
+    }
+
+    // Cambiar su estado a 'inactivo'
+    $profesor->estado = 'inactivo';
+    $profesor->save();
+
+    // Redirigir con un mensaje de éxito
+    return redirect()->route('plataforma.profesores')->with('success', 'Profesor dado de baja correctamente.');
+}
+
 
     public function pagos() {
         return view('plataforma.index');

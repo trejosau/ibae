@@ -225,164 +225,189 @@
     }
 
     /* Carrito de compras */
-
     .cart-sidebar {
-        width: 400px;
-        padding: 20px;
-        background-color: #fff;
-        position: fixed;
-        right: -420px;
-        top: 0;
-        bottom: 0;
-        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
-        transition: right 0.3s ease;
-        z-index: 1000;
-    }
+    width: 400px;
+    padding: 20px;
+    background-color: #fff;
+    position: fixed;
+    right: -420px;
+    top: 0;
+    bottom: 0;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+    transition: right 0.3s ease;
+    z-index: 1000;
+}
 
-    .cart-sidebar.active {
-        right: 0;
-    }
+.cart-sidebar.active {
+    right: 0;
+}
 
-    .close-btn {
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        cursor: pointer;
-        color: #333;
-    }
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #333;
+}
 
-    .cart-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 10px;
-        margin-bottom: 20px;
-    }
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
 
-    .cart-content {
-        max-height: 60vh;
-        overflow-y: auto;
-    }
+.cart-content {
+    max-height: 60vh;
+    overflow-y: auto;
+}
 
-    .cart-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-        padding: 10px;
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    }
+.cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
 
-    .product-image-container {
-        width: 80px;
-        height: 80px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        border-radius: 8px;
-        margin-right: 15px;
-    }
+.product-image-container {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-right: 15px;
+}
 
-    .product-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+.product-image-container img {
+    width: 60px;
+    height: 60px;
+}
 
-    .cart-item-details {
-        flex-grow: 1;
-    }
+.cart-item-details {
+    flex: 1;
+    margin-left: 15px;
+}
 
-    .item-name {
-        font-weight: bold;
-        color: #333;
-        font-size: 1.1em;
-    }
+.item-name {
+    font-weight: bold;
+    color: #333;
+    font-size: 1.1em;
+}
 
-    .item-quantity-price, .item-total {
-        color: #666;
-        font-size: 0.9em;
-    }
+.item-quantity-price,
+.item-total {
+    color: #555;
+    font-size: 1em;
+}
 
-    .remove-btn {
-        background-color: transparent;
-        border: none;
-        color: #333; /* Rojo */
-        cursor: pointer;
-        font-size: 18px;
-        transition: color 0.2s ease;
-    }
+.quantity-controls {
+    display: flex;
+    align-items: center;
+}
 
-    .remove-btn:hover {
-        color: #d99db7; /* Rojo más fuerte */
-    }
+.quantity-controls .btn-quantity {
+    background-color: #f0f0f0;
+    border: none;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    cursor: pointer;
+    margin: 0 5px;
+}
 
-    .empty-cart {
-        text-align: center;
-        padding: 20px;
-        color: #999;
-    }
+.quantity-controls input[type="number"] {
+    width: 50px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
 
-    .empty-cart-icon {
-        font-size: 48px;
-        color: #cccccc;
-        margin-bottom: 10px;
-    }
+.remove-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #c00;
+    font-size: 1.2em;
+    transition: color 0.2s ease;
+}
 
-    .empty-cart-text {
-        font-size: 18px;
-        color: #666;
-    }
+.remove-btn:hover {
+    color: #d99db7; /* Rosa más fuerte */
+}
 
-    .total-price {
-        font-size: 1.4em;
-        font-weight: bold;
-        margin-top: 30px;
-        text-align: center;
-    }
+.remove-btn i {
+    font-size: 20px;
+}
 
-    .cart-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 20px;
-    }
+.empty-cart {
+    text-align: center;
+    padding: 20px;
+    color: #999;
+}
 
-    .checkout-btn {
-        background-color: #333; /* Rojo */
-        border: none;
-        color: #fff;
-        padding: 10px 20px;
-        font-size: 1.1em;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
+.empty-cart-icon {
+    font-size: 48px;
+    color: #cccccc;
+    margin-bottom: 10px;
+}
 
-    .checkout-btn:hover {
-        background-color: #d99db7; /* Rosa clarito */
-    }
+.empty-cart-text {
+    font-size: 18px;
+    color: #666;
+}
 
-    .view-cart-btn {
-        text-decoration: none;
-        color: #e63946; /* Rojo */
-        font-weight: bold;
-    }
+.total-price {
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-top: 30px;
+    text-align: center;
+}
 
-    /* Carrito y navegación */
-    .cart-sidebar.active .navegacion {
-        display: none;
-    }
+.cart-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
 
+.checkout-btn {
+    background-color: #333;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 1.1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
-    .mensaje-ajax {
+.checkout-btn:hover {
+    background-color: #d99db7; /* Rosa clarito */
+}
+
+.view-cart-btn {
+    text-decoration: none;
+    color: #e63946; /* Rojo */
+    font-weight: bold;
+}
+
+.cart-sidebar.active .navegacion {
+    display: none;
+}
+
+.mensaje-ajax {
     position: fixed;
     bottom: 20px;
     left: 20px;
-    background-color: #333; /* Rojo para mensaje */
+    background-color: #333;
     color: #fff;
     padding: 15px 30px;
     border-radius: 8px;
@@ -391,14 +416,13 @@
     transition: opacity 0.4s ease, transform 0.4s ease;
     z-index: 1000;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transform: translateY(20px); /* Animación de entrada */
+    transform: translateY(20px);
 }
 
 .mensaje-ajax.show {
     opacity: 1;
     transform: translateY(0);
 }
-
 
 
 
@@ -576,7 +600,7 @@
             document.getElementById('cart-sidebar').classList.remove('active');
         });
     });
-    
+
     function cargarContenidoCarrito() {
     fetch('/carrito/contenido')
         .then(response => response.json())
@@ -591,38 +615,146 @@
                     let totalPorProducto = product.precio * product.cantidad;
                     subtotal += totalPorProducto;
 
-                    // Agregar producto al contenido del carrito con verificación de imagen
                     cartContent.innerHTML += `
-                        <div class="cart-item">
-                            <div class="product-image-container">
-                                <img 
-                                    src="${product.main_photo || '/ruta/a/imagen-placeholder.jpg'}" 
-                                    alt="${product.nombre}" 
-                                    class="img-fluid rounded shadow mb-4"
-                                    onerror="this.src='/ruta/a/imagen-placeholder.jpg'; this.alt='Imagen no disponible';"
-                                >
-                            </div>
+    <div class="cart-item">
+        <div class="product-image-container">
+            <img 
+                src="${product.main_photo || '/ruta/a/imagen-placeholder.jpg'}" 
+                alt="${product.nombre}" 
+                class="img-fluid rounded shadow mb-4"
+                onerror="this.src='/ruta/a/imagen-placeholder.jpg'; this.alt='Imagen no disponible';"
+            >
+        </div>
 
-                            <div class="cart-item-details">
-                                <span class="item-name">${product.nombre}</span>
-                                <span class="item-quantity-price">$${product.precio} x ${product.cantidad}</span>
-                                <span class="item-total">= $${totalPorProducto.toFixed(2)}</span>
-                            </div>
+        <div class="cart-item-details">
+            <span class="item-name">${product.nombre}</span>
+            
+            <div class="quantity-controls">
+                <button onclick="adjustQuantity(${id}, -1)" class="btn-quantity">-</button>
+                <input 
+                    type="number" 
+                    min="1" 
+                    value="${product.cantidad}" 
+                    class="item-quantity" 
+                    data-product-id="${id}"
+                    onchange="changeQuantity(${id}, this.value)"
+                >
+                <button onclick="adjustQuantity(${id}, 1)" class="btn-quantity">+</button>
+            </div>
 
-                            <button class="remove-btn" onclick="removeFromCart(${id})">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    `;
+            <span class="item-price">$${product.precio}</span>
+            <span class="item-total" id="product-total-${id}">= $${totalPorProducto.toFixed(2)}</span>
+        </div>
+
+        <button class="remove-btn" onclick="removeFromCart(${id})">
+            <i class="fas fa-trash-alt"></i>
+        </button>
+    </div>
+`;
+
                 });
 
-                document.getElementById('cart-icon-total').innerText = `$${subtotal.toFixed(2)}`;
-                document.getElementById('cart-total-sidebar').innerText = `Total: $${subtotal.toFixed(2)}`;
+                // Actualizar los totales del carrito
+                actualizarTotalesCarrito(subtotal);
             } else {
                 mostrarCarritoVacio(cartContent);
             }
         })
         .catch(error => console.error('Error al cargar el contenido del carrito:', error));
+}
+
+function changeQuantity(id, nuevaCantidad) {
+    if (nuevaCantidad < 1) return;
+
+    fetch(`/carrito/actualizar/${id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ cantidad: nuevaCantidad })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const itemTotal = document.getElementById(`product-total-${id}`);
+            const productPrice = parseFloat(document.querySelector(`input[data-product-id="${id}"]`).getAttribute('data-price'));
+            const newTotal = productPrice * nuevaCantidad;
+
+            itemTotal.innerText = `= $${newTotal.toFixed(2)}`;
+
+            // Recalcular el subtotal
+            recalcularSubtotal();
+        } else {
+            console.error('Error al actualizar la cantidad del producto:', data.message);
+        }
+    })
+    .catch(error => console.error('Error en la solicitud de actualización:', error));
+}
+
+function recalcularSubtotal() {
+    let subtotal = 0;
+
+    document.querySelectorAll('.item-total').forEach(itemTotal => {
+        subtotal += parseFloat(itemTotal.innerText.replace('= $', ''));
+    });
+
+    document.getElementById('cart-icon-total').innerText = `$${subtotal.toFixed(2)}`;
+    document.getElementById('cart-total-sidebar').innerText = `Total: $${subtotal.toFixed(2)}`;
+}
+
+function adjustQuantity(id, delta) {
+    const quantityInput = document.querySelector(`input[data-product-id="${id}"]`);
+    let nuevaCantidad = parseInt(quantityInput.value) + delta;
+
+    if (nuevaCantidad < 1) nuevaCantidad = 1;
+
+    quantityInput.value = nuevaCantidad;
+    changeQuantity(id, nuevaCantidad);
+}
+
+function actualizarTotalesCarrito(subtotal) {
+    document.getElementById('cart-icon-total').innerText = `$${subtotal.toFixed(2)}`;
+    document.getElementById('cart-total-sidebar').innerText = `Total: $${subtotal.toFixed(2)}`;
+}
+
+function actualizarTotalCarrito() {
+    fetch('/carrito/contenido')
+        .then(response => response.json())
+        .then(data => {
+            if (data.subtotal !== undefined) {
+                document.getElementById('cart-total').innerText = `$${data.subtotal.toFixed(2)}`;
+            } else {
+                document.getElementById('cart-total').innerText = '$0.00';
+            }
+        })
+        .catch(error => console.error('Error al actualizar el total del carrito:', error));
+}
+
+
+
+
+
+
+
+
+
+
+function removeFromCart(productId) {
+    fetch(`/carrito/${productId}`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            cargarContenidoCarrito(); // Actualizar la vista del carrito
+        } else {
+            console.error('Error al eliminar el producto del carrito');
+        }
+    })
+    .catch(error => console.error('Error al eliminar el producto del carrito:', error));
 }
 
     
@@ -638,19 +770,6 @@
         document.getElementById('cart-total-sidebar').innerText = 'Total: $0.00';
     }
     
-    // Función para actualizar el total del carrito
-    function actualizarTotalCarrito() {
-        fetch('/carrito/contenido')
-            .then(response => response.json())
-            .then(data => {
-                if (data.subtotal !== undefined) {
-                    document.getElementById('cart-total').innerText = `$${data.subtotal.toFixed(2)}`;
-                } else {
-                    document.getElementById('cart-total').innerText = '$0.00';
-                }
-            })
-            .catch(error => console.error('Error al actualizar el total del carrito:', error));
-    }
     
     function mostrarMensajeEliminacion(mensaje) {
     const mensajeElemento = document.createElement('div');
