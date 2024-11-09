@@ -35,7 +35,7 @@
             </li>
             <li class="sidebar-item">
                 <a href="{{ route('dashboard.pedidos') }}" class="sidebar-link">
-                    <i class="fa-solid fa-shop"></i>
+                    <i class="fa-solid fa-box"></i>
                     <span>Pedidos</span>
                 </a>
             </li>
