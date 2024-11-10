@@ -6,9 +6,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 
-class LoginGoogleController extends Controller
+class loginGoogleController extends Controller
 {
     public function redirectToGoogle()
     {
@@ -41,7 +40,7 @@ class LoginGoogleController extends Controller
                 $user->assignRole('admin');
             }
 
-            Auth::login($user);
+            Auth::login($user, true);
 
             return redirect()->route('home');
         } catch (\Exception $e) {
