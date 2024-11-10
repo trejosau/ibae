@@ -31,33 +31,7 @@
 <div class="productos-section">
     <h2 class="text-center mb-4">Gestión de Productos</h2>
 
-    <!-- Card para Gráficas -->
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card text-center border-success">
-                <div class="card-header">Productos Más Vendidos</div>
-                <div class="card-body">
-                    <canvas id="productosMasVendidosChart"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-center border-success">
-                <div class="card-header">Mejor Valorados</div>
-                <div class="card-body">
-                    <canvas id="mejorValoradosChart"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-center border-success">
-                <div class="card-header">Menos Vendidos</div>
-                <div class="card-body">
-                    <canvas id="menosVendidosChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Filtros y Barra de Búsqueda en la Misma Línea -->
     <div class="row mb-3 align-items-end">
@@ -87,21 +61,7 @@
         <div class="col-md-2">
             <input type="number" class="form-control" id="maxStock" placeholder="Max Stock">
         </div>
-        <div class="col-md-4">
-            <h5>Seleccionar columnas a mostrar:</h5>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                    Seleccionar Columnas
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item"><input type="checkbox" id="toggleNombre" checked> Nombre</a></li>
-                    <li><a class="dropdown-item"><input type="checkbox" id="toggleCantidad" checked> Cantidad en Stock</a></li>
-                    <li><a class="dropdown-item"><input type="checkbox" id="togglePrecio" checked> Precio de Venta</a></li>
-                    <li><a class="dropdown-item"><input type="checkbox" id="toggleEstado" checked> Estado</a></li>
-                    <li><a class="dropdown-item"><input type="checkbox" id="toggleAcciones" checked> Acciones</a></li>
-                </ul>
-            </div>
-        </div>
+
     </div>
 
     <!-- Tabla de Productos -->
@@ -244,75 +204,3 @@
     @endforeach
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const ctx1 = document.getElementById('productosMasVendidosChart').getContext('2d');
-    const ctx2 = document.getElementById('mejorValoradosChart').getContext('2d');
-    const ctx3 = document.getElementById('menosVendidosChart').getContext('2d');
-
-    const productosMasVendidosChart = new Chart(ctx1, {
-        type: 'bar',
-        data: {
-            labels: ['Producto 1', 'Producto 2', 'Producto 3'],
-            datasets: [{
-                label: 'Cantidad Vendida',
-                data: [30, 20, 10],
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    const mejorValoradosChart = new Chart(ctx2, {
-        type: 'bar',
-        data: {
-            labels: ['Producto 1', 'Producto 2', 'Producto 3'],
-            datasets: [{
-                label: 'Calificación',
-                data: [5, 4, 3],
-                backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                borderColor: 'rgba(153, 102, 255, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    const menosVendidosChart = new Chart(ctx3, {
-        type: 'bar',
-        data: {
-            labels: ['Producto 1', 'Producto 2', 'Producto 3'],
-            datasets: [{
-                label: 'Cantidad Vendida',
-                data: [10, 5, 2],
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-</script>

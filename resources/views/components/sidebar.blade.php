@@ -82,24 +82,7 @@
                     <span>Auditoría</span>
                 </a>
             </li>
-            <li class="sidebar-item">
-                <a href="#profileDropdown" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
-                   data-bs-target="#profileDropdown" aria-expanded="false" aria-controls="profileDropdown">
-                    <i class="fa-solid fa-gear"></i>
-                    <span>Mi perfil</span>
-                </a>
-                <ul id="profileDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item">
-                        <a href="" class="sidebar-link">Información</a>
-                    </li>v
-                    <li class="sidebar-item">
-                        <a href="" class="sidebar-link">Configuración</a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="" class="sidebar-link">Notificaciones</a>
-                    </li>
-                </ul>
-            </li>
+
 
 
         </ul>
@@ -115,4 +98,6 @@
         </li>
 
     </aside>
+
+
 
