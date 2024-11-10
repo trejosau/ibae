@@ -16,9 +16,9 @@ class CreateNotificationsTable extends Migration
             $table->id();
             $table->string('motivo');
             $table->string('mensaje');
-            $table->bigInteger('user_id');
+            $table->foreignId('usuario')->constrained('users')->onDelete('cascade');
             $table->timestamp('leida_at')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
         });
     }
 
