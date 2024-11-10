@@ -87,13 +87,12 @@
 
         </ul>
         <li class="sidebar-footer">
-
-            <form method="POST" action="{{ route('logout') }}">
+            <a class="sidebar-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Logout</span>
+            </a>
+            <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
                 @csrf
-                <a class="sidebar-link" type="submit">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span>Logout</span>
-                </a>
             </form>
         </li>
 
