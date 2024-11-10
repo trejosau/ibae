@@ -152,12 +152,9 @@
 
                                 <!-- Si la notificación no está leída -->
                                 @if(is_null($notificacion->leida_at))
-                                    <form action="{{ route('notificaciones.marcarLeida', $notificacion->id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-success">
-                                            <i class="fas fa-check"></i> Marcar como leída
-                                        </button>
-                                    </form>
+                                    <a href="{{ route('notificaciones.marcarLeida', $notificacion->id) }}" class="btn btn-sm btn-success">
+                                        <i class="fas fa-check"></i> Marcar como leída
+                                    </a>
                                 @else
                                     <!-- Si la notificación ya está leída -->
                                     <button class="btn btn-sm btn-secondary" disabled>
