@@ -17,11 +17,17 @@ class DetalleCompraSeeder extends Seeder
         $productos = Productos::all(); // Obtener todos los productos
 
         foreach ($compras as $compra) {
+            // Obtener el proveedor de la compra
+            $proveedor = $compra->proveedor;
+
+            // Filtrar productos por el proveedor de la compra
+            $productosDelProveedor = $productos->where('id_proveedor', $proveedor->id);
+
             // Simular varios detalles por compra
             for ($i = 1; $i <= random_int(1, 3); $i++) {
                 DetalleCompra::create([
                     'id_compra' => $compra->id,
-                    'id_producto' => $productos->random()->id, // Asignar un producto aleatorio
+                    'id_producto' => $productosDelProveedor->random()->id, // Asignar un producto aleatorio del mismo proveedor
                     'cantidad' => random_int(1, 10), // Cantidad entre 1 y 10
                 ]);
             }
