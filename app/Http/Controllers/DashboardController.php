@@ -222,18 +222,18 @@ class DashboardController extends Controller
     }
     public function compras(Request $request)
     {
-        $proveedores = Proveedores::paginate(4);
+        $proveedores = Proveedores::paginate(4, ['*'], 'proveedores_page');
         $proveedores->load(['productos' => function($query) {
             $query->whereIn('estado', ['activo', 'agotado']);
         }]);
 
         $compras = Compras::with('proveedor')
             ->orderBy('fecha_compra', 'desc')
-            ->paginate(6);
+            ->paginate(6, ['*'], 'compras_page');
 
         $productos = Productos::where('estado', '!=', 'inactivo')
             ->with('proveedor')
-            ->paginate(10);
+            ->paginate(10, ['*'], 'productos_page');
 
         $catalogoProductos = Productos::where('estado', '!=', 'inactivo')->get();
 

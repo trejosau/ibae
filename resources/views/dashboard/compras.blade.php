@@ -113,16 +113,19 @@
                         @endforeach
                         </tbody>
                     </table>
-
-                    <!-- Paginación -->
+                    <!-- Paginación proveedores -->
                     <div class="d-flex justify-content-between mt-3">
                         <div>
-                            {{ $proveedores->links('pagination::bootstrap-5') }}
+                            {{ $proveedores->appends([
+                                'compras_page' => $compras->currentPage(),
+                                'productos_page' => $productos->currentPage()
+                            ])->links('pagination::bootstrap-5') }}
                         </div>
                         <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modal-agregar-proveedor">
                             <i class="fas fa-plus-circle"></i> Agregar Proveedor
                         </button>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -218,9 +221,14 @@
                         </tbody>
                     </table>
 
-                    <!-- Paginación -->
-                    <div class="d-flex justify-content-center">
-                        {{ $compras->links('pagination::bootstrap-5') }}
+                    <!-- Paginación Compras -->
+                    <div class="d-flex justify-content-between mt-3">
+                        <div>
+                            {{ $compras->appends([
+                                'proveedores_page' => $proveedores->currentPage(),
+                                'productos_page' => $productos->currentPage()
+                            ])->links('pagination::bootstrap-5') }}
+                        </div>
                     </div>
 
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-agregar-compra">Agregar Compra</button>
@@ -371,9 +379,14 @@
                         @endforeach
                         </tbody>
                     </table>
-                    <!-- Paginación -->
-                    <div class="d-flex justify-content-center">
-                        {{ $productos->links('pagination::bootstrap-5') }}
+                    <!-- Paginación Productos -->
+                    <div class="d-flex justify-content-between mt-3">
+                        <div>
+                            {{ $productos->appends([
+                                'proveedores_page' => $proveedores->currentPage(),
+                                'compras_page' => $compras->currentPage()
+                            ])->links('pagination::bootstrap-5') }}
+                        </div>
                     </div>
                 </div>
             </div>
