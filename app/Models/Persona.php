@@ -33,6 +33,5 @@ class Persona extends Model
     {
         return $this->hasOne(Profesor::class, 'id_persona');
     }
-
-
 }
+
