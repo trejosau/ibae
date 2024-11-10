@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\CompraController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GraficasController;
 use App\Http\Controllers\loginGoogleController;
+use App\Http\Controllers\NotificacionesController;
+use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PlataformaController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\SalonController;
@@ -21,7 +24,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/inicio', [DashboardController::class, 'inicio'])->name('dashboard.inicio');
     Route::get('/dashboard/ventas', [DashboardController::class, 'ventas'])->name('dashboard.ventas');
     Route::get('/dashboard/pedidos', [DashboardController::class, 'pedidos'])->name('dashboard.pedidos');
-    Route::get('/dashboard/filtrar', [DashboardController::class, 'filtrar'])->name('dashboard.filtrar');
     Route::post('/ventas/agregar-producto', [VentaController::class, 'agregarProducto'])->name('ventas.agregarProducto');
     Route::get('/ventas/total', [VentaController::class, 'obtenerTotal'])->name('ventas.total');
     Route::post('/ventas/quitar-producto', [VentaController::class, 'quitarProducto'])->name('ventas.quitarProducto');
@@ -29,13 +31,26 @@ Route::middleware('auth')->group(function () {
     Route::delete('/ventas/eliminar/{id}', [VentaController::class, 'eliminar'])->name('ventas.destroy');
     Route::get('/ventas/limpiarCarrito', [VentaController::class, 'limpiarCarrito'])->name('limpiarCarrito');
     Route::get('/ventas/buscarMatricula', [VentaController::class, 'buscarMatriculas'])->name('buscar.matriculas');
+    Route::post('/pedidos/marcar-listo/{id}', [PedidoController::class, 'marcarListo'])->name('pedido.marcarListo');
+    Route::post('/pedidos/marcar-entregado/{id}', [PedidoController::class, 'marcarEntregado'])->name('pedido.marcarEntregado');
     Route::get('/dashboard/compras', [DashboardController::class, 'compras'])->name('dashboard.compras');
+    Route::post('/dashboard/compras/proveedores', [DashboardController::class, 'proveedoresCreate'])->name('proveedores.store');
+    Route::put('/dashboard/compras/proveedores/{id}/update', [DashboardController::class, 'proveedoresUpdate'])->name('proveedores.update');
+    Route::delete('/dashboard/compras/proveedores/{id}', [DashboardController::class, 'proveedoresDestroy'])->name('proveedores.destroy');
+    Route::post('/dashboard/compras/cancelar/{id}', [DashboardController::class, 'compraCancelar'])->name('compra.cancelar');
+    Route::get('/dashboard/compras/recibida/{id}', [DashboardController::class, 'compraRecibida'])->name('compra.recibida');
+    Route::get('/dashboard/compras/catalogo/{id}', [CompraController::class, 'detallarProducto'])->name('detallar.producto');
+    Route::post('/dashboard/compras/agregar-producto', [CompraController::class, 'agregarProducto'])->name('compra.agregarProducto');
+    Route::get('/dashboard/compras/limpiar-carrito/{id}', [CompraController::class, 'limpiarCarrito'])->name('compra.limpiarCarrito');
+    Route::post('/dashboard/compras/quitar-producto', [CompraController::class, 'quitarProducto'])->name('compra.quitarProducto');
     Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');
     Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');
     Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');
     Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
     Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');
     Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
+    Route::get('/notificaciones/marcar-leida/{id}', [NotificacionesController::class, 'marcarLeida'])->name('notificaciones.marcarLeida');
+
 });
 
 Route::get('/contacto', function () {
@@ -126,7 +141,7 @@ Route::post('/catalogo', [ProductosController::class, 'filtrar'])->name('product
 
 // Filtrar productos por categoría desde URL
 Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, 'filtrar'])->name('productos.categoria');
-    
+
     Route::get('/producto/{id}', [ProductosController::class, 'mostrarDetalle'])->name('producto.detalle');
     Route::get('/buscar', [ProductosController::class, 'buscar'])->name('buscar');
     Route::get('/tienda', [ProductosController::class, 'mostrar'])->name('tienda.mostrar');

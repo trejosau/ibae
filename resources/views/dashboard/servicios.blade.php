@@ -38,28 +38,7 @@
     </div>
 
 
-    <!-- Gráfica de Servicios -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card border-info h-100 mb-4">
-                <div class="card-body">
-                    <h5 class="card-title text-center">
-                        <i class="fas fa-chart-pie fa-2x text-info"></i> Gráfica de Servicios Solicitados
-                    </h5>
-                    <div class="row text-center">
-                        <!-- Gráfico de Pastel -->
-                        <div class="col-md-6">
-                            <canvas id="servicio-pastel"></canvas>
-                        </div>
-                        <!-- Gráfico de Barras -->
-                        <div class="col-md-6">
-                            <canvas id="servicio-barras" ></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
 
     <!-- Servicios Activos -->
@@ -186,76 +165,3 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // Datos de Ejemplo para Gráfico de Pastel (Servicios más solicitados en agosto)
-    const servicioData = {
-        labels: ['Corte de Cabello', 'Alisado', 'Mechas', 'Coloración'],
-        datasets: [{
-            label: 'Servicios Solicitados en Agosto',
-            data: [40, 30, 20, 10], // Total de cada servicio
-            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
-            hoverOffset: 4
-        }]
-    };
-
-    const configPastel = {
-        type: 'pie',
-        data: servicioData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    };
-
-    const servicioPastel = new Chart(
-        document.getElementById('servicio-pastel'),
-        configPastel
-    );
-
-    // Datos de Ejemplo para Gráfico de Barras (Servicios semanales en agosto)
-    const servicioBarrasData = {
-        labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-        datasets: [
-            {
-                label: 'Corte de Cabello',
-                data: [10, 15, 10, 5],
-                backgroundColor: '#FF6384'
-            },
-            {
-                label: 'Alisado',
-                data: [5, 10, 5, 10],
-                backgroundColor: '#36A2EB'
-            },
-            {
-                label: 'Mechas',
-                data: [2, 5, 8, 5],
-                backgroundColor: '#FFCE56'
-            },
-            {
-                label: 'Coloración',
-                data: [3, 5, 5, 2],
-                backgroundColor: '#4BC0C0'
-            }
-        ]
-    };
-
-    const configBarras = {
-        type: 'bar',
-        data: servicioBarrasData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    };
-
-    const servicioBarras = new Chart(
-        document.getElementById('servicio-barras'),
-        configBarras
-    );
-</script>

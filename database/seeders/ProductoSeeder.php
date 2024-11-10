@@ -24,7 +24,6 @@ class ProductoSeeder extends Seeder
             Productos::create([
                 'nombre' => 'Producto ' . $i,
                 'descripcion' => $faker->paragraph,
-                'marca' => $faker->company,
                 'precio_proveedor' => $precio_proveedor,
                 'precio_lista' => $precio_lista,
                 'precio_venta' => $precio_venta,

@@ -45,12 +45,8 @@ class CreateNewUser implements CreatesNewUsers
                 'max:255',
                 Rule::unique('users')->ignore($userId),
             ],
-            'password' => [
-                'required',
-                'string',
-                Password::default(),
-                'confirmed',
-            ],
+            'password' => $this->passwordRules(),
         ]);
     }
+
 }

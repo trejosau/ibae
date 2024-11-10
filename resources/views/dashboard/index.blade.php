@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sidebar</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
 </head>
 <style>
     ::after,
@@ -302,6 +303,7 @@
 <div class="main p-3">
     @include(Route::currentRouteName())
 </div>
+
 
 <script>
     if (window.location.pathname === '/dashboard/productos') {

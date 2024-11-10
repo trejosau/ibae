@@ -6,14 +6,16 @@ use App\Models\Administrador;
 use App\Models\Citas;
 use App\Models\Colegiaturas;
 use App\Models\Comprador;
+use App\Models\Compras;
 use App\Models\DetalleVenta;
 use App\Models\Estilista;
 use App\Models\Estudiante;
 use App\Models\Inscripcion;
+use App\Models\Notificaciones;
 use App\Models\Pedidos;
-use App\Models\Persona;
 use App\Models\Productos;
 use App\Models\Profesor;
+use App\Models\Proveedores;
 use App\Models\Ventas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -136,7 +138,9 @@ class DashboardController extends Controller
 
     public function pedidos(Request $request)
     {
-        $query = Pedidos::with(['comprador', 'detalles.producto', 'entrega', 'estudiante']);
+
+
+        $query = Pedidos::with(['comprador.persona', 'detalles.producto', 'entrega', 'estudiante']);
 
         if ($request->has('search') && $request->search) {
             $query->where('id', 'like', '%' . $request->search . '%');
@@ -149,6 +153,28 @@ class DashboardController extends Controller
         $pedidos = $query->paginate(8); // Adjust the number for pagination
 
         return view('dashboard.index', compact('pedidos'));
+    }
+
+    public function compraRecibida($id)
+    {
+
+        $compra = Compras::find($id);
+        $compra->estado = 'entregado';
+        $compra->save();
+        return redirect()->route('dashboard.compras');
+    }
+
+    public function compraCancelar(Request $request, $id)
+    {
+        $request->validate([
+            'motivo' => 'required|string|max:255',
+        ]);
+
+        $compra = Compras::find($id);
+        $compra->estado = 'cancelado';
+        $compra->motivo = $request->motivo;
+        $compra->save();
+        return redirect()->back()->with('success', 'Compra actualizada correctamente.');
     }
 
 
@@ -196,8 +222,94 @@ class DashboardController extends Controller
     }
     public function compras(Request $request)
     {
-        return view('dashboard.index');
+        $proveedores = Proveedores::paginate(4, ['*'], 'proveedores_page');
+        $proveedores->load(['productos' => function($query) {
+            $query->whereIn('estado', ['activo', 'agotado']);
+        }]);
+
+        $compras = Compras::with('proveedor')
+            ->orderBy('fecha_compra', 'desc')
+            ->paginate(6, ['*'], 'compras_page');
+
+        $productos = Productos::where('estado', '!=', 'inactivo')
+            ->with('proveedor')
+            ->paginate(10, ['*'], 'productos_page');
+
+        $catalogoProductos = Productos::where('estado', '!=', 'inactivo')->get();
+
+        // Obtener el filtro de la URL, por defecto 'todos'
+        $filtro = $request->get('filtro' );
+        $notificaciones = Notificaciones::where('user_id', auth()->id());
+
+        if ($filtro === 'leidas') {
+            $notificaciones = $notificaciones->whereNotNull('leida_at');
+        } elseif ($filtro === 'no-leidas') {
+            $notificaciones = $notificaciones->whereNull('leida_at');
+        }
+        $notificaciones = $notificaciones->get();
+
+
+        return view('dashboard.index', compact('proveedores', 'compras', 'productos', 'catalogoProductos', 'notificaciones'));
     }
+
+
+
+    public function proveedoresCreate(Request $request)
+    {
+        $request->validate([
+            'nombre_persona' => 'required|string|max:255',
+            'nombre_empresa' => 'required|string|max:255',
+            'contacto_telefono' => 'required|string|regex:/^\+?[1-9]\d{1,14}$/',
+            'contacto_correo' => 'required|email|max:255',
+        ]);
+
+        // Crear el nuevo proveedor
+        $proveedor = Proveedores::create([
+            'nombre_persona' => $request->nombre_persona,
+            'nombre_empresa' => $request->nombre_empresa,
+            'contacto_telefono' => $request->contacto_telefono,
+            'contacto_correo' => $request->contacto_correo,
+        ]);
+
+        // Redirigir con mensaje de éxito
+        return redirect()->back()->with('success', 'Proveedor agregado correctamente.');
+    }
+
+    public function proveedoresUpdate(Request $request, $id)
+    {
+        // Validar los datos de la solicitud
+        $validated = $request->validate([
+            'nombre_persona' => 'required|string|max:255',
+            'nombre_empresa' => 'required|string|max:255',
+            'contacto_telefono' => 'required|string|regex:/^\+?[1-9]\d{1,14}$/',
+            'contacto_correo' => 'required|email|max:255',
+        ]);
+
+        // Buscar al proveedor por ID
+        $proveedor = Proveedores::find($id);
+
+        if (!$proveedor) {
+            // Si no se encuentra el proveedor, redirigir con mensaje de error
+            return redirect()->route('dashboard.compras')->with('error', 'Proveedor no encontrado.');
+        }
+
+        // Actualizar los datos del proveedor con la información validada
+        $proveedor->update($validated);
+
+        // Redirigir con mensaje de éxito
+        return redirect()->route('dashboard.compras')->with('success', 'Datos del proveedor actualizados correctamente.');
+    }
+
+
+    public function proveedoresDestroy(Request $request, $id)
+    {
+        $proveedor = Proveedores::find($id);
+        $proveedor->delete();
+        return redirect()->route('dashboard.compras')->with('success', 'Proveedor eliminado correctamente.');
+    }
+
+
+
 
     public function citas(Request $request)
     {

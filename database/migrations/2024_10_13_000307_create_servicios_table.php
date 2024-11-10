@@ -14,6 +14,7 @@ return new class extends Migration
             $table->text('descripcion')->nullable();
             $table->decimal('precio', 10);
             $table->enum('categoria', ['manicura', 'color', 'corte y estilizado', 'alisado y tratamiento', 'cejas y pestañas', 'maquillaje y peinado', 'pedicura']);
+            $table->enum('estado', ['activo', 'inactivo'])->default('activo');
         });
     }
 

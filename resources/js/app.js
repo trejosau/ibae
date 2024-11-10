@@ -21,6 +21,8 @@ import ApexCharts from 'apexcharts';
 
 
 
+
+
 document.addEventListener('DOMContentLoaded', function () {
     if (window.location.pathname === '/') {
         // Animación por frames
@@ -341,17 +343,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     if (window.location.pathname === '/dashboard/ventas') {
 
         // Realizar una solicitud fetch a la ruta /graficas/tienda
@@ -420,124 +411,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    if (window.location.pathname === '/dashboard/compras') {
-
-        // Variables de configuración
-        var numProductos = 30; // Ajusta el número de productos
-        var maxStock = 90;     // Máximo stock aleatorio para las barras
-        var alturaBarra = 20;   // Altura de cada barra en píxeles
-
-        // Generación dinámica de productos y datos
-        var categories = Array.from({ length: numProductos }, (_, i) => 'Producto ' + (i + 1));
-        var data = Array.from({ length: numProductos }, () => Math.floor(Math.random() * maxStock)); // Datos aleatorios
-
-        // Configuración del gráfico
-        var options = {
-            series: [{
-                name: 'Stock',  // Nombre personalizado para la serie
-                data: data
-            }],
-            chart: {
-                type: 'bar',
-                height: numProductos * alturaBarra + 'px', // Ajuste automático de altura
-                toolbar: {
-                    show: true,  // Mostrar herramientas del gráfico
-                }
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: true,
-                    barHeight: alturaBarra + 'px', // Altura fija de las barras
-                    distributed: true,             // Colores variados para las barras
-                }
-            },
-            xaxis: {
-                categories: categories, // Nombres de los productos
-            },
-            tooltip: {
-                y: {
-                    formatter: function (val) {
-                        return val;  // Mostrar "Stock: [valor]" en el tooltip
-                    }
-                }
-            },
-            yaxis: {
-                labels: {
-                    style: {
-                        fontSize: '12px', // Tamaño de fuente para los nombres de los productos
-                    }
-                }
-            },
-            grid: {
-                show: true,  // Mostrar la cuadrícula de fondo
-            },
-            dataLabels: {
-                enabled: false // No mostrar etiquetas dentro de las barras
-            },
-            legend: {
-                show: false // Ocultar leyenda de colores
-            }
-        };
-
-        // Renderizar el gráfico
-        var chart = new ApexCharts(document.querySelector("#chart"), options);
-        chart.render();
-    }
-
-
-
-    if (window.location.pathname === '/dashboard/citas') {
-        // Datos de ejemplo para las citas
-        const categorias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-        const citas = [12, 8, 15, 10, 18, 20, 5];
-
-        // Configuración del gráfico
-        const opciones = {
-            series: [{
-                name: 'Citas',
-                data: citas
-            }],
-            chart: {
-                type: 'line', // Cambiar a gráfico de líneas
-                height: '350px',
-                toolbar: {
-                    show: true,
-                }
-            },
-            xaxis: {
-                categories: categorias, // Días de la semana
-            },
-            yaxis: {
-                title: {
-                    text: 'Número de Citas'
-                }
-            },
-            title: {
-                text: 'Citas por Día en el Salón de Belleza',
-                align: 'center'
-            },
-            dataLabels: {
-                enabled: true // Habilita las etiquetas de datos
-            },
-            tooltip: {
-                y: {
-                    formatter: function (val) {
-                        return val + ' citas'; // Muestra "X citas" en el tooltip
-                    }
-                }
-            },
-            stroke: {
-                curve: 'smooth' // Hace que la línea sea suave
-            }
-        };
-
-        // Renderizar el gráfico
-        const chart = new ApexCharts(document.querySelector("#chart"), opciones);
-        chart.render();
-
-
-
-    }
 
 
 

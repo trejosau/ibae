@@ -13,7 +13,6 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->text('descripcion')->nullable();
-            $table->string('marca', 100);
             $table->decimal('precio_proveedor', 10, 2); // Precio del proveedor
             $table->decimal('precio_lista', 10, 2);     // Precio lista
             $table->decimal('precio_venta', 10, 2);     // Precio venta

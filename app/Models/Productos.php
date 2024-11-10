@@ -26,6 +26,7 @@ class Productos extends Model
         'id_categoria'
     ];
 
+
     public function proveedor(): BelongsTo
     {
         return $this->belongsTo(Proveedores::class, 'id_proveedor');
@@ -35,11 +36,12 @@ class Productos extends Model
     {
         return $this->belongsTo(Categorias::class, 'id_categoria');
     }
-    public function detalles()
+    public function compras()
     {
-        return $this->hasMany(DetalleVenta::class, 'id_producto'); // Relación inversa
+        return $this->belongsToMany(Compras::class, 'detalle_compra', 'id_producto', 'id_compra')
+            ->withPivot('cantidad');
     }
-     // Definir la relación con la tabla `detalle_pedido`
+
      public function detallePedidos()
      {
          return $this->hasMany(DetallePedido::class, 'id_producto');

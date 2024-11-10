@@ -12,9 +12,6 @@
                     <h5 class="card-title text-center">
                         <i class="fas fa-calendar-alt fa-2x text-info"></i> Gráfica de Citas
                     </h5>
-                    <div id="grafica-citas" class="text-center">
-                        <div id="chart"></div>
-                    </div>
                 </div>
             </div>
         </div>
