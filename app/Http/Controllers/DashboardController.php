@@ -137,6 +137,8 @@ class DashboardController extends Controller
 
     public function pedidos(Request $request)
     {
+
+
         $query = Pedidos::with(['comprador.persona', 'detalles.producto', 'entrega', 'estudiante']);
 
         if ($request->has('search') && $request->search) {
@@ -158,7 +160,7 @@ class DashboardController extends Controller
         $compra = Compras::find($id);
         $compra->estado = 'entregado';
         $compra->save();
-        return redirect()->back()->with('success', 'Compra actualizada correctamente.');
+        return redirect()->route('dashboard.compras');
     }
 
     public function compraCancelar(Request $request, $id)
@@ -228,10 +230,16 @@ class DashboardController extends Controller
             ->orderBy('fecha_compra', 'desc')
             ->paginate(6);
 
-        $productos = Productos::paginate(10);
+        $productos = Productos::where('estado', '!=', 'inactivo')
+            ->with('proveedor')
+            ->paginate(10);
 
-        return view('dashboard.index', compact('proveedores', 'compras', 'productos'));
+        $catalogoProductos = Productos::where('estado', '!=', 'inactivo')->get();
+
+        return view('dashboard.index', compact('proveedores', 'compras', 'productos', 'catalogoProductos'));
     }
+
+
 
     public function proveedoresCreate(Request $request)
     {

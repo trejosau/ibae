@@ -3,6 +3,8 @@
 
     <!-- Proveedores y Notificaciones -->
     <div class="row mb-4">
+
+
         <div class="col-md-7">
             <div class="card border-secondary h-100">
                 <div class="card-body">
@@ -175,9 +177,10 @@
                                 </td>
                                 <td>
                                     @if($compra->estado == 'entregado')
-                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detallar-productos-{{ $compra->id }}">Ver Detalle</button>
+                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detalle-productos-{{ $compra->id }}">Ver Detalle</button>
                                     @elseif($compra->estado == 'pendiente')
-                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detallar-productos-{{ $compra->id }}">Detallar</button>
+                                        <a class="btn btn-info btn-sm" href="{{ route('detallar.producto', ['id' => $compra->id]) }}">Detallar</a>
+
                                     @elseif($compra->estado == 'cancelado')
                                         <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-motivo-cancelacion-{{ $compra->id }}">Ver Motivo</button>
                                     @endif
@@ -198,15 +201,20 @@
 
         </div>
 
-        <!-- Modal para Detallar Compra (Estado: Pendiente / Entregado) -->
+
+
+
+
+
+        <!-- Modal para ver Detalle Compra (Estado: Entregado o Pendiente) -->
         @foreach($compras as $compra)
             @if($compra->estado == 'pendiente' || $compra->estado == 'entregado')
                 <!-- Modal principal de detalle de la compra -->
-                <div class="modal fade" id="modal-detallar-productos-{{ $compra->id }}" tabindex="-1" aria-labelledby="modal-detallar-productos-{{ $compra->id }}-label" aria-hidden="true">
+                <div class="modal fade" id="modal-detalle-productos-{{ $compra->id }}" tabindex="-1" aria-labelledby="modal-detalle-productos-{{ $compra->id }}-label" aria-hidden="true">
                     <div class="modal-dialog" style="max-width: 95%; max-height: 90%; margin: auto;">
                         <div class="modal-content" style="border-radius: 10px; background-color: #f9f9f9;">
                             <div class="modal-header" style="background-color: #f7c8d7; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-                                <h5 class="modal-title" id="modal-detallar-productos-{{ $compra->id }}-label" style="color: #5a5a5a;">Detalle de Compra</h5>
+                                <h5 class="modal-title" id="modal-detalle-productos-{{ $compra->id }}-label" style="color: #5a5a5a;">Detalle de Compra</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body" style="padding: 20px; color: #333;">
@@ -229,7 +237,10 @@
                                                             <strong>Stock:</strong> {{ $producto->stock }}
                                                         </p>
                                                         <p class="card-text" style="font-size: 14px; color: #8c8c8c;">
-                                                            <strong>Precio Venta:</strong> ${{ number_format($producto->precio_venta, 2) }}
+                                                            <strong>Precio estudiantes:</strong> {{ $producto->precio_lista }}
+                                                        </p>
+                                                        <p class="card-text" style="font-size: 14px; color: #8c8c8c;">
+                                                            <strong>Precio Publico:</strong> ${{ number_format($producto->precio_venta, 2) }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -240,10 +251,7 @@
                             </div>
                             <div class="modal-footer" style="background-color: #f7c8d7; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
                                 @if($compra->estado == 'pendiente')
-                                    <!-- Botón de Cancelar que abre el segundo modal -->
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-cancelar-compra-{{ $compra->id }}">Cancelar</button>
-
-                                    <!-- Botón de Marcar como Recibido -->
                                     <form method="POST" action="{{ route('compra.recibida', $compra->id) }}" style="display: inline;">
                                         @csrf
                                         <button type="submit" class="btn btn-success">Marcar como Recibido</button>
@@ -280,7 +288,6 @@
                 </div>
             @endif
         @endforeach
-
 
         <!-- Modal para Ver Motivo de Cancelación (Estado: Cancelado) -->
         @foreach($compras as $compra)
@@ -320,7 +327,6 @@
                         <tbody>
                         @foreach($productos as $producto)
                             @php
-                                // Definición de colores según el stock
                                 $bgColor = '';
                                 if ($producto->stock <= 5) {
                                     $bgColor = '#ffc1c1';

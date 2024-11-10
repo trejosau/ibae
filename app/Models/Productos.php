@@ -26,6 +26,7 @@ class Productos extends Model
         'id_categoria'
     ];
 
+
     public function proveedor(): BelongsTo
     {
         return $this->belongsTo(Proveedores::class, 'id_proveedor');

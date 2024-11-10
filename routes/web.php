@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CompraController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GraficasController;
 use App\Http\Controllers\loginGoogleController;
@@ -36,7 +37,12 @@ Route::middleware('auth')->group(function () {
     Route::put('/dashboard/compras/proveedores/{id}/update', [DashboardController::class, 'proveedoresUpdate'])->name('proveedores.update');
     Route::delete('/dashboard/compras/proveedores/{id}', [DashboardController::class, 'proveedoresDestroy'])->name('proveedores.destroy');
     Route::post('/dashboard/compras/cancelar/{id}', [DashboardController::class, 'compraCancelar'])->name('compra.cancelar');
-    Route::post('/dashboard/compras/recibida/{id}', [DashboardController::class, 'compraRecibida'])->name('compra.recibida');
+    Route::get('/dashboard/compras/recibida/{id}', [DashboardController::class, 'compraRecibida'])->name('compra.recibida');
+    Route::get('/dashboard/compras/catalogo/{id}', [CompraController::class, 'detallarProducto'])->name('detallar.producto');
+    Route::post('/dashboard/compras/agregar-producto', [CompraController::class, 'agregarProducto'])->name('compra.agregarProducto');
+    Route::get('/dashboard/compras/limpiar-carrito/{id}', [CompraController::class, 'limpiarCarrito'])->name('compra.limpiarCarrito');
+    Route::post('/dashboard/compras/quitar-producto', [CompraController::class, 'quitarProducto'])->name('compra.quitarProducto');
+    Route::get('/dashboard/compras/total', [CompraController::class, 'obtenerTotal'])->name('compra.total');
     Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');
     Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');
     Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');
