@@ -4,6 +4,7 @@ use App\Http\Controllers\CompraController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GraficasController;
 use App\Http\Controllers\loginGoogleController;
+use App\Http\Controllers\NotificacionesController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PlataformaController;
 use App\Http\Controllers\ProductosController;
@@ -42,13 +43,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/compras/agregar-producto', [CompraController::class, 'agregarProducto'])->name('compra.agregarProducto');
     Route::get('/dashboard/compras/limpiar-carrito/{id}', [CompraController::class, 'limpiarCarrito'])->name('compra.limpiarCarrito');
     Route::post('/dashboard/compras/quitar-producto', [CompraController::class, 'quitarProducto'])->name('compra.quitarProducto');
-    Route::get('/dashboard/compras/total', [CompraController::class, 'obtenerTotal'])->name('compra.total');
     Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');
     Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');
     Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');
     Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
     Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');
     Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
+    Route::get('/notificaciones/marcar-leida/{id}', [NotificacionesController::class, 'marcarLeida'])->name('notificaciones.marcarLeida');
 });
 
 Route::get('/contacto', function () {

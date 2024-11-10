@@ -134,12 +134,43 @@
                     <h5 class="card-title text-center">
                         <i class="fas fa-bell fa-2x text-primary"></i> Notificaciones
                     </h5>
+
+                    <!-- Filtros de notificaciones -->
+                    <div class="d-flex justify-content-center mb-3">
+                        <a href="{{ route('dashboard.compras', ['filtro' => 'todos']) }}" class="btn btn-sm btn-outline-primary mx-2">Todos</a>
+                        <a href="{{ route('dashboard.compras', ['filtro' => 'leidas']) }}" class="btn btn-sm btn-outline-success mx-2">Leídas</a>
+                        <a href="{{ route('dashboard.compras', ['filtro' => 'no-leidas']) }}" class="btn btn-sm btn-outline-danger mx-2">No leídas</a>
+                    </div>
+
                     <ul class="list-group">
-                        <!-- Añade más notificaciones aquí -->
+                        @foreach($notificaciones as $notificacion)
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <strong>{{ $notificacion->motivo }}</strong><br>
+                                    <small>{{ $notificacion->mensaje }}</small>
+                                </div>
+
+                                <!-- Si la notificación no está leída -->
+                                @if(is_null($notificacion->leida_at))
+                                    <form action="{{ route('notificaciones.marcarLeida', $notificacion->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-success">
+                                            <i class="fas fa-check"></i> Marcar como leída
+                                        </button>
+                                    </form>
+                                @else
+                                    <!-- Si la notificación ya está leída -->
+                                    <button class="btn btn-sm btn-secondary" disabled>
+                                        <i class="fas fa-check-double"></i> Leída
+                                    </button>
+                                @endif
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- Compras Recientes -->

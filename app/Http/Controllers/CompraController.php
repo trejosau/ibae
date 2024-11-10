@@ -65,8 +65,5 @@ class CompraController extends Controller
         return redirect()->back()->with('success', 'Carrito limpiado.');
     }
 
-    public function obtenerTotal()
-    {
 
-    }
 }

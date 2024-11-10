@@ -11,6 +11,7 @@ use App\Models\DetalleVenta;
 use App\Models\Estilista;
 use App\Models\Estudiante;
 use App\Models\Inscripcion;
+use App\Models\Notificaciones;
 use App\Models\Pedidos;
 use App\Models\Productos;
 use App\Models\Profesor;
@@ -236,7 +237,19 @@ class DashboardController extends Controller
 
         $catalogoProductos = Productos::where('estado', '!=', 'inactivo')->get();
 
-        return view('dashboard.index', compact('proveedores', 'compras', 'productos', 'catalogoProductos'));
+        // Obtener el filtro de la URL, por defecto 'todos'
+        $filtro = $request->get('filtro' );
+        $notificaciones = Notificaciones::where('user_id', auth()->id());
+
+        if ($filtro === 'leidas') {
+            $notificaciones = $notificaciones->whereNotNull('leida_at');
+        } elseif ($filtro === 'no-leidas') {
+            $notificaciones = $notificaciones->whereNull('leida_at');
+        }
+        $notificaciones = $notificaciones->get();
+
+
+        return view('dashboard.index', compact('proveedores', 'compras', 'productos', 'catalogoProductos', 'notificaciones'));
     }
 
 
