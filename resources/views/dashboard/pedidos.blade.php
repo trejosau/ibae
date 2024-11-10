@@ -90,54 +90,74 @@
         @foreach ($pedidos as $pedido)
             <div class="modal fade" id="detalleModal{{ $pedido->id }}" tabindex="-1" aria-labelledby="detalleModalLabel{{ $pedido->id }}" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="detalleModalLabel{{ $pedido->id }}">Detalle del Pedido #{{ $pedido->id }}</h5>
+                    <div class="modal-content" style="background-color: #f9f9f9; border-radius: 10px;">
+                        <div class="modal-header" style="border-bottom: 2px solid #eee;">
+                            <h5 class="modal-title" id="detalleModalLabel{{ $pedido->id }}" style="color: #6c757d;">Detalle del Pedido #{{ $pedido->id }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" style="padding: 20px;">
                             <div class="row mb-3">
-                                <div class="col-12">
+                                <div class="col-6" style="background-color: #e8f4f8; padding: 15px; border-radius: 8px;">
+                                    <!-- Pedido Info -->
                                     <p><strong>Total:</strong> ${{ number_format($pedido->total, 2) }}</p>
-                                </div>
-                                <div class="col-12">
                                     <p><strong>Fecha de Pedido:</strong> {{ $pedido->fecha_pedido }}</p>
-                                </div>
-                                <div class="col-12">
                                     <p><strong>Estado:</strong> {{ ucfirst($pedido->estado) }}</p>
-                                </div>
-                                <div class="col-12">
                                     <p><strong>Clave de Entrega:</strong> {{ $pedido->clave_entrega }}</p>
+                                    <p><strong>Cliente:</strong> {{ $pedido->comprador->persona->nombre }}</p>
+                                    @if (isset($pedido->comprador->razon_social))
+                                        <p><strong>Razón Social:</strong> {{ $pedido->comprador->razon_social }}</p>
+                                        @endif
+                                </div>
+
+                                <div class="col-6" style="background-color: #f0f8ff; padding: 15px; border-radius: 8px;">
+                                    <!-- Stripe Payment Info -->
+                                    <h6 class="mt-4" style="color: #6c757d;">Detalles de Pago:</h6>
+                                    <div class="row mb-3">
+                                        <div class="col-12" style="color: #5a6268;">
+                                            <p><strong>ID de Pago:</strong> {{ $pedido->stripe_payment_id ?? 'No disponible' }}</p>
+                                        </div>
+                                        <div class="col-12" style="color: #5a6268;">
+                                            <p><strong>Estado de Pago:</strong> {{ ucfirst($pedido->estado_pago) }}</p>
+                                        </div>
+                                        <div class="col-12" style="color: #5a6268;">
+                                            @if ($pedido->estado_pago == 'completado')
+                                                <p><strong>Fecha de Pago:</strong> {{ $pedido->fecha_pago ? $pedido->fecha_pago->format('d/m/Y H:i') : 'No disponible' }}</p>
+                                            @else
+                                                <p><strong>Fecha de Pago:</strong> No realizado</p>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <h6>Detalles Adicionales:</h6>
+                                        <pre style="background-color: #f8f9fa; padding: 10px; border-radius: 6px; font-size: 14px; color: #495057;">{{ json_encode($pedido->detalles_pago, JSON_PRETTY_PRINT) }}</pre>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Estudiante Details -->
                             <div class="row mb-3">
-                                <div class="col-12">
+                                <div class="col-12" style="background-color: #e8f4f8; padding: 15px; border-radius: 8px;">
                                     <h6>Estudiante:</h6>
                                     @if ($pedido->estudiante)
                                         <div class="row">
-                                            <div class="col-6">
+                                            <div class="col-6" style="color: #5a6268;">
                                                 <p><strong>Matricula:</strong> {{ $pedido->estudiante->matricula }}</p>
                                                 <p><strong>Estado:</strong> {{ $pedido->estudiante->estado }}</p>
                                             </div>
-                                            <div class="col-6">
-                                                <p><strong>Grado de Estudio:</strong> {{ $pedido->estudiante->grado_estudio }}</p>
-                                                <p><strong>Dirección:</strong> {{ $pedido->estudiante->calle }}, {{ $pedido->estudiante->num_ext }} {{ $pedido->estudiante->colonia }}, {{ $pedido->estudiante->zipcode }}</p>
-                                            </div>
                                         </div>
                                     @else
-                                        <p>No hay estudiante asociado a este pedido.</p>
+                                        <p style="color: #5a6268;">No hay estudiante asociado a este pedido.</p>
                                     @endif
                                 </div>
                             </div>
 
                             <!-- Pedido Details with Scroll -->
-                            <h6 class="mb-3">Detalles del Pedido:</h6>
-                            <div style="max-height: 300px; overflow-y: auto;">
+                            <h6 class="mb-3" style="color: #6c757d;">Detalles del Pedido:</h6>
+                            <div style="max-height: 300px; overflow-y: auto; background-color: #f8f9fa; padding: 10px; border-radius: 8px;">
                                 <ul class="list-group">
                                     @foreach ($pedido->detalles as $detalle)
-                                        <li class="list-group-item">
+                                        <li class="list-group-item" style="background-color: #e9ecef; border-radius: 8px; color: #495057;">
                                             <div class="row">
                                                 <div class="col-8">
                                                     <strong>{{ $detalle->producto->nombre }}</strong>
@@ -154,12 +174,12 @@
                             </div>
                         </div>
 
-                        <div class="modal-footer">
+                        <div class="modal-footer" style="border-top: 2px solid #eee;">
                             <!-- Form for marking as ready for delivery -->
                             @if ($pedido->estado == 'preparando para entrega')
                                 <form action="{{ route('pedido.marcarListo', $pedido->id) }}" method="POST" style="display:inline;">
                                     @csrf
-                                    <button type="submit" class="btn btn-primary">Marcar como Listo para Entrega</button>
+                                    <button type="submit" class="btn btn-primary" style="background-color: #007bff; border: none;">Marcar como Listo para Entrega</button>
                                 </form>
                             @endif
 
@@ -169,9 +189,9 @@
                                     @csrf
                                     <!-- Input for the name of the person collecting the order -->
                                     <div class="mt-3 d-flex align-items-center">
-                                        <label for="nombreRecogido{{ $pedido->id }}" class="form-label me-2"><strong>Nombre de quien recoge:</strong></label>
-                                        <input type="text" id="nombreRecogido{{ $pedido->id }}" name="nombreRecogido" class="form-control me-2" placeholder="Ingrese el nombre">
-                                        <button type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
+                                        <label for="nombreRecogido{{ $pedido->id }}" class="form-label me-2" style="color: #6c757d;"><strong>Nombre de quien recoge:</strong></label>
+                                        <input type="text" id="nombreRecogido{{ $pedido->id }}" name="nombreRecogido" class="form-control me-2" placeholder="Ingrese el nombre" style="border-radius: 5px; border: 1px solid #ccc;">
+                                        <button type="submit" class="btn btn-success" style="background-color: #28a745; border: none;"><i class="fas fa-check"></i></button>
                                     </div>
                                 </form>
                             @endif
@@ -179,8 +199,8 @@
                             <!-- Show collector name when delivered -->
                             @if ($pedido->estado == 'entregado')
                                 <div class="mt-3">
-                                    <label for="nombreRecogido{{ $pedido->id }}" class="form-label"><strong>Nombre de quien entregó:</strong></label>
-                                    <input type="text" id="nombreRecogido{{ $pedido->id }}" class="form-control" value="{{ $pedido->entrega->nombre_recolector }}" readonly>
+                                    <label for="nombreRecogido{{ $pedido->id }}" class="form-label" style="color: #6c757d;"><strong>Nombre de quien entregó:</strong></label>
+                                    <input type="text" id="nombreRecogido{{ $pedido->id }}" class="form-control" value="{{ $pedido->entrega->nombre_recolector }}" readonly style="background-color: #e9ecef; border: 1px solid #ccc;">
                                 </div>
                             @endif
                         </div>
@@ -188,3 +208,4 @@
                 </div>
             </div>
 @endforeach
+

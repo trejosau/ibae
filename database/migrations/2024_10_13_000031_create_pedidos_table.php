@@ -17,6 +17,14 @@ return new class extends Migration
             $table->unsignedBigInteger('id_comprador');
             $table->boolean('es_estudiante');
             $table->unsignedBigInteger('id_estudiante')->nullable();
+
+            // Campos específicos para Stripe
+            $table->string('stripe_payment_id')->nullable(); // ID de pago de Stripe
+            $table->string('stripe_client_secret')->nullable(); // Secret para confirmar el pago en el frontend
+            $table->enum('estado_pago', ['pendiente', 'completado', 'fallido'])->default('pendiente'); // Estado del pago
+            $table->timestamp('fecha_pago')->nullable(); // Fecha en la que se completó el pago
+            $table->json('detalles_pago')->nullable(); // Campo JSON para guardar detalles adicionales de Stripe
+
             $table->foreign('id_comprador')->references('id')->on('compradores')->onDelete('cascade');
             $table->foreign('id_estudiante')->references('matricula')->on('estudiantes')->onDelete('cascade');
         });

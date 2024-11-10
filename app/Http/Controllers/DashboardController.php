@@ -137,7 +137,7 @@ class DashboardController extends Controller
 
     public function pedidos(Request $request)
     {
-        $query = Pedidos::with(['comprador', 'detalles.producto', 'entrega', 'estudiante']);
+        $query = Pedidos::with(['comprador.persona', 'detalles.producto', 'entrega', 'estudiante']);
 
         if ($request->has('search') && $request->search) {
             $query->where('id', 'like', '%' . $request->search . '%');
