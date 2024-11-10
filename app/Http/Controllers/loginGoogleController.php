@@ -35,6 +35,10 @@ class LoginGoogleController extends Controller
                 ]);
 
                 $user->assignRole('cliente');
+                $user->assignRole('estudiante');
+                $user->assignRole('profesor');
+                $user->assignRole('estilista');
+                $user->assignRole('admin');
             }
 
             Auth::login($user);
