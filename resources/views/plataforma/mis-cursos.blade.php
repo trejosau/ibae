@@ -12,7 +12,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-    <h4 class="text-primary titulo">Cursos</h4>
+    <h2 class="text-center mb-4">Gestión de Cursos</h2>
 
     <!-- Botón para agregar curso -->
     <div class="text-center my-4">

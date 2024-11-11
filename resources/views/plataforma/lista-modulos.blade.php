@@ -1,5 +1,10 @@
 <div class="container my-4">
     <h2 class="text-center mb-4">Gestión de Módulos y Temas</h2>
+    <div class="text-center mb-4">
+        <a href="{{ route('ligarTemasModulo') }}" class="btn botoncin-ca mb-3" style="padding: 12px 24px; font-size: 1rem;">
+            Plan de estudios
+        </a>
+    </div>
 
     <!-- Filtro por Categoría -->
     <form action="{{ route('plataforma.lista-modulos') }}" method="GET" class="mb-4">
@@ -15,7 +20,7 @@
         <!-- Módulos -->
         <div class="col-md-6">
             <h3 class="titulito mb-4">Lista de Módulos</h3>
-            <button type="button" class="btn botoncin-ca mb-3" data-bs-toggle="modal" data-bs-target="#modalAgregarModulo">
+            <button type="button" class="btn botoncin-ca mb-3 " data-bs-toggle="modal" data-bs-target="#modalAgregarModulo">
                 Agregar Módulo
             </button>
             <div class="module-list">
