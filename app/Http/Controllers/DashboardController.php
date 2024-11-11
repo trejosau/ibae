@@ -19,6 +19,7 @@ use App\Models\Productos;
 use App\Models\Profesor;
 use App\Models\Proveedores;
 use App\Models\Servicios;
+use App\Models\User;
 use App\Models\Ventas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -349,7 +350,8 @@ class DashboardController extends Controller
 
     public function usuarios(Request $request)
     {
-        return view('dashboard.index');
+        $usuarios = User::with('persona')->orderBy('created_at', 'desc')->paginate(6);
+        return view('dashboard.index', compact('usuarios'));
     }
 
     public function auditoria(Request $request)

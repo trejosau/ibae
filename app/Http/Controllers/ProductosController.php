@@ -18,20 +18,20 @@ class ProductosController extends Controller
 
     public function agregar(Request $request)
     {
+        // Validación de los campos
         $request->validate([
-                'nombre' => 'required|string|max:255',
-                'descripcion' => 'required|string',
-                'marca' => 'nullable|string|max:255',
-                'precio_proveedor' => 'required|numeric|min:0',
-                'precio_lista' => 'required|numeric|min:0',
-                'precio_venta' => 'required|numeric|min:0',
-                'cantidad' => 'required|integer|min:0',
-                'medida' => 'nullable|string|max:50',
-                'id_proveedor' => 'required|exists:proveedores,id',
-                'id_categoria' => 'required|exists:categorias,id',
-                'main_photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-                'stock' => 'required|integer|min:0',
-                'estado' => 'required|in:activo,inactivo',
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'marca' => 'nullable|string|max:255',
+            'precio_proveedor' => 'required|numeric|min:0',
+            'precio_lista' => 'required|numeric|min:0',
+            'precio_venta' => 'required|numeric|min:0',
+            'cantidad' => 'required|integer|min:0',
+            'medida' => 'nullable|string|max:50',
+            'id_categoria' => 'required|exists:categorias,id',
+            'main_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'stock' => 'required|integer|min:0',
+            'estado' => 'required|in:activo,inactivo',
         ]);
 
         $nombre = $request->input('nombre');
@@ -42,46 +42,48 @@ class ProductosController extends Controller
         $precio_venta = $request->input('precio_venta');
         $cantidad = $request->input('cantidad');
         $medida = $request->input('medida');
+        $id_categoria = $request->input('id_categoria');
+        $stock = $request->input('stock');
+        $estado = $request->input('estado');
 
+        $url = null;
+
+        // Subir imagen si está presente
         if ($request->hasFile('main_photo')) {
             $image = $request->file('main_photo');
-            // implementar todas imagenes mismo formato y tamano cuadrado
 
-
-
-
-
-
+            // Normalizar el nombre del archivo
             $extension = $image->getClientOriginalExtension();
-
             $FileName = $nombre . '_' . $cantidad . '_' . $medida . '.' . $extension;
 
             // Subir la imagen a S3 dentro de la carpeta 'productos/'
             $path = Storage::disk('s3')->put('images/productos/' . $FileName, file_get_contents($image));
 
-            // Obtener la URL de la imagen cargada
+            // Obtener la URL de la imagen cargada en S3
             $url = Storage::disk('s3')->url('images/productos/' . $FileName);
         }
 
+        // Crear el producto
         Productos::create([
             'nombre' => $nombre,
             'descripcion' => $descripcion,
-            'marca' => $marca,
             'precio_proveedor' => $precio_proveedor,
             'precio_lista' => $precio_lista,
             'precio_venta' => $precio_venta,
             'cantidad' => $cantidad,
             'medida' => $medida,
-            'id_proveedor' => $request->input('id_proveedor'),
-            'id_categoria' => $request->input('id_categoria'),
+            'id_proveedor' => $marca,
+            'id_categoria' => $id_categoria,
             'main_photo' => $url,
-            'stock' => $request->input('stock'),
-            'estado' => $request->input('estado'),
+            'stock' => $stock,
+            'estado' => $estado,
             'fecha_agregado' => now(),
         ]);
 
+        // Redirigir con mensaje de éxito
         return redirect()->back()->with('success', 'Producto agregado correctamente.');
     }
+
 
 
     public function catalogo()

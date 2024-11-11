@@ -73,16 +73,7 @@
                         </div>
                         <!-- Proveedor y Categoría -->
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="id_proveedor" class="form-label">Proveedor</label>
-                                <select class="form-select" id="id_proveedor" name="id_proveedor">
-                                    <option value="">Selecciona un proveedor...</option>
-                                    @foreach($marcas as $marca)
-                                        <option value="{{ $marca->id }}">{{ $marca->nombre_empresa }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-8 mb-3">
                                 <label for="id_categoria" class="form-label">Categoría</label>
                                 <select class="form-select" id="id_categoria" name="id_categoria">
                                     <option value="">Selecciona una categoría...</option>

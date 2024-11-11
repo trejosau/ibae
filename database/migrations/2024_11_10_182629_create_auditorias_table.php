@@ -17,7 +17,6 @@ class CreateAuditoriasTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('afectado_user_id')->constrained('users');
-            $table->string('accion');
             $table->enum('accion', ['create', 'update', 'delete']);
             $table->string('table_name')->nullable();
             $table->text('motivo')->nullable();
