@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use App\Models\Productos;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image;
 
 class ProductosController extends Controller
 {
@@ -16,53 +16,122 @@ class ProductosController extends Controller
         return view('tienda', compact('productos'));
     }
 
+    public function agregar(Request $request)
+    {
+        // Validación de los campos
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'marca' => 'nullable|string|max:255',
+            'precio_proveedor' => 'required|numeric|min:0',
+            'precio_lista' => 'required|numeric|min:0',
+            'precio_venta' => 'required|numeric|min:0',
+            'cantidad' => 'required|integer|min:0',
+            'medida' => 'nullable|string|max:50',
+            'id_categoria' => 'required|exists:categorias,id',
+            'main_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'stock' => 'required|integer|min:0',
+            'estado' => 'required|in:activo,inactivo',
+        ]);
+
+        $nombre = $request->input('nombre');
+        $descripcion = $request->input('descripcion');
+        $marca = $request->input('marca');
+        $precio_proveedor = $request->input('precio_proveedor');
+        $precio_lista = $request->input('precio_lista');
+        $precio_venta = $request->input('precio_venta');
+        $cantidad = $request->input('cantidad');
+        $medida = $request->input('medida');
+        $id_categoria = $request->input('id_categoria');
+        $stock = $request->input('stock');
+        $estado = $request->input('estado');
+
+        $url = null;
+
+        // Subir imagen si está presente
+        if ($request->hasFile('main_photo')) {
+            $image = $request->file('main_photo');
+
+            // Normalizar el nombre del archivo
+            $extension = $image->getClientOriginalExtension();
+            $FileName = $nombre . '_' . $cantidad . '_' . $medida . '.' . $extension;
+
+            // Subir la imagen a S3 dentro de la carpeta 'productos/'
+            $path = Storage::disk('s3')->put('images/productos/' . $FileName, file_get_contents($image));
+
+            // Obtener la URL de la imagen cargada en S3
+            $url = Storage::disk('s3')->url('images/productos/' . $FileName);
+        }
+
+        // Crear el producto
+        Productos::create([
+            'nombre' => $nombre,
+            'descripcion' => $descripcion,
+            'precio_proveedor' => $precio_proveedor,
+            'precio_lista' => $precio_lista,
+            'precio_venta' => $precio_venta,
+            'cantidad' => $cantidad,
+            'medida' => $medida,
+            'id_proveedor' => $marca,
+            'id_categoria' => $id_categoria,
+            'main_photo' => $url,
+            'stock' => $stock,
+            'estado' => $estado,
+            'fecha_agregado' => now(),
+        ]);
+
+        // Redirigir con mensaje de éxito
+        return redirect()->back()->with('success', 'Producto agregado correctamente.');
+    }
+
+
 
     public function catalogo()
     {
         $productos = Productos::all(); // Obtiene todos los productos
         return view('catalogo', compact('productos')); // Devuelve la vista con todos los productos
     }
-    
+
 
     public function filtrar(Request $request)
     {
         $query = Productos::query();
-    
+
         // Filtrar por categoría
         if ($request->filled('id_categoria')) {
             $query->where('id_categoria', $request->id_categoria);
         }
-    
+
         // Filtrar por rango de precios
         if ($request->filled('precio_min')) {
             $query->where('precio_venta', '>=', $request->precio_min);
         }
-    
+
         if ($request->filled('precio_max')) {
             $query->where('precio_venta', '<=', $request->precio_max);
         }
-    
+
         $productos = $query->get();
-    
+
         // Asegúrate de redirigir a la vista correcta
         return view('catalogo', compact('productos'));
     }
-    
 
-    
+
+
     public function mostrarDetalle($id)
     {
         $producto = Productos::findOrFail($id);
-        
+
         // Suponiendo que tienes una lógica para obtener productos relacionados
         $productosRelacionados = Productos::where('id_categoria', $producto->id_categoria)
             ->where('id', '!=', $id) // Excluir el producto actual
             ->take(4) // Limitar a 3 productos relacionados
             ->get();
-    
+
         return view('detalle', compact('producto', 'productosRelacionados'));
     }
-    
+
 
     public function mostrar()
     {
@@ -88,12 +157,12 @@ class ProductosController extends Controller
 
 
 
-    
+
     public function agregarAlCarrito(Request $request, $id)
     {
         $producto = Productos::find($id);
         $cantidad = $request->cantidad;
-    
+
         if ($producto) {
             $carrito = session()->get('carrito', []);
             if (isset($carrito[$id])) {
@@ -109,11 +178,11 @@ class ProductosController extends Controller
             session()->put('carrito', $carrito);
             return response()->json(['success' => true, 'carrito' => $carrito]);
         }
-    
+
         return response()->json(['success' => false]);
     }
-    
-    
+
+
 
 public function verCarrito(Request $request)
 {
@@ -165,10 +234,10 @@ public function eliminarDelCarrito($id)
 public function buscar(Request $request)
 {
     $query = $request->input('query');
-    
+
     // Busca en la base de datos productos que coincidan con el nombre exacto
     $producto = Productos::where('nombre', $query)->first();
-    
+
     if ($producto) {
         // Redirige a la vista de detalles del producto si se encuentra
         return redirect()->route('producto.detalle', ['id' => $producto->id]);

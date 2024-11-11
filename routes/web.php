@@ -49,6 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/servicios/agregar', [ServiciosController::class, 'agregarServicio'])->name('servicios.agregar');
     Route::post('/dashboard/servicios/agregar-categoria', [ServiciosController::class, 'agregarCategoria'])->name('servicios.agregarCategoria');
     Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');
+    Route::post('/dashboard/productos/agregar', [ProductosController::class, 'agregar'])->name('productos.agregar');
     Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
     Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');
     Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');

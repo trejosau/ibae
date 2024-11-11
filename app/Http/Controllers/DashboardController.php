@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Administrador;
+use App\Models\Categorias;
 use App\Models\Categorias_de_Servicios;
 use App\Models\Citas;
 use App\Models\Colegiaturas;
@@ -18,6 +19,7 @@ use App\Models\Productos;
 use App\Models\Profesor;
 use App\Models\Proveedores;
 use App\Models\Servicios;
+use App\Models\User;
 use App\Models\Ventas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -331,12 +333,25 @@ class DashboardController extends Controller
 
     public function productos(Request $request)
     {
-        return view('dashboard.index');
+
+        $categorias = Categorias::all();
+        $marcas = Proveedores::all();
+        $productos = Productos::with('proveedor')->orderBy('fecha_agregado', 'desc')->paginate(6);
+        $medidas = [
+            'pzas' => 'Piezas',
+            'ml' => 'Mililitros',
+            'lt' => 'Litros',
+            'gr' => 'Gramos',
+            'cm' => 'Centímetros',
+        ];
+
+        return view('dashboard.index', compact('productos', 'marcas', 'medidas', 'categorias'));
     }
 
     public function usuarios(Request $request)
     {
-        return view('dashboard.index');
+        $usuarios = User::with('persona')->orderBy('created_at', 'desc')->paginate(6);
+        return view('dashboard.index', compact('usuarios'));
     }
 
     public function auditoria(Request $request)
