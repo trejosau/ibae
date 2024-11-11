@@ -12,13 +12,23 @@ class Servicios extends Model
 
     protected $fillable = [
         'nombre',
+
         'descripcion',
         'precio',
         'categoria',
+        'duracion_minima',
+        'duracion_maxima',
+        'categoria',
+        'estado',
     ];
 
     public function detallesCita() : HasMany
     {
         return $this->hasMany(DetalleCita::class, 'id_servicio');
+    }
+
+    public function categoria()
+    {
+        return $this->belongsTo(Categorias_de_Servicios::class, 'categoria');
     }
 }

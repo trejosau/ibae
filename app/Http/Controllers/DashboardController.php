@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Administrador;
+use App\Models\Categorias_de_Servicios;
 use App\Models\Citas;
 use App\Models\Colegiaturas;
 use App\Models\Comprador;
@@ -16,6 +17,7 @@ use App\Models\Pedidos;
 use App\Models\Productos;
 use App\Models\Profesor;
 use App\Models\Proveedores;
+use App\Models\Servicios;
 use App\Models\Ventas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -318,7 +320,13 @@ class DashboardController extends Controller
 
     public function servicios(Request $request)
     {
-        return view('dashboard.index');
+        $servicios = Servicios::with('categoria')->get();
+
+
+        $categorias = Categorias_de_Servicios::all();
+
+
+        return view('dashboard.index', compact('servicios', 'categorias'));
     }
 
     public function productos(Request $request)
