@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/servicios/agregar-categoria', [ServiciosController::class, 'agregarCategoria'])->name('servicios.agregarCategoria');
     Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');
     Route::post('/dashboard/productos/agregar', [ProductosController::class, 'agregar'])->name('productos.agregar');
+    Route::put('/dashboard/productos/actualizar/{id}', [ProductosController::class, 'actualizar'])->name('productos.update');
     Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
     Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');
     Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
@@ -129,7 +130,7 @@ Route::middleware('auth')->group(function () {
 
     Route::put('/inscripciones/{id}', [PlataformaController::class, 'update'])->name('plataforma.updateInscripcion');
     Route::post('/plataforma/bajaProfesor/{id}', [PlataformaController::class, 'bajaProfesor'])->name('plataforma.bajaProfesor');
- 
+
 
 
     Route::post('/plataforma/asignar-rol', [PlataformaController::class, 'asignarRol'])->name('plataforma.asignarRol');

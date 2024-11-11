@@ -84,6 +84,61 @@ class ProductosController extends Controller
         return redirect()->back()->with('success', 'Producto agregado correctamente.');
     }
 
+    public function actualizar(Request $request, $id)
+    {
+        // Validación de los datos
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'categoria_id' => 'required|exists:categorias,id',
+            'precio_venta' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'estado' => 'required|in:activo,inactivo',
+            'main_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validar la imagen
+        ]);
+
+        // Buscar el producto en la base de datos
+        $producto = Productos::findOrFail($id);
+
+        // Actualizar los campos
+        $producto->nombre = $request->nombre;
+        $producto->id_categoria = $request->categoria_id;
+        $producto->precio_venta = $request->precio_venta;
+        $producto->stock = $request->stock;
+        $producto->estado = $request->estado;
+
+        // Manejo de la imagen (si se sube una nueva)
+        if ($request->hasFile('main_photo')) {
+            // Eliminar la imagen anterior si existe en S3
+            if ($producto->main_photo) {
+                $filePath = parse_url($producto->main_photo, PHP_URL_PATH);
+                Storage::disk('s3')->delete(ltrim($filePath, '/'));
+            }
+
+            // Subir la nueva imagen
+            $nombre = $producto->nombre;
+            $cantidad = $producto->cantidad;
+            $medida = $producto->medida;
+            $image = $request->file('main_photo');
+            $extension = $image->getClientOriginalExtension();
+
+            // Generar un nuevo nombre de archivo
+            $FileName = $nombre . '_' . $cantidad . '_' . $medida . '.' . $extension;
+
+            $path = Storage::disk('s3')->put('images/productos/' . $FileName, file_get_contents($image));
+
+            $producto->main_photo = Storage::disk('s3')->url('images/productos/' . $FileName);
+        }
+
+        // Guardar los cambios en la base de datos
+        $producto->save();
+
+        // Redireccionar con un mensaje de éxito
+        return redirect()->back()->with('success', 'Producto actualizado correctamente.');
+    }
+
+
+
+
 
 
     public function catalogo()

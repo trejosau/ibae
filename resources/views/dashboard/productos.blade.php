@@ -135,7 +135,7 @@
                     <tr>
                         <td>
                             <a href="{{ $producto->main_photo }}" data-lightbox="producto-{{ $producto->id }}" data-title="{{ $producto->nombre }}">
-                              <img src="{{ $producto->main_photo }}" alt="{{ $producto->nombre }}" style="width: 128px; height: auto; object-fit: cover;">
+                                <img src="{{ $producto->main_photo }}" alt="{{ $producto->nombre }}" style="width: 128px; height: auto; object-fit: cover;">
                             </a>
                         </td>
                         <td>{{ $producto->nombre }}</td>
@@ -146,17 +146,89 @@
                         <td>{{ $producto->estado == 'activo' ? 'Activo' : 'Inactivo' }}</td>
                         <td>{{ $producto->fecha_agregado }}</td>
                         <td>
-                            <a href="" class="btn btn-sm btn-warning">Editar</a>
+                            <!-- Cambiar el 'data-bs-target' para que apunte al modal con el id único -->
+                            <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#editarProductoModal{{ $producto->id }}">
+                                Editar
+                            </button>
                             <form action="" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este producto?')">Eliminar</button>
+                                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
                             </form>
                         </td>
                     </tr>
+
+                    <!-- Modal para editar el producto -->
+                    <div class="modal fade" id="editarProductoModal{{ $producto->id }}" tabindex="-1" aria-labelledby="editarProductoModalLabel{{ $producto->id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editarProductoModalLabel{{ $producto->id }}">Editar Producto</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="{{ route('productos.update', ['id' => $producto->id]) }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="modal-body">
+                                        <!-- Imagen -->
+                                        <div class="mb-3">
+                                            <label for="main_photo" class="form-label">Imagen</label>
+                                            <input type="file" name="main_photo" class="form-control" id="main_photo">
+                                            <img src="{{ $producto->main_photo }}" alt="{{ $producto->nombre }}" style="width: 100px; height: auto; margin-top: 10px;">
+                                        </div>
+
+                                        <!-- Nombre -->
+                                        <div class="mb-3">
+                                            <label for="nombre" class="form-label">Nombre</label>
+                                            <input type="text" name="nombre" class="form-control" id="nombre" value="{{ $producto->nombre }}" required>
+                                        </div>
+
+                                        <!-- Categoría -->
+                                        <div class="mb-3">
+                                            <label for="categoria" class="form-label">Categoría</label>
+                                            <select name="categoria_id" class="form-select" id="categoria" required>
+                                                @foreach($categorias as $categoria)
+                                                    <option value="{{ $categoria->id }}" {{ $producto->categoria_id == $categoria->id ? 'selected' : '' }}>
+                                                        {{ $categoria->nombre }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <!-- Precio Venta -->
+                                        <div class="mb-3">
+                                            <label for="precio_venta" class="form-label">Precio Venta</label>
+                                            <input type="number" name="precio_venta" class="form-control" id="precio_venta" value="{{ $producto->precio_venta }}" step="0.01" required>
+                                        </div>
+
+                                        <!-- Stock -->
+                                        <div class="mb-3">
+                                            <label for="stock" class="form-label">Stock</label>
+                                            <input type="number" name="stock" class="form-control" id="stock" value="{{ $producto->stock }}" required>
+                                        </div>
+
+                                        <!-- Estado -->
+                                        <div class="mb-3">
+                                            <label for="estado" class="form-label">Estado</label>
+                                            <select name="estado" class="form-select" id="estado" required>
+                                                <option value="activo" {{ $producto->estado == 'activo' ? 'selected' : '' }}>Activo</option>
+                                                <option value="inactivo" {{ $producto->estado == 'inactivo' ? 'selected' : '' }}>Inactivo</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
                 </tbody>
             </table>
+
         </div>
     </div>
 </div>
