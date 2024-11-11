@@ -38,6 +38,11 @@ class User extends Authenticatable
         return $this->hasOne(Persona::class, 'usuario', 'id');
     }
 
+    public function auditorias()
+    {
+        return $this->hasMany(Auditoria::class, 'user_id');
+    }
+
 
 
 

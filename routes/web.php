@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');
     Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');
     Route::post('/dashboard/servicios/agregar', [ServiciosController::class, 'agregarServicio'])->name('servicios.agregar');
+    Route::post('/dashboard/servicios/agregar-categoria', [ServiciosController::class, 'agregarCategoria'])->name('servicios.agregarCategoria');
     Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');
     Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
     Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');

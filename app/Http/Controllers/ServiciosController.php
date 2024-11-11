@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categorias_de_Servicios;
 use App\Models\Servicios;
 use Illuminate\Http\Request;
 
@@ -32,6 +33,19 @@ class ServiciosController extends Controller
         return redirect()->back()->with('success', 'Servicio agregado correctamente.');
 
     }
+
+    public function agregarCategoria(Request $request)
+        {
+
+            $request->validate([
+                'nombre' => 'required|string|max:255',
+            ]);
+
+            Categorias_de_Servicios::create([
+                'nombre' => $request->nombre,
+            ]);
+            return redirect()->back()->with('success', 'Categoria agregada correctamente.');
+        }
 
 
 }

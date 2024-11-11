@@ -65,6 +65,10 @@
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-agregar-servicio">
                         <i class="fas fa-plus-circle"></i> Agregar Servicio
                     </button>
+
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-agregar-categoria">
+                        <i class="fas fa-plus-circle"></i> Agregar Categoria
+                    </button>
                 </div>
             </div>
         </div>
@@ -126,6 +130,33 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <!-- Modal para Agregar Categoría -->
+    <div class="modal fade" id="modal-agregar-categoria" tabindex="-1" aria-labelledby="modal-agregar-categoria-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-agregar-categoria-label">Agregar Nueva Categoría</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ route('servicios.agregarCategoria') }}">
+                        @csrf  <!-- Token CSRF para protección -->
+
+                        <div class="mb-3">
+                            <label for="nombre-categoria" class="form-label">Nombre de la Categoría</label>
+                            <input type="text" class="form-control" id="nombre-categoria" name="nombre" required>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
