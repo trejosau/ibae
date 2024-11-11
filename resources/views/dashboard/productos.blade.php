@@ -1,3 +1,9 @@
+<!-- Cropper.js CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" />
+
+<!-- Cropper.js JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
 <div class="container">
     <h1 class="mb-4">Gestión de Productos</h1>
 
@@ -92,13 +98,6 @@
                                 </select>
                             </div>
                         </div>
-
-
-                        <!-- Cropper.js CSS -->
-                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" />
-
-                        <!-- Cropper.js JS -->
-                        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 
 
                         <!-- Foto -->
@@ -259,13 +258,10 @@
                                     }
                                 });
                             });
-
-
                         </script>
 
                     </tr>
 
-                    <!-- Modal para editar el producto -->
                     <div class="modal fade" id="editarProductoModal{{ $producto->id }}" tabindex="-1" aria-labelledby="editarProductoModalLabel{{ $producto->id }}" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -277,56 +273,139 @@
                                     @csrf
                                     @method('PUT')
                                     <div class="modal-body">
-                                        <!-- Imagen -->
-                                        <div class="mb-3">
-                                            <label for="main_photo" class="form-label">Imagen</label>
-                                            <input type="file" name="main_photo" class="form-control" id="main_photo">
-                                            <img src="{{ $producto->main_photo }}" alt="{{ $producto->nombre }}" style="width: 100px; height: auto; margin-top: 10px;">
+
+                                        <!-- Nombre y Marca -->
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="nombre_update" class="form-label">Nombre del Producto</label>
+                                                <input type="text" class="form-control" id="nombre_update" name="nombre" value="{{ $producto->nombre }}" required>
+                                            </div>
                                         </div>
 
-                                        <!-- Nombre -->
+                                        <!-- Descripción -->
                                         <div class="mb-3">
-                                            <label for="nombre" class="form-label">Nombre</label>
-                                            <input type="text" name="nombre" class="form-control" id="nombre" value="{{ $producto->nombre }}" required>
+                                            <label for="descripcion_update" class="form-label">Descripción</label>
+                                            <textarea class="form-control" id="descripcion_update" name="descripcion" rows="3" required>{{ $producto->descripcion }}</textarea>
                                         </div>
 
-                                        <!-- Categoría -->
-                                        <div class="mb-3">
-                                            <label for="categoria" class="form-label">Categoría</label>
-                                            <select name="categoria_id" class="form-select" id="categoria" required>
-                                                @foreach($categorias as $categoria)
-                                                    <option value="{{ $categoria->id }}" {{ $producto->categoria_id == $categoria->id ? 'selected' : '' }}>
-                                                        {{ $categoria->nombre }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                        <!-- Precios -->
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <label for="precio_proveedor_update" class="form-label">Precio Proveedor</label>
+                                                <input type="number" class="form-control" id="precio_proveedor_update" name="precio_proveedor" value="{{ $producto->precio_proveedor }}" required>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="precio_lista_update" class="form-label">Precio Lista</label>
+                                                <input type="number" class="form-control" id="precio_lista_update" name="precio_lista" value="{{ $producto->precio_lista }}" required>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="precio_venta_update" class="form-label">Precio Venta</label>
+                                                <input type="number" class="form-control" id="precio_venta_update" name="precio_venta" value="{{ $producto->precio_venta }}" required>
+                                            </div>
                                         </div>
 
-                                        <!-- Precio Venta -->
-                                        <div class="mb-3">
-                                            <label for="precio_venta" class="form-label">Precio Venta</label>
-                                            <input type="number" name="precio_venta" class="form-control" id="precio_venta" value="{{ $producto->precio_venta }}" step="0.01" required>
+                                        <!-- Cantidad/Medida/Categoría -->
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <label for="cantidad_update" class="form-label">Cantidad</label>
+                                                <input type="number" class="form-control" id="cantidad_update" name="cantidad" value="{{ $producto->cantidad }}" required>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="medida_update" class="form-label">Medida</label>
+                                                <select class="form-select" id="medida_update" name="medida">
+                                                    <option disabled selected>Selecciona una medida...</option>
+                                                    @foreach($medidas as $valor => $texto)
+                                                        <option value="{{ $valor }}" {{ $producto->medida == $valor ? 'selected' : '' }}>{{ $texto }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="id_categoria_update" class="form-label">Categoría</label>
+                                                <select class="form-select" id="id_categoria_update" name="id_categoria">
+                                                    <option value="">Selecciona una categoría...</option>
+                                                    @foreach($categorias as $categoria)
+                                                        <option value="{{ $categoria->id }}" {{ $producto->id_categoria == $categoria->id ? 'selected' : '' }}>
+                                                            {{ $categoria->nombre }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
 
-                                        <!-- Stock -->
-                                        <div class="mb-3">
-                                            <label for="stock" class="form-label">Stock</label>
-                                            <input type="number" name="stock" class="form-control" id="stock" value="{{ $producto->stock }}" required>
+                                        <!-- Stock y Estado -->
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="stock_update" class="form-label">Stock</label>
+                                                <input type="number" class="form-control" id="stock_update" name="stock" value="{{ $producto->stock }}" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="estado_update" class="form-label">Estado</label>
+                                                <select class="form-select" id="estado_update" name="estado" required>
+                                                    <option value="activo" {{ $producto->estado == 'activo' ? 'selected' : '' }}>Activo</option>
+                                                    <option value="inactivo" {{ $producto->estado == 'inactivo' ? 'selected' : '' }}>Inactivo</option>
+                                                </select>
+                                            </div>
                                         </div>
 
-                                        <!-- Estado -->
+                                        <!-- Foto -->
                                         <div class="mb-3">
-                                            <label for="estado" class="form-label">Estado</label>
-                                            <select name="estado" class="form-select" id="estado" required>
-                                                <option value="activo" {{ $producto->estado == 'activo' ? 'selected' : '' }}>Activo</option>
-                                                <option value="inactivo" {{ $producto->estado == 'inactivo' ? 'selected' : '' }}>Inactivo</option>
-                                            </select>
+                                            <label for="main_photo_update{{ $producto->id }}" class="form-label">Foto Principal</label>
+                                            <div class="d-flex align-items-center">
+                                                <div class="photo-upload-btn position-relative">
+                                                    <input type="file" class="form-control position-absolute top-0 start-0 opacity-0" id="main_photo_update{{ $producto->id }}" name="main_photo" accept="image/*" style="width: 100%; height: 100%;" onchange="previewImageUpdate(event, {{ $producto->id }})">
+                                                    <input type="hidden" id="crop_x_update{{ $producto->id }}" name="crop_x">
+                                                    <input type="hidden" id="crop_y_update{{ $producto->id }}" name="crop_y">
+                                                    <input type="hidden" id="crop_width_update{{ $producto->id }}" name="crop_width">
+                                                    <input type="hidden" id="crop_height_update{{ $producto->id }}" name="crop_height">
+                                                    <div class="btn-circle">
+                                                        <i class="fa fa-camera"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Contenedor para la imagen y el área de recorte -->
+                                            <div class="mt-3">
+                                                <img id="image_to_crop_update{{ $producto->id }}" src="#" alt="Image to crop" style="max-width: 100%; display: none;">
+                                            </div>
                                         </div>
+
+                                        <script>
+                                            let cropperUpdate;
+
+                                            function previewImageUpdate(event, productId) {
+                                                if (event.target.files.length === 0) {
+                                                    return;
+                                                }
+
+                                                var imageUpdate = document.getElementById('image_to_crop_update' + productId);
+                                                var readerUpdate = new FileReader();
+
+                                                readerUpdate.onload = function () {
+                                                    imageUpdate.src = readerUpdate.result;
+                                                    imageUpdate.style.display = 'block';
+
+                                                    if (cropperUpdate) {
+                                                        cropperUpdate.destroy();
+                                                    }
+
+                                                    cropperUpdate = new Cropper(imageUpdate, {
+                                                        aspectRatio: 1,
+                                                        crop(event) {
+                                                            document.getElementById('crop_x_update' + productId).value = event.detail.x;
+                                                            document.getElementById('crop_y_update' + productId).value = event.detail.y;
+                                                            document.getElementById('crop_width_update' + productId).value = event.detail.width;
+                                                            document.getElementById('crop_height_update' + productId).value = event.detail.height;
+                                                        }
+                                                    });
+                                                };
+                                                readerUpdate.readAsDataURL(event.target.files[0]);
+                                            }
+                                        </script>
 
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
                                     </div>
                                 </form>
                             </div>
@@ -335,8 +414,15 @@
 
                 @endforeach
 
+
                 </tbody>
             </table>
+
+            <!-- Paginación -->
+            <div class="d-flex justify-content-between mt-3">
+                {{ $productos->links('pagination::bootstrap-5') }}
+            </div>
+
 
         </div>
     </div>
