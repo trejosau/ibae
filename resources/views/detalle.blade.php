@@ -40,46 +40,102 @@
             transform: translateY(0);
         }
         
-        /* Productos relacionados */
-        .productos-container {
-            padding: 20px 0;
-            background-color: #fff;
-        }
-        
-        .productos-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-        
-        .producto-card {
-            flex: 1 1 220px;
-            margin: 0 10px;
-        }
-        
-        .card {
-            transition: transform 0.3s, box-shadow 0.3s;
-            color: inherit;
-            border-radius: 10px;
-            overflow: hidden;
-            background-color: #fff;
-        }
-        
-        .card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        }
-        
-        /* Precio y botones */
-        .precio {
-            color: #e63946; /* Rojo */
-            font-size: 1.2rem;
-        }
-        
-        .text-danger {
-            color: #e63946 !important; /* Rojo */
-        }
+        .products-container .card {
+    border: 1px solid #ddd; /* Contorno alrededor de cada tarjeta */
+    border-radius: 10px;
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.products-container .card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra en hover */
+}
+
+.products-container .card img {
+    max-height: 400px;
+    object-fit: cover;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    transition: transform 0.3s ease;
+    width: 100%;
+}
+
+.products-container .card:hover img {
+    transform: scale(1.1); /* Solo agrandar la imagen en hover */
+}
+
+.products-container .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.precio {
+    color: #ff5722;
+    font-size: 1.2rem;
+    margin-bottom: 1rem; /* Espacio debajo del precio */
+}
+
+/* Estilo para el botón "Agregar al carrito" */
+.btn-agg {
+    background-color: #ff5a5f; /* Color de fondo */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Botón ancho */
+    margin-top: auto; /* Empuja el botón a la parte inferior del contenedor */
+}
+
+.btn-agg:hover {
+    background-color: #ff4146; /* Color de fondo en hover */
+}
+
+/* Ajuste adicional para el contenedor de productos */
+.productos-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding: 20px 0;
+}
+
+.productos-wrapper {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.producto-card {
+    min-width: 220px;
+    margin: 0 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Asegura que el contenido esté alineado correctamente */
+}
+
+.card {
+    text-decoration: none; /* Evita subrayado en el enlace */
+    transition: transform 0.3s, box-shadow 0.3s; /* Transiciones para el hover */
+}
+
+.card:hover {
+    transform: scale(1.05); /* Aumenta el tamaño en hover */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra en hover */
+}
+
+.precio {
+    color: #ff5722; /* Color vibrante para el precio */
+    font-size: 1.2rem; /* Tamaño de fuente más grande para el precio */
+}
+
         
         .btn-agg {
             background-color: #333; 
@@ -214,21 +270,33 @@
     <div class="productos-container">
         <div class="productos-wrapper">
             @forelse($productosRelacionados as $productoRelacionado)
-                <div class="producto-card">
-                    <a href="{{ route('producto.detalle', $productoRelacionado->id) }}" class="card h-100 shadow-sm border-0 text-decoration-none">
-                        @if($productoRelacionado->main_photo)
-                            <img src="{{ asset($productoRelacionado->main_photo) }}" alt="{{ $productoRelacionado->nombre }}" class="card-img-top img-fluid rounded-top">
-                        @else
-                            <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 200px; background-color: #f8f9fa;">
-                                <p class="text-muted">Imagen no disponible</p>
-                            </div>
-                        @endif
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title fw-bold text-dark">{{ $productoRelacionado->nombre }}</h5>
-                            <p class="card-text text-danger fw-bold precio mb-4">Precio: ${{ number_format($productoRelacionado->precio_venta, 2) }}</p>
+            <div class="producto-card">
+                <a href="{{ route('producto.detalle', $productoRelacionado->id) }}" class="card h-100 shadow-sm border-0 text-decoration-none">
+                    @if($productoRelacionado->main_photo)
+                        <img src="{{ asset($productoRelacionado->main_photo) }}" alt="{{ $productoRelacionado->nombre }}" class="card-img-top img-fluid rounded-top">
+                    @else
+                        <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 200px; background-color: #f8f9fa;">
+                            <p class="text-muted">Imagen no disponible</p>
                         </div>
-                    </a>
-                </div>
+                    @endif
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold text-dark">{{ $productoRelacionado->nombre }}</h5>
+                        <p class="card-text text-danger fw-bold precio mb-4">Precio: ${{ number_format($productoRelacionado->precio_venta, 2) }}</p>
+                    </div>
+                </a>
+            
+                <!-- Formulario para agregar al carrito fuera del enlace -->
+                <form id="agregar-carrito-form">
+                    @csrf
+                    <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
+                    <button type="button" class="btn btn-agg btn-lg fw-bold mt-3" 
+                            aria-label="Agregar {{ $productoRelacionado->nombre }} al carrito" 
+                            onclick="agregarAlCarrito({{ $productoRelacionado->id }})">
+                        <i class="fas fa-shopping-cart"></i> Agregar al carrito
+                    </button>
+                </form>
+            </div>
+            
             @empty
                 <div class="col-md-12">
                     <p class="text-center text-muted">No se encontraron productos relacionados.</p>
