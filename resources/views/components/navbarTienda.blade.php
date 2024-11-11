@@ -712,22 +712,30 @@ function adjustQuantity(id, delta) {
     changeQuantity(id, nuevaCantidad);
 }
 
-function actualizarTotalesCarrito(subtotal) {
-    document.getElementById('cart-icon-total').innerText = `$${subtotal.toFixed(2)}`;
-    document.getElementById('cart-total-sidebar').innerText = `Total: $${subtotal.toFixed(2)}`;
-}
-
 function actualizarTotalCarrito() {
     fetch('/carrito/contenido')
         .then(response => response.json())
         .then(data => {
-            if (data.subtotal !== undefined) {
-                document.getElementById('cart-total').innerText = `$${data.subtotal.toFixed(2)}`;
+            if (data.carrito && Object.keys(data.carrito).length > 0) {
+                // Calcular el subtotal
+                let subtotal = 0;
+                Object.entries(data.carrito).forEach(([id, product]) => {
+                    subtotal += product.precio * product.cantidad;
+                });
+
+                // Actualizar el total
+                actualizarTotalesCarrito(subtotal);
             } else {
-                document.getElementById('cart-total').innerText = '$0.00';
+                // Si el carrito está vacío, asegurarse de que el total sea 0
+                actualizarTotalesCarrito(0);
             }
         })
         .catch(error => console.error('Error al actualizar el total del carrito:', error));
+}
+
+function actualizarTotalesCarrito(subtotal) {
+    document.getElementById('cart-icon-total').innerText = `$${subtotal.toFixed(2)}`;
+    document.getElementById('cart-total-sidebar').innerText = `Total: $${subtotal.toFixed(2)}`;
 }
 
 
