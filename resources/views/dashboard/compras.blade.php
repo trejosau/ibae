@@ -2,10 +2,152 @@
     <h2 class="text-center mb-4">Sección de Compras</h2>
 
     <!-- Proveedores y Notificaciones -->
+
+
+
+    <div class="row mb-4">
+        <!-- Card Compras Recientes -->
+        <div class="col-md-8">
+            <div class="card border-primary h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-center text-primary">
+                        <i class="fas fa-shopping-cart fa-2x"></i> Compras Recientes
+                    </h5>
+                    <table class="table table-bordered text-center">
+                        <thead class="table-primary">
+                        <tr>
+                            <th>Proveedor</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($compras as $compra)
+                            <tr>
+                                <td>{{ $compra->proveedor->nombre_empresa }}</td>
+                                <td>{{ $compra->fecha_compra }}</td>
+                                <td>${{ number_format($compra->total, 2) }}</td>
+                                <td>
+                                    @if($compra->estado == 'entregado')
+                                        <span class="badge bg-success text-white">Entregado</span>
+                                    @elseif($compra->estado == 'pendiente')
+                                        <span class="badge bg-warning text-dark">Pendiente</span>
+                                    @elseif($compra->estado == 'cancelado')
+                                        <span class="badge bg-danger text-white">Cancelado</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($compra->estado == 'entregado')
+                                        <button class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-detalle-productos-{{ $compra->id }}">Ver Detalle</button>
+                                    @elseif($compra->estado == 'pendiente')
+                                        <a class="btn btn-outline-primary btn-sm w-100" href="{{ route('detallar.producto', ['id' => $compra->id]) }}">Detallar</a>
+                                    @elseif($compra->estado == 'cancelado')
+                                        <button class="btn btn-outline-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-motivo-cancelacion-{{ $compra->id }}">Ver Motivo</button>
+                                    @endif
+                                </td>
+
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    <!-- Paginación Compras -->
+                    <div class="d-flex justify-content-between mt-3">
+                        {{ $compras->appends(['proveedores_page' => $proveedores->currentPage(), 'productos_page' => $productos->currentPage()])->links('pagination::bootstrap-5') }}
+                    </div>
+                    <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modal-agregar-compra">Agregar Compra</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Tabla de Stock -->
+        <div class="col-md-4">
+            <div class="card border-secondary h-100" style="border-color: #d8bfd8;">
+                <div class="card-body" style="background-color: #fdf7ff;">
+                    <h5 class="card-title text-center" style="color: #8b5e83;">
+                        <i class="fas fa-boxes fa-2x"></i> Tabla de Stock
+                    </h5>
+                    <table class="table table-bordered text-center">
+                        <thead style="background-color: #f7d6e0;">
+                        <tr>
+                            <th>Producto</th>
+                            <th>Stock Actual</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($productos as $producto)
+                            @php
+                                $bgColor = '';
+                                if ($producto->stock <= 5) {
+                                    $bgColor = 'table-danger';
+                                } elseif ($producto->stock <= 15) {
+                                    $bgColor = 'table-warning';
+                                } else {
+                                    $bgColor = 'table-success';
+                                }
+                            @endphp
+                            <tr class="{{ $bgColor }}">
+                                <td>{{ $producto->nombre }}</td>
+                                <td>{{ $producto->stock }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    <!-- Paginación Productos -->
+                    <div class="d-flex justify-content-between mt-3">
+                        {{ $productos->appends(['proveedores_page' => $proveedores->currentPage(), 'compras_page' => $compras->currentPage()])->links('pagination::bootstrap-5') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row mb-4">
 
+        <!-- Notificaciones -->
+        <div class="col-md-4">
+            <div class="card border-primary h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <i class="fas fa-bell fa-2x text-primary"></i> Notificaciones
+                    </h5>
 
-        <div class="col-md-7">
+                    <!-- Filtros de notificaciones -->
+                    <div class="d-flex justify-content-center mb-3">
+                        <a href="{{ route('dashboard.compras', ['filtro' => 'todos']) }}" class="btn btn-sm btn-outline-primary mx-2">Todos</a>
+                        <a href="{{ route('dashboard.compras', ['filtro' => 'leidas']) }}" class="btn btn-sm btn-outline-success mx-2">Leídas</a>
+                        <a href="{{ route('dashboard.compras', ['filtro' => 'no-leidas']) }}" class="btn btn-sm btn-outline-danger mx-2">No leídas</a>
+                    </div>
+
+                    <ul class="list-group">
+                        @foreach($notificaciones as $notificacion)
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <strong>{{ $notificacion->motivo }}</strong><br>
+                                    <small>{{ $notificacion->mensaje }}</small>
+                                </div>
+
+                                <!-- Si la notificación no está leída -->
+                                @if(is_null($notificacion->leida_at))
+                                    <a href="{{ route('notificaciones.marcarLeida', $notificacion->id) }}" class="btn btn-sm btn-success">
+                                        <i class="fas fa-check"></i> Marcar como leída
+                                    </a>
+                                @else
+                                    <!-- Si la notificación ya está leída -->
+                                    <button class="btn btn-sm btn-secondary" disabled>
+                                        <i class="fas fa-check-double"></i> Leída
+                                    </button>
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Proveedores -->
+        <div class="col-md-8">
             <div class="card border-secondary h-100">
                 <div class="card-body">
                     <h5 class="card-title text-start mb-3" style="font-size: 1.5rem; color: #6c757d;">Proveedores</h5>
@@ -130,119 +272,9 @@
             </div>
         </div>
 
-        <!-- Notificaciones (col-md-5) -->
-        <div class="col-md-5">
-            <div class="card border-primary h-100">
-                <div class="card-body">
-                    <h5 class="card-title text-center">
-                        <i class="fas fa-bell fa-2x text-primary"></i> Notificaciones
-                    </h5>
-
-                    <!-- Filtros de notificaciones -->
-                    <div class="d-flex justify-content-center mb-3">
-                        <a href="{{ route('dashboard.compras', ['filtro' => 'todos']) }}" class="btn btn-sm btn-outline-primary mx-2">Todos</a>
-                        <a href="{{ route('dashboard.compras', ['filtro' => 'leidas']) }}" class="btn btn-sm btn-outline-success mx-2">Leídas</a>
-                        <a href="{{ route('dashboard.compras', ['filtro' => 'no-leidas']) }}" class="btn btn-sm btn-outline-danger mx-2">No leídas</a>
-                    </div>
-
-                    <ul class="list-group">
-                        @foreach($notificaciones as $notificacion)
-                            <li class="list-group-item d-flex justify-content-between">
-                                <div>
-                                    <strong>{{ $notificacion->motivo }}</strong><br>
-                                    <small>{{ $notificacion->mensaje }}</small>
-                                </div>
-
-                                <!-- Si la notificación no está leída -->
-                                @if(is_null($notificacion->leida_at))
-                                    <a href="{{ route('notificaciones.marcarLeida', $notificacion->id) }}" class="btn btn-sm btn-success">
-                                        <i class="fas fa-check"></i> Marcar como leída
-                                    </a>
-                                @else
-                                    <!-- Si la notificación ya está leída -->
-                                    <button class="btn btn-sm btn-secondary" disabled>
-                                        <i class="fas fa-check-double"></i> Leída
-                                    </button>
-                                @endif
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>
-
     </div>
 
-    <!-- Compras Recientes -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card border-primary mb-4">
-                <div class="card-body">
-                    <h5 class="card-title text-center">
-                        <i class="fas fa-shopping-cart fa-2x text-primary"></i> Compras Recientes
-                    </h5>
-                    <table class="table table-bordered text-center">
-                        <thead>
-                        <tr>
-                            <th>Proveedor</th>
-                            <th>Fecha</th>
-                            <th>Total</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($compras as $compra)
-                            <tr>
-                                <td>{{ $compra->proveedor->nombre_empresa }}</td>
-                                <td>{{ $compra->fecha_compra }}</td>
-                                <td>${{ number_format($compra->total, 2) }}</td>
-                                <td>
-                                    @if($compra->estado == 'entregado')
-                                        <span class="badge" style="background-color: #a8e6cf; color: #2d6a4f;">Entregado</span>
-                                    @elseif($compra->estado == 'pendiente')
-                                        <span class="badge" style="background-color: #ffe156; color: #d3a300;">Pendiente</span>
-                                    @elseif($compra->estado == 'cancelado')
-                                        <span class="badge" style="background-color: #ff6f61; color: #3f4348;">Cancelado</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($compra->estado == 'entregado')
-                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detalle-productos-{{ $compra->id }}">Ver Detalle</button>
-                                    @elseif($compra->estado == 'pendiente')
-                                        <a class="btn btn-info btn-sm" href="{{ route('detallar.producto', ['id' => $compra->id]) }}">Detallar</a>
-
-                                    @elseif($compra->estado == 'cancelado')
-                                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-motivo-cancelacion-{{ $compra->id }}">Ver Motivo</button>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-
-                    <!-- Paginación Compras -->
-                    <div class="d-flex justify-content-between mt-3">
-                        <div>
-                            {{ $compras->appends([
-                                'proveedores_page' => $proveedores->currentPage(),
-                                'productos_page' => $productos->currentPage()
-                            ])->links('pagination::bootstrap-5') }}
-                        </div>
-                    </div>
-
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-agregar-compra">Agregar Compra</button>
-                </div>
-            </div>
-
-        </div>
-
-
-
-
-
-
-        <!-- Modal para ver Detalle Compra (Estado: Entregado o Pendiente) -->
+    <!-- Modal para ver Detalle Compra (Estado: Entregado o Pendiente) -->
         @foreach($compras as $compra)
             @if($compra->estado == 'pendiente' || $compra->estado == 'entregado')
                 <!-- Modal principal de detalle de la compra -->
@@ -347,51 +379,6 @@
             @endif
         @endforeach
 
-
-        <!-- Tabla de Stock (col-md-6) -->
-        <div class="col-md-6">
-            <div class="card border-secondary mb-4" style="border-color: #d8bfd8;">
-                <div class="card-body" style="background-color: #fdf7ff;">
-                    <h5 class="card-title text-center" style="color: #8b5e83;">Tabla de Stock</h5>
-                    <table class="table table-bordered text-center">
-                        <thead style="background-color: #f7d6e0;">
-                        <tr>
-                            <th>Producto</th>
-                            <th>Stock Actual</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($productos as $producto)
-                            @php
-                                $bgColor = '';
-                                if ($producto->stock <= 5) {
-                                    $bgColor = '#ffc1c1';
-                                } elseif ($producto->stock <= 15) {
-                                    $bgColor = '#ffecb3';
-                                } else {
-                                    $bgColor = '#d4edda';
-                                }
-                            @endphp
-                            <tr>
-                                <td style="color: #5a5a5a; background-color: {{ $bgColor }};">{{ $producto->nombre }}</td>
-                                <td style="color: #5a5a5a; background-color: {{ $bgColor }};">{{ $producto->stock }}</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                    <!-- Paginación Productos -->
-                    <div class="d-flex justify-content-between mt-3">
-                        <div>
-                            {{ $productos->appends([
-                                'proveedores_page' => $proveedores->currentPage(),
-                                'compras_page' => $compras->currentPage()
-                            ])->links('pagination::bootstrap-5') }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
 <!-- Modal para agregar proveedor -->
@@ -420,7 +407,7 @@
                     <!-- Campo Teléfono con la librería intl-tel-input -->
                     <div class="mb-3">
                         <label for="contacto_telefono" class="form-label">Teléfono</label>
-                        <input type="tel" id="contacto_telefono" name="contacto_telefono" class="form-control" required>
+                        <input type="tel" id="contacto_telefono" name="contacto_telefono" class="form-control" value="+52" required>
                     </div>
 
                     <!-- Campo Correo -->
@@ -447,7 +434,7 @@
             const iti = window.intlTelInput(input, {
                 nationalMode: false, // Desactiva el modo nacional
                 utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-                preferredCountries: ["us", "mx", "es"],
+                preferredCountries: [ "mx"],
             });
         }
     });

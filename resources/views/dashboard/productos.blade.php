@@ -17,26 +17,26 @@
                 <div class="modal-body">
                     <form action="{{ route('productos.agregar') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <!-- Nombre del producto -->
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre del Producto</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        <!-- Nombre y Marca -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nombre" class="form-label">Nombre del Producto</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="marca" class="form-label">Marca</label>
+                                <select class="form-select" id="marca" name="marca">
+                                    <option value="">Selecciona una marca...</option>
+                                    @foreach($marcas as $marca)
+                                        <option value="{{ $marca->id }}">{{ $marca->nombre_empresa }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                         <!-- Descripción -->
                         <div class="mb-3">
                             <label for="descripcion" class="form-label">Descripción</label>
                             <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
-                        </div>
-                        <!-- Marca -->
-                        <div class="mb-3">
-                            <label for="marca" class="form-label">Marca</label>
-                            <select class="form-select" id="marca" name="marca">
-                                <option value="">Selecciona una marca...</option>
-                                @foreach($marcas as $marca)
-                                    <option value="{{ $marca->id }}">{{ $marca->nombre_empresa }}</option>
-                                @endforeach
-                            </select>
-
                         </div>
                         <!-- Precios -->
                         <div class="row">
@@ -53,27 +53,22 @@
                                 <input type="number" class="form-control" id="precio_venta" name="precio_venta" required>
                             </div>
                         </div>
-                        <!-- Cantidad y Medida -->
+                        <!-- Cantidad/Medida/Categoría -->
                         <div class="row">
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label for="cantidad" class="form-label">Cantidad</label>
-                                    <input type="number" class="form-control" id="cantidad" name="cantidad" required>
-                                </div>
-                                <div class="col-md-8 mb-3">
-                                    <label for="medida" class="form-label">Medida</label>
-                                    <select class="form-select" id="medida" name="medida">
-                                        <option disabled selected>Selecciona una medida...</option>
-                                        @foreach($medidas as $valor => $texto)
-                                            <option value="{{ $valor }}">{{ $texto }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="cantidad" class="form-label">Cantidad</label>
+                                <input type="number" class="form-control" id="cantidad" name="cantidad" required>
                             </div>
-                        </div>
-                        <!-- Proveedor y Categoría -->
-                        <div class="row">
-                            <div class="col-md-8 mb-3">
+                            <div class="col-md-4 mb-3">
+                                <label for="medida" class="form-label">Medida</label>
+                                <select class="form-select" id="medida" name="medida">
+                                    <option disabled selected>Selecciona una medida...</option>
+                                    @foreach($medidas as $valor => $texto)
+                                        <option value="{{ $valor }}">{{ $texto }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
                                 <label for="id_categoria" class="form-label">Categoría</label>
                                 <select class="form-select" id="id_categoria" name="id_categoria">
                                     <option value="">Selecciona una categoría...</option>
@@ -83,44 +78,6 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="main_photo" class="form-label">Foto Principal</label>
-                            <div class="d-flex align-items-center">
-                                <div class="photo-upload-btn position-relative">
-                                    <input type="file" class="form-control position-absolute top-0 start-0 opacity-0" id="main_photo" name="main_photo" accept="image/*" style="width: 100%; height: 100%;" onchange="previewImage(event)">
-                                    <div class="btn-circle">
-                                        <i class="fa fa-camera"></i>
-                                    </div>
-                                </div>
-                                <img id="photo_preview" src="#" alt="Image Preview" style="display: none; width: 100px; height: auto; margin-left: 20px;">
-                            </div>
-                        </div>
-
-                        <style>
-
-                            .btn-circle {
-                                background-color: #007bff;
-                            }
-
-                            .btn-circle i {
-                                font-size: 22px;
-                                color: #9beade;
-                            }
-                        </style>
-
-                        <script>
-                            function previewImage(event) {
-                                const reader = new FileReader();
-                                const preview = document.getElementById('photo_preview');
-
-                                reader.onload = function() {
-                                    preview.src = reader.result;
-                                    preview.style.display = 'block';
-                                };
-
-                                reader.readAsDataURL(event.target.files[0]);
-                            }
-                        </script>
                         <!-- Stock y Estado -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -133,6 +90,19 @@
                                     <option value="activo">Activo</option>
                                     <option value="inactivo">Inactivo</option>
                                 </select>
+                            </div>
+                        </div>
+                        <!-- Foto -->
+                        <div class="mb-3">
+                            <label for="main_photo" class="form-label">Foto Principal</label>
+                            <div class="d-flex align-items-center">
+                                <div class="photo-upload-btn position-relative">
+                                    <input type="file" class="form-control position-absolute top-0 start-0 opacity-0" id="main_photo" name="main_photo" accept="image/*" style="width: 100%; height: 100%;" onchange="previewImage(event)">
+                                    <div class="btn-circle">
+                                        <i class="fa fa-camera"></i>
+                                    </div>
+                                </div>
+                                <img id="photo_preview" src="#" alt="Image Preview" style="display: none; width: 100px; height: auto; margin-left: 20px;">
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar Producto</button>
