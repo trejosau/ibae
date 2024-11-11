@@ -1,206 +1,201 @@
-@php
-    // Simulación de datos que normalmente vendrían del controlador
-    $productos = [
-        (object)[
-            'id' => 1,
-            'nombre' => 'Producto 1',
-            'cantidad_stock' => 50,
-            'precio_venta' => 100,
-            'estado' => 'activo',
-            'imagen' => 'ruta/a/imagen1.jpg',
-        ],
-        (object)[
-            'id' => 2,
-            'nombre' => 'Producto 2',
-            'cantidad_stock' => 30,
-            'precio_venta' => 150,
-            'estado' => 'inactivo',
-            'imagen' => 'https://d1eipm3vz40hy0.cloudfront.net/images/SSAC-Blog/mercadotecnia-marketing-productos.jpg',
-        ],
-        (object)[
-            'id' => 3,
-            'nombre' => 'Producto 3',
-            'cantidad_stock' => 20,
-            'precio_venta' => 200,
-            'estado' => 'activo',
-            'imagen' => 'ruta/a/imagen3.jpg',
-        ],
-    ];
-@endphp
+<div class="container">
+    <h1 class="mb-4">Gestión de Productos</h1>
 
-<div class="productos-section">
-    <h2 class="text-center mb-4">Gestión de Productos</h2>
+    <!-- Button to Open the Modal -->
+    <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#agregarProductoModal">
+        Agregar Producto
+    </button>
 
-
-
-    <!-- Filtros y Barra de Búsqueda en la Misma Línea -->
-    <div class="row mb-3 align-items-end">
-        <div class="col-md-4">
-            <input type="text" class="form-control" placeholder="Buscar productos..." id="searchInput">
-        </div>
-        <div class="col-md-3">
-            <select class="form-select" id="filterEstado">
-                <option value="">Filtrar por Estado</option>
-                <option value="activo">Activo</option>
-                <option value="inactivo">Inactivo</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <input type="number" class="form-control" id="minPrice" placeholder="Min Precio">
-        </div>
-        <div class="col-md-2">
-            <input type="number" class="form-control" id="maxPrice" placeholder="Max Precio">
-        </div>
-    </div>
-
-    <!-- Filtros de Cantidad en Stock -->
-    <div class="row mb-3 align-items-end">
-        <div class="col-md-2">
-            <input type="number" class="form-control" id="minStock" placeholder="Min Stock">
-        </div>
-        <div class="col-md-2">
-            <input type="number" class="form-control" id="maxStock" placeholder="Max Stock">
-        </div>
-
-    </div>
-
-    <!-- Tabla de Productos -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card border-success h-100 mb-4">
-                <div class="card-body">
-                    <h5 class="card-title text-center">
-                        <i class="fas fa-box-open fa-2x text-success"></i> Lista de Productos
-                    </h5>
-                    <table class="table table-bordered table-hover text-center">
-                        <thead>
-                        <tr>
-                            <th data-sort="nombre">Nombre del Producto</th>
-                            <th data-sort="cantidad">Cantidad en Stock</th>
-                            <th data-sort="precio">Precio de Venta</th>
-                            <th data-sort="estado">Estado</th>
-                            <th data-sort="acciones">Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($productos as $producto)
-                            <tr>
-                                <td class="nombre">{{ $producto->nombre }}</td>
-                                <td class="cantidad">{{ $producto->cantidad_stock }}</td>
-                                <td class="precio">${{ $producto->precio_venta }}</td>
-                                <td class="estado">{{ ucfirst($producto->estado) }}</td>
-                                <td>
-                                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-producto-{{ $producto->id }}">
-                                        <i class="fas fa-edit"></i> Modificar
-                                    </button>
-                                    <button class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash-alt"></i> Eliminar
-                                    </button>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-
-                    <!-- Paginación -->
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
-                        </ul>
-                    </nav>
-
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-agregar-producto">
-                        <i class="fas fa-plus-circle"></i> Agregar Producto
-                    </button>
-                    <button class="btn btn-success" id="exportExcelBtn">
-                        <i class="fas fa-file-excel"></i> Exportar a Excel
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para Agregar Producto -->
-    <div class="modal fade" id="modal-agregar-producto" tabindex="-1" aria-labelledby="modal-agregar-producto-label" aria-hidden="true">
+    <!-- Modal -->
+    <div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-labelledby="agregarProductoModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modal-agregar-producto-label">Agregar Nuevo Producto</h5>
+                    <h5 class="modal-title" id="agregarProductoModalLabel">Agregar/Editar Producto</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form action="{{ route('productos.agregar') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <!-- Nombre del producto -->
                         <div class="mb-3">
-                            <label for="nombre-nuevo-producto" class="form-label">Nombre del Producto</label>
-                            <input type="text" class="form-control" id="nombre-nuevo-producto" placeholder="Ingrese el nombre del producto" required>
+                            <label for="nombre" class="form-label">Nombre del Producto</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
                         </div>
+                        <!-- Descripción -->
                         <div class="mb-3">
-                            <label for="cantidad-nuevo-producto" class="form-label">Cantidad en Stock</label>
-                            <input type="number" class="form-control" id="cantidad-nuevo-producto" placeholder="Ingrese la cantidad disponible" required>
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
                         </div>
+                        <!-- Marca -->
                         <div class="mb-3">
-                            <label for="precio-nuevo-producto" class="form-label">Precio de Venta</label>
-                            <input type="number" class="form-control" id="precio-nuevo-producto" placeholder="Ingrese el precio de venta" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="estado-nuevo-producto" class="form-label">Estado</label>
-                            <select class="form-select" id="estado-nuevo-producto">
-                                <option value="activo">Activo</option>
-                                <option value="inactivo">Inactivo</option>
+                            <label for="marca" class="form-label">Marca</label>
+                            <select class="form-select" id="marca" name="marca">
+                                <option value="">Selecciona una marca...</option>
+                                @foreach($marcas as $marca)
+                                    <option value="{{ $marca->id }}">{{ $marca->nombre_empresa }}</option>
+                                @endforeach
                             </select>
+
                         </div>
+                        <!-- Precios -->
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="precio_proveedor" class="form-label">Precio Proveedor</label>
+                                <input type="number" class="form-control" id="precio_proveedor" name="precio_proveedor" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="precio_lista" class="form-label">Precio Lista</label>
+                                <input type="number" class="form-control" id="precio_lista" name="precio_lista" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="precio_venta" class="form-label">Precio Venta</label>
+                                <input type="number" class="form-control" id="precio_venta" name="precio_venta" required>
+                            </div>
+                        </div>
+                        <!-- Cantidad y Medida -->
+                        <div class="row">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="cantidad" class="form-label">Cantidad</label>
+                                    <input type="number" class="form-control" id="cantidad" name="cantidad" required>
+                                </div>
+                                <div class="col-md-8 mb-3">
+                                    <label for="medida" class="form-label">Medida</label>
+                                    <select class="form-select" id="medida" name="medida">
+                                        <option disabled selected>Selecciona una medida...</option>
+                                        @foreach($medidas as $valor => $texto)
+                                            <option value="{{ $valor }}">{{ $texto }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Proveedor y Categoría -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_proveedor" class="form-label">Proveedor</label>
+                                <select class="form-select" id="id_proveedor" name="id_proveedor">
+                                    <option value="">Selecciona un proveedor...</option>
+                                    @foreach($marcas as $marca)
+                                        <option value="{{ $marca->id }}">{{ $marca->nombre_empresa }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_categoria" class="form-label">Categoría</label>
+                                <select class="form-select" id="id_categoria" name="id_categoria">
+                                    <option value="">Selecciona una categoría...</option>
+                                    @foreach($categorias as $categoria)
+                                        <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="main_photo" class="form-label">Foto Principal</label>
+                            <div class="d-flex align-items-center">
+                                <div class="photo-upload-btn position-relative">
+                                    <input type="file" class="form-control position-absolute top-0 start-0 opacity-0" id="main_photo" name="main_photo" accept="image/*" style="width: 100%; height: 100%;" onchange="previewImage(event)">
+                                    <div class="btn-circle">
+                                        <i class="fa fa-camera"></i>
+                                    </div>
+                                </div>
+                                <img id="photo_preview" src="#" alt="Image Preview" style="display: none; width: 100px; height: auto; margin-left: 20px;">
+                            </div>
+                        </div>
+
+                        <style>
+
+                            .btn-circle {
+                                background-color: #007bff;
+                            }
+
+                            .btn-circle i {
+                                font-size: 22px;
+                                color: #9beade;
+                            }
+                        </style>
+
+                        <script>
+                            function previewImage(event) {
+                                const reader = new FileReader();
+                                const preview = document.getElementById('photo_preview');
+
+                                reader.onload = function() {
+                                    preview.src = reader.result;
+                                    preview.style.display = 'block';
+                                };
+
+                                reader.readAsDataURL(event.target.files[0]);
+                            }
+                        </script>
+                        <!-- Stock y Estado -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="stock" class="form-label">Stock</label>
+                                <input type="number" class="form-control" id="stock" name="stock" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="estado" class="form-label">Estado</label>
+                                <select class="form-select" id="estado" name="estado" required>
+                                    <option value="activo">Activo</option>
+                                    <option value="inactivo">Inactivo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Producto</button>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Agregar Producto</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal para Editar Producto -->
-    @foreach($productos as $producto)
-        <div class="modal fade" id="modal-editar-producto-{{ $producto->id }}" tabindex="-1" aria-labelledby="modal-editar-producto-{{ $producto->id }}-label" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modal-editar-producto-{{ $producto->id }}-label">Modificar Producto: {{ $producto->nombre }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="nombre-editar-producto-{{ $producto->id }}" class="form-label">Nombre del Producto</label>
-                                <input type="text" class="form-control" id="nombre-editar-producto-{{ $producto->id }}" value="{{ $producto->nombre }}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="cantidad-editar-producto-{{ $producto->id }}" class="form-label">Cantidad en Stock</label>
-                                <input type="number" class="form-control" id="cantidad-editar-producto-{{ $producto->id }}" value="{{ $producto->cantidad_stock }}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="precio-editar-producto-{{ $producto->id }}" class="form-label">Precio de Venta</label>
-                                <input type="number" class="form-control" id="precio-editar-producto-{{ $producto->id }}" value="{{ $producto->precio_venta }}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="estado-editar-producto-{{ $producto->id }}" class="form-label">Estado</label>
-                                <select class="form-select" id="estado-editar-producto-{{ $producto->id }}">
-                                    <option value="activo" {{ $producto->estado === 'activo' ? 'selected' : '' }}>Activo</option>
-                                    <option value="inactivo" {{ $producto->estado === 'inactivo' ? 'selected' : '' }}>Inactivo</option>
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary">Modificar Producto</button>
-                    </div>
-                </div>
-            </div>
+    <!-- Tabla de productos -->
+    <div class="card">
+        <div class="card-header">Lista de Productos</div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Marca</th>
+                    <th>Precio Venta</th>
+                    <th>Stock</th>
+                    <th>Estado</th>
+                    <th>Fecha Agregado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($productos as $producto)
+                    <tr>
+                        <td>
+                            <a href="{{ $producto->main_photo }}" data-lightbox="producto-{{ $producto->id }}" data-title="{{ $producto->nombre }}">
+                              <img src="{{ $producto->main_photo }}" alt="{{ $producto->nombre }}" style="width: 128px; height: auto; object-fit: cover;">
+                            </a>
+                        </td>
+                        <td>{{ $producto->nombre }}</td>
+                        <td>{{ $producto->categoria->nombre }}</td>
+                        <td>{{ $producto->Proveedor->nombre_empresa }}</td>
+                        <td>${{ number_format($producto->precio_venta, 2) }}</td>
+                        <td>{{ $producto->stock }}</td>
+                        <td>{{ $producto->estado == 'activo' ? 'Activo' : 'Inactivo' }}</td>
+                        <td>{{ $producto->fecha_agregado }}</td>
+                        <td>
+                            <a href="" class="btn btn-sm btn-warning">Editar</a>
+                            <form action="" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este producto?')">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
         </div>
-    @endforeach
+    </div>
 </div>
-
