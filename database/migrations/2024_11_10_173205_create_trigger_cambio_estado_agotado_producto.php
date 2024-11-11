@@ -37,6 +37,24 @@ return new class extends Migration
                 END IF;
             END;
         ');
+
+        DB::unprepared('
+    CREATE TRIGGER actualizar_stock_y_estado_producto
+    AFTER UPDATE ON compras
+    FOR EACH ROW
+    BEGIN
+        IF NEW.estado = "entregado" AND OLD.estado != "entregado" THEN
+            UPDATE productos p
+            JOIN detalle_compra dc ON p.id = dc.id_producto
+            SET p.stock = p.stock + dc.cantidad,
+                p.estado = CASE
+                             WHEN p.estado = "agotado" AND p.stock + dc.cantidad > 0 THEN "activo"
+                             ELSE p.estado
+                           END
+            WHERE dc.id_compra = NEW.id AND p.id = dc.id_producto;
+        END IF;
+    END;
+');
     }
 
     /**
