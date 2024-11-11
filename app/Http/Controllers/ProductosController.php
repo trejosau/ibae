@@ -24,7 +24,7 @@ class ProductosController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string',
-            'marca' => 'required|string|max:255',
+            'marca' => 'nullable|string|max:255',
             'precio_proveedor' => 'required|numeric|min:0',
             'precio_lista' => 'required|numeric|min:0',
             'precio_venta' => 'required|numeric|min:0',
@@ -51,28 +51,35 @@ class ProductosController extends Controller
         $url = null;
 
         // Subir imagen si está presente
+        if ($request->hasFile('main_photo')) {
 
-            if ($request->hasFile('main_photo')) {
                 // Obtener la imagen cargada
                 $image = $request->file('main_photo');
 
                 $manager = new ImageManager(new Driver());
 
-                // Crear una instancia del gestor de imágenes
                 $image = $manager->read($image->getContent());
 
-                $width = $image->width();
-                $height = $image->height();
-                $size = min($width, $height);
+            if ($request->has('crop_x') && $request->has('crop_y') && $request->has('crop_width') && $request->has('crop_height')) {
 
-                $image->crop($size, $size, ($width - $size) / 2, ($height - $size) / 2);
+                $cropX = $request->input('crop_x');
+                $cropY = $request->input('crop_y');
+                $cropWidth = $request->input('crop_width');
+                $cropHeight = $request->input('crop_height');
 
-                $webpImage = $image->toWebp(90);
 
-                $FileName = $nombre . '_' . $cantidad . '_' . $medida . '.webp';
+                $image = $image->crop($cropWidth, $cropHeight, $cropX, $cropY);
+            }
+
+                $image = $image->toWebp(90);
+
+
+                // Normalizar el nombre del archivo
+                $FileName = $nombre . '_' . $cantidad . '_' . $medida . '.' . 'webp';
 
                 // Subir la imagen a S3 dentro de la carpeta 'productos/'
-                $path = Storage::disk('s3')->put('images/productos/' . $FileName, (string) $webpImage);
+                $path = Storage::disk('s3')->put('images/productos/' . $FileName, $image);
+
 
                 // Obtener la URL de la imagen cargada en S3
                 $url = Storage::disk('s3')->url('images/productos/' . $FileName);
@@ -94,6 +101,8 @@ class ProductosController extends Controller
                 'estado' => $estado,
                 'fecha_agregado' => now(),
             ]);
+
+
 
 
             // Redirigir con mensaje de éxito

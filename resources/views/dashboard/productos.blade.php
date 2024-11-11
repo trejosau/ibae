@@ -92,30 +92,76 @@
                                 </select>
                             </div>
                         </div>
+
+
+                        <!-- Cropper.js CSS -->
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" />
+
+                        <!-- Cropper.js JS -->
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+
                         <!-- Foto -->
                         <div class="mb-3">
                             <label for="main_photo" class="form-label">Foto Principal</label>
                             <div class="d-flex align-items-center">
                                 <div class="photo-upload-btn position-relative">
                                     <input type="file" class="form-control position-absolute top-0 start-0 opacity-0" id="main_photo" name="main_photo" accept="image/*" style="width: 100%; height: 100%;" onchange="previewImage(event)">
+                                    <input type="hidden" id="crop_x" name="crop_x">
+                                    <input type="hidden" id="crop_y" name="crop_y">
+                                    <input type="hidden" id="crop_width" name="crop_width">
+                                    <input type="hidden" id="crop_height" name="crop_height">
                                     <div class="btn-circle">
                                         <i class="fa fa-camera"></i>
                                     </div>
                                 </div>
-                                <img id="photo_preview" src="#" alt="Image Preview" style="display: none; width: 100px; height: auto; margin-left: 20px;">
-                                <script>
-                                    function previewImage(event) {
-                                        var reader = new FileReader(); // Crear un lector de archivos
-                                        reader.onload = function() {
-                                            var output = document.getElementById('photo_preview');
-                                            output.src = reader.result; // Establecer la fuente de la imagen como la imagen cargada
-                                            output.style.display = 'block'; // Hacer visible la vista previa
-                                        };
-                                        reader.readAsDataURL(event.target.files[0]); // Leer la imagen seleccionada como URL de datos
-                                    }
-                                </script>
+                                   </div>
+
+                            <!-- Contenedor para la imagen y el área de recorte -->
+                            <div class="mt-3">
+                                <img id="image_to_crop" src="#" alt="Image to crop" style="max-width: 100%; display: none;">
                             </div>
                         </div>
+
+                        <script>
+                            let cropper;
+
+                            function previewImage(event) {
+                                if (event.target.files.length === 0) {
+                                    return;
+                                }
+
+                                var image = document.getElementById('image_to_crop');
+                                var reader = new FileReader();
+
+                                reader.onload = function () {
+                                    image.src = reader.result;
+                                    image.style.display = 'block';
+
+                                    if (cropper) {
+                                        cropper.destroy();
+                                    }
+
+                                    cropper = new Cropper(image, {
+                                        aspectRatio: 1,
+                                        viewMode: 1,
+                                        autoCropArea: 0.8,
+                                        minContainerWidth: 300,
+                                        minContainerHeight: 300,
+                                        responsive: true,
+                                        crop(event) {
+
+                                            document.getElementById('crop_x').value = event.detail.x;
+                                            document.getElementById('crop_y').value = event.detail.y;
+                                            document.getElementById('crop_width').value = event.detail.width;
+                                            document.getElementById('crop_height').value = event.detail.height;
+                                        }
+                                    });
+                                };
+                                reader.readAsDataURL(event.target.files[0]);
+                            }
+
+                        </script>
                         <button type="submit" class="btn btn-primary">Guardar Producto</button>
                     </form>
                 </div>
