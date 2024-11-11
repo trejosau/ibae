@@ -103,6 +103,17 @@
                                     </div>
                                 </div>
                                 <img id="photo_preview" src="#" alt="Image Preview" style="display: none; width: 100px; height: auto; margin-left: 20px;">
+                                <script>
+                                    function previewImage(event) {
+                                        var reader = new FileReader(); // Crear un lector de archivos
+                                        reader.onload = function() {
+                                            var output = document.getElementById('photo_preview');
+                                            output.src = reader.result; // Establecer la fuente de la imagen como la imagen cargada
+                                            output.style.display = 'block'; // Hacer visible la vista previa
+                                        };
+                                        reader.readAsDataURL(event.target.files[0]); // Leer la imagen seleccionada como URL de datos
+                                    }
+                                </script>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar Producto</button>
@@ -111,6 +122,8 @@
             </div>
         </div>
     </div>
+
+
 
     <!-- Tabla de productos -->
     <div class="card">
@@ -145,17 +158,65 @@
                         <td>{{ $producto->stock }}</td>
                         <td>{{ $producto->estado == 'activo' ? 'Activo' : 'Inactivo' }}</td>
                         <td>{{ $producto->fecha_agregado }}</td>
-                        <td>
-                            <!-- Cambiar el 'data-bs-target' para que apunte al modal con el id único -->
-                            <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#editarProductoModal{{ $producto->id }}">
+                        <td class="text-center">
+                            <!-- Botón Editar -->
+                            <button type="button" class="btn btn-primary btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#editarProductoModal{{ $producto->id }}">
                                 Editar
                             </button>
-                            <form action="" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
-                            </form>
+
+                            <!-- Botón Eliminar que abre el modal de confirmación -->
+                            <button type="button" class="btn btn-danger btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#confirmarRetiroModal{{ $producto->id }}">
+                                Retirar
+                            </button>
                         </td>
+
+                        <!-- Modal de confirmación de retiro -->
+                        <div class="modal fade" id="confirmarRetiroModal{{ $producto->id }}" tabindex="-1" aria-labelledby="confirmarRetiroModalLabel{{ $producto->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="confirmarRetiroModalLabel{{ $producto->id }}">Confirmar retiro del producto</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Para confirmar el retiro del producto del catálogo, escribe: <strong>retirar {{ $producto->nombre }}</strong></p>
+                                        <input type="text" class="form-control" id="confirmarRetiroInput{{ $producto->id }}" autocomplete="off" placeholder="Escribe aquí...">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form action="{{ route('productos.retirar', ['id' => $producto->id]) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-secondary" id="confirmarRetiroBtn{{ $producto->id }}" disabled>
+                                                Retirar producto del catálogo
+                                            </button>
+                                        </form>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                const productoId = "{{ $producto->id }}";
+                                const nombreProducto = "{{ $producto->nombre }}";
+                                const inputRetiro = document.getElementById(`confirmarRetiroInput${productoId}`);
+                                const botonRetiro = document.getElementById(`confirmarRetiroBtn${productoId}`);
+
+                                inputRetiro.addEventListener("input", function () {
+                                    if (inputRetiro.value.toLowerCase() === `retirar ${nombreProducto.toLowerCase()}`) {
+                                        botonRetiro.disabled = false;
+                                        botonRetiro.classList.remove("btn-secondary");
+                                        botonRetiro.classList.add("btn-danger");
+                                    } else {
+                                        botonRetiro.disabled = true;
+                                    }
+                                });
+                            });
+
+
+                        </script>
+
                     </tr>
 
                     <!-- Modal para editar el producto -->
@@ -225,7 +286,9 @@
                             </div>
                         </div>
                     </div>
+
                 @endforeach
+
                 </tbody>
             </table>
 

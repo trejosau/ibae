@@ -7,6 +7,8 @@ use App\Models\Productos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class ProductosController extends Controller
 {
@@ -22,14 +24,14 @@ class ProductosController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string',
-            'marca' => 'nullable|string|max:255',
+            'marca' => 'required|string|max:255',
             'precio_proveedor' => 'required|numeric|min:0',
             'precio_lista' => 'required|numeric|min:0',
             'precio_venta' => 'required|numeric|min:0',
             'cantidad' => 'required|integer|min:0',
             'medida' => 'nullable|string|max:50',
             'id_categoria' => 'required|exists:categorias,id',
-            'main_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'main_photo' => 'nullable|image|mimes:jpeg,png,jpg',
             'stock' => 'required|integer|min:0',
             'estado' => 'required|in:activo,inactivo',
         ]);
@@ -49,40 +51,56 @@ class ProductosController extends Controller
         $url = null;
 
         // Subir imagen si está presente
-        if ($request->hasFile('main_photo')) {
-            $image = $request->file('main_photo');
 
-            // Normalizar el nombre del archivo
-            $extension = $image->getClientOriginalExtension();
-            $FileName = $nombre . '_' . $cantidad . '_' . $medida . '.' . $extension;
+            if ($request->hasFile('main_photo')) {
+                // Obtener la imagen cargada
+                $image = $request->file('main_photo');
 
-            // Subir la imagen a S3 dentro de la carpeta 'productos/'
-            $path = Storage::disk('s3')->put('images/productos/' . $FileName, file_get_contents($image));
+                $manager = new ImageManager(new Driver());
 
-            // Obtener la URL de la imagen cargada en S3
-            $url = Storage::disk('s3')->url('images/productos/' . $FileName);
+                // Crear una instancia del gestor de imágenes
+                $image = $manager->read($image->getContent());
+
+                $width = $image->width();
+                $height = $image->height();
+                $size = min($width, $height);
+
+                $image->crop($size, $size, ($width - $size) / 2, ($height - $size) / 2);
+
+                $webpImage = $image->toWebp(90);
+
+                $FileName = $nombre . '_' . $cantidad . '_' . $medida . '.webp';
+
+                // Subir la imagen a S3 dentro de la carpeta 'productos/'
+                $path = Storage::disk('s3')->put('images/productos/' . $FileName, (string) $webpImage);
+
+                // Obtener la URL de la imagen cargada en S3
+                $url = Storage::disk('s3')->url('images/productos/' . $FileName);
+            }
+
+            // Crear el producto
+            Productos::create([
+                'nombre' => $nombre,
+                'descripcion' => $descripcion,
+                'precio_proveedor' => $precio_proveedor,
+                'precio_lista' => $precio_lista,
+                'precio_venta' => $precio_venta,
+                'cantidad' => $cantidad,
+                'medida' => $medida,
+                'id_proveedor' => $marca,
+                'id_categoria' => $id_categoria,
+                'main_photo' => $url,
+                'stock' => $stock,
+                'estado' => $estado,
+                'fecha_agregado' => now(),
+            ]);
+
+
+            // Redirigir con mensaje de éxito
+            return redirect()->back()->with('success', 'Producto agregado correctamente.');
         }
 
-        // Crear el producto
-        Productos::create([
-            'nombre' => $nombre,
-            'descripcion' => $descripcion,
-            'precio_proveedor' => $precio_proveedor,
-            'precio_lista' => $precio_lista,
-            'precio_venta' => $precio_venta,
-            'cantidad' => $cantidad,
-            'medida' => $medida,
-            'id_proveedor' => $marca,
-            'id_categoria' => $id_categoria,
-            'main_photo' => $url,
-            'stock' => $stock,
-            'estado' => $estado,
-            'fecha_agregado' => now(),
-        ]);
 
-        // Redirigir con mensaje de éxito
-        return redirect()->back()->with('success', 'Producto agregado correctamente.');
-    }
 
     public function actualizar(Request $request, $id)
     {
@@ -135,6 +153,19 @@ class ProductosController extends Controller
         // Redireccionar con un mensaje de éxito
         return redirect()->back()->with('success', 'Producto actualizado correctamente.');
     }
+
+    public function retirar(Request $request, $id)
+    {
+        // Buscar el producto en la base de datos
+        $producto = Productos::findOrFail($id);
+
+        $producto->estado = 'inactivo';
+        $producto->save();
+
+        return redirect()->back()->with('success', 'Producto retirado correctamente.');
+    }
+
+
 
 
 
