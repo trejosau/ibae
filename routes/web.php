@@ -156,9 +156,9 @@ Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, '
     Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleCallback'])->name('login.google.callback');
 
     Route::get('/productos', [ProductosController::class, 'index'])->name('productos.index');
-    Route::get('/carrito', [ProductosController::class, 'verCarrito'])->name('carrito.ver');
     Route::post('/producto/{id}/agregar-al-carrito', [ProductosController::class, 'agregarAlCarrito'])->name('producto.agregar');
     Route::delete('/carrito/{id}', [ProductosController::class, 'eliminarDelCarrito'])->name('carrito.eliminar');
+    Route::get('/carrito', [ProductosController::class, 'verCarrito'])->name('carrito.ver');
     Route::get('/carrito/contenido', [ProductosController::class, 'cargarContenidoCarrito'])->name('carrito.contenido');
 
 
