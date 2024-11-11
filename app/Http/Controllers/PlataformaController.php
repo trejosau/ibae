@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Cursos;
 use App\Models\Certificados;
+use App\Models\User;
 use App\Models\CursoApertura;
 use App\Models\Inscripcion ;
 use Illuminate\Support\Facades\Auth;
@@ -498,15 +499,27 @@ public function actualizarTema(Request $request, $id)
     $tema->update($request->only(['nombre', 'descripcion']));
     return redirect()->back()->with('success', 'Tema actualizado con éxito.');
 }
-public function estudiantes()
-{
-        // Obtener estudiantes con las relaciones de persona e inscripcion
-        $estudiantes = Estudiante::with([
-            'persona.usuario',
-            'inscripcion'
-        ])->get();
-        return view('plataforma.index', compact('estudiantes'));
+    public function estudiantes()
+    {
+        $estudiantes = Estudiante::with(['persona.usuario', 'inscripcion'])->get();
+
+        // Obtener usuarios sin el rol de "estudiante"
+        $usuariosSinRolEstudiante = User::whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'estudiante');
+        })->get();
+
+        return view('plataforma.index', compact('estudiantes', 'usuariosSinRolEstudiante'));
+    }
+    // PlataformaController.php
+    public function asignarRol(Request $request)
+    {
+        $usuario = User::find($request->usuario_id);
+        $usuario->assignRole('estudiante');
+
+        return redirect()->route('plataforma.estudiantes')->with('success', 'Rol asignado con éxito');
 }
+
+
 
 
     public function darDeBaja($matricula)
@@ -607,6 +620,12 @@ public function estudiantes()
     // Redirigir con un mensaje de éxito
     return redirect()->route('plataforma.profesores')->with('success', 'Profesor dado de baja correctamente.');
 }
+
+
+
+
+
+
 
 
     public function pagos() {
