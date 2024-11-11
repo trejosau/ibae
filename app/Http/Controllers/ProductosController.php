@@ -297,18 +297,6 @@ public function verCarrito(Request $request)
 }
 
 
-public function eliminarDelCarrito($id)
-{
-    $carrito = session()->get('carrito', []);
-
-    if (isset($carrito[$id])) {
-        unset($carrito[$id]);
-        session()->put('carrito', $carrito);
-        return response()->json(['success' => true, 'message' => 'Producto eliminado del carrito.']);
-    }
-
-    return response()->json(['success' => false, 'message' => 'Producto no encontrado en el carrito.'], 404);
-}
 
 
     public function cargarContenidoCarrito()
@@ -322,6 +310,21 @@ public function eliminarDelCarrito($id)
         'carrito' => $carrito,
         'subtotal' => $subtotal
     ]);
+}
+
+
+
+public function eliminarDelCarrito($id)
+{
+    $carrito = session()->get('carrito', []);
+
+    if (isset($carrito[$id])) {
+        unset($carrito[$id]);
+        session()->put('carrito', $carrito);
+        return response()->json(['success' => true, 'message' => 'Producto eliminado del carrito.']);
+    }
+
+    return response()->json(['success' => false, 'message' => 'Producto no encontrado en el carrito.'], 404);
 }
 
 

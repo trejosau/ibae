@@ -264,15 +264,20 @@
     overflow-y: auto;
 }
 
+/* General Cart Item Styles */
 .cart-item {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
-    background-color: #fff;
-    border-radius: 8px;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 12px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.cart-item:hover {
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .product-image-container {
@@ -284,43 +289,70 @@
     overflow: hidden;
     border-radius: 8px;
     margin-right: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .product-image-container img {
-    width: 60px;
-    height: 60px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .cart-item-details {
     flex: 1;
     margin-left: 15px;
+    display: flex;
+    flex-direction: column;
 }
 
 .item-name {
     font-weight: bold;
     color: #333;
-    font-size: 1.1em;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+.item-price-details {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9em;
+    color: #777;
+    margin-top: 5px;
 }
 
 .item-quantity-price,
 .item-total {
     color: #555;
-    font-size: 1em;
 }
 
+.item-total {
+    font-size: 1em;
+    font-weight: bold;
+    color: #e63946;
+    margin-top: 5px;
+}
+
+/* Quantity Controls */
 .quantity-controls {
     display: flex;
     align-items: center;
+    margin-top: 5px;
 }
 
 .quantity-controls .btn-quantity {
     background-color: #f0f0f0;
     border: none;
+    border-radius: 6px;
     width: 30px;
     height: 30px;
     font-size: 18px;
+    color: #333;
     cursor: pointer;
-    margin: 0 5px;
+    transition: background-color 0.3s ease;
+}
+
+.quantity-controls .btn-quantity:hover {
+    background-color: #ddd;
 }
 
 .quantity-controls input[type="number"] {
@@ -328,32 +360,37 @@
     text-align: center;
     border: 1px solid #ddd;
     border-radius: 5px;
+    margin: 0 5px;
 }
 
+/* Remove Button */
 .remove-btn {
-    background: none;
+    background-color: transparent;
     border: none;
+    color: #dc3545;
     cursor: pointer;
-    color: #c00;
-    font-size: 1.2em;
-    transition: color 0.2s ease;
+    font-size: 1.5rem;
+    transition: color 0.3s;
 }
 
 .remove-btn:hover {
-    color: #d99db7; /* Rosa más fuerte */
+    color: #9a2323;
 }
 
-.remove-btn i {
-    font-size: 20px;
-}
-
+/* Empty Cart Message */
 .empty-cart {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Para centrar verticalmente en todo el contenedor */
     text-align: center;
     padding: 20px;
     color: #999;
 }
 
 .empty-cart-icon {
+    padding-top: 200px;
     font-size: 48px;
     color: #cccccc;
     margin-bottom: 10px;
@@ -364,6 +401,8 @@
     color: #666;
 }
 
+
+/* Total Price and Cart Footer */
 .total-price {
     font-size: 1.4em;
     font-weight: bold;
@@ -390,19 +429,21 @@
 }
 
 .checkout-btn:hover {
-    background-color: #d99db7; /* Rosa clarito */
+    background-color: #e63946;
 }
 
 .view-cart-btn {
     text-decoration: none;
-    color: #e63946; /* Rojo */
+    color: #e63946;
     font-weight: bold;
 }
 
+/* Sidebar */
 .cart-sidebar.active .navegacion {
     display: none;
 }
 
+/* Ajax Message */
 .mensaje-ajax {
     position: fixed;
     bottom: 20px;
@@ -422,6 +463,22 @@
 .mensaje-ajax.show {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .product-image-container {
+        margin-bottom: 10px;
+    }
+
+    .cart-item-details {
+        margin-left: 0;
+    }
 }
 
 
@@ -616,40 +673,30 @@
                     subtotal += totalPorProducto;
 
                     cartContent.innerHTML += `
-    <div class="cart-item">
-        <div class="product-image-container">
-            <img 
-                src="${product.main_photo || '/ruta/a/imagen-placeholder.jpg'}" 
-                alt="${product.nombre}" 
-                class="img-fluid rounded shadow mb-4"
-                onerror="this.src='/ruta/a/imagen-placeholder.jpg'; this.alt='Imagen no disponible';"
-            >
-        </div>
-
-        <div class="cart-item-details">
-            <span class="item-name">${product.nombre}</span>
-            
-            <div class="quantity-controls">
-                <button onclick="adjustQuantity(${id}, -1)" class="btn-quantity">-</button>
-                <input 
-                    type="number" 
-                    min="1" 
-                    value="${product.cantidad}" 
-                    class="item-quantity" 
-                    data-product-id="${id}"
-                    onchange="changeQuantity(${id}, this.value)"
-                >
-                <button onclick="adjustQuantity(${id}, 1)" class="btn-quantity">+</button>
-            </div>
-
-            <span class="item-price">$${product.precio}</span>
-            <span class="item-total" id="product-total-${id}">= $${totalPorProducto.toFixed(2)}</span>
-        </div>
-
-        <button class="remove-btn" onclick="removeFromCart(${id})">
-            <i class="fas fa-trash-alt"></i>
-        </button>
+<div class="cart-item">
+    <div class="product-image-container">
+        <img 
+            src="${product.main_photo || '/ruta/a/imagen-placeholder.jpg'}" 
+            alt="${product.nombre}" 
+            class="img-fluid rounded shadow mb-4"
+            onerror="this.src='/ruta/a/imagen-placeholder.jpg'; this.alt='Imagen no disponible';"
+        >
     </div>
+
+    <div class="cart-item-details">
+        <span class="item-name">${product.nombre}</span>
+        <div class="item-price-details">
+            <span class="item-quantity">Cantidad: ${product.cantidad}</span>
+            <span class="item-price">Precio unitario: $${product.precio}</span>
+            <span class="item-total" id="product-total-${id}">Total: $${totalPorProducto.toFixed(2)}</span>
+        </div>
+    </div>
+
+    <button class="remove-btn" onclick="removeFromCart(${id})">
+        <i class="fas fa-trash-alt"></i>
+    </button>
+</div>
+
 `;
 
                 });
@@ -663,77 +710,44 @@
         .catch(error => console.error('Error al cargar el contenido del carrito:', error));
 }
 
-function changeQuantity(id, nuevaCantidad) {
-    if (nuevaCantidad < 1) return;
+function actualizarTotalCarrito() {
+    fetch('/carrito/contenido')
+        .then(response => response.json())
+        .then(data => {
+            const cartFooter = document.querySelector('.cart-footer');
+            if (data.carrito && Object.keys(data.carrito).length > 0) {
+                // Calcular el subtotal
+                let subtotal = 0;
+                Object.entries(data.carrito).forEach(([id, product]) => {
+                    subtotal += product.precio * product.cantidad;
+                });
 
-    fetch(`/carrito/actualizar/${id}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ cantidad: nuevaCantidad })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            const itemTotal = document.getElementById(`product-total-${id}`);
-            const productPrice = parseFloat(document.querySelector(`input[data-product-id="${id}"]`).getAttribute('data-price'));
-            const newTotal = productPrice * nuevaCantidad;
+                // Actualizar el total
+                actualizarTotalesCarrito(subtotal);
 
-            itemTotal.innerText = `= $${newTotal.toFixed(2)}`;
+                // Mostrar el cart-footer cuando hay productos en el carrito
+                cartFooter.style.display = 'flex';
+            } else {
+                // Si el carrito está vacío, asegurarse de que el total sea 0
+                actualizarTotalesCarrito(0);
 
-            // Recalcular el subtotal
-            recalcularSubtotal();
-        } else {
-            console.error('Error al actualizar la cantidad del producto:', data.message);
-        }
-    })
-    .catch(error => console.error('Error en la solicitud de actualización:', error));
+                // Ocultar el cart-footer cuando el carrito esté vacío
+                cartFooter.style.display = 'none';
+            }
+        })
+        .catch(error => console.error('Error al actualizar el total del carrito:', error));
 }
 
-function recalcularSubtotal() {
-    let subtotal = 0;
-
-    document.querySelectorAll('.item-total').forEach(itemTotal => {
-        subtotal += parseFloat(itemTotal.innerText.replace('= $', ''));
-    });
-
-    document.getElementById('cart-icon-total').innerText = `$${subtotal.toFixed(2)}`;
-    document.getElementById('cart-total-sidebar').innerText = `Total: $${subtotal.toFixed(2)}`;
-}
-
-function adjustQuantity(id, delta) {
-    const quantityInput = document.querySelector(`input[data-product-id="${id}"]`);
-    let nuevaCantidad = parseInt(quantityInput.value) + delta;
-
-    if (nuevaCantidad < 1) nuevaCantidad = 1;
-
-    quantityInput.value = nuevaCantidad;
-    changeQuantity(id, nuevaCantidad);
+// Función para actualizar los totales en el carrito
+function actualizarTotalesCarrito(total) {
+    document.getElementById('cart-total-sidebar').innerText = `Total: $${total.toFixed(2)}`;
+    document.getElementById('cart-icon-total').innerText = `$${total.toFixed(2)}`;
 }
 
 function actualizarTotalesCarrito(subtotal) {
     document.getElementById('cart-icon-total').innerText = `$${subtotal.toFixed(2)}`;
     document.getElementById('cart-total-sidebar').innerText = `Total: $${subtotal.toFixed(2)}`;
 }
-
-function actualizarTotalCarrito() {
-    fetch('/carrito/contenido')
-        .then(response => response.json())
-        .then(data => {
-            if (data.subtotal !== undefined) {
-                document.getElementById('cart-total').innerText = `$${data.subtotal.toFixed(2)}`;
-            } else {
-                document.getElementById('cart-total').innerText = '$0.00';
-            }
-        })
-        .catch(error => console.error('Error al actualizar el total del carrito:', error));
-}
-
-
-
-
-
 
 
 
@@ -758,17 +772,20 @@ function removeFromCart(productId) {
 }
 
     
-    // Función para mostrar un mensaje cuando el carrito está vacío
-    function mostrarCarritoVacio(cartContent) {
-        cartContent.innerHTML = `
-            <div class="empty-cart">
-                <i class="fas fa-shopping-cart empty-cart-icon"></i>
-                <p class="empty-cart-text">Tu carrito está vacío.</p>
-            </div>
-        `;
-        document.getElementById('cart-icon-total').innerText = '$0.00';
-        document.getElementById('cart-total-sidebar').innerText = 'Total: $0.00';
-    }
+function mostrarCarritoVacio(cartContent) {
+    cartContent.innerHTML = `
+        <div class="empty-cart">
+            <i class="fas fa-shopping-cart empty-cart-icon"></i>
+            <p class="empty-cart-text">Tu carrito está vacío.</p>
+        </div>
+    `;
+    document.getElementById('cart-icon-total').innerText = '$0.00';
+    document.getElementById('cart-total-sidebar').innerText = 'Total: $0.00';
+    
+    // Oculta el contenedor del subtotal y botón de compra
+    document.querySelector('.cart-footer').style.display = 'none';
+}
+
     
     
     function mostrarMensajeEliminacion(mensaje) {
