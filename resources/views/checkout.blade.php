@@ -1,122 +1,130 @@
-@extends('layouts.app')
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detalles del Pedido</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body>
 
-@section('content')
-<div class="checkout-container">
-    <h2>Detalles del Pedido</h2>
+    @include('components.navbarTienda')
 
-    <div class="checkout-content">
-        <div class="checkout-items">
-            @foreach($carrito as $id => $producto)
-                <div class="checkout-item">
-                    <div class="product-img-container">
-                        <img src="{{ $producto['main_photo'] ?? '/ruta/a/imagen-placeholder.jpg' }}" alt="{{ $producto['nombre'] }}" class="product-img">
+    <div class="checkout-container">
+        <h2>Detalles del Pedido</h2>
+
+        <div class="checkout-content">
+            <div class="checkout-items">
+                @foreach($carrito as $id => $producto)
+                    <div class="checkout-item">
+                        <div class="product-img-container">
+                            <img src="{{ $producto['main_photo'] ?? '/ruta/a/imagen-placeholder.jpg' }}" alt="{{ $producto['nombre'] }}" class="product-img">
+                        </div>
+                        <div class="product-details">
+                            <h4 class="product-name">{{ $producto['nombre'] }}</h4>
+                            <p class="product-price">Precio unitario: ${{ number_format($producto['precio'], 2) }}</p>
+                            <p class="product-quantity">Cantidad: {{ $producto['cantidad'] }}</p>
+                            <p class="product-total">Total: ${{ number_format($producto['precio'] * $producto['cantidad'], 2) }}</p>
+                        </div>
                     </div>
-                    <div class="product-details">
-                        <h4 class="product-name">{{ $producto['nombre'] }}</h4>
-                        <p class="product-price">Precio unitario: ${{ number_format($producto['precio'], 2) }}</p>
-                        <p class="product-quantity">Cantidad: {{ $producto['cantidad'] }}</p>
-                        <p class="product-total">Total: ${{ number_format($producto['precio'] * $producto['cantidad'], 2) }}</p>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-
-        <div class="checkout-summary">
-            <h3>Resumen del Pedido</h3>
-
-            <!-- Mostrar cada producto sumando el total -->
-            <div class="order-summary">
-                <p class="order-item">Subtotal de Productos:</p>
-                @php $subtotal = 0; @endphp
-                @foreach($carrito as $producto)
-                    @php
-                        $subtotal += $producto['precio'] * $producto['cantidad'];
-                    @endphp
-                    <p class="order-item">
-                        {{ $producto['nombre'] }}: ${{ number_format($producto['precio'] * $producto['cantidad'], 2) }}
-                    </p>
                 @endforeach
-
-                <p class="order-total">Subtotal: <span class="subtotal-amount">${{ number_format($subtotal, 2) }}</span></p>
             </div>
 
-            <!-- Opciones de pago con botones de radio -->
-            <div class="payment-methods">
-                <label class="custom-radio">
-                    <input type="radio" name="paymentMethod" value="cash" checked> Pago en Efectivo
-                    <span class="radio-checkmark"></span>
-                </label>
-                <label class="custom-radio">
-                    <input type="radio" name="paymentMethod" value="card"> Pago con Tarjeta
-                    <span class="radio-checkmark "></span>
-                </label>
-            </div>
+            <div class="checkout-summary">
+                <h3>Resumen del Pedido</h3>
 
-            <button onclick="confirmarPago()" class="checkout-button">Proceder al Pago</button>
+                <div class="order-summary">
+                    <p class="order-item">Subtotal de Productos:</p>
+                    @php $subtotal = 0; @endphp
+                    @foreach($carrito as $producto)
+                        @php
+                            $subtotal += $producto['precio'] * $producto['cantidad'];
+                        @endphp
+                        <p class="order-item">
+                            {{ $producto['nombre'] }}: ${{ number_format($producto['precio'] * $producto['cantidad'], 2) }}
+                        </p>
+                    @endforeach
+
+                    <p class="order-total">Subtotal: <span class="subtotal-amount">${{ number_format($subtotal, 2) }}</span></p>
+                </div>
+
+                <div class="payment-methods">
+                    <label class="custom-radio">
+                        <input type="radio" name="paymentMethod" value="cash" checked> Pago en Efectivo
+                        <span class="radio-checkmark"></span>
+                    </label>
+                    <label class="custom-radio">
+                        <input type="radio" name="paymentMethod" value="card"> Pago con Tarjeta
+                        <span class="radio-checkmark"></span>
+                    </label>
+                </div>
+
+                <button onclick="confirmarPago()" class="checkout-button">Proceder al Pago</button>
+            </div>
         </div>
     </div>
-</div>
-@endsection
 
-<script>
-function confirmarPago() {
-    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-    
-    if (paymentMethod === 'cash') {
-        alert("Procediendo con el pago en efectivo...");
-    } else {
-        alert("Procediendo con el pago con tarjeta...");
-    }
+    <script>
+        function confirmarPago() {
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
 
-    // Aquí puedes agregar la lógica para redirigir a la pasarela de pago dependiendo del tipo de pago seleccionado
-}
-</script>
+            if (paymentMethod === 'cash') {
+                alert("Procediendo con el pago en efectivo...");
+            } else {
+                alert("Procediendo con el pago con tarjeta...");
+            }
+        }
+    </script>
 
-<style>
-/* Estilos generales */
+    <style>
+       /* Estilos generales */
 .checkout-container {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 30px;
+    padding: 40px; /* Aumenta el padding para más espacio */
     background-color: #f9f9f9;
     border-radius: 12px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
     color: #333;
-    font-family: Arial, sans-serif;
 }
 
+/* Título principal */
 .checkout-container h2 {
     text-align: center;
     font-size: 2rem;
     color: #333;
-    margin-bottom: 25px;
+    margin-bottom: 30px; /* Más espacio debajo del título */
     border-bottom: 2px solid #e0e0e0;
     padding-bottom: 10px;
 }
 
+/* Contenido principal */
 .checkout-content {
     display: flex;
     justify-content: space-between;
-    gap: 25px;
+    gap: 40px; /* Aumenta el espacio entre las columnas */
 }
 
+/* Productos */
 .checkout-items {
     flex: 3;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 30px; /* Aumenta el espacio entre los productos */
 }
 
+/* Elemento individual de producto */
 .checkout-item {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 20px; /* Aumenta el espacio entre los elementos dentro de un producto */
     background-color: #fff;
     border: 1px solid #e0e0e0;
     border-radius: 10px;
-    padding: 15px;
+    padding: 20px; /* Aumenta el padding dentro de cada producto */
 }
 
+/* Contenedor de la imagen del producto */
 .product-img-container {
     width: 90px;
     height: 90px;
@@ -125,59 +133,67 @@ function confirmarPago() {
     background-color: #f0f0f0;
 }
 
+/* Imagen del producto */
 .product-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
+/* Detalles del producto */
 .product-details {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px; /* Más espacio entre los detalles del producto */
 }
 
+/* Nombre del producto */
 .product-name {
     font-size: 1.2rem;
     font-weight: bold;
     color: #333;
 }
 
+/* Precio y cantidad */
 .product-price, .product-quantity, .product-total {
     font-size: 0.95rem;
     color: #666;
 }
 
-/* Estilo del resumen de los productos */
+/* Resumen del pedido */
 .checkout-summary {
     flex: 1;
-    padding: 25px;
+    padding: 30px; /* Más padding */
     background-color: #ffffff;
     border-radius: 10px;
     border: 1px solid #e0e0e0;
     text-align: center;
 }
 
+/* Título del resumen */
 .checkout-summary h3 {
     font-size: 1.5rem;
     color: #333;
-    margin-bottom: 15px;
+    margin-bottom: 20px; /* Más espacio debajo del título */
     border-bottom: 2px solid #e0e0e0;
     padding-bottom: 10px;
 }
 
+/* Resumen de la orden */
 .order-summary {
     text-align: left;
     font-size: 1.1rem;
-    margin-bottom: 25px;
+    margin-bottom: 30px; /* Más espacio entre los elementos */
 }
 
+/* Items de la orden */
 .order-item {
-    margin: 8px 0;
+    margin: 10px 0;
     font-size: 1.1rem;
     color: #666;
 }
 
+/* Total de la orden */
 .order-total {
     font-weight: bold;
     font-size: 1.4rem;
@@ -188,18 +204,19 @@ function confirmarPago() {
     color: #333;
 }
 
-/* Estilos personalizados para los botones de radio */
+/* Métodos de pago */
 .payment-methods {
-    margin-top: 20px;
-    margin-bottom: 25px;
+    margin-top: 30px; /* Más margen superior */
+    margin-bottom: 30px; /* Más margen inferior */
     font-size: 1.1rem;
     color: #333;
 }
 
+/* Estilo de los botones de radio */
 .custom-radio {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px; /* Más espacio entre las opciones de pago */
     cursor: pointer;
     font-size: 1.1rem;
 }
@@ -209,18 +226,18 @@ function confirmarPago() {
 }
 
 .custom-radio .radio-checkmark {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     border: 2px solid #333; /* Color más suave */
-    border-radius: 50%; /* Esto hace el radio button redondeado */
+    border-radius: 50%;
     background-color: transparent;
-    margin-right: 10px;
+    margin-right: 12px; /* Más espacio entre el radio y el texto */
     position: relative;
     transition: all 0.3s ease;
 }
 
 .custom-radio input[type="radio"]:checked + .radio-checkmark {
-    background-color: #333; /* Color del radio button seleccionado */
+    background-color: #333; /* Color cuando está seleccionado */
 }
 
 .custom-radio input[type="radio"]:focus + .radio-checkmark {
@@ -228,11 +245,11 @@ function confirmarPago() {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
-/* Botón de pago */
+/* Botón de proceder al pago */
 .checkout-button {
-    margin-top: 20px;
-    padding: 12px 25px;
-    background-color: #333; /* Gris oscuro */
+    margin-top: 30px; /* Más espacio superior */
+    padding: 14px 30px; /* Aumenta el padding */
+    background-color: #333;
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -252,4 +269,10 @@ function confirmarPago() {
     background-color: #222; /* Gris más oscuro */
     transform: scale(1.02);
 }
-</style>
+
+    </style>
+
+    @include('components.footer')
+
+</body>
+</html>
