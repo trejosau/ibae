@@ -19,6 +19,11 @@ use App\Models\CursoApertura;
 use App\Models\Inscripcion ;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Persona;
+use App\Mail\CambiarContrasenaMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+
 
 
 
@@ -487,39 +492,101 @@ class PlataformaController extends Controller
 
 
      public function actualizarModulo(Request $request, $id)
-{
+    {
     $modulo = Modulos::findOrFail($id);
     $modulo->update($request->only(['nombre', 'categoria', 'duracion']));
     return redirect()->back()->with('success', 'Módulo actualizado con éxito.');
-}
+    }
 
-public function actualizarTema(Request $request, $id)
-{
+    public function actualizarTema(Request $request, $id)
+    {
     $tema = Temas::findOrFail($id);
     $tema->update($request->only(['nombre', 'descripcion']));
     return redirect()->back()->with('success', 'Tema actualizado con éxito.');
-}
+    }
+
+
+
+
     public function estudiantes()
     {
         $estudiantes = Estudiante::with(['persona.usuario', 'inscripcion'])->get();
+        $inscripciones = Inscripcion::all();
 
         // Obtener usuarios sin el rol de "estudiante"
         $usuariosSinRolEstudiante = User::whereDoesntHave('roles', function ($query) {
             $query->where('name', 'estudiante');
         })->get();
 
-        return view('plataforma.index', compact('estudiantes', 'usuariosSinRolEstudiante'));
+        return view('plataforma.index', compact('estudiantes', 'usuariosSinRolEstudiante', 'inscripciones'));
     }
-    // PlataformaController.php
+
     public function asignarRol(Request $request)
     {
         $usuario = User::find($request->usuario_id);
         $usuario->assignRole('estudiante');
 
         return redirect()->route('plataforma.estudiantes')->with('success', 'Rol asignado con éxito');
-}
+    }
 
+    public function registrarEstudiante(Request $request)
+    {
+        // Validar datos
+        $request->validate([
+            'nombre' => 'required|string',
+            'ap_paterno' => 'required|string',
+            'ap_materno' => 'nullable|string',
+            'telefono' => 'required|string',
+            'username' => 'required|string|unique:users,username',
+            'email' => 'required|email|unique:users,email',
+            'id_inscripcion' => 'required|exists:inscripciones,id',
+            'fecha_inscripcion' => 'required|date',
+            'grado_estudio' => 'required|string',
+            'zipcode' => 'required|string',
+            'colonia' => 'required|string',
+            'calle' => 'required|string',
+            'num_ext' => 'required|string',
+            'num_int' => 'nullable|string',
+        ]);
 
+        // Crear Usuario con contraseña por defecto
+        $usuario = User::create([
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make('Cambia123'), // Contraseña por defecto
+        ]);
+
+        // Crear Persona
+        $persona = Persona::create([
+            'nombre' => $request->nombre,
+            'ap_paterno' => $request->ap_paterno,
+            'ap_materno' => $request->ap_materno,
+            'telefono' => $request->telefono,
+            'usuario' => $usuario->id,
+        ]);
+
+        // Asignar rol de estudiante
+        $usuario->assignRole('estudiante');
+
+        // Crear Estudiante
+        Estudiante::create([
+            'estado' => 'activo',
+            'id_persona' => $persona->id,
+            'id_inscripcion' => $request->id_inscripcion,
+            'fecha_inscripcion' => $request->fecha_inscripcion,
+            'grado_estudio' => $request->grado_estudio,
+            'zipcode' => $request->zipcode,
+            'colonia' => $request->colonia,
+            'calle' => $request->calle,
+            'num_ext' => $request->num_ext,
+            'num_int' => $request->num_int,
+        ]);
+
+        // Enviar correo de confirmación
+        Mail::to($usuario->email)->send(new CambiarContrasenaMail($usuario));
+
+        return redirect()->route('plataforma.estudiantes')->with('success', 'Estudiante registrado y correo enviado.');
+    }
 
 
     public function darDeBaja($matricula)

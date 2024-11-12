@@ -1,14 +1,21 @@
 <div class="container mt-4"> 
     <h2 class="text-center mb-4">Gestión de Estudiantes</h2>
 
-    <!-- Botón para abrir el modal de asignación de rol -->
+   <div class="row">
     <div class="text-center mb-4">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAsignarRol">
             Asignar Rol de Estudiante
         </button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalRegistrarEstudiante">
+            Registrar Estudiante
+        </button>
     </div>
+  
+   </div>
+  
 
     <div class="row">
+        
         @foreach($estudiantes as $estudiante)
             @if($estudiante->estado == 'activo')
                 <div class="col-md-4 mb-4">
@@ -68,7 +75,7 @@
                                         <strong>Nombre Completo:</strong> {{ $estudiante->persona->nombre }} {{ $estudiante->persona->ap_paterno }} {{ $estudiante->persona->ap_materno }}
                                     </div>
                                     <div class="d-flex align-items-center mb-3" style="border-bottom: 1px solid #F2C6D1; padding-bottom: 5px;">
-                                        <strong>Correo:</strong> {{ $estudiante->persona->Usuario->email ?? 'No disponible' }}
+                                        <strong>Correo:</strong> {{ $estudiante->persona->usuario->email ?? 'No disponible' }}
                                     </div>
                                     <div class="d-flex align-items-center mb-3" style="border-bottom: 1px solid #F2C6D1; padding-bottom: 5px;">
                                         <strong>Grado de Estudios:</strong> {{ $estudiante->grado_estudio }}
@@ -120,6 +127,97 @@
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+<!-- Modal para registrar una persona, usuario y estudiante -->
+<div class="modal fade" id="modalRegistrarEstudiante" tabindex="-1" role="dialog" aria-labelledby="modalRegistrarEstudianteLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalRegistrarEstudianteLabel">Registrar Estudiante</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('plataforma.registrarEstudiante') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <!-- Datos de Persona -->
+                    <h6>Datos de Persona</h6>
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ap_paterno">Apellido Paterno</label>
+                        <input type="text" class="form-control" id="ap_paterno" name="ap_paterno" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ap_materno">Apellido Materno</label>
+                        <input type="text" class="form-control" id="ap_materno" name="ap_materno">
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="tel" class="form-control" id="telefono" name="telefono" required>
+                    </div>
+
+                    <!-- Datos de Usuario -->
+                    <h6>Datos de Usuario</h6>
+                    <div class="form-group">
+                        <label for="username">Nombre de Usuario</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+
+                    <!-- Datos de Estudiante -->
+                    <h6>Datos de Estudiante</h6>
+                    <div class="form-group">
+                        <label for="id_inscripcion">Inscripción</label>
+                        <select class="form-control" id="id_inscripcion" name="id_inscripcion" required>
+                            <!-- Opciones de inscripciones -->
+                            @foreach($inscripciones as $inscripcion)
+                                <option value="{{ $inscripcion->id }}">{{ $inscripcion->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_inscripcion">Fecha de Inscripción</label>
+                        <input type="date" class="form-control" id="fecha_inscripcion" name="fecha_inscripcion" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="grado_estudio">Grado de Estudio</label>
+                        <input type="text" class="form-control" id="grado_estudio" name="grado_estudio" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="zipcode">Código Postal</label>
+                        <input type="text" class="form-control" id="zipcode" name="zipcode" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="colonia">Colonia</label>
+                        <input type="text" class="form-control" id="colonia" name="colonia" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="calle">Calle</label>
+                        <input type="text" class="form-control" id="calle" name="calle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="num_ext">Número Exterior</label>
+                        <input type="text" class="form-control" id="num_ext" name="num_ext" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="num_int">Número Interior</label>
+                        <input type="text" class="form-control" id="num_int" name="num_int">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

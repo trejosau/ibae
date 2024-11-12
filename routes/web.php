@@ -123,6 +123,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/plataforma/actualizarModulo/{id}', [PlataformaController::class, 'actualizarModulo'])->name('plataforma.actualizarModulo');
     Route::put('/plataforma/actualizarTema/{id}', [PlataformaController::class, 'actualizarTema'])->name('plataforma.actualizarTema');
 
+    Route::post('/registrar-estudiante', [PlataformaController::class, 'registrarEstudiante'])->name('plataforma.registrarEstudiante');
     Route::post('/estudiante/{matricula}/baja', [PlataformaController::class, 'darDeBaja'])->name('plataforma.baja');
 
     Route::post('/inscripciones', [PlataformaController::class, 'storeInscripcion'])->name('plataforma.storeInscripcion');
