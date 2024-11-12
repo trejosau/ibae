@@ -209,10 +209,12 @@
                                 Editar
                             </button>
 
-                            <!-- Botón Eliminar que abre el modal de confirmación -->
-                            <button type="button" class="btn btn-danger btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#confirmarRetiroModal{{ $producto->id }}">
-                                Retirar
-                            </button>
+                            @if($producto->estado == 'activo')
+                                <!-- Botón Eliminar que abre el modal de confirmación -->
+                                <button type="button" class="btn btn-danger btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#confirmarRetiroModal{{ $producto->id }}">
+                                    Retirar
+                                </button>
+                            @endif
                         </td>
 
                         <!-- Modal de confirmación de retiro -->
@@ -223,7 +225,7 @@
                                         <h5 class="modal-title" id="confirmarRetiroModalLabel{{ $producto->id }}">Confirmar retiro del producto</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                                     </div>
-                                    <div class="modal-body">
+                                    <div class="modal-body text-center">
                                         <p>Para confirmar el retiro del producto del catálogo, escribe: <strong>retirar {{ $producto->nombre }}</strong></p>
                                         <input type="text" class="form-control" id="confirmarRetiroInput{{ $producto->id }}" autocomplete="off" placeholder="Escribe aquí...">
                                     </div>
@@ -240,28 +242,26 @@
                                 </div>
                             </div>
                         </div>
-
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function () {
-                                const productoId = "{{ $producto->id }}";
-                                const nombreProducto = "{{ $producto->nombre }}";
-                                const inputRetiro = document.getElementById(`confirmarRetiroInput${productoId}`);
-                                const botonRetiro = document.getElementById(`confirmarRetiroBtn${productoId}`);
-
-                                inputRetiro.addEventListener("input", function () {
-                                    if (inputRetiro.value.toLowerCase() === `retirar ${nombreProducto.toLowerCase()}`) {
-                                        botonRetiro.disabled = false;
-                                        botonRetiro.classList.remove("btn-secondary");
-                                        botonRetiro.classList.add("btn-danger");
-                                    } else {
-                                        botonRetiro.disabled = true;
-                                    }
-                                });
-                            });
-                        </script>
-
                     </tr>
 
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const productoId = "{{ $producto->id }}";
+                            const nombreProducto = "{{ $producto->nombre }}";
+                            const inputRetiro = document.getElementById(`confirmarRetiroInput${productoId}`);
+                            const botonRetiro = document.getElementById(`confirmarRetiroBtn${productoId}`);
+
+                            inputRetiro.addEventListener("input", function () {
+                                if (inputRetiro.value.toLowerCase() === `retirar ${nombreProducto.toLowerCase()}`) {
+                                    botonRetiro.disabled = false;
+                                    botonRetiro.classList.remove("btn-secondary");
+                                    botonRetiro.classList.add("btn-danger");
+                                } else {
+                                    botonRetiro.disabled = true;
+                                }
+                            });
+                        });
+                    </script>
                     <div class="modal fade" id="editarProductoModal{{ $producto->id }}" tabindex="-1" aria-labelledby="editarProductoModalLabel{{ $producto->id }}" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
