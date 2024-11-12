@@ -35,7 +35,7 @@ class ProcesoUsuariosSeeder extends Seeder
             $usuario = User::create([
                 'username' => "usuario$i",
                 'email' => "usuario$i@example.com",
-                'password' => bcrypt('password'), // Cambia esto por una contraseña encriptada
+                'password' => bcrypt('password'), 
                 'email_verified_at' => now(),
                 'estado' => 'activo',
                 'profile_photo_url' => "https://example.com/profile_photos/user$i.jpg",

@@ -521,6 +521,29 @@ class PlataformaController extends Controller
         return view('plataforma.index', compact('estudiantes', 'usuariosSinRolEstudiante', 'inscripciones'));
     }
 
+    function generarContrasenaAleatoria($longitud = 8) {
+        // Caracteres permitidos en cada categoría
+        $minusculas = 'abcdefghijklmnopqrstuvwxyz';
+        $mayusculas = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $numeros = '0123456789';
+        $simbolos = '!@#$%^&*()_+-={}[]|:;<>,.?';
+
+         $contrasena = $minusculas[random_int(0, strlen($minusculas) - 1)] .
+            $mayusculas[random_int(0, strlen($mayusculas) - 1)] .
+            $numeros[random_int(0, strlen($numeros) - 1)] .
+            $simbolos[random_int(0, strlen($simbolos) - 1)];
+
+        $todos = $minusculas . $mayusculas . $numeros . $simbolos;
+        for ($i = 4; $i < $longitud; $i++) {
+            $contrasena .= $todos[random_int(0, strlen($todos) - 1)];
+        }
+
+        $contrasena = str_shuffle($contrasena);
+        dd($contrasena);
+        // Hashear la contraseña antes de guardarla
+        return Hash::make($contrasena);
+    }
+
     public function asignarRol(Request $request)
     {
         $usuario = User::find($request->usuario_id);
@@ -551,9 +574,9 @@ class PlataformaController extends Controller
 
         // Crear Usuario con contraseña por defecto
         $usuario = User::create([
-            'username' => $request->username,
+            'username' => date('YmdHis') . rand(1000, 9999),
             'email' => $request->email,
-            'password' => Hash::make('Cambia123'), // Contraseña por defecto
+            'password' => $this->generarContrasenaAleatoria(),
         ]);
 
         // Crear Persona
@@ -592,15 +615,15 @@ class PlataformaController extends Controller
     public function darDeBaja($matricula)
     {
         $estudiante = Estudiante::where('matricula', $matricula)->first();
-    
+
         if (!$estudiante) {
             return redirect()->back()->with('error', 'Estudiante no encontrado.');
         }
-    
+
         // Cambiar el estado a baja
         $estudiante->estado = 'baja';  // Asumiendo que el campo 'estado' es 'activo' o 'baja'
         $estudiante->save();
-    
+
         return redirect()->route('plataforma.estudiantes')->with('success', 'Estudiante dado de baja correctamente.');
     }
 
@@ -621,7 +644,7 @@ class PlataformaController extends Controller
             'descripcion' => 'nullable|string',
             'material_incluido' => 'required|boolean',
         ]);
-    
+
         // Crear la nueva inscripción
         Inscripcion::create([
             'nombre' => $request->nombre,
@@ -629,11 +652,11 @@ class PlataformaController extends Controller
             'descripcion' => $request->descripcion,
             'material_incluido' => $request->material_incluido,
         ]);
-    
+
         // Redirigir con un mensaje de éxito
         return redirect()->back()->with('success', 'Inscripción agregada correctamente.');
     }
-        
+
     public function update(Request $request, $id)
     {
         // Validar los datos del formulario
@@ -662,12 +685,12 @@ class PlataformaController extends Controller
     public function profesores() {
         // Obtener los profesores con la relación 'persona' y 'usuario'
         $profesores = Profesor::with(['persona.usuario'])->get();
-        
+
         // Retornar la vista pasando los datos de los profesores
         return view('plataforma.index', compact('profesores'));
     }
 
-    
+
 
 
     public function bajaProfesor($id)
