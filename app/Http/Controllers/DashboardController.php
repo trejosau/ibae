@@ -350,7 +350,20 @@ class DashboardController extends Controller
 
     public function usuarios(Request $request)
     {
-        $usuarios = User::with('persona')->orderBy('created_at', 'desc')->paginate(6);
+        // Obtener todos los usuarios con las relaciones de las demás tablas
+        $usuarios = User::with([
+            'persona',
+            'persona.administrador',
+            'persona.estilista',
+            'persona.profesor',
+            'persona.estudiante',
+            'persona.comprador',
+             'roles'
+        ])->get();
+
+
+
+        // Pasar los usuarios a la vista
         return view('dashboard.index', compact('usuarios'));
     }
 

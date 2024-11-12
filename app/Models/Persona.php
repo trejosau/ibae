@@ -23,15 +23,28 @@ class Persona extends Model
         return $this->belongsTo(User::class, 'usuario', 'id');
     }
 
-    public function estudiante()
+    public function Estudiante()
     {
         return $this->hasOne(Estudiante::class, 'id_persona', 'id');
     }
 
+    public function administrador()
+    {
+        return $this->hasOne(Administrador::class, 'id_persona', 'id');
+    }
 
     public function profesor()
     {
-        return $this->hasOne(Profesor::class, 'id_persona');
+        return $this->hasOne(Profesor::class, 'id_persona', 'id');
+    }
+    public function estilista()
+    {
+        return $this->hasOne(Estilista::class, 'id_persona');
+    }
+
+    public function comprador()
+    {
+        return $this->hasOne(Comprador::class, 'id_persona');
     }
 }
 

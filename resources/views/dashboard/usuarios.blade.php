@@ -1,112 +1,126 @@
-<div class="container mt-4">
-    <h2 class="text-center">Gestión de Usuarios</h2>
-
-    <!-- Botón para abrir el modal de agregar usuario -->
-    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addUserModal">
-        <i class="fas fa-user-plus"></i> Agregar Usuario
-    </button>
-
-    <!-- Tabla de usuarios -->
-    <table class="table table-dark table-bordered table-hover">
-        <thead class="thead-light">
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Roles</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($usuarios as $usuario)
-            <tr>
-                <td>{{ $usuario->id }}</td>
-                <td>{{ $usuario->persona->nombre ?? '' }} {{ $usuario->persona->ap_paterno ?? '' }} {{ $usuario->persona->ap_materno ?? '' }}</td>
-                <td>{{ $usuario->username }}</td>
-                <td>{{ $usuario->email }}</td>
-                <td>
-                    @foreach($usuario->roles as $role)
-                        <span class="badge bg-info text-dark">{{ $role->name }}</span>
-                    @endforeach
-                </td>
-                <td>
-                    <a href="" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-                    <a href="" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Editar Roles</a>
-                    <a href="" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
-                </td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
-
-    <!-- Modal para agregar usuario -->
-    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="addUserModalLabel">Agregar Usuario</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="">
-                        <div class="mb-3">
-                            <label for="inputFirstName" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="inputFirstName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputLastNameP" class="form-label">Apellido Paterno</label>
-                            <input type="text" class="form-control" id="inputLastNameP" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputLastNameM" class="form-label">Apellido Materno</label>
-                            <input type="text" class="form-control" id="inputLastNameM">
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputPhone" class="form-label">Teléfono</label>
-                            <input type="tel" class="form-control" id="inputPhone">
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputUsername" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="inputUsername" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputEmail" class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="inputEmail" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputPassword" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="inputPassword" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </div>
-            </div>
-        </div>
+<div class="container-fluid my-5">
+    <!-- Botones de agregar roles -->
+    <div class="d-flex justify-content-around mb-4">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarAdmin">Agregar Administrador</button>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarProfesor">Agregar Profesor</button>
+        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalAgregarEstilista">Agregar Estilista</button>
     </div>
 
-    <!-- Modal para ver detalles del usuario (contenido de ejemplo) -->
-    <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-info text-white">
-                    <h5 class="modal-title" id="viewUserModalLabel">Detalles del Usuario</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Aquí puedes mostrar más detalles del usuario seleccionado.</p>
-                    <!-- Ejemplo de campos -->
-                    <p><strong>Nombre Completo:</strong> Juan Pérez</p>
-                    <p><strong>Email:</strong> juan.perez@example.com</p>
-                    <p><strong>Roles:</strong> Admin, Editor</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+    <!-- Modals para agregar roles -->
+    @foreach(['Admin' => 'Administrador', 'Profesor' => 'Profesor', 'Estilista' => 'Estilista'] as $key => $role)
+        <div class="modal fade" id="modalAgregar{{ $key }}" tabindex="-1" aria-labelledby="modalAgregar{{ $key }}Label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAgregar{{ $key }}Label">Agregar {{ $role }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/{{ strtolower($role) }}/agregar" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="username{{ $key }}" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username{{ $key }}" name="username" required>
+                            </div>
+                            @if($key == 'Admin' || $key == 'Estilista')
+                                <div class="mb-3">
+                                    <label for="email{{ $key }}" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email{{ $key }}" name="email" required>
+                                </div>
+                            @elseif($key == 'Profesor')
+                                <div class="mb-3">
+                                    <label for="especialidad{{ $key }}" class="form-label">Especialidad</label>
+                                    <select class="form-control" id="especialidad{{ $key }}" name="especialidad" required>
+                                        <option value="estilismo">Estilismo</option>
+                                        <option value="barbería">Barbería</option>
+                                        <option value="maquillaje">Maquillaje</option>
+                                        <option value="uñas">Uñas</option>
+                                    </select>
+                                </div>
+                            @endif
+                            <button type="submit" class="btn btn-primary">Guardar {{ $role }}</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
+    @endforeach
+
+    <!-- Listado de usuarios -->
+    <div class="row">
+        @foreach($usuarios as $usuario)
+            <div class="col-md-3 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $usuario->username }}</h5>
+                        <p class="card-text"><strong>Email:</strong> {{ $usuario->email }}</p>
+
+                        @if($persona = $usuario->persona)
+                            <p><strong>Nombre:</strong> {{ $persona->nombre }} {{ $persona->ap_paterno }} {{ $persona->ap_materno }}</p>
+                            <p><strong>Teléfono:</strong> {{ $persona->telefono }}</p>
+
+                            <!-- Roles -->
+                            <div class="mb-2">
+                                @foreach(['administrador', 'estilista', 'profesor', 'estudiante', 'comprador'] as $role)
+                                    @if($persona->$role)
+                                        <span class="badge bg-secondary me-1">{{ ucfirst($role) }}</span>
+                                    @endif
+                                @endforeach
+                            </div>
+
+                            <!-- Botón para ver más -->
+                            <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#modal{{ $usuario->id }}">Ver más</button>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal para ver más de un usuario -->
+            @if($persona)
+                <div class="modal fade" id="modal{{ $usuario->id }}" tabindex="-1" aria-labelledby="modal{{ $usuario->id }}Label" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modal{{ $usuario->id }}Label">{{ $usuario->username }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Información adicional de Persona -->
+                                <p><strong>Nombre Completo:</strong> {{ $persona->nombre }} {{ $persona->ap_paterno }} {{ $persona->ap_materno }}</p>
+                                <p><strong>Teléfono:</strong> {{ $persona->telefono }}</p>
+
+                                <!-- Información de Profesor -->
+                                @if($profesor = $persona->profesor)
+                                    <hr>
+                                    <h6><strong>Información de Profesor</strong></h6>
+                                    <p><strong>Especialidad:</strong> {{ $profesor->especialidad }}</p>
+                                    <p><strong>Fecha Contratación:</strong> {{ $profesor->fecha_contratacion }}</p>
+                                    <p><strong>Estado:</strong> {{ $profesor->estado }}</p>
+                                    <p><strong>Dirección:</strong> {{ $profesor->calle }} {{ $profesor->n_ext }}@if($profesor->n_int), Int: {{ $profesor->n_int }}@endif, {{ $profesor->colonia }}, {{ $profesor->ciudad }}, {{ $profesor->zipcode }}</p>
+                                @endif
+
+                                <!-- Información de Estudiante -->
+                                @if($estudiante = $persona->estudiante)
+                                    <hr>
+                                    <h6><strong>Información de Estudiante</strong></h6>
+                                    <p><strong>Matrícula:</strong> {{ $estudiante->matricula }}</p>
+                                    <p><strong>Grado de Estudio:</strong> {{ $estudiante->grado_estudio }}</p>
+                                    <p><strong>Estado:</strong> {{ $estudiante->estado }}</p>
+                                    <p><strong>Dirección:</strong> {{ $estudiante->calle }} {{ $estudiante->num_ext }}@if($estudiante->num_int), Int: {{ $estudiante->num_int }}@endif, {{ $estudiante->colonia }}, {{ $estudiante->ciudad }}, {{ $estudiante->zipcode }}</p>
+                                @endif
+
+                                <!-- Información de Comprador -->
+                                @if($comprador = $persona->comprador)
+                                    <hr>
+                                    <h6><strong>Información de Comprador</strong></h6>
+                                    <p><strong>Razón Social:</strong> {{ $comprador->razon_social }}</p>
+                                    <p><strong>Preferencia:</strong> {{ $comprador->preferencia }}</p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endforeach
     </div>
 </div>

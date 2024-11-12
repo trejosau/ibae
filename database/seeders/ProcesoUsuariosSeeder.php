@@ -93,6 +93,7 @@ class ProcesoUsuariosSeeder extends Seeder
                         'id_persona' => $persona->id,
                         'zipcode' => '270' . random_int(1, 8) . $i + 1,
                         'colonia' => 'Colonia ' . $i,
+                        'ciudad' => 'Ciudad ' . $i,
                         'calle' => 'Calle ' . $i,
                         'n_ext' => random_int(128, 900),
                         'n_int' => null,
@@ -130,6 +131,7 @@ class ProcesoUsuariosSeeder extends Seeder
                         'grado_estudio' => 'Preparatoria ' . ($i - 6),
                         'matricula' => $matricula,  // Asignar la matrícula única
                         'zipcode' => '270' . random_int(1, 8) . $i,
+                        'ciudad' => 'Ciudad ' . $i,
                         'colonia' => 'Colonia ' . $i,
                         'calle' => 'Calle ' . $i,
                         'num_ext' => random_int(120, 600),

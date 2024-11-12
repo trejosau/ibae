@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('estado', ['activo', 'inactivo', 'vacaciones']);
             $table->unsignedBigInteger('id_persona');
             $table->string('zipcode', 10);
+            $table->string('ciudad', 100);
             $table->string('colonia', 100);
             $table->string('calle', 100);
             $table->string('n_ext', 10);

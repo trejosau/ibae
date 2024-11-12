@@ -50,6 +50,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/servicios/agregar-categoria', [ServiciosController::class, 'agregarCategoria'])->name('servicios.agregarCategoria');
     Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');
     Route::post('/dashboard/productos/agregar', [ProductosController::class, 'agregar'])->name('productos.agregar');
+    Route::put('/dashboard/productos/actualizar/{id}', [ProductosController::class, 'actualizar'])->name('productos.update');
+    Route::put('/dashboard/productos/retirar/{id}', [ProductosController::class, 'retirar'])->name('productos.retirar');
+
     Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
     Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');
     Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
@@ -130,7 +133,7 @@ Route::middleware('auth')->group(function () {
 
     Route::put('/inscripciones/{id}', [PlataformaController::class, 'update'])->name('plataforma.updateInscripcion');
     Route::post('/plataforma/bajaProfesor/{id}', [PlataformaController::class, 'bajaProfesor'])->name('plataforma.bajaProfesor');
- 
+
 
 
     Route::post('/plataforma/asignar-rol', [PlataformaController::class, 'asignarRol'])->name('plataforma.asignarRol');
@@ -156,10 +159,12 @@ Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, '
     Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleCallback'])->name('login.google.callback');
 
     Route::get('/productos', [ProductosController::class, 'index'])->name('productos.index');
-    Route::get('/carrito', [ProductosController::class, 'verCarrito'])->name('carrito.ver');
     Route::post('/producto/{id}/agregar-al-carrito', [ProductosController::class, 'agregarAlCarrito'])->name('producto.agregar');
     Route::delete('/carrito/{id}', [ProductosController::class, 'eliminarDelCarrito'])->name('carrito.eliminar');
+    Route::get('/carrito', [ProductosController::class, 'verCarrito'])->name('carrito.ver');
     Route::get('/carrito/contenido', [ProductosController::class, 'cargarContenidoCarrito'])->name('carrito.contenido');
+    Route::get('/checkout', [ProductosController::class, 'checkout'])->name('checkout');
+
 
 
     Route::middleware('auth')->group(function () {
