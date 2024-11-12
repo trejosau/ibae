@@ -163,7 +163,6 @@ Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, '
     Route::get('/carrito', [ProductosController::class, 'verCarrito'])->name('carrito.ver');
     Route::get('/carrito/contenido', [ProductosController::class, 'cargarContenidoCarrito'])->name('carrito.contenido');
     Route::get('/checkout', [ProductosController::class, 'checkout'])->name('checkout');
-    Route::post('/checkout/{id}/update', [ProductosController::class, 'updateQuantityInCheckout'])->name('checkout.update');
 
 
 

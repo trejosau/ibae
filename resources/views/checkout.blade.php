@@ -6,21 +6,15 @@
 
     <div class="checkout-items">
         @foreach($carrito as $id => $producto)
-            <div class="checkout-item" data-product-id="{{ $id }}">
+            <div class="checkout-item">
                 <div class="product-img-container">
                     <img src="{{ $producto['main_photo'] ?? '/ruta/a/imagen-placeholder.jpg' }}" alt="{{ $producto['nombre'] }}" class="product-img">
                 </div>
                 <div class="product-details">
                     <h4 class="product-name">{{ $producto['nombre'] }}</h4>
                     <p class="product-price">Precio unitario: ${{ number_format($producto['precio'], 2) }}</p>
-                    <div class="quantity-control">
-                        <button class="decrement-btn" onclick="updateQuantity({{ $id }}, -1)">-</button>
-                        <span class="product-quantity" id="quantity-{{ $id }}">{{ $producto['cantidad'] }}</span>
-                        <button class="increment-btn" onclick="updateQuantity({{ $id }}, 1)">+</button>
-                    </div>
-                    <p class="product-total" id="product-total-{{ $id }}">
-                        Total: ${{ number_format($producto['precio'] * $producto['cantidad'], 2) }}
-                    </p>
+                    <p class="product-quantity">Cantidad: {{ $producto['cantidad'] }}</p>
+                    <p class="product-total">Total: ${{ number_format($producto['precio'] * $producto['cantidad'], 2) }}</p>
                 </div>
             </div>
         @endforeach
@@ -28,60 +22,113 @@
 
     <div class="checkout-summary">
         <h3>Resumen del Pedido</h3>
-        <p>Subtotal: <span id="subtotal-amount">${{ number_format($subtotal, 2) }}</span></p>
+        <p>Subtotal: <span class="subtotal-amount">${{ number_format($subtotal, 2) }}</span></p>
         <button onclick="confirmarPago()" class="checkout-button">Proceder al Pago</button>
     </div>
 </div>
 @endsection
 
 <script>
-
-function updateQuantity(productId, amount) {
-    fetch(`/checkout/${productId}/update`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({ amount: amount })
-    })
-    .then(response => {
-        console.log(response);
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            document.getElementById(`quantity-${productId}`).innerText = data.newQuantity;
-            document.getElementById(`product-total-${productId}`).innerText = `Total: $${data.newTotal.toFixed(2)}`;
-            document.getElementById('subtotal-amount').innerText = `$${data.subtotal.toFixed(2)}`;
-        } else {
-            alert(data.message || 'Error al actualizar la cantidad');
-        }
-    })
-    .catch(error => console.error('Error:', error));
+function confirmarPago() {
+    alert("Redirigiendo a la pasarela de pago...");
+    // Aquí puedes redirigir a la pasarela de pago
 }
-
-
 </script>
 
 <style>
-.quantity-control {
+/* Estilos generales */
+.checkout-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f7f9fc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.checkout-container h2, .checkout-container h3 {
+    text-align: center;
+    color: #333;
+}
+
+/* Estilos para los productos */
+.checkout-items {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.checkout-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin: 5px 0;
+    gap: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.increment-btn, .decrement-btn {
-    padding: 5px 10px;
-    background-color: #ddd;
+.product-img-container {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.product-name {
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.product-price, .product-quantity, .product-total {
+    color: #555;
+    font-size: 0.95rem;
+}
+
+/* Estilos para el resumen del pedido */
+.checkout-summary {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.subtotal-amount {
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: #333;
+}
+
+/* Estilos para el botón de pago */
+.checkout-button {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background-color: #4CAF50;
+    color: #ffffff;
     border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    border-radius: 8px;
+    font-size: 1.1rem;
     font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.increment-btn:hover, .decrement-btn:hover {
-    background-color: #ccc;
+.checkout-button:hover {
+    background-color: #45a049;
 }
 </style>
