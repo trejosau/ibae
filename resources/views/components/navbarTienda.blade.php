@@ -523,7 +523,8 @@
         <div class="cart-subtotal">
             <p id="cart-total-sidebar" class="subtotal-text">Total: $0.00</p>
         </div>
-        <a href="{{ route('carrito.ver') }}" class="btn btn-primary checkout-btn">Finalizar compra</a>
+
+        <a href="{{ route('checkout') }}" class="btn btn-primary checkout-btn">Finalizar compra</a>
     </div>
 </div>
 
@@ -640,6 +641,10 @@
         </div>
     </div>
 </nav>
+
+
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Actualizar el subtotal al cargar la página

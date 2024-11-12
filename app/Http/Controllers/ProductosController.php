@@ -335,6 +335,16 @@ public function buscar(Request $request)
     }
 }
 
+public function checkout()
+{
+    $carrito = session()->get('carrito', []);
+    $subtotal = array_reduce($carrito, function ($total, $item) {
+        return $total + $item['precio'] * $item['cantidad'];
+    }, 0);
+
+    return view('checkout', compact('carrito', 'subtotal'));
+}
+
 
 
 }

@@ -162,6 +162,8 @@ Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, '
     Route::delete('/carrito/{id}', [ProductosController::class, 'eliminarDelCarrito'])->name('carrito.eliminar');
     Route::get('/carrito', [ProductosController::class, 'verCarrito'])->name('carrito.ver');
     Route::get('/carrito/contenido', [ProductosController::class, 'cargarContenidoCarrito'])->name('carrito.contenido');
+    Route::get('/checkout', [ProductosController::class, 'checkout'])->name('checkout');
+
 
 
     Route::middleware('auth')->group(function () {
