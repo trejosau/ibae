@@ -18,6 +18,6 @@ class Comprador extends Model
 
     public function persona() : BelongsTo
     {
-        return $this->belongsTo(Persona::class, 'id_persona');
+        return $this->belongsTo(Persona::class, 'id_persona', 'id');
     }
 }

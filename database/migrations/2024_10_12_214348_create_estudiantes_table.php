@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('fecha_inscripcion');
             $table->string('grado_estudio');
             $table->string('zipcode');
+            $table->string('ciudad');
             $table->string('colonia');
             $table->string('calle');
             $table->string('num_ext');

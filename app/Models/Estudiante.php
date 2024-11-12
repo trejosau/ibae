@@ -21,6 +21,7 @@ class Estudiante extends Model
         'fecha_inscripcion',
         'grado_estudio',
         'zipcode',
+        'ciudad',
         'colonia',
         'calle',
         'num_ext',
@@ -35,7 +36,6 @@ class Estudiante extends Model
         return $this->belongsTo(Persona::class, 'id_persona', 'id');
     }
 
-    // Definir la relación con el modelo Inscripcion
 
 
 

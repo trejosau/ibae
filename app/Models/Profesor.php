@@ -16,6 +16,7 @@ class Profesor extends Model
         'estado',
         'id_persona',
         'zipcode',
+        'ciudad',
         'colonia',
         'calle',
         'n_ext',
