@@ -305,6 +305,55 @@ public function buscar(Request $request)
     }
 }
 
+public function checkout()
+{
+    $carrito = session()->get('carrito', []);
+    $subtotal = array_reduce($carrito, function ($total, $item) {
+        return $total + $item['precio'] * $item['cantidad'];
+    }, 0);
+
+    return view('checkout', compact('carrito', 'subtotal'));
+}
+
+
+public function updateQuantityInCheckout(Request $request, $id)
+{
+    
+    $carrito = session()->get('carrito', []);
+
+    if (isset($carrito[$id])) {
+        $cantidadActual = $carrito[$id]['cantidad'];
+        $nuevaCantidad = $cantidadActual + $request->input('amount');
+
+        // Verificación para evitar cantidades menores a 1
+        if ($nuevaCantidad < 1) {
+            return response()->json(['success' => false, 'message' => 'La cantidad mínima es 1']);
+        }
+
+        // Actualizar cantidad y total del producto
+        $carrito[$id]['cantidad'] = $nuevaCantidad;
+        $carrito[$id]['total'] = $carrito[$id]['precio'] * $nuevaCantidad;
+
+        // Actualizar la sesión
+        session()->put('carrito', $carrito);
+        session()->save(); // <-- Esta línea asegura que los cambios se guarden
+
+        // Calcular subtotal
+        $subtotal = array_reduce($carrito, function ($total, $item) {
+            return $total + $item['precio'] * $item['cantidad'];
+        }, 0);
+
+        return response()->json([
+            'success' => true,
+            'newQuantity' => $nuevaCantidad,
+            'newTotal' => $carrito[$id]['total'],
+            'subtotal' => $subtotal
+        ]);
+    }
+
+    return response()->json(['success' => false, 'message' => 'Producto no encontrado en el carrito']);
+}
+
 
 
 }
