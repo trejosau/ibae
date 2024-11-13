@@ -8,6 +8,7 @@ use App\Http\Controllers\NotificacionesController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PlataformaController;
 use App\Http\Controllers\ProductosController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SalonController;
 use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\UsuarioController;
@@ -20,6 +21,14 @@ use Illuminate\Support\Facades\Redirect;
 Route::get('/', function () {
     return view('index');
 })->name('home');
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/image-update', [ProfileController::class, 'imageUpdate'])->name('profile.imageUpdate');
+});
+
 
 
 

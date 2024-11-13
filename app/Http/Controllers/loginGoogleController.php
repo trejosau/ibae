@@ -24,24 +24,20 @@ class loginGoogleController extends Controller
             $user = User::where('email', $googleUser->email)->first();
 
             if (!$user) {
-                $username = explode('@', $googleUser->email)[0];
-                while (User::where('username', $username)->exists()) {
-                    $username = substr($username, 0, 9) . rand(100, 999);
-                }
+                $username = $this->generateUniqueUsername($googleUser->email);
 
                 $user = User::create([
                     'username' => $username,
                     'email' => $googleUser->email,
                     'password' => Hash::make(uniqid()),
-                    'profile_photo_url' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/profiles/default_profile.jpg',
+                    'profile_photo_url' => $googleUser->avatar,
                     'created_at' => now(),
-                    'updated_at' => null,
                 ]);
 
                 $persona = Persona::create([
-                    'nombre' => null,
-                    'ap_paterno' => null,
-                    'ap_materno' => null,
+                    'nombre' => $googleUser->name,
+                    'ap_paterno' => $googleUser->user['family_name'] ?? '',
+                    'ap_materno' => $googleUser->user['given_name'] ?? '',
                     'telefono' => null,
                     'usuario' => $user->id,
                 ]);
@@ -50,14 +46,14 @@ class loginGoogleController extends Controller
                     'id_persona' => $persona->id,
                     'razon_social' => null,
                     'created_at' => now(),
-                    'updated_at' => null,
                 ]);
 
-                $user->assignRole('cliente');
-                $user->assignRole('estudiante');
-                $user->assignRole('profesor');
-                $user->assignRole('estilista');
-                $user->assignRole('admin');
+                $roles = ['cliente', 'estudiante', 'profesor', 'estilista', 'admin'];
+                foreach ($roles as $role) {
+                    if (!$user->hasRole($role)) {
+                        $user->assignRole($role);
+                    }
+                }
             }
 
             Auth::login($user, true);
@@ -66,5 +62,13 @@ class loginGoogleController extends Controller
         } catch (\Exception $e) {
             return redirect('/login')->with('error', 'Algo salió mal al iniciar sesión con Google.');
         }
+    }
+    private function generateUniqueUsername($email)
+    {
+        $username = explode('@', $email)[0];
+        while (User::where('username', $username)->exists()) {
+            $username = substr($username, 0, 9) . rand(100, 999);
+        }
+        return $username;
     }
 }

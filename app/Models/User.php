@@ -24,11 +24,14 @@ class User extends Authenticatable
         'email',
         'password',
         'email_verified_at',
-        'remember_token',
         'estado',
-        'password',
         'remember_token',
         'profile_photo_url'
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
 

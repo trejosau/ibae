@@ -104,7 +104,7 @@
                         aria-labelledby="navbarDropdownMenuAvatar"
                     >
                         <li>
-                            <a class="dropdown-item" href="#">My profile</a>
+                            <a class="dropdown-item" href="{{ route('profile.edit') }}">Mi perfil</a>
                         </li>
                         <li class="dropdown-divider"></li>
                         <li>
