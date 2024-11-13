@@ -184,6 +184,8 @@
         display: flex; /* Cambiar a flex para alinear los elementos */
         justify-content: space-between; /* Espacio entre el texto y el ícono */
         align-items: center; /* Alinear verticalmente en el centro */
+        text-decoration: none
+        color: inherit;
         padding: 1rem 1.5rem;
         color: var(--sidebar-text);
         font-size: 1.3rem;

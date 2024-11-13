@@ -1,3 +1,18 @@
+<style>
+<style>
+    /* Estilos globales para <a> */
+    a {
+        text-decoration: none; 
+        color: inherit;
+    }
+
+    /* Estilos para hover con un color melón suave */
+    a:hover {
+        color: #ffa07a; /* Cambia al color melón suave al pasar el cursor */
+    }
+</style>
+
+</style>
 <div class="wrapper">
     <aside id="sidebar">
         <div class="d-flex">
@@ -14,7 +29,7 @@
         <ul class="sidebar-nav">
             <!-- Sección para todos -->
             <li class="sidebar-item">
-                <a href="{{ route('home') }}" class="sidebar-link">
+                <a  href="{{ route('home') }}" class="sidebar-link">
                     <i class="fa-solid fa-reply"></i>
                     <span>Volver a Inicio</span>
                 </a>
@@ -23,7 +38,7 @@
             @if(auth()->user()->hasAnyRole(['profesor', 'admin']))
             <!-- Código para la pestaña Cursos -->
             <li class="sidebar-item">
-                <a href="#cursosDropdown" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                <a style="text-decoration: none; color: inherit;" href="#cursosDropdown" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                    data-bs-target="#cursosDropdown" aria-expanded="false" aria-controls="cursosDropdown">
                     <i class="fa-solid fa-book"></i>
                     <span>Cursos</span>
@@ -64,7 +79,7 @@
                 <ul id="estudiantesProfesoresDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                     <li class="sidebar-item"><a href="{{route('plataforma.estudiantes')}}" class="sidebar-link">Lista de Estudiantes</a></li>
                     <li class="sidebar-item"><a href="{{route('plataforma.inscripciones')}}" class="sidebar-link">Inscripciones</a></li>
-                    <li class="sidebar-item"><a href="{{route('plataforma.profesores')}}" class="sidebar-link">Lista de Profesores</a></li>
+                  
 
                 </ul>
             </li>
@@ -73,34 +88,34 @@
             <!-- Sección de Finanzas -->
             <li class="sidebar-item">
                 <a href="#finanzasDropdown" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
-                   data-bs-target="#finanzasDropdown" aria-expanded="false" aria-controls="finanzasDropdown">
+                   data-bs-target="#finanzasDropdown" aria-expanded="false" aria-controls="finanzasDropdown" style="text-decoration: none; color: inherit;">
                     <i class="fa-solid fa-dollar-sign"></i>
                     <span>Finanzas</span>
                     <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                 </a>
                 <ul id="finanzasDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item"><a href="{{route('plataforma.pagos')}}" class="sidebar-link">Pagos y Colegiaturas</a></li>
-                    <li class="sidebar-item"><a href="{{route('plataforma.historial-pagos')}}" class="sidebar-link">Historial de Pagos</a></li>
+                    <li class="sidebar-item"><a href="{{route('plataforma.pagos')}}" class="sidebar-link" style="text-decoration: none; color: inherit;">Pagos y Colegiaturas</a></li>
+                    <li class="sidebar-item"><a href="{{route('plataforma.historial-pagos')}}" class="sidebar-link" style="text-decoration: none; color: inherit;">Historial de Pagos</a></li>
                 </ul>
             </li>
 
             <!-- Sección exclusiva para Estudiantes -->
             <li class="sidebar-item">
                 <a href="#estudianteDropdown" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
-                   data-bs-target="#estudianteDropdown" aria-expanded="false" aria-controls="estudianteDropdown">
+                   data-bs-target="#estudianteDropdown" aria-expanded="false" aria-controls="estudianteDropdown" style="text-decoration: none; color: inherit;">
                     <i class="fa-solid fa-user"></i>
                     <span>Mi espacio</span>
                     <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                 </a>
                 <ul id="estudianteDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                     <li class="sidebar-item">
-                        <a href="{{route('plataforma.espacio-mis-cursos')}}" class="sidebar-link">Mis Cursos</a>
+                        <a href="{{route('plataforma.espacio-mis-cursos')}}" class="sidebar-link" style="text-decoration: none; color: inherit;">Mis Cursos</a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="{{route('plataforma.espacio-mis-pagos')}}" class="sidebar-link">Mis Pagos</a>
+                        <a href="{{route('plataforma.espacio-mis-pagos')}}" class="sidebar-link" style="text-decoration: none; color: inherit;">Mis Pagos</a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="{{route('plataforma.espacio-perfil')}}" class="sidebar-link">Perfil / Configuración</a>
+                        <a href="{{route('plataforma.espacio-perfil')}}" class="sidebar-link" style="text-decoration: none; color: inherit;">Perfil / Configuración</a>
                     </li>
                 </ul>
             </li>
