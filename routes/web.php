@@ -10,7 +10,9 @@ use App\Http\Controllers\PlataformaController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\SalonController;
 use App\Http\Controllers\ServiciosController;
+use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\VentaController;
+use App\Mail\EnvioCredenciales;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redirect;
 
@@ -18,6 +20,8 @@ use Illuminate\Support\Facades\Redirect;
 Route::get('/', function () {
     return view('index');
 })->name('home');
+
+
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
@@ -54,6 +58,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/dashboard/productos/retirar/{id}', [ProductosController::class, 'retirar'])->name('productos.retirar');
 
     Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
+    Route::post('/dashboard/usuarios/agregarAdmin', [UsuarioController::class, 'agregarAdmin'])->name('usuarios.agregarAdmin');
+    Route::post('/dashboard/usuarios/agregarEstilista', [UsuarioController::class, 'agregarEstilista'])->name('usuarios.agregarEstilista');
+    Route::post('/dashboard/usuarios/agregarProfesor', [UsuarioController::class, 'agregarProfesor'])->name('usuarios.agregarProfesor');
     Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');
     Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
     Route::get('/notificaciones/marcar-leida/{id}', [NotificacionesController::class, 'marcarLeida'])->name('notificaciones.marcarLeida');

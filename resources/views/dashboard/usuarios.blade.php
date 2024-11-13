@@ -1,50 +1,180 @@
 <div class="container-fluid my-5">
-    <!-- Botones de agregar roles -->
-    <div class="d-flex justify-content-around mb-4">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarAdmin">Agregar Administrador</button>
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarProfesor">Agregar Profesor</button>
-        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalAgregarEstilista">Agregar Estilista</button>
-    </div>
+            <!-- Botones de agregar roles -->
+            <div class="d-flex justify-content-around mb-4">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarAdmin">Agregar Administrador</button>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarProfesor">Agregar Profesor</button>
+                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalAgregarEstilista">Agregar Estilista</button>
+            </div>
 
-    <!-- Modals para agregar roles -->
-    @foreach(['Admin' => 'Administrador', 'Profesor' => 'Profesor', 'Estilista' => 'Estilista'] as $key => $role)
-        <div class="modal fade" id="modalAgregar{{ $key }}" tabindex="-1" aria-labelledby="modalAgregar{{ $key }}Label" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalAgregar{{ $key }}Label">Agregar {{ $role }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="/{{ strtolower($role) }}/agregar" method="POST">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="username{{ $key }}" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username{{ $key }}" name="username" required>
-                            </div>
-                            @if($key == 'Admin' || $key == 'Estilista')
+            <!-- Modal para agregar Administrador -->
+            <div class="modal fade" id="modalAgregarAdmin" tabindex="-1" aria-labelledby="modalAgregarAdminLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalAgregarAdminLabel">Agregar Administrador</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ route('usuarios.agregarAdmin') }}" method="post">
+                                @csrf
                                 <div class="mb-3">
-                                    <label for="email{{ $key }}" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email{{ $key }}" name="email" required>
+                                    <label for="nombreAdmin" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="nombreAdmin" name="nombre" required>
                                 </div>
-                            @elseif($key == 'Profesor')
                                 <div class="mb-3">
-                                    <label for="especialidad{{ $key }}" class="form-label">Especialidad</label>
-                                    <select class="form-control" id="especialidad{{ $key }}" name="especialidad" required>
+                                    <label for="ap_paternoAdmin" class="form-label">Apellido Paterno</label>
+                                    <input type="text" class="form-control" id="ap_paternoAdmin" name="ap_paterno" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="ap_maternoAdmin" class="form-label">Apellido Materno</label>
+                                    <input type="text" class="form-control" id="ap_maternoAdmin" name="ap_materno" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="telefonoAdmin" class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control" id="telefonoAdmin" name="telefono" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="usernameAdmin" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="usernameAdmin" name="username" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="emailAdmin" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="emailAdmin" name="email" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Guardar Administrador</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    <!-- Modal para agregar Profesor -->
+    <div class="modal fade" id="modalAgregarProfesor" tabindex="-1" aria-labelledby="modalAgregarProfesorLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAgregarProfesorLabel">Agregar Profesor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('usuarios.agregarProfesor') }}" method="post">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="nombreProfesor" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="nombreProfesor" name="nombre" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="ap_paternoProfesor" class="form-label">Apellido Paterno</label>
+                                    <input type="text" class="form-control" id="ap_paternoProfesor" name="ap_paterno" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="ap_maternoProfesor" class="form-label">Apellido Materno</label>
+                                    <input type="text" class="form-control" id="ap_maternoProfesor" name="ap_materno" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="telefonoProfesor" class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control" id="telefonoProfesor" name="telefono" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="rfcProfesor" class="form-label">RFC</label>
+                                    <input type="text" class="form-control" id="rfcProfesor" name="RFC" maxlength="13">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="curpProfesor" class="form-label">CURP</label>
+                                    <input type="text" class="form-control" id="curpProfesor" name="CURP" maxlength="18">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="usernameProfesor" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="usernameProfesor" name="username" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="especialidadProfesor" class="form-label">Especialidad</label>
+                                    <select class="form-control" id="especialidadProfesor" name="especialidad" required>
                                         <option value="estilismo">Estilismo</option>
                                         <option value="barbería">Barbería</option>
                                         <option value="maquillaje">Maquillaje</option>
                                         <option value="uñas">Uñas</option>
                                     </select>
                                 </div>
-                            @endif
-                            <button type="submit" class="btn btn-primary">Guardar {{ $role }}</button>
-                        </form>
+                                <div class="mb-3">
+                                    <label for="zipcodeProfesor" class="form-label">Código Postal</label>
+                                    <input type="text" class="form-control" id="zipcodeProfesor" name="zipcode" maxlength="10">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="ciudadProfesor" class="form-label">Ciudad</label>
+                                    <input type="text" class="form-control" id="ciudadProfesor" name="ciudad" maxlength="100">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="coloniaProfesor" class="form-label">Colonia</label>
+                                    <input type="text" class="form-control" id="coloniaProfesor" name="colonia" maxlength="100">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="calleProfesor" class="form-label">Calle</label>
+                                    <input type="text" class="form-control" id="calleProfesor" name="calle" maxlength="100">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="n_extProfesor" class="form-label">Número Exterior</label>
+                                    <input type="text" class="form-control" id="n_extProfesor" name="n_ext" maxlength="10">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="n_intProfesor" class="form-label">Número Interior</label>
+                                    <input type="text" class="form-control" id="n_intProfesor" name="n_int" maxlength="10">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Profesor</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+            <!-- Modal para agregar Estilista -->
+            <div class="modal fade" id="modalAgregarEstilista" tabindex="-1" aria-labelledby="modalAgregarEstilistaLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalAgregarEstilistaLabel">Agregar Estilista</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ route('usuarios.agregarEstilista') }}" method="post">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="nombreEstilista" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="nombreEstilista" name="nombre" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="ap_paternoEstilista" class="form-label">Apellido Paterno</label>
+                                    <input type="text" class="form-control" id="ap_paternoEstilista" name="ap_paterno" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="ap_maternoEstilista" class="form-label">Apellido Materno</label>
+                                    <input type="text" class="form-control" id="ap_maternoEstilista" name="ap_materno" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="telefonoEstilista" class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control" id="telefonoEstilista" name="telefono" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="usernameEstilista" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="usernameEstilista" name="username" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="emailEstilista" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="emailEstilista" name="email" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Guardar Estilista</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    @endforeach
 
     <!-- Listado de usuarios -->
     <div class="row">

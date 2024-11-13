@@ -539,7 +539,7 @@ class PlataformaController extends Controller
         }
 
         $contrasena = str_shuffle($contrasena);
-        dd($contrasena);
+
         // Hashear la contraseña antes de guardarla
         return Hash::make($contrasena);
     }
