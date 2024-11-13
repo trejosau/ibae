@@ -1,21 +1,27 @@
 <div class="container mt-4">
     <h2 class="text-center mb-4">Gestión de Estudiantes</h2>
-
-   <div class="row">
-    <div class="text-center mb-4">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAsignarRol">
-            Asignar Rol de Estudiante
-        </button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalRegistrarEstudiante">
-            Registrar Estudiante
-        </button>
+    
+    <div class="row">
+        <div class="text-center mb-4">
+            <button type="button" class="btn" data-toggle="modal" data-target="#modalAsignarRol" 
+                style="background-color: #ffdab9; color: #4a4e69; font-weight: bold; padding: 12px 24px; border-radius: 8px; border: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: background-color 0.3s, color 0.3s;"
+                onmouseover="this.style.backgroundColor='#ffb48a'; this.style.color='#ffffff';" 
+                onmouseout="this.style.backgroundColor='#ffdab9'; this.style.color='#4a4e69';">
+                Asignar Rol de Estudiante
+            </button>
+            <button type="button" class="btn" data-toggle="modal" data-target="#modalRegistrarEstudiante" 
+                style="background-color: #ffdab9; color: #4a4e69; font-weight: bold; padding: 12px 24px; border-radius: 8px; border: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: background-color 0.3s, color 0.3s;"
+                onmouseover="this.style.backgroundColor='#ffb48a'; this.style.color='#ffffff';" 
+                onmouseout="this.style.backgroundColor='#ffdab9'; this.style.color='#4a4e69';">
+                Registrar Estudiante
+            </button>
+        </div>
     </div>
-
-   </div>
+    
+    
 
 
     <div class="row">
-
         @foreach($estudiantes as $estudiante)
             @if($estudiante->estado == 'activo')
                 <div class="col-md-4 mb-4">

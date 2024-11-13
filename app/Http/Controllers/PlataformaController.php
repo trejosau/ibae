@@ -579,7 +579,7 @@ class PlataformaController extends Controller
         // Crear Usuario con contraseña por defecto
         $usuario = User::create([
             'username' => random_int(1,10000).now(),
-            'email' => rand(1,10000).now().'@gmail.com',
+            'email' => $request->email,
             'password' => Hash::make($password), // Contraseña por defecto
         ]);
 
