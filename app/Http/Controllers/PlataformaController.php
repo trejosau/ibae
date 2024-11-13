@@ -579,7 +579,7 @@ class PlataformaController extends Controller
         // Crear Usuario con contraseña por defecto
         $usuario = User::create([
             'username' => random_int(1,10000).now(),
-            'email' => rand(1,10000).now().'@gmail.com',
+            'email' => $request->email,
             'password' => Hash::make($password), // Contraseña por defecto
         ]);
 
@@ -610,13 +610,13 @@ class PlataformaController extends Controller
             'num_int' => $request->num_int,
         ]);
 
-$prefix = date('y') . date('m');
-$matricula_username = $prefix . $usuario->id;
+    $prefix = date('y') . date('m');
+    $matricula_username = $prefix . $usuario->id;
 
-        $usuario->username = $matricula_username;
-        $estudiante->matricula = $matricula_username;
-        $usuario->save();
-        $estudiante->save;
+            $usuario->username = $matricula_username;
+            $estudiante->matricula = $matricula_username;
+            $usuario->save();
+            $estudiante->save;
 
 
         if ($estudiante)
