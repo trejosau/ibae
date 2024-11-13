@@ -553,7 +553,7 @@ class PlataformaController extends Controller
 
         return redirect()->route('plataforma.estudiantes')->with('success', 'Rol asignado con éxito');
     }
-    
+
     public function registrarEstudiante(Request $request)
     {
         // Validar datos
@@ -583,7 +583,7 @@ class PlataformaController extends Controller
             'password' => Hash::make($password), // Contraseña por defecto
         ]);
 
-    
+
         // Crear Persona
         $persona = Persona::create([
             'nombre' => $request->nombre,
@@ -617,18 +617,17 @@ $matricula_username = $prefix . $usuario->id;
         $estudiante->matricula = $matricula_username;
         $usuario->save();
         $estudiante->save;
- 
+
 
         if ($estudiante)
         {
-      
-            Mail::to($request->email)->send(new EnvioCredenciales($usuario, $password));
-            dd('Enviado');
-        }
-        
-    
 
-    
+            Mail::to($request->email)->send(new EnvioCredenciales($usuario, $password));
+        }
+
+
+
+
         return redirect()->route('plataforma.estudiantes')->with('success', 'Estudiante registrado y correo enviado.');
     }
 
