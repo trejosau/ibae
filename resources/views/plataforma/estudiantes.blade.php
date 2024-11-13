@@ -122,7 +122,8 @@
                             <select class="form-control" id="usuario" name="usuario_id" required>
                                 <option value="">Seleccione un usuario</option>
                                 @foreach($usuariosSinRolEstudiante as $usuario)
-                                    <option value="{{ $usuario->id }}">{{ $usuario->persona->nombre }} {{ $usuario->persona->ap_paterno }}</option>
+                                    <option value="{{ $usuario->id }}">{{optional($usuario->persona)->nombre}} {{ optional($usuario->persona)->ap_paterno }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>

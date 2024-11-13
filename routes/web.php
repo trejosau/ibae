@@ -27,6 +27,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/image-update', [ProfileController::class, 'imageUpdate'])->name('profile.imageUpdate');
+    Route::get('/checkout', [ProductosController::class, 'checkout'])->name('checkout');
+
 });
 
 
@@ -179,7 +181,6 @@ Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, '
     Route::delete('/carrito/{id}', [ProductosController::class, 'eliminarDelCarrito'])->name('carrito.eliminar');
     Route::get('/carrito', [ProductosController::class, 'verCarrito'])->name('carrito.ver');
     Route::get('/carrito/contenido', [ProductosController::class, 'cargarContenidoCarrito'])->name('carrito.contenido');
-    Route::get('/checkout', [ProductosController::class, 'checkout'])->name('checkout');
 
 
 

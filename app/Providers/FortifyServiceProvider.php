@@ -65,4 +65,6 @@ class FortifyServiceProvider extends ServiceProvider
 
         Fortify::loginView('auth.login');
     }
+
+    
 }
