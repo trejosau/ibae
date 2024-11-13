@@ -30,6 +30,7 @@ class loginGoogleController extends Controller
                     'username' => $username,
                     'email' => $googleUser->email,
                     'password' => Hash::make(uniqid()),
+                    'provider' => 'google',
                     'profile_photo_url' => $googleUser->avatar,
                     'created_at' => now(),
                 ]);
