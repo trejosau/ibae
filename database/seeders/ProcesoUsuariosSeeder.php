@@ -35,7 +35,7 @@ class ProcesoUsuariosSeeder extends Seeder
             $usuario = User::create([
                 'username' => "usuario$i",
                 'email' => "usuario$i@example.com",
-                'password' => bcrypt('password'), 
+                'password' => bcrypt('password'),
                 'email_verified_at' => now(),
                 'estado' => 'activo',
                 'profile_photo_url' => "https://example.com/profile_photos/user$i.jpg",
@@ -57,7 +57,6 @@ class ProcesoUsuariosSeeder extends Seeder
             // Crear un registro en la tabla de Compradores (todos son clientes)
             Comprador::create([
                 'id_persona' => $persona->id,
-                'preferencia' => $i % 2 === 0 ? 'barber' : 'belleza',
                 'razon_social' => "Razón Social " . $usuario->username,
             ]);
 

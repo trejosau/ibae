@@ -12,6 +12,7 @@ class Profesor extends Model
     protected $fillable = [
         'especialidad',
         'fecha_contratacion',
+        'RFC',
         'CURP',
         'estado',
         'id_persona',
@@ -21,6 +22,7 @@ class Profesor extends Model
         'calle',
         'n_ext',
         'n_int',
+
     ];
 
     protected $hidden = [

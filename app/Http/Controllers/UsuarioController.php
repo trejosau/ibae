@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Mail\EnvioCredenciales;
 use App\Models\Administrador;
+use App\Models\Comprador;
+use App\Models\Estilista;
 use App\Models\Persona;
+use App\Models\Profesor;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -37,21 +40,17 @@ class UsuarioController extends Controller
 
     public function agregarAdmin(Request $request)
     {
-        // Validación de datos de entrada
         $request->validate([
             'nombre' => 'required|string|max:255',
             'ap_paterno' => 'required|string|max:255',
             'ap_materno' => 'required|string|max:255',
-            'telefono' => 'required|string|max:15',
-            'username' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email', // Asegura email único
+            'phone' => ['required', 'string','min:15', 'max:15', 'regex:/^\+52\d{10}$/'],
+            'username' => 'required|string|max:255|unique:users,username',
+            'email' => 'required|email|max:255|unique:users,email',
         ]);
-
-
 
         // Generar contraseña aleatoria
         $password = $this->generarContrasenaAleatoria();
-
 
         // Iniciar una transacción
         \DB::beginTransaction();
@@ -60,7 +59,7 @@ class UsuarioController extends Controller
             // Crear el usuario
             $usuario = User::create([
                 'username' => $request->username,
-                'email' => random_int(1, 1000) . '@example.com',
+                'email' => $request->email,
                 'password' => Hash::make($password),
                 'profile_photo_url' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/profiles/default_profile.jpg',
             ]);
@@ -70,8 +69,16 @@ class UsuarioController extends Controller
                 'nombre' => $request->nombre,
                 'ap_paterno' => $request->ap_paterno,
                 'ap_materno' => $request->ap_materno,
-                'telefono' => $request->telefono,
+                'telefono' => $request->phone,
                 'usuario' => $usuario->id,
+            ]);
+
+            // Crear el comprador
+            $cliente = Comprador::create([
+                'id_persona' => $persona->id,
+                'razon_social' => null,
+                'created_at' => now(),
+                'updated_at' => null,
             ]);
 
             // Crear el administrador
@@ -87,16 +94,187 @@ class UsuarioController extends Controller
 
             if ($admin) {
                 Mail::to($request->email)->send(new EnvioCredenciales($usuario, $password));
-                dd('Enviado');
             }
 
-
+            return redirect()->route('dashboard.usuarios')->with('success', 'Usuario creado con éxito. Se ha enviado un correo con las credenciales.');
 
         } catch (\Exception $e) {
             // Revertir transacción en caso de error
             \DB::rollback();
-            return redirect()->back()->with('error', 'Error al crear usuario.');
+
+            // Pasar el mensaje de error detallado a la sesión
+            return redirect()->route('dashboard.usuarios')->with('error', 'Error al crear usuario: ' . $e->getMessage());
         }
     }
 
+
+    public function agregarEstilista(Request $request)
+    {
+        // Validación de datos de entrada
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'ap_paterno' => 'required|string|max:255',
+            'ap_materno' => 'required|string|max:255',
+            'phone' => ['required', 'string','min:15', 'max:15', 'regex:/^\+52\d{10}$/'],
+            'username' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+        ]);
+
+
+
+
+        // Generar contraseña aleatoria
+        $password = $this->generarContrasenaAleatoria();
+
+
+        // Iniciar una transacción
+        \DB::beginTransaction();
+
+        try {
+            // Crear el usuario
+            $usuario = User::create([
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => Hash::make($password),
+                'profile_photo_url' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/profiles/default_profile.jpg',
+            ]);
+
+            // Crear la persona
+            $persona = Persona::create([
+                'nombre' => $request->nombre,
+                'ap_paterno' => $request->ap_paterno,
+                'ap_materno' => $request->ap_materno,
+                'telefono' => $request->phone,
+                'usuario' => $usuario->id,
+            ]);
+
+            $cliente = Comprador::create([
+                'id_persona' => $persona->id,
+                'razon_social' => null,
+                'created_at' => now(),
+                'updated_at' => null,
+            ]);
+
+            // Crear el estilista
+            $estilista = Estilista::create([
+                'estado' => 'activo',
+                'id_persona' => $persona->id,
+                'created_at' => now(),
+                'updated_at' => null,
+            ]);
+
+
+            // Asignar roles
+            $usuario->assignRole('cliente');
+            $usuario->assignRole('estilista');
+
+            \DB::commit();
+
+            if ($estilista) {
+                Mail::to($request->email)->send(new EnvioCredenciales($usuario, $password));
+            }
+
+            return redirect()->route('dashboard.usuarios')->with('success', 'Usuario creado con éxito. Se ha enviado un correo con las credenciales.');
+
+        } catch (\Exception $e) {
+            // Revertir transacción en caso de error
+            \DB::rollback();
+            return redirect()->route('dashboard.usuarios')->with('error', 'Error al crear usuario.');
+        }
+    }
+
+
+        public function agregarProfesor(Request $request)
+    {
+        // Validation rules
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'ap_paterno' => 'required|string|max:255',
+            'ap_materno' => 'required|string|max:255',
+            'phone' => ['required', 'string', 'max:15','min:15', 'regex:/^\+52\d{10}$/'],
+            'RFC' => 'nullable|string|max:20',
+            'CURP' => 'nullable|string|max:20',
+            'username' => 'required|string|max:255|unique:users,username',
+            'email' => 'required|email|max:255|unique:users,email',
+            'especialidad' => 'required|string|in:estilismo,barbería,maquillaje,uñas',
+            'zipcode' => 'required|string|size:6',
+            'ciudad' => 'required|string|max:100',
+            'colonia' => 'required|string|max:100',
+            'calle' => 'required|string|max:100',
+            'n_ext' => 'required|string|max:10',
+            'n_int' => 'nullable|string|max:10',
+        ]);
+
+
+        // Generate a random password
+        $password = $this->generarContrasenaAleatoria();
+
+        \DB::beginTransaction();
+
+        try {
+            // Crear el usuario
+            $usuario = User::create([
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => Hash::make($password),
+                'profile_photo_url' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/profiles/default_profile.jpg',
+            ]);
+
+            // Crear la persona
+            $persona = Persona::create([
+                'nombre' => $request->nombre,
+                'ap_paterno' => $request->ap_paterno,
+                'ap_materno' => $request->ap_materno,
+                'telefono' => $request->phone,
+                'usuario' => $usuario->id,
+            ]);
+
+            // Crear el comprador
+            $cliente = Comprador::create([
+                'id_persona' => $persona->id,
+                'razon_social' => null,
+                'created_at' => now(),
+                'updated_at' => null,
+            ]);
+
+        // Create the professor
+        $profesor = Profesor::create([
+            'especialidad' => $request->especialidad,
+            'fecha_contratacion' => now(),
+            'RFC' => $request->RFC,
+            'CURP' => $request->CURP,
+            'estado' => 'activo',
+            'id_persona' => $persona->id,
+            'zipcode' => $request->zipcode,
+            'ciudad' => $request->ciudad,
+            'colonia' => $request->colonia,
+            'calle' => $request->calle,
+            'n_ext' => $request->n_ext,
+            'n_int' => $request->n_int,
+            'created_at' => now(),
+            'updated_at' => null,
+        ]);
+
+
+
+            // Asignar roles
+            $usuario->assignRole('cliente');
+            $usuario->assignRole('profesor');
+
+            \DB::commit();
+
+            if ($profesor) {
+                Mail::to($request->email)->send(new EnvioCredenciales($usuario, $password));
+            }
+
+            return redirect()->route('dashboard.usuarios')->with('success', 'Usuario creado con éxito. Se ha enviado un correo con las credenciales.');
+
+        } catch (\Exception $e) {
+            // Revertir transacción en caso de error
+            \DB::rollback();
+
+            // Pasar el mensaje de error detallado a la sesión
+            return redirect()->route('dashboard.usuarios')->with('error', 'Error al crear usuario: ' . $e->getMessage());
+        }
+    }
 }

@@ -1,6 +1,34 @@
-<div class="container-fluid my-5">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+<div class="container-fluid my-3">
             <!-- Botones de agregar roles -->
-            <div class="d-flex justify-content-around mb-4">
+            <div class="d-flex justify-content-around mb-1">
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarAdmin">Agregar Administrador</button>
                 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarProfesor">Agregar Profesor</button>
                 <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalAgregarEstilista">Agregar Estilista</button>
@@ -31,7 +59,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="telefonoAdmin" class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control" id="telefonoAdmin" name="telefono" required>
+                                    <input type="tel" name="phone" class="form-control phone-input" value="+52" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="usernameAdmin" class="form-label">Username</label>
@@ -75,7 +103,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="telefonoProfesor" class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control" id="telefonoProfesor" name="telefono" required>
+                                    <input type="tel" name="phone" class="form-control phone-input" value="+52" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="rfcProfesor" class="form-label">RFC</label>
@@ -91,6 +119,11 @@
                                     <label for="usernameProfesor" class="form-label">Username</label>
                                     <input type="text" class="form-control" id="usernameProfesor" name="username" required>
                                 </div>
+                                <div class="mb-3">
+                                    <label for="emailProfesor" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="emailProfesor" name="email" required>
+                                </div>
+
                                 <div class="mb-3">
                                     <label for="especialidadProfesor" class="form-label">Especialidad</label>
                                     <select class="form-control" id="especialidadProfesor" name="especialidad" required>
@@ -158,7 +191,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="telefonoEstilista" class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control" id="telefonoEstilista" name="telefono" required>
+                                    <input type="tel" name="phone" class="form-control phone-input" value="+52" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="usernameEstilista" class="form-label">Username</label>
@@ -176,14 +209,53 @@
             </div>
         </div>
 
+<script>
+    $(document).ready(function() {
+        $('.phone-input').each(function() {
+            window.intlTelInput(this, {
+                initialCountry: "mx",
+                nationalMode: false,
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+                preferredCountries: ["mx"]
+            });
+        });
+    });
+</script>
+
     <!-- Listado de usuarios -->
     <div class="row">
         @foreach($usuarios as $usuario)
             <div class="col-md-3 mb-4">
                 <div class="card h-100">
+                    <!-- Card Header with General and Role States Badges -->
+                    <div class="card-header" style="display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: flex-end;">
+                        <!-- General User State Badge -->
+                        <span class="badge {{ $usuario->estado == 'activo' ? 'bg-success' : 'bg-danger' }}">
+                Usuario: {{ ucfirst($usuario->estado) }}
+            </span>
+
+                        <!-- Role-specific State Badges -->
+                        @if($persona = $usuario->persona)
+                            @if($persona->estilista)
+                                <span class="badge {{ $persona->estilista->estado == 'activo' ? 'bg-success' : ($persona->estilista->estado == 'vacaciones' ? 'bg-warning' : 'bg-danger') }}">
+                        Estilista: {{ ucfirst($persona->estilista->estado) }}
+                    </span>
+                            @endif
+                            @if($persona->profesor)
+                                <span class="badge {{ $persona->profesor->estado == 'activo' ? 'bg-success' : ($persona->profesor->estado == 'vacaciones' ? 'bg-warning' : 'bg-danger') }}">
+                        Profesor: {{ ucfirst($persona->profesor->estado) }}
+                    </span>
+                            @endif
+                            @if($persona->estudiante)
+                                <span class="badge {{ $persona->estudiante->estado == 'activo' ? 'bg-success' : 'bg-danger' }}">
+                        Estudiante: {{ ucfirst($persona->estudiante->estado) }}
+                    </span>
+                            @endif
+                        @endif
+                    </div>
+
                     <div class="card-body">
-                        <h5 class="card-title">{{ $usuario->username }}</h5>
-                        <p class="card-text"><strong>Email:</strong> {{ $usuario->email }}</p>
+                        <h5 class="card-title">{{ $usuario->username }} <span class="badge bg-primary">{{ $usuario->email }}</span></h5>
 
                         @if($persona = $usuario->persona)
                             <p><strong>Nombre:</strong> {{ $persona->nombre }} {{ $persona->ap_paterno }} {{ $persona->ap_materno }}</p>
@@ -204,6 +276,8 @@
                     </div>
                 </div>
             </div>
+
+
 
             <!-- Modal para ver más de un usuario -->
             @if($persona)
@@ -244,7 +318,6 @@
                                     <hr>
                                     <h6><strong>Información de Comprador</strong></h6>
                                     <p><strong>Razón Social:</strong> {{ $comprador->razon_social }}</p>
-                                    <p><strong>Preferencia:</strong> {{ $comprador->preferencia }}</p>
                                 @endif
                             </div>
                         </div>
@@ -252,5 +325,9 @@
                 </div>
             @endif
         @endforeach
+            <!-- Paginación -->
+            <div class="d-flex justify-content-center">
+                {{ $usuarios->links('pagination::bootstrap-5')}}
+            </div>
     </div>
 </div>

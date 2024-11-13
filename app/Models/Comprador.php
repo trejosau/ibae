@@ -12,7 +12,6 @@ class Comprador extends Model
 
     protected $fillable = [
         'id_persona',
-        'preferencia',
         'razon_social',
     ];
 

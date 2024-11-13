@@ -359,7 +359,7 @@ class DashboardController extends Controller
             'persona.estudiante',
             'persona.comprador',
              'roles'
-        ])->get();
+        ])->paginate(16);
 
 
 
