@@ -247,7 +247,7 @@
                                         </div>
                                         <div class="col-md-12">
                                             <label class="labels">Razón Social</label>
-                                            <input type="text" class="form-control" name="razon_social" placeholder="Salon de belleza trc" value="{{ $user->persona->comprador->razon_social }}">
+                                            <input type="text" class="form-control" name="razon_social" placeholder="Salon de belleza trc" value="{{ optional($user->persona)->razon_social }}">
                                         </div>
 
                             <div class="col-md-12 mt-2">

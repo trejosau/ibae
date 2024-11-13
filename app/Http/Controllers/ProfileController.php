@@ -34,7 +34,8 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
-        $persona = Persona::find($user->persona->id);
+        $persona = Persona::where('usuario', $user->id)->first();
+
         $comprador = Comprador::where('id_persona', $persona->id)->first();
         // Validación de los campos
         $validatedData = $request->validate([
@@ -50,6 +51,7 @@ class ProfileController extends Controller
         $username = $validatedData['username'];
 
 
+        dd($validatedData['razon_social']);
             $persona->nombre = $validatedData['nombre'];
             $persona->ap_paterno = $validatedData['ap_paterno'];
             $persona->ap_materno = $validatedData['ap_materno'];
