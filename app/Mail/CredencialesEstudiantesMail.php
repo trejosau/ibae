@@ -10,46 +10,27 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 
-class CambiarContrasenaMail extends Mailable
+class CredencialesEstudiantesMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $usuario;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct(User $usuario)
+    public $usuario;
+    public $password;
+
+    public function __construct( $usuario, $password)
     {
         $this->usuario = $usuario;
+        $this->password = $password;
     }
 
-
-    public function build()
-    {
-        return $this->view('plataforma.CambiarContrasena')
-                    ->subject('Instrucciones para cambiar tu contraseña')
-                    ->with([
-                        'usuario' => $this->usuario,
-                    ]);
-    }
-
-    /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'Cambiar Contrasena Mail',
-        );
-    }
-
+    
     /**
      * Get the message content definition.
      */
     public function content(): Content
     {
         return new Content(
-            view: 'plataforma.CambiarContrasena',
+            view: 'emails.credenciales',
         );
     }
 
@@ -61,5 +42,13 @@ class CambiarContrasenaMail extends Mailable
     public function attachments(): array
     {
         return [];
+    }
+
+
+    public function build()
+    {
+        return $this->view('emails.credenciales')
+                    ->subject('Instrucciones para cambiar tu contraseña');
+                  
     }
 }

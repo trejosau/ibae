@@ -123,7 +123,7 @@ class ProcesoUsuariosSeeder extends Seeder
                 if (!Estudiante::where('id_persona', $persona->id)->exists()) {
                     $matricula = array_shift($matriculas);  // Asignar una matrícula única
 
-                    Estudiante::create([
+                    $estudiante = Estudiante::create([
                         'id_persona' => $persona->id,
                         'id_inscripcion' => $inscripcionIds[array_rand($inscripcionIds)], // Elige aleatoriamente un ID de inscripción
                         'fecha_inscripcion' => now(),
@@ -138,6 +138,11 @@ class ProcesoUsuariosSeeder extends Seeder
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);
+
+                    $prefix = date('y') . date('m');
+                    $matricula_username = $prefix . $usuario->id;
+
+                    $estudiante->matricula = $matricula_username;
                 }
             }
         }

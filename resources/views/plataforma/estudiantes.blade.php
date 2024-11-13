@@ -1,4 +1,4 @@
-<div class="container mt-4"> 
+<div class="container mt-4">
     <h2 class="text-center mb-4">Gestión de Estudiantes</h2>
 
    <div class="row">
@@ -10,12 +10,12 @@
             Registrar Estudiante
         </button>
     </div>
-  
+
    </div>
-  
+
 
     <div class="row">
-        
+
         @foreach($estudiantes as $estudiante)
             @if($estudiante->estado == 'activo')
                 <div class="col-md-4 mb-4">
@@ -23,11 +23,11 @@
                         <div class="card-body text-center">
                             <!-- Foto de perfil -->
                             <div style="width: 120px; height: 120px; margin: 0 auto; overflow: hidden; border-radius: 50%; background-color: #ddd;">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzceK1AIQtiWPaIfjbcbN1rvQ0a8dUbbJ8IA&s" 
-                                     alt="Foto de {{ $estudiante->persona->nombre }}" 
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzceK1AIQtiWPaIfjbcbN1rvQ0a8dUbbJ8IA&s"
+                                     alt="Foto de {{ $estudiante->persona->nombre }}"
                                      style="width: 100%; height: 100%; object-fit: cover; display: block;">
                             </div>
-                            
+
                             <!-- Información del estudiante -->
                             <h5 class="card-title" style="color: #6a5a4e;">
                                 {{ $estudiante->persona->nombre }} {{ $estudiante->persona->ap_paterno }} {{ $estudiante->persona->ap_materno }}
@@ -130,6 +130,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modal para registrar una persona, usuario y estudiante -->
 <div class="modal fade" id="modalRegistrarEstudiante" tabindex="-1" role="dialog" aria-labelledby="modalRegistrarEstudianteLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -164,10 +165,7 @@
 
                     <!-- Datos de Usuario -->
                     <h6>Datos de Usuario</h6>
-                    <div class="form-group">
-                        <label for="username">Nombre de Usuario</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
-                    </div>
+
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" id="email" name="email" required>
@@ -195,6 +193,10 @@
                     <div class="form-group">
                         <label for="zipcode">Código Postal</label>
                         <input type="text" class="form-control" id="zipcode" name="zipcode" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ciudad">Código Postal</label>
+                        <input type="text" class="form-control" id="ciudad" name="ciudad" required>
                     </div>
                     <div class="form-group">
                         <label for="colonia">Colonia</label>

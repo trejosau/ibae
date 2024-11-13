@@ -131,7 +131,7 @@
                                         <tr>
                                             <td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
                                                 <div class="alignment" align="center" style="line-height:10px">
-                                                    <div style="max-width: 147.333px;"><img src="https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/logos/Recurso+8.png" style="display: block; height: auto; border: 0; width: 100%;" width="147.333" alt="Company Logo" title="Company Logo" height="auto"></div>
+                                                    <div style="max-width: 147.333px;"><img src="https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/logos/Recurso+8.png" style="display: block; height: auto; border: 0; width: 100%;" width="147.333" alt="LOGO IBA&E" title="Company Logo" height="auto"></div>
                                                 </div>
                                             </td>
                                         </tr>

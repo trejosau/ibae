@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CursoAperturaRequest;
+use App\Mail\CredencialesEstudiantesMail;
+use App\Mail\EnvioCredenciales;
 use App\Models\Estudiante;
 use App\Models\EstudianteCurso;
 use App\Models\ModuloCurso;
@@ -20,9 +22,9 @@ use App\Models\Inscripcion ;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Persona;
-use App\Mail\CambiarContrasenaMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
+
 
 
 
@@ -526,22 +528,22 @@ class PlataformaController extends Controller
         $minusculas = 'abcdefghijklmnopqrstuvwxyz';
         $mayusculas = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $numeros = '0123456789';
-        $simbolos = '!@#$%^&*()_+-={}[]|:;<>,.?';
+        $simbolos = '!@#$()_+-={}:?';
 
-         $contrasena = $minusculas[random_int(0, strlen($minusculas) - 1)] .
+        // Aseguramos que cada tipo de carácter esté presente al menos una vez
+        $contrasena = $minusculas[random_int(0, strlen($minusculas) - 1)] .
             $mayusculas[random_int(0, strlen($mayusculas) - 1)] .
             $numeros[random_int(0, strlen($numeros) - 1)] .
             $simbolos[random_int(0, strlen($simbolos) - 1)];
 
+        // Llenamos el resto de la contraseña hasta la longitud deseada
         $todos = $minusculas . $mayusculas . $numeros . $simbolos;
-        for ($i = 4; $i < $longitud; $i++) {
+        for ($i = strlen($contrasena); $i < $longitud; $i++) {
             $contrasena .= $todos[random_int(0, strlen($todos) - 1)];
         }
 
-        $contrasena = str_shuffle($contrasena);
-
-        // Hashear la contraseña antes de guardarla
-        return Hash::make($contrasena);
+        // Mezclamos los caracteres para mayor aleatoriedad
+        return str_shuffle($contrasena);
     }
 
     public function asignarRol(Request $request)
@@ -551,7 +553,7 @@ class PlataformaController extends Controller
 
         return redirect()->route('plataforma.estudiantes')->with('success', 'Rol asignado con éxito');
     }
-
+    
     public function registrarEstudiante(Request $request)
     {
         // Validar datos
@@ -560,25 +562,28 @@ class PlataformaController extends Controller
             'ap_paterno' => 'required|string',
             'ap_materno' => 'nullable|string',
             'telefono' => 'required|string',
-            'username' => 'required|string|unique:users,username',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email',
             'id_inscripcion' => 'required|exists:inscripciones,id',
             'fecha_inscripcion' => 'required|date',
             'grado_estudio' => 'required|string',
             'zipcode' => 'required|string',
+            'ciudad' => 'required|string',
             'colonia' => 'required|string',
             'calle' => 'required|string',
             'num_ext' => 'required|string',
             'num_int' => 'nullable|string',
         ]);
 
+
+        $password = $this->generarContrasenaAleatoria();
         // Crear Usuario con contraseña por defecto
         $usuario = User::create([
-            'username' => date('YmdHis') . rand(1000, 9999),
-            'email' => $request->email,
-            'password' => $this->generarContrasenaAleatoria(),
+            'username' => random_int(1,10000).now(),
+            'email' => rand(1,10000).now().'@gmail.com',
+            'password' => Hash::make($password), // Contraseña por defecto
         ]);
 
+    
         // Crear Persona
         $persona = Persona::create([
             'nombre' => $request->nombre,
@@ -587,29 +592,46 @@ class PlataformaController extends Controller
             'telefono' => $request->telefono,
             'usuario' => $usuario->id,
         ]);
-
         // Asignar rol de estudiante
         $usuario->assignRole('estudiante');
 
         // Crear Estudiante
-        Estudiante::create([
+        $estudiante = Estudiante::create([
             'estado' => 'activo',
             'id_persona' => $persona->id,
             'id_inscripcion' => $request->id_inscripcion,
             'fecha_inscripcion' => $request->fecha_inscripcion,
             'grado_estudio' => $request->grado_estudio,
             'zipcode' => $request->zipcode,
+            'ciudad' => $request->ciudad,
             'colonia' => $request->colonia,
             'calle' => $request->calle,
             'num_ext' => $request->num_ext,
             'num_int' => $request->num_int,
         ]);
 
-        // Enviar correo de confirmación
-        Mail::to($usuario->email)->send(new CambiarContrasenaMail($usuario));
+$prefix = date('y') . date('m');
+$matricula_username = $prefix . $usuario->id;
 
+        $usuario->username = $matricula_username;
+        $estudiante->matricula = $matricula_username;
+        $usuario->save();
+        $estudiante->save;
+ 
+
+        if ($estudiante)
+        {
+      
+            Mail::to($request->email)->send(new EnvioCredenciales($usuario, $password));
+            dd('Enviado');
+        }
+        
+    
+
+    
         return redirect()->route('plataforma.estudiantes')->with('success', 'Estudiante registrado y correo enviado.');
     }
+
 
 
     public function darDeBaja($matricula)
