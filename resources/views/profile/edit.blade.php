@@ -162,19 +162,20 @@
                 </div>
                 <div class="modal-body">
                     <!-- Password change form -->
-                    <form method="POST" action="">
+                    <form method="POST" action="{{ route('profile.changePassword') }}">
                         @csrf
+                        @method('PUT')
                         <div class="mb-3">
                             <label for="current_password" class="form-label">Contraseña Actual</label>
                             <input type="password" class="form-control" id="current_password" name="current_password" required>
                         </div>
                         <div class="mb-3">
-                            <label for="new_password" class="form-label">Nueva Contraseña</label>
-                            <input type="password" class="form-control" id="new_password" name="new_password" required>
+                            <label for="password" class="form-label">Nueva Contraseña</label>
+                            <input type="password" class="form-control" id="new_password" name="password" required>
                         </div>
                         <div class="mb-3">
-                            <label for="new_password_confirmation" class="form-label">Confirmar Nueva Contraseña</label>
-                            <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation" required>
+                            <label for="password_confirmation" class="form-label">Confirmar Nueva Contraseña</label>
+                            <input type="password" class="form-control" id="new_password_confirmation" name="password_confirmation" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     </form>
@@ -188,7 +189,18 @@
     <!-- Cropper.js JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 
-
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     <div class="container rounded bg-white mt-5 mb-5">
         <div class="row">
             <div class="col-md-3 border-right">
@@ -209,9 +221,13 @@
 
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h4 class="text-right">Informacion personal</h4>
-                                    <button class="btn btn-primary profile-button" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-                                        Cambiar Contraseña
-                                    </button>
+                                    @if ($user->provider === 'default')
+                                        <button class="btn btn-primary profile-button" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                                            Cambiar Contraseña
+                                        </button>
+                                    @endif
+
+
                                     <form method="POST" action="{{ route('profile.update') }}">
                                         @method('PUT')
                                     <button class="btn btn-primary profile-button" type="submit">Guardar Perfil</button>

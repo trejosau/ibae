@@ -51,7 +51,7 @@ class ProfileController extends Controller
         $username = $validatedData['username'];
 
 
-        dd($validatedData['razon_social']);
+
             $persona->nombre = $validatedData['nombre'];
             $persona->ap_paterno = $validatedData['ap_paterno'];
             $persona->ap_materno = $validatedData['ap_materno'];
@@ -79,6 +79,31 @@ class ProfileController extends Controller
 
         return redirect()->route('profile.edit')->with('success', 'Perfil actualizado correctamente.');
     }
+
+    public function changePassword(Request $request)
+    {
+        $validatedData = $request->validate([
+            'current_password' => 'required|string|min:8',
+            'password' => 'required|string|min:8',
+            'password_confirmation' => 'required|string|min:8',
+        ]);
+
+        $user = Auth::user();
+        if ($user->password !== Hash::make($validatedData['current_password'])) {
+            return redirect()->route('profile.edit')->with('error', 'La contraseña actual no es correcta.');
+        }
+
+        if ($validatedData['password'] !== $validatedData['password_confirmation']) {
+            return redirect()->route('profile.edit')->with('error', 'Las contraseñas no coinciden.');
+        }
+
+        $user->password = Hash::make($validatedData['password']);
+        $user->save();
+
+        return redirect()->route('profile.edit')->with('success', 'Contraseña cambiada correctamente.');
+
+    }
+
 
 
     public function imageUpdate(Request $request)

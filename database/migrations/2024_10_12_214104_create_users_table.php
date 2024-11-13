@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('provider')->default('default');
             $table->rememberToken();
             $table->enum('estado', ['activo', 'inactivo'])->default('activo');
             $table->string('profile_photo_url')->nullable();
