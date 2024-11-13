@@ -2,6 +2,8 @@
 
 namespace App\Actions\Fortify;
 
+use App\Models\Comprador;
+use App\Models\Persona;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Hash;
@@ -22,6 +24,22 @@ class CreateNewUser implements CreatesNewUsers
             'username' => $input['username'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
+            'profile_photo_url' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/profiles/default_profile.jpg',
+        ]);
+
+        $persona = Persona::create([
+            'nombre' => null,
+            'ap_paterno' => null,
+            'ap_materno' => null,
+            'telefono' => null,
+            'usuario' => $user->id,
+        ]);
+
+        Comprador::create([
+            'id_persona' => $persona->id,
+            'razon_social' => null,
+            'created_at' => now(),
+            'updated_at' => null,
         ]);
 
         $user->assignRole('cliente');

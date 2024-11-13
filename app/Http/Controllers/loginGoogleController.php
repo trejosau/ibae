@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comprador;
+use App\Models\Persona;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -31,6 +33,24 @@ class loginGoogleController extends Controller
                     'username' => $username,
                     'email' => $googleUser->email,
                     'password' => Hash::make(uniqid()),
+                    'profile_photo_url' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/profiles/default_profile.jpg',
+                    'created_at' => now(),
+                    'updated_at' => null,
+                ]);
+
+                $persona = Persona::create([
+                    'nombre' => null,
+                    'ap_paterno' => null,
+                    'ap_materno' => null,
+                    'telefono' => null,
+                    'usuario' => $user->id,
+                ]);
+
+                Comprador::create([
+                    'id_persona' => $persona->id,
+                    'razon_social' => null,
+                    'created_at' => now(),
+                    'updated_at' => null,
                 ]);
 
                 $user->assignRole('cliente');
