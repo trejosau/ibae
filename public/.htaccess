@@ -1,5 +1,5 @@
 <VirtualHost *:80>
-    ServerName   http://18.188.255.10/
+    ServerName   18.188.255.10
     DocumentRoot "/var/www/html/ibae/public/"
     ErrorLog     "/var/www/html/ibae/error.log"
     CustomLog    "/var/www/html/ibae/access.log" combined
