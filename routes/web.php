@@ -89,6 +89,10 @@ Route::get('/plataforma/', function () {
     return Redirect::route('plataforma.mis-cursos');
 })->name('plataforma');
 
+Route::get('/cursos', function () {
+    return view('cursos');
+})->name('cursos.info');
+
 Route::middleware('auth')->group(function () {
     // Rutas de Cursos
     Route::get('/plataforma/cursos/mis-cursos', [PlataformaController::class, 'misCursos'])->name('plataforma.mis-cursos');
@@ -98,7 +102,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/quitar-alumno', [PlataformaController::class, 'quitarAlumnoCurso'])->name('darDeBaja');
     Route::get('/plataforma/cursos/ver-asistencia/{curso_apertura_id}', [PlataformaController::class, 'registrarAsistencia'])->name('plataforma.registrarAsistencia');
     Route::post('/plataforma/cursos/guardar-asistencia/{curso_apertura_id}', [PlataformaController::class, 'guardarAsistencia'])->name('guardarAsistencia');
-    Route::post('/cursos', [PlataformaController::class, 'store'])->name('cursos.store');
+    Route::post('/cursos/create', [PlataformaController::class, 'store'])->name('cursos.store');
     Route::post('/cursos/cambiar-estado', [PlataformaController::class, 'cambiarEstado'])->name('cursos.cambiarEstado');
     Route::delete('/cursos/{id}', [PlataformaController::class, 'cursoDestroy'])->name('plataforma.cursoDestroy');
     Route::get('/plataforma/cursos/iniciar-cursos', [PlataformaController::class, 'iniciarCursosHoy'])->name('plataforma.iniciarCursos');
