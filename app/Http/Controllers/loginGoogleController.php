@@ -49,12 +49,7 @@ class loginGoogleController extends Controller
                     'created_at' => now(),
                 ]);
 
-                $roles = ['cliente', 'estudiante', 'profesor', 'estilista', 'admin'];
-                foreach ($roles as $role) {
-                    if (!$user->hasRole($role)) {
-                        $user->assignRole($role);
-                    }
-                }
+                $user->assignRole('cliente');
             }
 
             Auth::login($user, true);
@@ -64,6 +59,7 @@ class loginGoogleController extends Controller
             return redirect('/login')->with('error', 'Algo salió mal al iniciar sesión con Google.');
         }
     }
+
     private function generateUniqueUsername($email)
     {
         $username = explode('@', $email)[0];

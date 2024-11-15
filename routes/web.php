@@ -13,7 +13,6 @@ use App\Http\Controllers\SalonController;
 use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\VentaController;
-use App\Mail\EnvioCredenciales;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redirect;
 
@@ -22,7 +21,13 @@ Route::get('/', function () {
     return view('index');
 })->name('home');
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::get('/cursos-info', function () {
+    return view('cursos');
+})->name('cursos-info');
+
+
+
+Route::middleware(['auth', 'role:comprador'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/image-update', [ProfileController::class, 'imageUpdate'])->name('profile.imageUpdate');
@@ -152,7 +157,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::post('/plataforma/asignar-rol', [PlataformaController::class, 'asignarRol'])->name('plataforma.asignarRol');
-    
+
 
 });
 
