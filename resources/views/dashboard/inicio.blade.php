@@ -22,7 +22,7 @@
             <div class="card border-danger text-center">
                 <div class="card-body">
                     <h5 class="card-title">Configuraciones</h5>
-                    <a href="{{route('dashboard.profile')}}" class="btn btn-danger">Ir a configuraciones</a>
+                    <a href="{{ route('profile.edit') }}" class="btn btn-danger">Ir a configuraciones</a>
                 </div>
             </div>
         </div>
