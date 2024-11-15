@@ -5,22 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use App\Models\Productos;
 use App\Models\Subcategoria;
-use App\Models\Categorias;  
+use App\Models\Categorias;
 use Illuminate\Http\Request;
 use App\Models\Pedidos;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use Stripe\Checkout\Session;
 use Stripe\Stripe;
 
 class ProductosController extends Controller
 {
-    public function index()
-    {
-        $productos = Productos::all();
-        return view('tienda', compact('productos'));
-    }
 
     public function agregar(Request $request)
     {
@@ -379,44 +375,67 @@ public function storeCategoria(Request $request)
         return redirect()->route('dashboard.index')->with('success', 'Subcategoría creada exitosamente');
     }
 
-public function pago()
-{
-    \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+    public function pago()
+    {
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
-    $carrito = session()->get('carrito', []);
-    $subtotal = array_reduce($carrito, function ($total, $item) {
-        return $total + $item['precio'] * $item['cantidad'];
-    }, 0);
+        $carrito = session()->get('carrito', []);
+        $subtotal = array_reduce($carrito, function ($total, $item) {
+            return $total + $item['precio'] * $item['cantidad'];
+        }, 0);
 
-    $subtotal_in_cents = $subtotal * 100;
+        $subtotal_in_cents = $subtotal * 100;
 
-    $session = \Stripe\Checkout\Session::create([
-        'line_items' => [
-            [
-                'price_data' => [
-                    'currency' => 'mxn',
-                    'product_data' => [
-                        'name' => 'Carrito de compras',
+        // Crear la sesión de Stripe
+        $session = \Stripe\Checkout\Session::create([
+            'line_items' => [
+                [
+                    'price_data' => [
+                        'currency' => 'mxn',
+                        'product_data' => [
+                            'name' => 'Carrito de compras',
+                        ],
+                        'unit_amount' => $subtotal_in_cents,
                     ],
-                    'unit_amount' => $subtotal_in_cents,
+                    'quantity' => 1,
                 ],
-                'quantity' => 1,
             ],
-        ],
-        'mode' => 'payment',
-        'success_url' => route('success'),
-        'cancel_url' => route('cancel'),
-    ]);
+            'mode' => 'payment',
+            'success_url' => route('success') . '?session_id={CHECKOUT_SESSION_ID}', // Incluye el session_id en la URL
+            'cancel_url' => route('cancel'),
+        ]);
 
-    return redirect($session->url);
-}
+        // Redirigir al cliente a Stripe Checkout
+        return redirect($session->url);
+    }
 
+    public function success(Request $request)
+    {
+        // Configurar la clave de API de Stripe
+        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
+        // Obtener el session_id de la URL
+        $sessionId = $request->get('session_id');
 
+        // Obtener los detalles de la sesión con Stripe
+        $session = Session::retrieve($sessionId);
 
-public function success()
+        // Hacer un dump de los datos de la sesión para inspeccionarlos
+        dd([
+            'session_id' => $session->id,
+            'amount_total' => $session->amount_total,
+            'currency' => $session->currency,
+            'payment_status' => $session->payment_status,
+            'customer_email' => $session->customer_email,
+            'line_items' => $session->line_items,
+            'status' => $session->status,
+            'created_at' => $session->created,
+        ]);
+    }
+
+public function cancel()
 {
-return view('success');
+return view('cancel');
 }
 
 public function __construct()

@@ -293,7 +293,7 @@
 
                         </div>
                         <hr>
-                        <h6 class="text-center mb-3">Dirección</h6>
+
                         @php
                             $direccion = null;
                             if(optional($user->persona)->estudiante && !optional($user->persona)->profesor) {  // Solo estudiante
@@ -306,6 +306,7 @@
                         @endphp
 
                         @if($direccion)
+                        <h6 class="text-center mb-3">Dirección</h6>
                             <div class="row mt-3">
                                 <div class="col-md-12">
                                     <label class="labels">Código Postal</label>
@@ -339,9 +340,10 @@
             </div>
             <div class="col-md-4">
                 <div class="p-3 py-5">
-                    <h6 class="text-center mb-3">Información de estudiante</h6>
+
                     {{-- Sección para estudiantes --}}
                     @if(optional($user->persona)->estudiante)
+                        <h6 class="text-center mb-3">Información de estudiante</h6>
                         <div class="form-group">
                             <label class="labels">Matrícula</label>
                             <input type="text" class="form-control" value="{{ optional($user->persona->estudiante)->matricula }}" disabled>

@@ -111,8 +111,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-
-
 Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
     {
         Route::get('/plataforma/', function () {
@@ -195,22 +193,21 @@ Route::middleware(['auth', 'role:cliente'])->group(function () {
     Route::get('/tienda', [ProductosController::class, 'mostrar'])->name('tienda.mostrar');
 
 
-    Route::get('/productos', [ProductosController::class, 'index'])->name('productos.index');
-    Route::post('/producto/{id}/agregar-al-carrito', [ProductosController::class, 'agregarAlCarrito'])->name('producto.agregar');
-    Route::delete('/carrito/{id}', [ProductosController::class, 'eliminarDelCarrito'])->name('carrito.eliminar');
-    Route::get('/carrito', [ProductosController::class, 'verCarrito'])->name('carrito.ver');
-    Route::get('/carrito/contenido', [ProductosController::class, 'cargarContenidoCarrito'])->name('carrito.contenido');
+
 
     Route::get('/checkout', [ProductosController::class, 'checkout'])->name('checkout');
     Route::post('/pago', [ProductosController::class, 'pago'])->name('pago'); // Procesa el pago y redirige a Stripe
     Route::get('/success', [ProductosController::class, 'success'])->name('success');
-    Route::get('/tienda', [ProductosController::class, 'index'])->name('tienda.mostrar');
+    Route::get('/cancel', [ProductosController::class, 'cancel'])->name('cancel');
 });
 
+Route::get('/tienda', [ProductosController::class, 'mostrar'])->name('tienda.mostrar');
+Route::get('/carrito', [ProductosController::class, 'verCarrito'])->name('carrito.ver');
+Route::get('/carrito/contenido', [ProductosController::class, 'cargarContenidoCarrito'])->name('carrito.contenido');
+Route::get('/productos', [ProductosController::class, 'index'])->name('productos.index');
 
-
-
-
+Route::post('/producto/{id}/agregar-al-carrito', [ProductosController::class, 'agregarAlCarrito'])->name('producto.agregar');
+Route::delete('/carrito/{id}', [ProductosController::class, 'eliminarDelCarrito'])->name('carrito.eliminar');
 
 
 

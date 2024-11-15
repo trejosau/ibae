@@ -200,25 +200,6 @@
         clear: both;
     }
 
-    /* Login Link */
-    .login-link {
-        margin-left: 20px;
-    }
-
-    .login-link a {
-        color: #fff;
-        background-color: #333; /* Rojo */
-        padding: 10px 15px;
-        border-radius: 5px;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
-    }
-
-    .login-link a:hover {
-        background-color: #d99db7; /* Rosa clarito */
-        border-color: #d99db7;
-    }
-
     .logo {
         width: auto;
         height: 60px;
@@ -481,6 +462,28 @@
     }
 }
 
+.padding-left{
+    padding-left: 50px;
+}
+
+
+.login-btn {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px; /* Tamaño del botón */
+    border: 2px solid #333; /* Borde para darle definición */
+    border-radius: 5px; /* Esquinas redondeadas */
+    font-size: 16px; /* Tamaño del texto */ 
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    transition: all 0.3s ease; /* Transición suave para todos los cambios */
+}
+
+.login-btn:hover {
+    background-color: #f0c4d0;
+    color: #333;
+    border-color: #f0c4d0; /* Cambia el color del borde al pasar el mouse */
+    transform: scale(1.05); /* Un pequeño efecto de zoom */
+}
 
 
 </style>
@@ -526,13 +529,50 @@
 
         <a href="{{ route('checkout') }}" class="btn btn-primary checkout-btn">Finalizar compra</a>
     </div>
-</div>
 
-        
-        
-        <div class="login-link">
-            <a href="{{ route('login') }}" class="btn">Iniciar Sesión</a>
-        </div>
+
+</div>     
+            <!-- Avatar -->
+            <div class="dropdown padding-left">
+                @if(auth()->check())
+                    <a
+                        data-mdb-dropdown-init
+                        class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                        href="#"
+                        id="navbarDropdownMenuAvatar"
+                        role="button"
+                        aria-expanded="false"
+                    >
+                        <img
+                            src="{{ auth()->user()->profile_photo_url }}"
+                            class="rounded-circle"
+                            height="64"
+                            width="64"
+                            alt="{{ auth()->user()->username }}"
+                            loading="lazy"
+                        />
+                    </a>
+                    <ul
+                        class="dropdown-menu dropdown-menu-end"
+                        aria-labelledby="navbarDropdownMenuAvatar"
+                    >
+                        <li>
+                            <a class="dropdown-item" href="{{ route('profile.edit') }}">Mi perfil</a>
+                        </li>
+                        <li class="dropdown-divider"></li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button class="dropdown-item" type="submit">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                @else
+                    <a href="{{ route('login') }}" class="btn login-btn">
+                        Iniciar Sesion
+                    </a>
+                @endif
+            </div>
     </div>
 </nav>
 

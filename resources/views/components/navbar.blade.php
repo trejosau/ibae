@@ -54,34 +54,7 @@
 
         </div>
 
-        <div class="d-flex align-items-center">
-            @if(auth()->check() && !request()->routeIs('dashboardd'))
-                <!-- Carrito -->
-                <a class="text-reset me-3" href="#">
-                    <i class="fas fa-shopping-cart icono"></i>
-                </a>
-
-                <!-- Notifications -->
-                <div class="dropdown">
-                    <a
-                        data-mdb-dropdown-init
-                        class="text-reset me-3 hidden-arrow"
-                        href="#"
-                        id="navbarDropdownMenuLink"
-                        role="button"
-                        aria-expanded="false"
-                    >
-                        <i class="fas fa-bell icono"><span class="badge rounded-pill badge-notification bg-danger icono-chico">1</span></i>
-                    </a>
-                    <ul
-                        class="dropdown-menu dropdown-menu-end"
-                        aria-labelledby="navbarDropdownMenuLink"
-                    >
-
-                        @include('components.notificaciones')
-                    </ul>
-                </div>
-            @endif
+      
 
             <!-- Avatar -->
             <div class="dropdown">
