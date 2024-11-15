@@ -152,6 +152,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::post('/plataforma/asignar-rol', [PlataformaController::class, 'asignarRol'])->name('plataforma.asignarRol');
+    
 
 });
 

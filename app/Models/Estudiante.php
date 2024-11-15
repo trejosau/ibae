@@ -38,7 +38,10 @@ class Estudiante extends Model
 
 
 
-
+    public function estudianteCurso()
+    {
+        return $this->hasMany(EstudianteCurso::class, 'id_estudiante');
+    }
 
     public function cursosApertura()
     {
@@ -60,4 +63,8 @@ class Estudiante extends Model
         return $this->hasMany(Pedidos::class);
     }
 
+    public function cursos()
+    {
+        return $this->belongsToMany(CursoApertura::class, 'estudiante_curso', 'id_estudiante', 'id_curso_apertura');
+    }
 }

@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Cursos;
 use App\Models\Certificados;
+use App\Models\Colegiaturas;
 use App\Models\User;
 use App\Models\CursoApertura;
 use App\Models\Inscripcion ;
@@ -736,6 +737,34 @@ class PlataformaController extends Controller
 
 
 
+// En tu controlador, por ejemplo, EstudianteController.php
+// App\Http\Controllers\EstudianteController.php
+public function historialPagos()
+{
+    $subquery = DB::table('colegiaturas')
+        ->select('id_estudiante_curso', DB::raw('MAX(fecha_pago) as max_fecha_pago'))
+        ->groupBy('id_estudiante_curso');
+
+    $colegiaturas = Colegiaturas::joinSub($subquery, 'ultimo_pago', function ($join) {
+            $join->on('colegiaturas.id_estudiante_curso', '=', 'ultimo_pago.id_estudiante_curso')
+                 ->on('colegiaturas.fecha_pago', '=', 'ultimo_pago.max_fecha_pago');
+        })
+        ->with(['estudianteCurso.estudiante.persona', 'estudianteCurso.cursoApertura', 'estudianteCurso.colegiaturas'])
+        ->get();
+
+    foreach ($colegiaturas as $colegiatura) {
+        // Suma de las semanas no pagadas
+        $adeudo = $colegiatura->estudianteCurso->colegiaturas
+            ->where('colegiatura', 0) // 0 indica no pagado
+            ->sum('Monto');
+        
+        $colegiatura->adeudo = $adeudo; // Añadimos el total adeudado a cada colegiatura
+    }
+
+    return view('plataforma.index', compact('colegiaturas'));
+}
+
+
 
 
 
@@ -743,13 +772,51 @@ class PlataformaController extends Controller
         return view('plataforma.index');
     }
 
-    public function historialPagos() {
-        return view('plataforma.index');
-    }
+    public function misCursosEspacio()
+    {
+        // Obtener el usuario autenticado
+        $username = auth()->user()->username;
+    
+        // Obtener la persona asociada al usuario
+         $persona = DB::table('personas')
+            ->join('users', 'personas.usuario', '=', 'users.id')
+            ->where('users.username', $username)
+            ->select('personas.id')
+            ->first();
+    
+        if (!$persona) {
+            return redirect()->back()->with('error', 'Usuario no encontrado.');
+        }
+    
+        // Obtener el estudiante basado en el id_persona de la tabla personas
+        $estudiante = DB::table('estudiantes')
+            ->where('id_persona', $persona->id)
+            ->first();
+    
+        if (!$estudiante) {
+            return redirect()->back()->with('error', 'Estudiante no encontrado.');
+        }
+    
+        return $cursos = DB::table('estudiante_curso')
+        ->join('curso_apertura', 'estudiante_curso.id_curso_apertura', '=', 'curso_apertura.id')
+        ->join('cursos', 'curso_apertura.id_curso', '=', 'cursos.id')
+        ->join('certificados', 'cursos.id_certificacion', '=', 'certificados.id')
+        ->where('estudiante_curso.id_estudiante', $estudiante->matricula)
+        ->select(
+            'cursos.nombre as nombre_curso',
+            'cursos.descripcion as descripcion_curso',
+            'cursos.duracion_semanas',
+            'certificados.nombre as nombre_certificado',
+            'curso_apertura.fecha_inicio'
+        )
+        ->get();
+    
 
-    public function misCursosEspacio() {
-        return view('plataforma.index');
+    
+        // Pasar los cursos y el estudiante a la vista
+        return view('plataforma.index', compact('cursos', 'estudiante'));
     }
+    
 
     public function misPagosEspacio() {
         return view('plataforma.index');

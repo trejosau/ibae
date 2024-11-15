@@ -1,31 +1,17 @@
-<VirtualHost *:80>
-    ServerName   18.188.255.10
-    DocumentRoot "/var/www/html/ibae/public/"
-    ErrorLog     "/var/www/html/ibae/error.log"
-    CustomLog    "/var/www/html/ibae/access.log" combined
+<IfModule mod_rewrite.c>
+    # Deshabilita MultiViews
+    <IfModule mod_negotiation.c>
+        Options -MultiViews
+    </IfModule>
 
-    <Directory "/var/www/html/ibae/public">
-        Options +Indexes +FollowSymLinks
-        DirectoryIndex index.php
-        AllowOverride None
-        Require all granted
+    RewriteEngine On
 
-        <IfModule mod_rewrite.c>
-            <IfModule mod_negotiation.c>
-                Options -MultiViews
-            </IfModule>
+    # Si el archivo o directorio no existe, redirige al front controller
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
 
-            RewriteEngine On
-
-            # Handle Front Controller...
-            RewriteCond %{REQUEST_FILENAME} !-d
-            RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteRule ^ index.php [L]
-
-            # Handle Authorization Header
-            RewriteCond %{HTTP:Authorization} .
-            RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-        </IfModule>
-    </Directory>
-
-</VirtualHost>
+    # Maneja el encabezado de autorización para Laravel (en caso de autenticación)
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>

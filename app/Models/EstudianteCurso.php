@@ -28,4 +28,9 @@ class EstudianteCurso extends Model
     {
         return $this->belongsTo(CursoApertura::class, 'id_curso_apertura');
     }
+
+    public function colegiaturas()
+{
+    return $this->hasMany(Colegiaturas::class, 'id_estudiante_curso');
+}
 }

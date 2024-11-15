@@ -28,8 +28,8 @@
         <div class="sidebar-divider"></div>
         <ul class="sidebar-nav">
             <!-- Sección para todos -->
-            <li class="sidebar-item">
-                <a  href="{{ route('home') }}" class="sidebar-link">
+            <li class="sidebar-item" style="text-decoration: none; color: inherit;">
+                <a  style="text-decoration: none; color: inherit;" href="{{ route('home') }}" class="sidebar-link">
                     <i class="fa-solid fa-reply"></i>
                     <span>Volver a Inicio</span>
                 </a>
@@ -41,12 +41,12 @@
                 <a style="text-decoration: none; color: inherit;" href="#cursosDropdown" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                    data-bs-target="#cursosDropdown" aria-expanded="false" aria-controls="cursosDropdown">
                     <i class="fa-solid fa-book"></i>
-                    <span>Cursos</span>
+                    <span style="text-decoration: none; color: inherit;">Cursos</span>
                     <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                 </a>
                 <ul id="cursosDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item"><a href="{{ route('plataforma.mis-cursos') }}" class="sidebar-link">Ver Cursos</a></li>
-                    <li class="sidebar-item"><a href="{{route('plataforma.historial-cursos')}}" class="sidebar-link">Historial de Cursos</a></li>
+                    <li class="sidebar-item"><a style="text-decoration: none; color: inherit;" href="{{ route('plataforma.mis-cursos') }}" class="sidebar-link">Ver Cursos</a></li>
+                    <li class="sidebar-item"><a style="text-decoration: none; color: inherit;" href="{{route('plataforma.historial-cursos')}}" class="sidebar-link">Historial de Cursos</a></li>
                 </ul>
             </li>
         @endif
@@ -56,20 +56,20 @@
 
             <!-- Sección para Módulos -->
             <li class="sidebar-item">
-                <a href="#modulosDropdown" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                <a style="text-decoration: none; color: inherit;" href="#modulosDropdown" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                    data-bs-target="#modulosDropdown" aria-expanded="false" aria-controls="modulosDropdown">
                     <i class="fa-solid fa-th-list"></i>
-                    <span>Módulos</span>
+                    <span >Módulos</span>
                     <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                 </a>
                 <ul id="modulosDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item"><a href="{{route('plataforma.lista-modulos')}}" class="sidebar-link">Modulos y Temas</a></li>
+                    <li class="sidebar-item"><a  style="text-decoration: none; color: inherit;" href="{{route('plataforma.lista-modulos')}}" class="sidebar-link">Modulos y Temas</a></li>
                    </ul>
             </li>
 
             <!-- Sección para Estudiantes/Profesores -->
             <li class="sidebar-item">
-                <a href="#estudiantesProfesoresDropdown" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                <a style="text-decoration: none; color: inherit;"href="#estudiantesProfesoresDropdown" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                    data-bs-target="#estudiantesProfesoresDropdown" aria-expanded="false" aria-controls="estudiantesProfesoresDropdown">
                     <!-- Nuevo ícono para Estudiantes/Profesores -->
                     <i class="fa-solid fa-chalkboard-teacher"></i>
@@ -77,8 +77,8 @@
                     <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                 </a>
                 <ul id="estudiantesProfesoresDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item"><a href="{{route('plataforma.estudiantes')}}" class="sidebar-link">Lista de Estudiantes</a></li>
-                    <li class="sidebar-item"><a href="{{route('plataforma.inscripciones')}}" class="sidebar-link">Inscripciones</a></li>
+                    <li class="sidebar-item"><a  style="text-decoration: none; color: inherit;" href="{{route('plataforma.estudiantes')}}" class="sidebar-link">Lista de Estudiantes</a></li>
+                    <li class="sidebar-item"><a  style="text-decoration: none; color: inherit;" href="{{route('plataforma.inscripciones')}}" class="sidebar-link">Inscripciones</a></li>
                   
 
                 </ul>
@@ -94,7 +94,6 @@
                     <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                 </a>
                 <ul id="finanzasDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item"><a href="{{route('plataforma.pagos')}}" class="sidebar-link" style="text-decoration: none; color: inherit;">Pagos y Colegiaturas</a></li>
                     <li class="sidebar-item"><a href="{{route('plataforma.historial-pagos')}}" class="sidebar-link" style="text-decoration: none; color: inherit;">Historial de Pagos</a></li>
                 </ul>
             </li>
@@ -113,9 +112,6 @@
                     </li>
                     <li class="sidebar-item">
                         <a href="{{route('plataforma.espacio-mis-pagos')}}" class="sidebar-link" style="text-decoration: none; color: inherit;">Mis Pagos</a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="{{route('plataforma.espacio-perfil')}}" class="sidebar-link" style="text-decoration: none; color: inherit;">Perfil / Configuración</a>
                     </li>
                 </ul>
             </li>
