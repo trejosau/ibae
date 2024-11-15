@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,7 +9,6 @@
 </head>
 <body>
 
-    @include('components.navbarTienda')
 
     <div class="main-container">
         <a href="/tienda" class="back-link">← Volver a la tienda</a>
@@ -49,27 +49,28 @@
                                 {{ $producto['nombre'] }}: ${{ number_format($producto['precio'] * $producto['cantidad'], 2) }}
                             </div>
                         @endforeach
-                        <div class="order-total">
-                            Subtotal: <span class="subtotal-amount">${{ number_format($subtotal, 2) }}</span>
+                        <div class="subtotal">
+                            <h3>Subtotal: ${{ number_format($subtotal, 2) }}</h3>
                         </div>
+                        
                     </div>
 
-                    <button onclick="confirmarPago()" class="checkout-button">Proceder al Pago</button>
-                </div>
+                    <form action="{{ route('pago') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="checkout-button">Proceder al Pago</button>
+                    </form>
+                                    </div>
             </div>
         </div>
     </div>
 
-    <script>
-        function confirmarPago() {
-            alert("Procediendo con el pago...");
-        }
-    </script>
+    
 
     <style>
         /* Contenedor Principal */
         .main-container {
-            padding-top: 150px;
+            padding-top: 50px;
+            padding-bottom:70px;
             max-width: 1200px;
             margin: 0 auto;
             padding-left: 20px;

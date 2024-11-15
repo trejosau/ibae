@@ -179,7 +179,10 @@ Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, '
     Route::delete('/carrito/{id}', [ProductosController::class, 'eliminarDelCarrito'])->name('carrito.eliminar');
     Route::get('/carrito', [ProductosController::class, 'verCarrito'])->name('carrito.ver');
     Route::get('/carrito/contenido', [ProductosController::class, 'cargarContenidoCarrito'])->name('carrito.contenido');
-
+    Route::get('/checkout', [ProductosController::class, 'checkout'])->name('checkout');
+    Route::post('/pago', [ProductosController::class, 'pago'])->name('pago'); // Procesa el pago y redirige a Stripe
+    Route::get('/success', [ProductosController::class, 'success'])->name('success');
+    Route::get('/cancel', [ProductosController::class, 'cancel'])->name('cancel');
 
 
     Route::middleware('auth')->group(function () {

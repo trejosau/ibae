@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use App\Models\Productos;
 use Illuminate\Http\Request;
+use App\Models\Pedidos;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use Stripe\Stripe;
 
 class ProductosController extends Controller
 {
@@ -335,6 +337,7 @@ public function buscar(Request $request)
     }
 }
 
+
 public function checkout()
 {
     $carrito = session()->get('carrito', []);
@@ -345,6 +348,50 @@ public function checkout()
     return view('checkout', compact('carrito', 'subtotal'));
 }
 
+public function pago()
+{
+    \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
+    $carrito = session()->get('carrito', []);
+    $subtotal = array_reduce($carrito, function ($total, $item) {
+        return $total + $item['precio'] * $item['cantidad'];
+    }, 0);
+
+    $subtotal_in_cents = $subtotal * 100;
+
+    $session = \Stripe\Checkout\Session::create([
+        'line_items' => [
+            [
+                'price_data' => [
+                    'currency' => 'mxn',
+                    'product_data' => [
+                        'name' => 'Carrito de compras',
+                    ],
+                    'unit_amount' => $subtotal_in_cents,
+                ],
+                'quantity' => 1,
+            ],
+        ],
+        'mode' => 'payment',
+        'success_url' => route('success'),
+        'cancel_url' => route('cancel'),
+    ]);
+
+    return redirect($session->url);
+}
+
+
+
+
+public function success()
+{
+return view('success');
+}
+
+public function __construct()
+{
+    Stripe::setApiKey(env('sk_test_51QKnwPEU75Ud4jS0uyDd5ojyadWAeGWamhPjusVK5McEutT9OPV3BRS7ZF3yhi5jVQ68QaE12Nwj6eaes8FGjI7z00w466kkdN'));
+}
 
 
 }
