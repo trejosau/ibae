@@ -1,7 +1,7 @@
 <div class="container mt-4">
     <h2 class="text-center mb-4">Gestión de Cursos Aperturados</h2>
 
-     
+
 
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -16,70 +16,74 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+
+    @if(auth()->user()->hasRole('admin'))
     <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#aperturarCursoModal">
         Aperturar Curso
     </button>
     <a href="{{ route('plataforma.iniciarCursos') }}" class="btn btn-primary mb-3">
         Iniciar Cursos
     </a>
+    @endif
     <div class="row mt-4">
         @foreach ($cursosApertura as $apertura)
-            <div class="col-12 mb-4">
-                <div class="card shadow-sm curso-card" style="font-size: 0.9rem; border: 1px solid #D32F2F; overflow: hidden; position: relative;">
-                    <div class="card-body" style="padding: 15px;">
-                        <h5 class="card-title" style="font-size: 1.2rem; color: #333; margin-bottom: 10px;">
-                            {{ $apertura->curso->nombre }}
-                        </h5>
-                        <p class="card-text mb-1">
-                            <strong>Día de Clase:</strong> {{ $apertura->dia_clase }}<br>
-                            <strong>Hora de Clase:</strong> {{ $apertura->hora_clase }}<br>
-                            <strong>Fecha de Inicio:</strong> {{ $apertura->fecha_inicio }}
-                        </p>
-                        <p class="card-text mb-2">
-                        <span class="badge
-                            @if($apertura->estado == 'finalizado') bg-success
-                            @elseif($apertura->estado == 'en curso') bg-warning
-                            @else bg-secondary @endif" style="font-size: 0.85rem; color: #fff;">
-                            {{ ucfirst($apertura->estado) }}
-                        </span>
-                        </p>
-                        @if($apertura->estado == 'programado')
-                            <button class="btn btn-danger btn-sm" style="position: absolute; top: 10px; right: 10px;" data-bs-toggle="modal" data-bs-target="#inscribirAlumnosModal-{{ $apertura->id }}">
-                                Inscribir
-                            </button>
-                        @elseif($apertura->estado == 'en curso')
-                            <a href="{{ route('plataforma.registrarAsistencia', $apertura->id) }}" class="btn btn-info btn-sm registrar-btn" style="position: absolute; top: 10px; right: 10px; z-index: 15;" target="_blank">
-                                Asistencia/Colegiaturas
-                            </a>
-
-                        @endif
-                    </div>
-                    <!-- Nuevo botón para colapsar -->
-                    <div class="card-footer" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#dropdown-{{ $apertura->id }}">
-                        <small class="text-muted">Ver detalles del curso</small>
-                    </div>
-                    <div id="dropdown-{{ $apertura->id }}" class="collapse">
-                        <div class="card-body" style="padding-top: 10px;">
-                            @foreach ($apertura->moduloCursos as $moduloCurso) <!-- Reemplaza esto según tu relación -->
-                            <div style="margin: 15px 0; padding: 10px;">
-                                <h6 style="margin: 0; font-size: 1.2rem; color: #333;">Semana {{ $moduloCurso->orden }}</h6>
-                                <hr style="border: 2px solid #C2185B; margin: 5px 0;">
-                                <p class="mt-1" style="margin: 0; font-size: 1rem; color: #C2185B;">
-                                    <span class="badge" style="background-color: #FFABAB; color: #333; border-radius: 4px; border: 1px solid #C2185B;">
-                                        Módulo: {{ $moduloCurso->modulo->nombre }} <!-- Cambia según el nombre del módulo -->
-                                    </span>
-                                </p>
-                                @foreach ($moduloCurso->modulo->temas as $tema) <!-- Cambia esto para que sea la relación correcta -->
-                                <p class="mt-1" style="margin: 0; margin-left: 10px; font-size: 0.9rem; color: #555; border-left: 2px solid #C2185B; padding-left: 10px;">
-                                    Tema: {{ $tema->nombre }} <!-- Asumiendo que el modelo de tema tiene un campo nombre -->
-                                </p>
+            @if(auth()->user()->hasRole('admin') || $apertura->estado == 'en curso')
+                <div class="col-12 mb-4">
+                    <div class="card shadow-sm curso-card" style="font-size: 0.9rem; border: 1px solid #D32F2F; overflow: hidden; position: relative;">
+                        <div class="card-body" style="padding: 15px;">
+                            <h5 class="card-title" style="font-size: 1.2rem; color: #333; margin-bottom: 10px;">
+                                {{ $apertura->curso->nombre }}
+                            </h5>
+                            <p class="card-text mb-1">
+                                <strong>Día de Clase:</strong> {{ $apertura->dia_clase }}<br>
+                                <strong>Hora de Clase:</strong> {{ $apertura->hora_clase }}<br>
+                                <strong>Fecha de Inicio:</strong> {{ $apertura->fecha_inicio }}
+                            </p>
+                            <p class="card-text mb-2">
+                    <span class="badge
+                        @if($apertura->estado == 'finalizado') bg-success
+                        @elseif($apertura->estado == 'en curso') bg-warning
+                        @else bg-secondary @endif" style="font-size: 0.85rem; color: #fff;">
+                        {{ ucfirst($apertura->estado) }}
+                    </span>
+                            </p>
+                            @if($apertura->estado == 'programado')
+                                <button class="btn btn-danger btn-sm" style="position: absolute; top: 10px; right: 10px;" data-bs-toggle="modal" data-bs-target="#inscribirAlumnosModal-{{ $apertura->id }}">
+                                    Inscribir
+                                </button>
+                            @elseif($apertura->estado == 'en curso')
+                                <a href="{{ route('plataforma.registrarAsistencia', $apertura->id) }}" class="btn btn-info btn-sm registrar-btn" style="position: absolute; top: 10px; right: 10px; z-index: 15;" target="_blank">
+                                    Asistencia/Colegiaturas
+                                </a>
+                            @endif
+                        </div>
+                        <!-- Nuevo botón para colapsar -->
+                        <div class="card-footer" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#dropdown-{{ $apertura->id }}">
+                            <small class="text-muted">Ver detalles del curso</small>
+                        </div>
+                        <div id="dropdown-{{ $apertura->id }}" class="collapse">
+                            <div class="card-body" style="padding-top: 10px;">
+                                @foreach ($apertura->moduloCursos as $moduloCurso)
+                                    <div style="margin: 15px 0; padding: 10px;">
+                                        <h6 style="margin: 0; font-size: 1.2rem; color: #333;">Semana {{ $moduloCurso->orden }}</h6>
+                                        <hr style="border: 2px solid #C2185B; margin: 5px 0;">
+                                        <p class="mt-1" style="margin: 0; font-size: 1rem; color: #C2185B;">
+                                <span class="badge" style="background-color: #FFABAB; color: #333; border-radius: 4px; border: 1px solid #C2185B;">
+                                    Módulo: {{ $moduloCurso->modulo->nombre }}
+                                </span>
+                                        </p>
+                                        @foreach ($moduloCurso->modulo->temas as $tema)
+                                            <p class="mt-1" style="margin: 0; margin-left: 10px; font-size: 0.9rem; color: #555; border-left: 2px solid #C2185B; padding-left: 10px;">
+                                                Tema: {{ $tema->nombre }} >
+                                            </p>
+                                        @endforeach
+                                    </div>
                                 @endforeach
                             </div>
-                            @endforeach
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
         @endforeach
     </div>
 
