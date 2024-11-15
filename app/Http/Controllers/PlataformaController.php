@@ -797,7 +797,7 @@ public function historialPagos()
             return redirect()->back()->with('error', 'Estudiante no encontrado.');
         }
     
-        return $cursos = DB::table('estudiante_curso')
+        $cursos = DB::table('estudiante_curso')
         ->join('curso_apertura', 'estudiante_curso.id_curso_apertura', '=', 'curso_apertura.id')
         ->join('cursos', 'curso_apertura.id_curso', '=', 'cursos.id')
         ->join('certificados', 'cursos.id_certificacion', '=', 'certificados.id')
@@ -818,9 +818,59 @@ public function historialPagos()
     }
     
 
-    public function misPagosEspacio() {
-        return view('plataforma.index');
+    public function misPagosEspacio()
+    {
+        // Obtener el usuario autenticado
+        $username = auth()->user()->username;
+    
+        // Obtener la persona asociada al usuario
+        $persona = DB::table('personas')
+            ->join('users', 'personas.usuario', '=', 'users.id')
+            ->where('users.username', $username)
+            ->select('personas.id')
+            ->first();
+    
+        if (!$persona) {
+            return redirect()->back()->with('error', 'Usuario no encontrado.');
+        }
+    
+        // Obtener el estudiante basado en el id_persona de la tabla personas
+        $estudiante = DB::table('estudiantes')
+            ->where('id_persona', $persona->id)
+            ->first();
+    
+        if (!$estudiante) {
+            return redirect()->back()->with('error', 'Estudiante no encontrado.');
+        }
+    
+        // Subconsulta para obtener la última fecha de pago de cada curso del estudiante
+        $subquery = DB::table('colegiaturas')
+            ->select('id_estudiante_curso', DB::raw('MAX(fecha_pago) as max_fecha_pago'))
+            ->groupBy('id_estudiante_curso');
+    
+        // Consulta principal para obtener los pagos de ese estudiante
+        $colegiaturas = DB::table('colegiaturas')
+            ->join('estudiante_curso', 'colegiaturas.id_estudiante_curso', '=', 'estudiante_curso.id')
+            ->join('curso_apertura', 'estudiante_curso.id_curso_apertura', '=', 'curso_apertura.id')
+            ->join('cursos', 'curso_apertura.id_curso', '=', 'cursos.id')
+            ->joinSub($subquery, 'ultimo_pago', function ($join) {
+                $join->on('colegiaturas.id_estudiante_curso', '=', 'ultimo_pago.id_estudiante_curso')
+                     ->on('colegiaturas.fecha_pago', '=', 'ultimo_pago.max_fecha_pago');
+            })
+            ->where('estudiante_curso.id_estudiante', $estudiante->matricula)
+            ->select(
+                'colegiaturas.fecha_pago',
+                'colegiaturas.Monto',
+                'cursos.nombre as nombre_curso',
+                'curso_apertura.fecha_inicio',
+                'colegiaturas.semana'
+            )
+            ->get();
+    
+        // Pasar los pagos y el estudiante a la vista
+        return view('plataforma.index', compact('colegiaturas', 'estudiante'));
     }
+    
 
     public function perfilEspacio() {
         return view('plataforma.index');

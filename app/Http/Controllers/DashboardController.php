@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Administrador;
 use App\Models\Categorias;
+use App\Models\Subcategoria;
 use App\Models\Categorias_de_Servicios;
 use App\Models\Citas;
 use App\Models\Colegiaturas;
@@ -335,6 +336,7 @@ class DashboardController extends Controller
     {
 
         $categorias = Categorias::all();
+        $subcategorias = Subcategoria::all();
         $marcas = Proveedores::all();
         $productos = Productos::with('proveedor')->orderBy('fecha_agregado', 'desc')->paginate(6);
         $medidas = [

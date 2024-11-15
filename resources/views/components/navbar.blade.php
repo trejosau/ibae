@@ -44,6 +44,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link roboto-medium" href="/cursos-info">Cursos</a>
+                        <a class="nav-link roboto-medium" href="{{ route('cursos.info') }}">Cursos</a>
                     </li>
 
                 </ul>

@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\Productos;
+use App\Models\Subcategoria;
+use App\Models\Categorias;  
 use Illuminate\Http\Request;
+use App\Models\Pedidos;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use Stripe\Stripe;
 
 class ProductosController extends Controller
 {
@@ -335,6 +339,7 @@ public function buscar(Request $request)
     }
 }
 
+
 public function checkout()
 {
     $carrito = session()->get('carrito', []);
@@ -343,6 +348,80 @@ public function checkout()
     }, 0);
 
     return view('checkout', compact('carrito', 'subtotal'));
+}
+public function storeCategoria(Request $request)
+    {
+        $request->validate([
+            'nombre_categoria' => 'required|string|max:255',
+        ]);
+
+
+        Categorias::create([
+            'nombre' => $request->nombre_categoria,
+        ]);
+
+        return redirect()->route('dashboard.index')->with('success', 'Categoría creada exitosamente');
+    }
+
+    // Método para almacenar una nueva subcategoría
+    public function storeSubcategoria(Request $request)
+    {
+        $request->validate([
+            'nombre_subcategoria' => 'required|string|max:255',
+            'categoria_id' => 'required|exists:categorias,id',
+        ]);
+
+        Subcategoria::create([
+            'nombre' => $request->nombre_subcategoria,
+            'categoria_id' => $request->categoria_id,
+        ]);
+
+        return redirect()->route('dashboard.index')->with('success', 'Subcategoría creada exitosamente');
+    }
+
+public function pago()
+{
+    \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
+    $carrito = session()->get('carrito', []);
+    $subtotal = array_reduce($carrito, function ($total, $item) {
+        return $total + $item['precio'] * $item['cantidad'];
+    }, 0);
+
+    $subtotal_in_cents = $subtotal * 100;
+
+    $session = \Stripe\Checkout\Session::create([
+        'line_items' => [
+            [
+                'price_data' => [
+                    'currency' => 'mxn',
+                    'product_data' => [
+                        'name' => 'Carrito de compras',
+                    ],
+                    'unit_amount' => $subtotal_in_cents,
+                ],
+                'quantity' => 1,
+            ],
+        ],
+        'mode' => 'payment',
+        'success_url' => route('success'),
+        'cancel_url' => route('cancel'),
+    ]);
+
+    return redirect($session->url);
+}
+
+
+
+
+public function success()
+{
+return view('success');
+}
+
+public function __construct()
+{
+    Stripe::setApiKey(env('sk_test_51QKnwPEU75Ud4jS0uyDd5ojyadWAeGWamhPjusVK5McEutT9OPV3BRS7ZF3yhi5jVQ68QaE12Nwj6eaes8FGjI7z00w466kkdN'));
 }
 
 

@@ -30,9 +30,9 @@ Route::get('/about-us', function () {
 })->name('sobrenosotros');
 
 
-Route::get('/cursos-info', function () {
+Route::get('/cursos', function () {
     return view('cursos');
-})->name('cursos-info');
+})->name('cursos.info');
 
 
 
@@ -84,6 +84,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/dashboard/productos/agregar', [ProductosController::class, 'agregar'])->name('productos.agregar');
     Route::put('/dashboard/productos/actualizar/{id}', [ProductosController::class, 'actualizar'])->name('productos.update');
     Route::put('/dashboard/productos/retirar/{id}', [ProductosController::class, 'retirar'])->name('productos.retirar');
+    Route::post('/categorias/store', [ProductosController::class, 'storeCategoria'])->name('categorias.store');
+    Route::post('/subcategorias/store', [ProductosController::class, 'storeSubcategoria'])->name('subcategorias.store');
     Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
     Route::post('/dashboard/usuarios/agregarAdmin', [UsuarioController::class, 'agregarAdmin'])->name('usuarios.agregarAdmin');
     Route::post('/dashboard/usuarios/agregarEstilista', [UsuarioController::class, 'agregarEstilista'])->name('usuarios.agregarEstilista');
@@ -91,8 +93,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');
     Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
     Route::get('/notificaciones/marcar-leida/{id}', [NotificacionesController::class, 'marcarLeida'])->name('notificaciones.marcarLeida');
-
-
 });
 
 
@@ -191,6 +191,11 @@ Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, '
     Route::delete('/carrito/{id}', [ProductosController::class, 'eliminarDelCarrito'])->name('carrito.eliminar');
     Route::get('/carrito', [ProductosController::class, 'verCarrito'])->name('carrito.ver');
     Route::get('/carrito/contenido', [ProductosController::class, 'cargarContenidoCarrito'])->name('carrito.contenido');
+
+    Route::get('/checkout', [ProductosController::class, 'checkout'])->name('checkout');
+    Route::post('/pago', [ProductosController::class, 'pago'])->name('pago'); // Procesa el pago y redirige a Stripe
+    Route::get('/success', [ProductosController::class, 'success'])->name('success');
+    Route::get('/tienda', [ProductosController::class, 'index'])->name('tienda.mostrar');
 
 
 
