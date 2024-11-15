@@ -168,9 +168,7 @@ Route::middleware(['auth', 'role:profesor'])->group(function () {
 
 });
 
-Route::get('/forzar-error-403', function () {
-    abort(403);
-});
+
 
 
     Route::get('/tienda', [ProductosController::class, 'index'])->name('tienda'); // Ruta para la tienda principal
