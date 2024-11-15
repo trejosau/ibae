@@ -97,6 +97,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');
         Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
         Route::get('/notificaciones/marcar-leida/{id}', [NotificacionesController::class, 'marcarLeida'])->name('notificaciones.marcarLeida');
+
+        // Rutas para las gráficas
+        Route::get('/graficas/colegiaturas', [GraficasController::class, 'obtenerTotalPorMesAcademia'])->name('graficas.colegiaturas');
+        Route::get('/graficas/salon', [GraficasController::class, 'obtenerTotalSalon'])->name('graficas.salon');
+        Route::get('/graficas/tienda', [GraficasController::class, 'obtenerTotalVentas'])->name('graficas.tienda');
+        Route::get('/graficas/data', [GraficasController::class, 'obtenerData'])->name('graficas.data');
+
     });
 });
 
@@ -169,20 +176,16 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
         });
 });
 
-Route::get('/forzar-error-403', function () {
-    abort(403);
-});
 
+Route::middleware(['auth', 'role:cliente'])->group(function () {
+    Route::get('/tienda', [ProductosController::class, 'index'])->name('tienda');
+    Route::get('/catalogo', [ProductosController::class, 'catalogo'])->name('catalogo');
 
-    Route::get('/tienda', [ProductosController::class, 'index'])->name('tienda'); // Ruta para la tienda principal
-    // Mostrar todos los productos sin filtros
-Route::get('/catalogo', [ProductosController::class, 'catalogo'])->name('catalogo');
+    // Filtrar productos desde el formulario
+    Route::post('/catalogo', [ProductosController::class, 'filtrar'])->name('productos.filtrar');
 
-// Filtrar productos desde el formulario
-Route::post('/catalogo', [ProductosController::class, 'filtrar'])->name('productos.filtrar');
-
-// Filtrar productos por categoría desde URL
-Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, 'filtrar'])->name('productos.categoria');
+    // Filtrar productos por categoría desde URL
+    Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, 'filtrar'])->name('productos.categoria');
 
     Route::get('/producto/{id}', [ProductosController::class, 'mostrarDetalle'])->name('producto.detalle');
     Route::get('/buscar', [ProductosController::class, 'buscar'])->name('buscar');
@@ -200,12 +203,13 @@ Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, '
     Route::post('/pago', [ProductosController::class, 'pago'])->name('pago'); // Procesa el pago y redirige a Stripe
     Route::get('/success', [ProductosController::class, 'success'])->name('success');
     Route::get('/tienda', [ProductosController::class, 'index'])->name('tienda.mostrar');
+});
 
 
 
-    Route::get('/graficas/colegiaturas', [GraficasController::class, 'obtenerTotalPorMesAcademia'])->name('graficas.colegiaturas');
-    Route::get('/graficas/salon', [GraficasController::class, 'obtenerTotalSalon'])->name('graficas.salon');
-    Route::get('/graficas/tienda', [GraficasController::class, 'obtenerTotalVentas'])->name('graficas.tienda');
-    Route::get('/graficas/data', [GraficasController::class, 'obtenerData'])->name('graficas.data');
+
+
+
+
 
 
