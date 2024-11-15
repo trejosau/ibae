@@ -411,7 +411,9 @@ public function pago()
 
 public function success()
 {
-return view('success');
+    dd(session()->all());
+
+    return view('success');
 }
 
 public function cancel()
