@@ -200,7 +200,7 @@ Route::middleware(['auth', 'role:cliente'])->group(function () {
     Route::get('/checkout', [ProductosController::class, 'checkout'])->name('checkout');
     Route::post('/pago', [ProductosController::class, 'pago'])->name('pago'); // Procesa el pago y redirige a Stripe
     Route::get('/success', [ProductosController::class, 'success'])->name('success');
-
+    Route::get('/cancel', [ProductosController::class, 'cancel'])->name('cancel');
 });
 
 Route::get('/tienda', [ProductosController::class, 'mostrar'])->name('tienda.mostrar');

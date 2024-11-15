@@ -414,6 +414,11 @@ public function success()
 return view('success');
 }
 
+public function cancel()
+{
+return view('cancel');
+}
+
 public function __construct()
 {
     Stripe::setApiKey(env('sk_test_51QKnwPEU75Ud4jS0uyDd5ojyadWAeGWamhPjusVK5McEutT9OPV3BRS7ZF3yhi5jVQ68QaE12Nwj6eaes8FGjI7z00w466kkdN'));
