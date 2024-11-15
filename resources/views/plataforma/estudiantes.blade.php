@@ -29,7 +29,7 @@
                         <div class="card-body text-center">
                             <!-- Foto de perfil -->
                             <div style="width: 120px; height: 120px; margin: 0 auto; overflow: hidden; border-radius: 50%; background-color: #ddd;">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzceK1AIQtiWPaIfjbcbN1rvQ0a8dUbbJ8IA&s"
+                                <img src="https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/profiles/default_profile.jpg"
                                      alt="Foto de {{ $estudiante->persona->nombre }}"
                                      style="width: 100%; height: 100%; object-fit: cover; display: block;">
                             </div>
@@ -202,7 +202,7 @@
                         <input type="text" class="form-control" id="zipcode" name="zipcode" required>
                     </div>
                     <div class="form-group">
-                        <label for="ciudad">Código Postal</label>
+                        <label for="ciudad">Ciudad</label>
                         <input type="text" class="form-control" id="ciudad" name="ciudad" required>
                     </div>
                     <div class="form-group">

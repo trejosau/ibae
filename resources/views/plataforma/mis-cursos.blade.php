@@ -12,6 +12,11 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+
+ 
+    
+
+    
     <h2 class="text-center mb-4">Gestión de Cursos</h2>
 
     <!-- Botón para agregar curso -->
@@ -147,22 +152,44 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="nombre_certificado" class="form-label">Nombre del Certificado</label>
-                            <input type="text" class="form-control" id="nombre_certificado" name="nombre" required>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="nombre_certificado" 
+                                name="nombre" 
+                                value="{{ old('nombre') }}" 
+                                required
+                            >
                         </div>
                         <div class="mb-3">
                             <label for="descripcion_certificado" class="form-label">Descripción</label>
-                            <textarea class="form-control" id="descripcion_certificado" name="descripcion" required></textarea>
+                            <textarea 
+                                class="form-control" 
+                                id="descripcion_certificado" 
+                                name="descripcion" 
+                                required>{{ old('descripcion') }}</textarea>
                         </div>
                         <div class="mb-3">
                             <label for="horas" class="form-label">Horas</label>
-                            <input type="number" class="form-control" id="horas" name="horas" min="1" required>
+                            <input 
+                                type="number" 
+                                class="form-control" 
+                                id="horas" 
+                                name="horas" 
+                                value="{{ old('horas') }}" 
+                                min="1" 
+                                max="120" 
+                                required
+                            >
                         </div>
                         <div class="mb-3">
                             <label for="institucion" class="form-label">Institución</label>
                             <select class="form-select" id="institucion" name="institucion" required>
-                                <option value="">Seleccione una institución</option>
+                                <option value="" {{ old('institucion') == '' ? 'selected' : '' }}>Seleccione una institución</option>
                                 @foreach($instituciones as $institucion)
-                                    <option value="{{ $institucion }}">{{ $institucion }}</option>
+                                    <option value="{{ $institucion }}" {{ old('institucion') == $institucion ? 'selected' : '' }}>
+                                        {{ $institucion }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -175,7 +202,7 @@
             </div>
         </div>
     </div>
-
+    
     <div class="modal fade" id="changeStatusModal" tabindex="-1" aria-labelledby="changeStatusModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -198,6 +225,7 @@
                         <div class="mb-3">
                             <label for="estado" class="form-label">Estado</label>
                             <select class="form-select" id="estado" name="estado" required>
+                                <option value="" selected disabled>Selecciona una opción</option>
                                 <option value="activo">Activo</option>
                                 <option value="inactivo">Inactivo</option>
                             </select>
@@ -213,3 +241,6 @@
     </div>
 </div>
 </div>
+
+
+

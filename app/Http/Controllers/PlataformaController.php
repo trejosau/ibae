@@ -178,14 +178,19 @@ class PlataformaController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string',
-            'horas' => 'required|integer|min:1',
-            'institucion' => 'required|string|in:SEP,Otra', // Validación enum
+            'horas' => 'required|integer|min:1|max:120',
+            'institucion' => 'required|string|in:SEP,Otra',
         ]);
-
+    
+        if ($request->horas > 120) {
+            return response()->json(['error' => 'Horas excedidas: el máximo permitido es 120.'], 422);
+        }
+    
         Certificados::create($request->all());
-
-        return redirect()->route('plataforma.mis-cursos')->with('success', 'Certificado creado con éxito.');
+    
+        return response()->json(['success' => 'Certificado creado con éxito.']);
     }
+    
 
     public function cambiarEstado(Request $request)
     {
@@ -327,6 +332,7 @@ class PlataformaController extends Controller
 
         // Usar el id_profesor del select
         $id_profesor = $validatedData['id_profesor'];
+        
 
         // Crear el registro de apertura de curso
         $cursoApertura = CursoApertura::create([
