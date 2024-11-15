@@ -8,7 +8,6 @@ use App\Models\Subcategoria;
 use App\Models\Categorias;
 use Illuminate\Http\Request;
 use App\Models\Pedidos;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -409,25 +408,11 @@ public function storeCategoria(Request $request)
         return redirect($session->url);
     }
 
-
-
-
-    public function success(Request $request)
-    {
-        dd($session->amount_total, $session->currency, $session->customer_details->email);
-
-        // Configurar la clave de API de Stripe
-        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-
-        // Obtener el session_id de la URL (pasado como parámetro)
-        $sessionId = $request->get('session_id');
-
-        // Obtener los detalles de la sesión de pago con Stripe
-        $session = Session::retrieve($sessionId);
-
-        // Hacer un dump de los datos de la sesión para inspeccionarlos
-        dd($session);
-    }
+public function success()
+{
+    dd(session()->all(), session()->get('session_id'));
+    return view('success');
+}
 
 public function cancel()
 {
