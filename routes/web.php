@@ -111,8 +111,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-
-
 Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
     {
         Route::get('/plataforma/', function () {

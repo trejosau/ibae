@@ -8,6 +8,7 @@ use App\Models\Subcategoria;
 use App\Models\Categorias;
 use Illuminate\Http\Request;
 use App\Models\Pedidos;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -374,47 +375,59 @@ public function storeCategoria(Request $request)
         return redirect()->route('dashboard.index')->with('success', 'Subcategoría creada exitosamente');
     }
 
-public function pago()
-{
-    \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+    public function pago()
+    {
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
-    $carrito = session()->get('carrito', []);
-    $subtotal = array_reduce($carrito, function ($total, $item) {
-        return $total + $item['precio'] * $item['cantidad'];
-    }, 0);
+        $carrito = session()->get('carrito', []);
+        $subtotal = array_reduce($carrito, function ($total, $item) {
+            return $total + $item['precio'] * $item['cantidad'];
+        }, 0);
 
-    $subtotal_in_cents = $subtotal * 100;
+        $subtotal_in_cents = $subtotal * 100;
 
-    $session = \Stripe\Checkout\Session::create([
-        'line_items' => [
-            [
-                'price_data' => [
-                    'currency' => 'mxn',
-                    'product_data' => [
-                        'name' => 'Carrito de compras',
+        // Crear la sesión de Stripe
+        $session = \Stripe\Checkout\Session::create([
+            'line_items' => [
+                [
+                    'price_data' => [
+                        'currency' => 'mxn',
+                        'product_data' => [
+                            'name' => 'Carrito de compras',
+                        ],
+                        'unit_amount' => $subtotal_in_cents,
                     ],
-                    'unit_amount' => $subtotal_in_cents,
+                    'quantity' => 1,
                 ],
-                'quantity' => 1,
             ],
-        ],
-        'mode' => 'payment',
-        'success_url' => route('success'),
-        'cancel_url' => route('cancel'),
-    ]);
+            'mode' => 'payment',
+            'success_url' => route('success') . '?session_id={CHECKOUT_SESSION_ID}', // Incluye el session_id en la URL
+            'cancel_url' => route('cancel'),
+        ]);
 
-    return redirect($session->url);
-}
-
-
+        // Redirigir al cliente a Stripe Checkout
+        return redirect($session->url);
+    }
 
 
-public function success()
-{
-    dd(session()->all());
 
-    return view('success');
-}
+
+    public function success(Request $request)
+    {
+        dd($session->amount_total, $session->currency, $session->customer_details->email);
+
+        // Configurar la clave de API de Stripe
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
+        // Obtener el session_id de la URL (pasado como parámetro)
+        $sessionId = $request->get('session_id');
+
+        // Obtener los detalles de la sesión de pago con Stripe
+        $session = Session::retrieve($sessionId);
+
+        // Hacer un dump de los datos de la sesión para inspeccionarlos
+        dd($session);
+    }
 
 public function cancel()
 {
