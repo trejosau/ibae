@@ -52,120 +52,121 @@ Route::middleware('auth')->group(function () {
 
 
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboardd');
-    Route::get('/dashboard/inicio', [DashboardController::class, 'inicio'])->name('dashboard.inicio');
-    Route::get('/dashboard/ventas', [DashboardController::class, 'ventas'])->name('dashboard.ventas');
-    Route::get('/dashboard/pedidos', [DashboardController::class, 'pedidos'])->name('dashboard.pedidos');
-    Route::post('/ventas/agregar-producto', [VentaController::class, 'agregarProducto'])->name('ventas.agregarProducto');
-    Route::get('/ventas/total', [VentaController::class, 'obtenerTotal'])->name('ventas.total');
-    Route::post('/ventas/quitar-producto', [VentaController::class, 'quitarProducto'])->name('ventas.quitarProducto');
-    Route::post('/ventas/realizar', [VentaController::class, 'store'])->name('ventas.store');
-    Route::delete('/ventas/eliminar/{id}', [VentaController::class, 'eliminar'])->name('ventas.destroy');
-    Route::get('/ventas/limpiarCarrito', [VentaController::class, 'limpiarCarrito'])->name('limpiarCarrito');
-    Route::get('/ventas/buscarMatricula', [VentaController::class, 'buscarMatriculas'])->name('buscar.matriculas');
-    Route::post('/pedidos/marcar-listo/{id}', [PedidoController::class, 'marcarListo'])->name('pedido.marcarListo');
-    Route::post('/pedidos/marcar-entregado/{id}', [PedidoController::class, 'marcarEntregado'])->name('pedido.marcarEntregado');
-    Route::get('/dashboard/compras', [DashboardController::class, 'compras'])->name('dashboard.compras');
-    Route::post('/dashboard/compras/proveedores', [DashboardController::class, 'proveedoresCreate'])->name('proveedores.store');
-    Route::put('/dashboard/compras/proveedores/{id}/update', [DashboardController::class, 'proveedoresUpdate'])->name('proveedores.update');
-    Route::delete('/dashboard/compras/proveedores/{id}', [DashboardController::class, 'proveedoresDestroy'])->name('proveedores.destroy');
-    Route::post('/dashboard/compras/cancelar/{id}', [DashboardController::class, 'compraCancelar'])->name('compra.cancelar');
-    Route::get('/dashboard/compras/recibida/{id}', [DashboardController::class, 'compraRecibida'])->name('compra.recibida');
-    Route::get('/dashboard/compras/catalogo/{id}', [CompraController::class, 'detallarProducto'])->name('detallar.producto');
-    Route::post('/dashboard/compras/agregar-producto', [CompraController::class, 'agregarProducto'])->name('compra.agregarProducto');
-    Route::get('/dashboard/compras/limpiar-carrito/{id}', [CompraController::class, 'limpiarCarrito'])->name('compra.limpiarCarrito');
-    Route::post('/dashboard/compras/quitar-producto', [CompraController::class, 'quitarProducto'])->name('compra.quitarProducto');
-    Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');
-    Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');
-    Route::post('/dashboard/servicios/agregar', [ServiciosController::class, 'agregarServicio'])->name('servicios.agregar');
-    Route::post('/dashboard/servicios/agregar-categoria', [ServiciosController::class, 'agregarCategoria'])->name('servicios.agregarCategoria');
-    Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');
-    Route::post('/dashboard/productos/agregar', [ProductosController::class, 'agregar'])->name('productos.agregar');
-    Route::put('/dashboard/productos/actualizar/{id}', [ProductosController::class, 'actualizar'])->name('productos.update');
-    Route::put('/dashboard/productos/retirar/{id}', [ProductosController::class, 'retirar'])->name('productos.retirar');
-    Route::post('/categorias/store', [ProductosController::class, 'storeCategoria'])->name('categorias.store');
-    Route::post('/subcategorias/store', [ProductosController::class, 'storeSubcategoria'])->name('subcategorias.store');
-    Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
-    Route::post('/dashboard/usuarios/agregarAdmin', [UsuarioController::class, 'agregarAdmin'])->name('usuarios.agregarAdmin');
-    Route::post('/dashboard/usuarios/agregarEstilista', [UsuarioController::class, 'agregarEstilista'])->name('usuarios.agregarEstilista');
-    Route::post('/dashboard/usuarios/agregarProfesor', [UsuarioController::class, 'agregarProfesor'])->name('usuarios.agregarProfesor');
-    Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');
-    Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
-    Route::get('/notificaciones/marcar-leida/{id}', [NotificacionesController::class, 'marcarLeida'])->name('notificaciones.marcarLeida');
+Route::middleware(['auth'])->group(function () {
+    Route::middleware('role:admin|estilista')->group(function () {
+        Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');
+        Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');
+        Route::post('/dashboard/servicios/agregar', [ServiciosController::class, 'agregarServicio'])->name('servicios.agregar');
+        Route::post('/dashboard/servicios/agregar-categoria', [ServiciosController::class, 'agregarCategoria'])->name('servicios.agregarCategoria');
+    });
+
+    Route::middleware(['auth', 'role:admin'])->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboardd');
+        Route::get('/dashboard/inicio', [DashboardController::class, 'inicio'])->name('dashboard.inicio');
+        Route::get('/dashboard/ventas', [DashboardController::class, 'ventas'])->name('dashboard.ventas');
+        Route::get('/dashboard/pedidos', [DashboardController::class, 'pedidos'])->name('dashboard.pedidos');
+        Route::post('/ventas/agregar-producto', [VentaController::class, 'agregarProducto'])->name('ventas.agregarProducto');
+        Route::get('/ventas/total', [VentaController::class, 'obtenerTotal'])->name('ventas.total');
+        Route::post('/ventas/quitar-producto', [VentaController::class, 'quitarProducto'])->name('ventas.quitarProducto');
+        Route::post('/ventas/realizar', [VentaController::class, 'store'])->name('ventas.store');
+        Route::delete('/ventas/eliminar/{id}', [VentaController::class, 'eliminar'])->name('ventas.destroy');
+        Route::get('/ventas/limpiarCarrito', [VentaController::class, 'limpiarCarrito'])->name('limpiarCarrito');
+        Route::get('/ventas/buscarMatricula', [VentaController::class, 'buscarMatriculas'])->name('buscar.matriculas');
+        Route::post('/pedidos/marcar-listo/{id}', [PedidoController::class, 'marcarListo'])->name('pedido.marcarListo');
+        Route::post('/pedidos/marcar-entregado/{id}', [PedidoController::class, 'marcarEntregado'])->name('pedido.marcarEntregado');
+        Route::get('/dashboard/compras', [DashboardController::class, 'compras'])->name('dashboard.compras');
+        Route::post('/dashboard/compras/proveedores', [DashboardController::class, 'proveedoresCreate'])->name('proveedores.store');
+        Route::put('/dashboard/compras/proveedores/{id}/update', [DashboardController::class, 'proveedoresUpdate'])->name('proveedores.update');
+        Route::delete('/dashboard/compras/proveedores/{id}', [DashboardController::class, 'proveedoresDestroy'])->name('proveedores.destroy');
+        Route::post('/dashboard/compras/cancelar/{id}', [DashboardController::class, 'compraCancelar'])->name('compra.cancelar');
+        Route::get('/dashboard/compras/recibida/{id}', [DashboardController::class, 'compraRecibida'])->name('compra.recibida');
+        Route::get('/dashboard/compras/catalogo/{id}', [CompraController::class, 'detallarProducto'])->name('detallar.producto');
+        Route::post('/dashboard/compras/agregar-producto', [CompraController::class, 'agregarProducto'])->name('compra.agregarProducto');
+        Route::get('/dashboard/compras/limpiar-carrito/{id}', [CompraController::class, 'limpiarCarrito'])->name('compra.limpiarCarrito');
+        Route::post('/dashboard/compras/quitar-producto', [CompraController::class, 'quitarProducto'])->name('compra.quitarProducto');
+        Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');
+        Route::post('/dashboard/productos/agregar', [ProductosController::class, 'agregar'])->name('productos.agregar');
+        Route::put('/dashboard/productos/actualizar/{id}', [ProductosController::class, 'actualizar'])->name('productos.update');
+        Route::put('/dashboard/productos/retirar/{id}', [ProductosController::class, 'retirar'])->name('productos.retirar');
+        Route::post('/categorias/store', [ProductosController::class, 'storeCategoria'])->name('categorias.store');
+        Route::post('/subcategorias/store', [ProductosController::class, 'storeSubcategoria'])->name('subcategorias.store');
+        Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
+        Route::post('/dashboard/usuarios/agregarAdmin', [UsuarioController::class, 'agregarAdmin'])->name('usuarios.agregarAdmin');
+        Route::post('/dashboard/usuarios/agregarEstilista', [UsuarioController::class, 'agregarEstilista'])->name('usuarios.agregarEstilista');
+        Route::post('/dashboard/usuarios/agregarProfesor', [UsuarioController::class, 'agregarProfesor'])->name('usuarios.agregarProfesor');
+        Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');
+        Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
+        Route::get('/notificaciones/marcar-leida/{id}', [NotificacionesController::class, 'marcarLeida'])->name('notificaciones.marcarLeida');
+    });
 });
 
 
 
 
-Route::middleware(['auth', 'role:profesor'])->group(function () {
-    Route::get('/plataforma/', function () {
-        return Redirect::route('plataforma.mis-cursos');
-    })->name('plataforma');
+Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
+    {
+        Route::get('/plataforma/', function () {
+            return Redirect::route('plataforma.mis-cursos');
+        })->name('plataforma');
+        Route::middleware(['auth', 'role:estudiante'])->group(function () {
+            Route::get('/plataforma/espacio/mis-cursos', [PlataformaController::class, 'misCursosEspacio'])->name('plataforma.espacio-mis-cursos');
+            Route::get('/plataforma/espacio/mis-pagos', [PlataformaController::class, 'misPagosEspacio'])->name('plataforma.espacio-mis-pagos');
+            Route::get('/plataforma/espacio/perfil', [PlataformaController::class, 'perfilEspacio'])->name('plataforma.espacio-perfil');
+        });
 
-    Route::get('/plataforma/cursos/mis-cursos', [PlataformaController::class, 'misCursos'])->name('plataforma.mis-cursos');
-    Route::get('/plataforma/cursos/historial-cursos', [PlataformaController::class, 'historialCursos'])->name('plataforma.historial-cursos');
-    Route::post('/plataforma/cursos/guardar-curso-apertura', [PlataformaController::class, 'storeCursoApertura'])->name('plataforma.storeCursoApertura');
-    Route::post('/inscribir-alumno', [PlataformaController::class, 'storeAlumnoCurso'])->name('inscribirAlumno');
-    Route::get('/quitar-alumno', [PlataformaController::class, 'quitarAlumnoCurso'])->name('darDeBaja');
-    Route::get('/plataforma/cursos/ver-asistencia/{curso_apertura_id}', [PlataformaController::class, 'registrarAsistencia'])->name('plataforma.registrarAsistencia');
-    Route::post('/plataforma/cursos/guardar-asistencia/{curso_apertura_id}', [PlataformaController::class, 'guardarAsistencia'])->name('guardarAsistencia');
-    Route::post('/cursos', [PlataformaController::class, 'store'])->name('cursos.store');
-    Route::post('/cursos/cambiar-estado', [PlataformaController::class, 'cambiarEstado'])->name('cursos.cambiarEstado');
-    Route::delete('/cursos/{id}', [PlataformaController::class, 'cursoDestroy'])->name('plataforma.cursoDestroy');
-    Route::get('/plataforma/cursos/iniciar-cursos', [PlataformaController::class, 'iniciarCursosHoy'])->name('plataforma.iniciarCursos');
+        Route::middleware(['auth', 'role:profesor|admin'])->group(function () {
+            Route::get('/plataforma/cursos/historial-cursos', [PlataformaController::class, 'historialCursos'])->name('plataforma.historial-cursos');
+            Route::get('/plataforma/cursos/ver-asistencia/{curso_apertura_id}', [PlataformaController::class, 'registrarAsistencia'])->name('plataforma.registrarAsistencia');
+            Route::post('/plataforma/cursos/guardar-asistencia/{curso_apertura_id}', [PlataformaController::class, 'guardarAsistencia'])->name('guardarAsistencia');
+        });
 
-
-    // Rutas de Módulos
-    Route::get('/plataforma/modulos/lista', [PlataformaController::class, 'listaModulos'])->name('plataforma.lista-modulos');
-    Route::post('/plataforma/modulos/store', [PlataformaController::class, 'moduloStore'])->name('plataforma.moduloStore');
-    Route::put('/plataforma/modulos/{id}', [PlataformaController::class, 'moduloUpdate'])->name('plataforma.moduloUpdate');
-    Route::delete('/plataforma/modulos/{id}', [PlataformaController::class, 'moduloDestroy'])->name('plataforma.moduloDestroy');
-    Route::get('/plataforma/modulos/temas', [PlataformaController::class, 'temasModulos'])->name('plataforma.temas-modulos');
-    Route::get('/temas-modulos', [PlataformaController::class, 'ligarModulosATemas'])->name('ligarTemasModulo');
-    Route::post('/plataforma/asignar-temas', [PlataformaController::class, 'asignarTemas'])->name('asignar.temas');
-    Route::post('/modulos', [PlataformaController::class, 'crearModulo'])->name('plataforma.crearModulo');
-    Route::get('/modulo/modificar/{id}', [PlataformaController::class, 'modificarModulo'])->name('plataforma.modificarModulo');
-    Route::delete('/modulo/eliminar/{id}', [PlataformaController::class, 'eliminarModulo'])->name('plataforma.eliminarModulo');
+        Route::middleware(['auth', 'role:admin'])->group(function () {
+            Route::get('/plataforma/cursos/mis-cursos', [PlataformaController::class, 'misCursos'])->name('plataforma.mis-cursos');
+            Route::post('/plataforma/cursos/guardar-curso-apertura', [PlataformaController::class, 'storeCursoApertura'])->name('plataforma.storeCursoApertura');
+            Route::post('/inscribir-alumno', [PlataformaController::class, 'storeAlumnoCurso'])->name('inscribirAlumno');
+            Route::get('/quitar-alumno', [PlataformaController::class, 'quitarAlumnoCurso'])->name('darDeBaja');
+            Route::post('/cursos', [PlataformaController::class, 'store'])->name('cursos.store');
+            Route::post('/cursos/cambiar-estado', [PlataformaController::class, 'cambiarEstado'])->name('cursos.cambiarEstado');
+            Route::delete('/cursos/{id}', [PlataformaController::class, 'cursoDestroy'])->name('plataforma.cursoDestroy');
+            Route::get('/plataforma/cursos/iniciar-cursos', [PlataformaController::class, 'iniciarCursosHoy'])->name('plataforma.iniciarCursos');
 
 
-    // Rutas para temas
-    Route::get('/tema/modificar/{id}', [PlataformaController::class, 'modificarTema'])->name('plataforma.modificarTema');
-    Route::delete('/tema/eliminar/{id}', [PlataformaController::class, 'eliminarTema'])->name('plataforma.eliminarTema');
-    Route::post('/temas', [PlataformaController::class, 'crearTema'])->name('plataforma.crearTema');
-
-    // Rutas de Personal
-    Route::get('/plataforma/personal/estudiantes', [PlataformaController::class, 'estudiantes'])->name('plataforma.estudiantes');
-    Route::get('/plataforma/personal/inscripciones', [PlataformaController::class, 'inscripciones'])->name('plataforma.inscripciones');
-
-    // Rutas de Finanzas
-    Route::get('/plataforma/finanzas/pagos', [PlataformaController::class, 'pagos'])->name('plataforma.pagos');
-    Route::get('/plataforma/finanzas/historial-pagos', [PlataformaController::class, 'historialPagos'])->name('plataforma.historial-pagos');
-
-    // Rutas de Espacio
-    Route::get('/plataforma/espacio/mis-cursos', [PlataformaController::class, 'misCursosEspacio'])->name('plataforma.espacio-mis-cursos');
-    Route::get('/plataforma/espacio/mis-pagos', [PlataformaController::class, 'misPagosEspacio'])->name('plataforma.espacio-mis-pagos');
-    Route::get('/plataforma/espacio/perfil', [PlataformaController::class, 'perfilEspacio'])->name('plataforma.espacio-perfil');
-
-    // Rutas adicionales
-    Route::post('/certificados', [PlataformaController::class, 'storeCertificado'])->name('certificados.store');
-
-    Route::put('/plataforma/actualizarModulo/{id}', [PlataformaController::class, 'actualizarModulo'])->name('plataforma.actualizarModulo');
-    Route::put('/plataforma/actualizarTema/{id}', [PlataformaController::class, 'actualizarTema'])->name('plataforma.actualizarTema');
-
-    Route::post('/registrar-estudiante', [PlataformaController::class, 'registrarEstudiante'])->name('plataforma.registrarEstudiante');
-    Route::post('/estudiante/{matricula}/baja', [PlataformaController::class, 'darDeBaja'])->name('plataforma.baja');
-
-    Route::post('/inscripciones', [PlataformaController::class, 'storeInscripcion'])->name('plataforma.storeInscripcion');
-
-    Route::put('/inscripciones/{id}', [PlataformaController::class, 'update'])->name('plataforma.updateInscripcion');
-    Route::post('/plataforma/bajaProfesor/{id}', [PlataformaController::class, 'bajaProfesor'])->name('plataforma.bajaProfesor');
+            // Rutas de Módulos
+            Route::get('/plataforma/modulos/lista', [PlataformaController::class, 'listaModulos'])->name('plataforma.lista-modulos');
+            Route::post('/plataforma/modulos/store', [PlataformaController::class, 'moduloStore'])->name('plataforma.moduloStore');
+            Route::put('/plataforma/modulos/{id}', [PlataformaController::class, 'moduloUpdate'])->name('plataforma.moduloUpdate');
+            Route::delete('/plataforma/modulos/{id}', [PlataformaController::class, 'moduloDestroy'])->name('plataforma.moduloDestroy');
+            Route::get('/plataforma/modulos/temas', [PlataformaController::class, 'temasModulos'])->name('plataforma.temas-modulos');
+            Route::get('/temas-modulos', [PlataformaController::class, 'ligarModulosATemas'])->name('ligarTemasModulo');
+            Route::post('/plataforma/asignar-temas', [PlataformaController::class, 'asignarTemas'])->name('asignar.temas');
+            Route::post('/modulos', [PlataformaController::class, 'crearModulo'])->name('plataforma.crearModulo');
+            Route::get('/modulo/modificar/{id}', [PlataformaController::class, 'modificarModulo'])->name('plataforma.modificarModulo');
+            Route::delete('/modulo/eliminar/{id}', [PlataformaController::class, 'eliminarModulo'])->name('plataforma.eliminarModulo');
 
 
+            // Rutas para temas
+            Route::get('/tema/modificar/{id}', [PlataformaController::class, 'modificarTema'])->name('plataforma.modificarTema');
+            Route::delete('/tema/eliminar/{id}', [PlataformaController::class, 'eliminarTema'])->name('plataforma.eliminarTema');
+            Route::post('/temas', [PlataformaController::class, 'crearTema'])->name('plataforma.crearTema');
 
-    Route::post('/plataforma/asignar-rol', [PlataformaController::class, 'asignarRol'])->name('plataforma.asignarRol');
+            // Rutas de Personal
+            Route::get('/plataforma/personal/estudiantes', [PlataformaController::class, 'estudiantes'])->name('plataforma.estudiantes');
+            Route::get('/plataforma/personal/inscripciones', [PlataformaController::class, 'inscripciones'])->name('plataforma.inscripciones');
 
+            // Rutas de Finanzas
+            Route::get('/plataforma/finanzas/pagos', [PlataformaController::class, 'pagos'])->name('plataforma.pagos');
+            Route::get('/plataforma/finanzas/historial-pagos', [PlataformaController::class, 'historialPagos'])->name('plataforma.historial-pagos');
 
+            Route::post('/certificados', [PlataformaController::class, 'storeCertificado'])->name('certificados.store');
+            Route::put('/plataforma/actualizarModulo/{id}', [PlataformaController::class, 'actualizarModulo'])->name('plataforma.actualizarModulo');
+            Route::put('/plataforma/actualizarTema/{id}', [PlataformaController::class, 'actualizarTema'])->name('plataforma.actualizarTema');
+            Route::post('/registrar-estudiante', [PlataformaController::class, 'registrarEstudiante'])->name('plataforma.registrarEstudiante');
+            Route::post('/estudiante/{matricula}/baja', [PlataformaController::class, 'darDeBaja'])->name('plataforma.baja');
+            Route::post('/inscripciones', [PlataformaController::class, 'storeInscripcion'])->name('plataforma.storeInscripcion');
+            Route::put('/inscripciones/{id}', [PlataformaController::class, 'update'])->name('plataforma.updateInscripcion');
+            Route::post('/plataforma/bajaProfesor/{id}', [PlataformaController::class, 'bajaProfesor'])->name('plataforma.bajaProfesor');
+            Route::post('/plataforma/asignar-rol', [PlataformaController::class, 'asignarRol'])->name('plataforma.asignarRol');
+        });
 });
 
 
