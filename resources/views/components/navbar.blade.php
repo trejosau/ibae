@@ -43,6 +43,7 @@
                         <a class="nav-link roboto-medium" href="/tienda">Tienda</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link roboto-medium" href="/cursos-info">Cursos</a>
                         <a class="nav-link roboto-medium" href="{{ route('cursos.info') }}">Cursos</a>
                     </li>
 
@@ -51,7 +52,7 @@
         </div>
 
         <div class="d-flex align-items-center">
-            @if(auth()->check() && !request()->routeIs('dashboard'))
+            @if(auth()->check() && !request()->routeIs('dashboardd'))
                 <!-- Carrito -->
                 <a class="text-reset me-3" href="#">
                     <i class="fas fa-shopping-cart icono"></i>
