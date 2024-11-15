@@ -34,6 +34,9 @@ Route::get('/cursos', function () {
     return view('cursos');
 })->name('cursos.info');
 
+Route::get('auth/google', [loginGoogleController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleCallback'])->name('login.google.callback');
+
 
 
 Route::middleware(['auth', 'role:cliente'])->group(function () {
@@ -190,8 +193,7 @@ Route::middleware(['auth', 'role:cliente'])->group(function () {
     Route::get('/producto/{id}', [ProductosController::class, 'mostrarDetalle'])->name('producto.detalle');
     Route::get('/buscar', [ProductosController::class, 'buscar'])->name('buscar');
     Route::get('/tienda', [ProductosController::class, 'mostrar'])->name('tienda.mostrar');
-    Route::get('auth/google', [loginGoogleController::class, 'redirectToGoogle'])->name('login.google');
-    Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleCallback'])->name('login.google.callback');
+
 
     Route::get('/productos', [ProductosController::class, 'index'])->name('productos.index');
     Route::post('/producto/{id}/agregar-al-carrito', [ProductosController::class, 'agregarAlCarrito'])->name('producto.agregar');
