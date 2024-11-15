@@ -181,16 +181,16 @@ class PlataformaController extends Controller
             'horas' => 'required|integer|min:1|max:120',
             'institucion' => 'required|string|in:SEP,Otra',
         ]);
-    
+
         if ($request->horas > 120) {
             return response()->json(['error' => 'Horas excedidas: el máximo permitido es 120.'], 422);
         }
-    
+
         Certificados::create($request->all());
-    
+
         return response()->json(['success' => 'Certificado creado con éxito.']);
     }
-    
+
 
     public function cambiarEstado(Request $request)
     {
@@ -332,7 +332,7 @@ class PlataformaController extends Controller
 
         // Usar el id_profesor del select
         $id_profesor = $validatedData['id_profesor'];
-        
+
 
         // Crear el registro de apertura de curso
         $cursoApertura = CursoApertura::create([
@@ -590,6 +590,9 @@ class PlataformaController extends Controller
             'password' => Hash::make($password), // Contraseña por defecto
         ]);
 
+        $usuario->assignRole('cliente');
+        $usuario->assignRole('estudiante');
+
 
         // Crear Persona
         $persona = Persona::create([
@@ -763,7 +766,7 @@ public function historialPagos()
         $adeudo = $colegiatura->estudianteCurso->colegiaturas
             ->where('colegiatura', 0) // 0 indica no pagado
             ->sum('Monto');
-        
+
         $colegiatura->adeudo = $adeudo; // Añadimos el total adeudado a cada colegiatura
     }
 
@@ -782,27 +785,27 @@ public function historialPagos()
     {
         // Obtener el usuario autenticado
         $username = auth()->user()->username;
-    
+
         // Obtener la persona asociada al usuario
          $persona = DB::table('personas')
             ->join('users', 'personas.usuario', '=', 'users.id')
             ->where('users.username', $username)
             ->select('personas.id')
             ->first();
-    
+
         if (!$persona) {
             return redirect()->back()->with('error', 'Usuario no encontrado.');
         }
-    
+
         // Obtener el estudiante basado en el id_persona de la tabla personas
         $estudiante = DB::table('estudiantes')
             ->where('id_persona', $persona->id)
             ->first();
-    
+
         if (!$estudiante) {
             return redirect()->back()->with('error', 'Estudiante no encontrado.');
         }
-    
+
         $cursos = DB::table('estudiante_curso')
         ->join('curso_apertura', 'estudiante_curso.id_curso_apertura', '=', 'curso_apertura.id')
         ->join('cursos', 'curso_apertura.id_curso', '=', 'cursos.id')
@@ -816,44 +819,44 @@ public function historialPagos()
             'curso_apertura.fecha_inicio'
         )
         ->get();
-    
 
-    
+
+
         // Pasar los cursos y el estudiante a la vista
         return view('plataforma.index', compact('cursos', 'estudiante'));
     }
-    
+
 
     public function misPagosEspacio()
     {
         // Obtener el usuario autenticado
         $username = auth()->user()->username;
-    
+
         // Obtener la persona asociada al usuario
         $persona = DB::table('personas')
             ->join('users', 'personas.usuario', '=', 'users.id')
             ->where('users.username', $username)
             ->select('personas.id')
             ->first();
-    
+
         if (!$persona) {
             return redirect()->back()->with('error', 'Usuario no encontrado.');
         }
-    
+
         // Obtener el estudiante basado en el id_persona de la tabla personas
         $estudiante = DB::table('estudiantes')
             ->where('id_persona', $persona->id)
             ->first();
-    
+
         if (!$estudiante) {
             return redirect()->back()->with('error', 'Estudiante no encontrado.');
         }
-    
+
         // Subconsulta para obtener la última fecha de pago de cada curso del estudiante
         $subquery = DB::table('colegiaturas')
             ->select('id_estudiante_curso', DB::raw('MAX(fecha_pago) as max_fecha_pago'))
             ->groupBy('id_estudiante_curso');
-    
+
         // Consulta principal para obtener los pagos de ese estudiante
         $colegiaturas = DB::table('colegiaturas')
             ->join('estudiante_curso', 'colegiaturas.id_estudiante_curso', '=', 'estudiante_curso.id')
@@ -872,11 +875,11 @@ public function historialPagos()
                 'colegiaturas.semana'
             )
             ->get();
-    
+
         // Pasar los pagos y el estudiante a la vista
         return view('plataforma.index', compact('colegiaturas', 'estudiante'));
     }
-    
+
 
     public function perfilEspacio() {
         return view('plataforma.index');
