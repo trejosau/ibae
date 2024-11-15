@@ -86,7 +86,7 @@
 
 </main>
 
-@if(!request()->routeIs('dashboard'))
+@if(!request()->routeIs('dashboardd'))
 @include('components.footer')
     @endif
 </body>

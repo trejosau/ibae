@@ -51,7 +51,7 @@
         </div>
 
         <div class="d-flex align-items-center">
-            @if(auth()->check() && !request()->routeIs('dashboard'))
+            @if(auth()->check() && !request()->routeIs('dashboardd'))
                 <!-- Carrito -->
                 <a class="text-reset me-3" href="#">
                     <i class="fas fa-shopping-cart icono"></i>

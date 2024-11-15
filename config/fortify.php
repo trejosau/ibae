@@ -16,7 +16,7 @@ return [
 
     'lowercase_usernames' => true,
 
-    'home' => '/home',
+    'home' => '/',
 
     'prefix' => '',
 
@@ -39,9 +39,7 @@ return [
     ],
     'redirects' => [
         'register' => '/login',
-        'logout' => '/login',
         'login' => '/',
-        'reset' => '/profile',
+        'logout' => '/login',
     ],
-
 ];

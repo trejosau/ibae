@@ -21,13 +21,22 @@ Route::get('/', function () {
     return view('index');
 })->name('home');
 
+Route::get('/contacto', function () {
+    return view('contacto');
+})->name('contacto');
+
+Route::get('/about-us', function () {
+    return view('sobrenosotros');
+})->name('sobrenosotros');
+
+
 Route::get('/cursos-info', function () {
     return view('cursos');
 })->name('cursos-info');
 
 
 
-Route::middleware(['auth', 'role:comprador'])->group(function () {
+Route::middleware(['auth', 'role:cliente'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/image-update', [ProfileController::class, 'imageUpdate'])->name('profile.imageUpdate');
@@ -35,12 +44,16 @@ Route::middleware(['auth', 'role:comprador'])->group(function () {
     Route::put('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.changePassword');
 });
 
-
-
-
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
-
+Route::get('/salon', [SalonController::class, 'index'])->name('salon.index');
 Route::middleware('auth')->group(function () {
+    Route::get('/salon/agendar', [SalonController::class, 'agendar'])->name('salon.agendar');
+    Route::get('/salon/confirmar', [SalonController::class, 'confirmar'])->name('salon.confirmar');
+});
+
+
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboardd');
     Route::get('/dashboard/inicio', [DashboardController::class, 'inicio'])->name('dashboard.inicio');
     Route::get('/dashboard/ventas', [DashboardController::class, 'ventas'])->name('dashboard.ventas');
     Route::get('/dashboard/pedidos', [DashboardController::class, 'pedidos'])->name('dashboard.pedidos');
@@ -71,7 +84,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/productos/agregar', [ProductosController::class, 'agregar'])->name('productos.agregar');
     Route::put('/dashboard/productos/actualizar/{id}', [ProductosController::class, 'actualizar'])->name('productos.update');
     Route::put('/dashboard/productos/retirar/{id}', [ProductosController::class, 'retirar'])->name('productos.retirar');
-
     Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
     Route::post('/dashboard/usuarios/agregarAdmin', [UsuarioController::class, 'agregarAdmin'])->name('usuarios.agregarAdmin');
     Route::post('/dashboard/usuarios/agregarEstilista', [UsuarioController::class, 'agregarEstilista'])->name('usuarios.agregarEstilista');
@@ -80,22 +92,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
     Route::get('/notificaciones/marcar-leida/{id}', [NotificacionesController::class, 'marcarLeida'])->name('notificaciones.marcarLeida');
 
+
 });
 
-Route::get('/contacto', function () {
-    return view('contacto');
-})->name('contacto');
 
-Route::get('/about-us', function () {
-    return view('sobrenosotros');
-})->name('sobrenosotros');
 
-Route::get('/plataforma/', function () {
-    return Redirect::route('plataforma.mis-cursos');
-})->name('plataforma');
 
-Route::middleware('auth')->group(function () {
-    // Rutas de Cursos
+Route::middleware(['auth', 'role:profesor'])->group(function () {
+    Route::get('/plataforma/', function () {
+        return Redirect::route('plataforma.mis-cursos');
+    })->name('plataforma');
+
     Route::get('/plataforma/cursos/mis-cursos', [PlataformaController::class, 'misCursos'])->name('plataforma.mis-cursos');
     Route::get('/plataforma/cursos/historial-cursos', [PlataformaController::class, 'historialCursos'])->name('plataforma.historial-cursos');
     Route::post('/plataforma/cursos/guardar-curso-apertura', [PlataformaController::class, 'storeCursoApertura'])->name('plataforma.storeCursoApertura');
@@ -186,12 +193,6 @@ Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, '
     Route::get('/carrito/contenido', [ProductosController::class, 'cargarContenidoCarrito'])->name('carrito.contenido');
 
 
-
-    Route::middleware('auth')->group(function () {
-    Route::get('/salon', [SalonController::class, 'index'])->name('salon.index');
-    Route::get('/salon/agendar', [SalonController::class, 'agendar'])->name('salon.agendar');
-    Route::get('/salon/confirmar', [SalonController::class, 'confirmar'])->name('salon.confirmar');
-});
 
     Route::get('/graficas/colegiaturas', [GraficasController::class, 'obtenerTotalPorMesAcademia'])->name('graficas.colegiaturas');
     Route::get('/graficas/salon', [GraficasController::class, 'obtenerTotalSalon'])->name('graficas.salon');
