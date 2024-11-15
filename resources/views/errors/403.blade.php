@@ -80,7 +80,7 @@
                 </div>
             </div>
         </div>
-
+	</div>
     <div class="animation-container">
         <dotlottie-player src="https://lottie.host/90989bdd-ae79-4fc2-b230-c5a530228dd1/wyf5FOCTuC.json"
         background="transparent"
