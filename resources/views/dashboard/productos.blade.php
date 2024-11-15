@@ -7,10 +7,26 @@
 <div class="container">
     <h1 class="mb-4">Gestión de Productos</h1>
 
-    <!-- Button to Open the Modal -->
-    <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#agregarProductoModal">
-        Agregar Producto
-    </button>
+  
+    <!-- Botón para abrir el modal de agregar Producto -->
+<button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#agregarProductoModal"
+style="width: 200px; margin-right: 10px; background-color: #4CAF50; border-color: #4CAF50; color: white; border-radius: 8px;">
+Agregar Producto
+</button>
+
+<!-- Botón para abrir el modal de agregar Categoría -->
+<button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#modalAgregarCategoria"
+style="width: 200px; margin-right: 10px; background-color: #2196F3; border-color: #2196F3; color: white; border-radius: 8px;">
+Agregar Categoría
+</button>
+
+<!-- Botón para abrir el modal de agregar Subcategoría -->
+<button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#modalAgregarSubcategoria"
+style="width: 300px; background-color: #FF9800; border-color: #FF9800; color: white; border-radius: 8px;">
+Agregar Subcategoría
+</button>
+
+
 
     <!-- Modal -->
     <div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-labelledby="agregarProductoModalLabel" aria-hidden="true">
@@ -244,6 +260,66 @@
                         </div>
                     </tr>
 
+
+                    <!-- Modal para agregar Categoría -->
+<div class="modal fade" id="modalAgregarCategoria" tabindex="-1" aria-labelledby="modalAgregarCategoriaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAgregarCategoriaLabel">Agregar Categoría</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{{ route('categorias.store') }}" method="POST">
+          @csrf
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="nombre_categoria" class="form-label">Nombre de la Categoría</label>
+              <input type="text" class="form-control" id="nombre_categoria" name="nombre_categoria" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal para agregar Subcategoría -->
+  <div class="modal fade" id="modalAgregarSubcategoria" tabindex="-1" aria-labelledby="modalAgregarSubcategoriaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAgregarSubcategoriaLabel">Agregar Subcategoría</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{{ route('subcategorias.store') }}" method="POST">
+          @csrf
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="nombre_subcategoria" class="form-label">Nombre de la Subcategoría</label>
+              <input type="text" class="form-control" id="nombre_subcategoria" name="nombre_subcategoria" required>
+            </div>
+            <div class="mb-3">
+              <label for="categoria_id" class="form-label">Categoría</label>
+              <select class="form-select" id="categoria_id" name="categoria_id" required>
+                <option value="">Seleccione una categoría</option>
+                @foreach($categorias as $categoria)
+                  <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
                     <script>
                         document.addEventListener("DOMContentLoaded", function () {
                             const productoId = "{{ $producto->id }}";

@@ -14,6 +14,7 @@ use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\VentaController;
 use App\Mail\EnvioCredenciales;
+use App\Models\Productos;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redirect;
 
@@ -67,6 +68,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/dashboard/productos/actualizar/{id}', [ProductosController::class, 'actualizar'])->name('productos.update');
     Route::put('/dashboard/productos/retirar/{id}', [ProductosController::class, 'retirar'])->name('productos.retirar');
 
+    Route::post('/categorias/store', [ProductosController::class, 'storeCategoria'])->name('categorias.store');
+    Route::post('/subcategorias/store', [ProductosController::class, 'storeSubcategoria'])->name('subcategorias.store');
+    
     Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
     Route::post('/dashboard/usuarios/agregarAdmin', [UsuarioController::class, 'agregarAdmin'])->name('usuarios.agregarAdmin');
     Route::post('/dashboard/usuarios/agregarEstilista', [UsuarioController::class, 'agregarEstilista'])->name('usuarios.agregarEstilista');

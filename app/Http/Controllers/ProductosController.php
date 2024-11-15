@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\Productos;
+use App\Models\Subcategoria;
+use App\Models\Categorias;  
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image;
@@ -344,7 +346,34 @@ public function checkout()
 
     return view('checkout', compact('carrito', 'subtotal'));
 }
+public function storeCategoria(Request $request)
+    {
+        $request->validate([
+            'nombre_categoria' => 'required|string|max:255',
+        ]);
 
+        Categorias::create([
+            'nombre' => $request->nombre_categoria,
+        ]);
+
+        return redirect()->route('dashboard.index')->with('success', 'Categoría creada exitosamente');
+    }
+
+    // Método para almacenar una nueva subcategoría
+    public function storeSubcategoria(Request $request)
+    {
+        $request->validate([
+            'nombre_subcategoria' => 'required|string|max:255',
+            'categoria_id' => 'required|exists:categorias,id',
+        ]);
+
+        Subcategoria::create([
+            'nombre' => $request->nombre_subcategoria,
+            'categoria_id' => $request->categoria_id,
+        ]);
+
+        return redirect()->route('dashboard.index')->with('success', 'Subcategoría creada exitosamente');
+    }
 
 
 }
