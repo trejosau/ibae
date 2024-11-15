@@ -16,7 +16,7 @@
         </a>
 
         <!-- Productos -->
-        <a href="{{ route('tienda') }}" class="service-item">
+        <a href="/tienda" class="service-item">
             <img src="https://th.bing.com/th/id/R.dd9fcb778bae6a1cc637aa94b19fe03a?rik=xWOrlxfLkYdUdA&riu=http%3a%2f%2f4.bp.blogspot.com%2f-XcsklL4Da14%2fTg3Z4QvVw6I%2fAAAAAAAAAfE%2fWnlhV8MwmWA%2fs1600%2fcosmetics.jpg&ehk=vk4Wi%2frVP8%2bcOzRNuckBwdWQxnjHqAmvbPMbVUNI9KQ%3d&risl=&pid=ImgRaw&r=0" alt="Productos">
             <div class="service-label roboto-medium">PRODUCTOS</div>
         </a>
