@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use App\Models\Productos;
 use App\Models\Subcategoria;
-use App\Models\Categorias;  
+use App\Models\Categorias;
 use Illuminate\Http\Request;
 use App\Models\Pedidos;
 use Illuminate\Support\Facades\Storage;
@@ -16,11 +16,6 @@ use Stripe\Stripe;
 
 class ProductosController extends Controller
 {
-    public function index()
-    {
-        $productos = Productos::all();
-        return view('tienda', compact('productos'));
-    }
 
     public function agregar(Request $request)
     {
