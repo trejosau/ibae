@@ -178,7 +178,7 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
 });
 
 
-Route::middleware(['auth', 'role:cliente'])->group(function () {
+
     Route::get('/tienda', [ProductosController::class, 'index'])->name('tienda');
     Route::get('/catalogo', [ProductosController::class, 'catalogo'])->name('catalogo');
 
@@ -195,7 +195,7 @@ Route::middleware(['auth', 'role:cliente'])->group(function () {
 
 
 
-
+Route::middleware(['auth', 'role:cliente'])->group(function () {
     Route::get('/checkout', [ProductosController::class, 'checkout'])->name('checkout');
     Route::post('/pago', [ProductosController::class, 'pago'])->name('pago'); // Procesa el pago y redirige a Stripe
     Route::get('/success', [ProductosController::class, 'success'])->name('success');
