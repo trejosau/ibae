@@ -18,17 +18,18 @@ class Pedidos extends Model
         'clave_entrega',
         'id_comprador',
         'es_estudiante',
+        'estado_pago',
     ];
+    public function detalles()
+    {
+        return $this->hasMany(DetallePedido::class, 'id_pedido', 'id');
+    }
 
     public function comprador(): BelongsTo
     {
         return $this->belongsTo(Comprador::class, 'id_comprador');
     }
 
-    public function detalles()
-    {
-        return $this->hasMany(DetallePedido::class, 'id_pedido'); // Cambia Detalle::class por el nombre correcto del modelo
-    }
 
     public function entrega()
     {

@@ -191,6 +191,7 @@ Route::middleware(['auth', 'role:cliente'])->group(function () {
     Route::get('/producto/{id}', [ProductosController::class, 'mostrarDetalle'])->name('producto.detalle');
     Route::get('/buscar', [ProductosController::class, 'buscar'])->name('buscar');
     Route::get('/tienda', [ProductosController::class, 'mostrar'])->name('tienda.mostrar');
+    Route::get('/pedidos', [ProductosController::class, 'mostrarPedidos'])->name('tienda.mis-pedidos');
 
 
 

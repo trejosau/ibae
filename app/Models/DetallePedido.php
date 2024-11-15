@@ -21,13 +21,14 @@ class DetallePedido extends Model
         'descuento',
     ];
 
-    public function pedido() : BelongsTo
+    public function pedido()
     {
-        return $this->belongsTo(Pedidos::class, 'id_pedido');
+        return $this->belongsTo(Pedidos::class, 'id_pedido', 'id');
     }
 
-    public function producto() : BelongsTo
+    public function producto()
     {
-        return $this->belongsTo(Productos::class, 'id_producto');
+        return $this->belongsTo(Productos::class, 'id_producto', 'id');
     }
+
 }

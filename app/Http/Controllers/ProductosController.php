@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DetallePedido;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Productos;
 use App\Models\Subcategoria;
@@ -17,6 +19,19 @@ use Stripe\Stripe;
 
 class ProductosController extends Controller
 {
+
+    public function mostrarPedidos()
+    {
+        $comprador = Auth::user()->persona->comprador;
+
+       $pedidos = Pedidos::where('id_comprador', $comprador->id)
+           ->with('detalles.producto')
+           ->get();
+
+
+        return view('mis-pedidos', compact('pedidos'));
+    }
+
 
     public function agregar(Request $request)
     {
@@ -401,11 +416,11 @@ public function storeCategoria(Request $request)
                 ],
             ],
             'mode' => 'payment',
-            'success_url' => route('success') . '?session_id={CHECKOUT_SESSION_ID}', // Incluye el session_id en la URL
+            'success_url' => route('success') . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('cancel'),
         ]);
 
-        // Redirigir al cliente a Stripe Checkout
+
         return redirect($session->url);
     }
 
@@ -414,29 +429,103 @@ public function storeCategoria(Request $request)
         // Configurar la clave de API de Stripe
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
-        // Obtener el session_id de la URL
+        // Obtener el session_id desde la URL de retorno
         $sessionId = $request->get('session_id');
 
-        // Obtener los detalles de la sesión con Stripe
-        $session = Session::retrieve($sessionId);
+        // Asegúrate de que el session_id sea válido y no esté vacío
+        if (!$sessionId) {
+            return redirect()->route('error');  // Redirigir a una página de error si el sessionId es inválido
+        }
 
-        // Hacer un dump de los datos de la sesión para inspeccionarlos
-        dd([
-            'session_id' => $session->id,
-            'amount_total' => $session->amount_total,
-            'currency' => $session->currency,
-            'payment_status' => $session->payment_status,
-            'customer_email' => $session->customer_email,
-            'line_items' => $session->line_items,
-            'status' => $session->status,
-            'created_at' => $session->created,
-        ]);
+        // Intentar obtener la sesión de Stripe
+        try {
+            $session = Session::retrieve($sessionId);
+
+
+
+
+            $usuario = Auth::user();
+
+            $total =number_format($session->amount_total / 100, 2);
+            $estado = 'preparando para entrega';
+            $claveEntrega = $this->generarClaveEntrega();
+            $idComprador = $usuario->persona->comprador->id;
+            $esEstudiante = $usuario->persona->estudiante ? 1 : 1;
+            $idEstudiante = $usuario->persona->estudiante ? $usuario->persona->estudiante->matricula : null;
+            $stripe_paymet_id = $session->payment_intent;
+            $fechaPago = date('Y-m-d H:i:s', $session->created);
+            $sessionCarrito = session()->get('carrito', []);
+            $pedido = Pedidos::create([
+                'total' => $total,
+                'estado' => $estado,
+                'clave_entrega' => $claveEntrega,
+                'fecha_pedido' => now(),
+                'id_comprador' => $idComprador,
+                'es_estudiante' => $esEstudiante,
+                'id_estudiante' => $idEstudiante,
+                'stripe_payment_id' => $stripe_paymet_id,
+                'estado_pago' => 'completado',
+                'fecha_pago' => $fechaPago,
+            ]);
+
+
+
+            $descuento = 0;
+            foreach ($sessionCarrito as $index => $producto) {
+
+
+                $productoId = $index;
+
+                $productoRegistro = Productos::findOrFail($productoId);
+                $precioAplicado = $productoRegistro->precio_venta;
+                // Acumulamos el descuento solo si el usuario es estudiante
+                if ($esEstudiante) {
+                    $precioAplicado = $productoRegistro->precio_lista;
+                    $descuento += $productoRegistro->precio_venta - $productoRegistro->precio_lista; // Suma el descuento al acumulado
+                }
+
+
+                $detalle = DetallePedido::create([
+                    'id_pedido' => $pedido->id,
+                    'id_producto' => $productoId,
+                    'cantidad' => $producto['cantidad'],
+                    'precio_aplicado' => $precioAplicado,
+                    'descuento' => $descuento,
+                ]);
+            }
+
+
+            return redirect()->route('tienda.mis-pedidos');
+
+        } catch (\Stripe\Exception\UnexpectedValueException $e) {
+            return redirect()->route('error')->with('error', 'Error al recuperar la sesión de pago.');
+        }
     }
 
 public function cancel()
 {
 return view('cancel');
 }
+
+    public function generarClaveEntrega()
+    {
+        $palabras = [
+            'barberia', 'estilo', 'corte', 'barbero', 'afeitado', 'peluqueria', 'manicura', 'pedicura',
+            'estilo', 'belleza', 'salon', 'cabello', 'coloracion', 'trenza', 'maquillaje', 'brillo',
+            'cepillo', 'tinte', 'liso', 'rizado', 'barba', 'desvanecido', 'tijeras', 'cera'
+        ];
+
+        // Seleccionar una palabra aleatoria
+        $palabra = $palabras[array_rand($palabras)];
+
+        $numero = rand(1, 99);
+
+        $claveEntrega = $palabra . $numero;
+
+
+        return $claveEntrega;
+    }
+
 
 public function __construct()
 {
