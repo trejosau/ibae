@@ -28,18 +28,22 @@
 
 
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    @if(auth()->user())
+                    @if(auth()->user() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('estilista')))
                         <li class="nav-item">
                             <a class="nav-link roboto-medium" href="{{ route('dashboard.inicio') }}">Menu principal</a>
                         </li>
                     @endif
-                    <li class="nav-item">
-                        <a class="nav-link roboto-medium" href="{{ route('plataforma') }}">Plataforma</a>
-                        </li>
+
+                        @if(auth()->user() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('profesor') || auth()->user()->hasRole('estudiante')))
+                            <li class="nav-item">
+                                <a class="nav-link roboto-medium" href="{{ route('plataforma') }}">Plataforma</a>
+                            </li>
+                        @endif
+
                         <li class="nav-item">
                             <a class="nav-link roboto-medium" href="{{ route('salon.index') }}">Salon</a>
                             </li>
-                    <li class="nav-item">
+                          <li class="nav-item">
                         <a class="nav-link roboto-medium" href="/tienda">Tienda</a>
                     </li>
                     <li class="nav-item">

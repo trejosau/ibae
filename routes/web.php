@@ -34,6 +34,9 @@ Route::get('/cursos', function () {
     return view('cursos');
 })->name('cursos.info');
 
+Route::get('auth/google', [loginGoogleController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleCallback'])->name('login.google.callback');
+
 
 
 Route::middleware(['auth', 'role:cliente'])->group(function () {
@@ -60,7 +63,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/servicios/agregar-categoria', [ServiciosController::class, 'agregarCategoria'])->name('servicios.agregarCategoria');
     });
 
-    Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::middleware(['role:admin'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboardd');
         Route::get('/dashboard/inicio', [DashboardController::class, 'inicio'])->name('dashboard.inicio');
         Route::get('/dashboard/ventas', [DashboardController::class, 'ventas'])->name('dashboard.ventas');
@@ -115,19 +118,19 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
         Route::get('/plataforma/', function () {
             return Redirect::route('plataforma.mis-cursos');
         })->name('plataforma');
-        Route::middleware(['auth', 'role:estudiante'])->group(function () {
+        Route::middleware(['role:estudiante'])->group(function () {
             Route::get('/plataforma/espacio/mis-cursos', [PlataformaController::class, 'misCursosEspacio'])->name('plataforma.espacio-mis-cursos');
             Route::get('/plataforma/espacio/mis-pagos', [PlataformaController::class, 'misPagosEspacio'])->name('plataforma.espacio-mis-pagos');
             Route::get('/plataforma/espacio/perfil', [PlataformaController::class, 'perfilEspacio'])->name('plataforma.espacio-perfil');
         });
 
-        Route::middleware(['auth', 'role:profesor|admin'])->group(function () {
+        Route::middleware(['role:profesor|admin'])->group(function () {
             Route::get('/plataforma/cursos/historial-cursos', [PlataformaController::class, 'historialCursos'])->name('plataforma.historial-cursos');
             Route::get('/plataforma/cursos/ver-asistencia/{curso_apertura_id}', [PlataformaController::class, 'registrarAsistencia'])->name('plataforma.registrarAsistencia');
             Route::post('/plataforma/cursos/guardar-asistencia/{curso_apertura_id}', [PlataformaController::class, 'guardarAsistencia'])->name('guardarAsistencia');
         });
 
-        Route::middleware(['auth', 'role:admin'])->group(function () {
+        Route::middleware(['role:admin'])->group(function () {
             Route::get('/plataforma/cursos/mis-cursos', [PlataformaController::class, 'misCursos'])->name('plataforma.mis-cursos');
             Route::post('/plataforma/cursos/guardar-curso-apertura', [PlataformaController::class, 'storeCursoApertura'])->name('plataforma.storeCursoApertura');
             Route::post('/inscribir-alumno', [PlataformaController::class, 'storeAlumnoCurso'])->name('inscribirAlumno');
@@ -190,8 +193,7 @@ Route::middleware(['auth', 'role:cliente'])->group(function () {
     Route::get('/producto/{id}', [ProductosController::class, 'mostrarDetalle'])->name('producto.detalle');
     Route::get('/buscar', [ProductosController::class, 'buscar'])->name('buscar');
     Route::get('/tienda', [ProductosController::class, 'mostrar'])->name('tienda.mostrar');
-    Route::get('auth/google', [loginGoogleController::class, 'redirectToGoogle'])->name('login.google');
-    Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleCallback'])->name('login.google.callback');
+
 
     Route::get('/productos', [ProductosController::class, 'index'])->name('productos.index');
     Route::post('/producto/{id}/agregar-al-carrito', [ProductosController::class, 'agregarAlCarrito'])->name('producto.agregar');

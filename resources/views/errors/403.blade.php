@@ -70,14 +70,24 @@
 </head>
 <body>
 <div class="container">
-    <!-- Columna con animación -->
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-danger h-100 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Error 403</h5>
+                    <p class="card-text h2">No tienes permisos para acceder a esta página.</p>
+                </div>
+            </div>
+        </div>
+	</div>
     <div class="animation-container">
-        <dotlottie-player src="https://lottie.host/90989bdd-ae79-4fc2-b230-c5a530228dd1/wyf5FOCTuC.json" 
-        background="transparent" 
-        speed="1" 
-        style="width: 300px; height: 300px" 
-        direction="1" 
-        playMode="normal" 
+        <dotlottie-player src="https://lottie.host/90989bdd-ae79-4fc2-b230-c5a530228dd1/wyf5FOCTuC.json"
+        background="transparent"
+        speed="1"
+        style="width: 300px; height: 300px"
+        direction="1"
+        playMode="normal"
         loop autoplay>
     </dotlottie-player>
 
