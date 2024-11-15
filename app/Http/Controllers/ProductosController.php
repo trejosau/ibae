@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use Stripe\Checkout\Session;
 use Stripe\Stripe;
 
 class ProductosController extends Controller
@@ -408,11 +409,29 @@ public function storeCategoria(Request $request)
         return redirect($session->url);
     }
 
-public function success()
-{
-    dd(session()->all(), session()->get('session_id'));
-    return view('success');
-}
+    public function success(Request $request)
+    {
+        // Configurar la clave de API de Stripe
+        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
+        // Obtener el session_id de la URL
+        $sessionId = $request->get('session_id');
+
+        // Obtener los detalles de la sesión con Stripe
+        $session = Session::retrieve($sessionId);
+
+        // Hacer un dump de los datos de la sesión para inspeccionarlos
+        dd([
+            'session_id' => $session->id,
+            'amount_total' => $session->amount_total,
+            'currency' => $session->currency,
+            'payment_status' => $session->payment_status,
+            'customer_email' => $session->customer_email,
+            'line_items' => $session->line_items,
+            'status' => $session->status,
+            'created_at' => $session->created,
+        ]);
+    }
 
 public function cancel()
 {
