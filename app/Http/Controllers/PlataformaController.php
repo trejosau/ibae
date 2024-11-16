@@ -200,7 +200,7 @@ class PlataformaController extends Controller
         ]);
 
         $curso = Cursos::find($request->curso_id);
-        $curso->estado = $request->estado; // Asegúrate de tener una columna `estado` en la tabla `cursos`
+        $curso->estado = $request->estado; // Asegúrate de tener una columna estado en la tabla cursos
         $curso->save();
 
         return redirect()->route('plataforma.mis-cursos')->with('success', 'Estado del curso actualizado con éxito.');
@@ -477,41 +477,41 @@ class PlataformaController extends Controller
         return redirect()->back()->with('success', 'Tema agregado correctamente.');
     }
 
-     // Método para eliminar un módulo
-     public function eliminarModulo($id)
-     {
-         // Buscar el módulo por ID y eliminarlo
-         $modulo = Modulos::findOrFail($id);
-         $modulo->delete();
-
-         return redirect()->route('plataforma.lista-modulos')->with('success', 'Módulo eliminado correctamente.');
-     }
-
-
-
-     // Método para eliminar un tema
-     public function eliminarTema($id)
-     {
-         // Buscar el tema por ID y eliminarlo
-         $tema = Temas::findOrFail($id);
-         $tema->delete();
-
-         return redirect()->route('plataforma.lista-modulos')->with('success', 'Tema eliminado correctamente.');
-     }
-
-
-     public function actualizarModulo(Request $request, $id)
+    // Método para eliminar un módulo
+    public function eliminarModulo($id)
     {
-    $modulo = Modulos::findOrFail($id);
-    $modulo->update($request->only(['nombre', 'categoria', 'duracion']));
-    return redirect()->back()->with('success', 'Módulo actualizado con éxito.');
+        // Buscar el módulo por ID y eliminarlo
+        $modulo = Modulos::findOrFail($id);
+        $modulo->delete();
+
+        return redirect()->route('plataforma.lista-modulos')->with('success', 'Módulo eliminado correctamente.');
+    }
+
+
+
+    // Método para eliminar un tema
+    public function eliminarTema($id)
+    {
+        // Buscar el tema por ID y eliminarlo
+        $tema = Temas::findOrFail($id);
+        $tema->delete();
+
+        return redirect()->route('plataforma.lista-modulos')->with('success', 'Tema eliminado correctamente.');
+    }
+
+
+    public function actualizarModulo(Request $request, $id)
+    {
+        $modulo = Modulos::findOrFail($id);
+        $modulo->update($request->only(['nombre', 'categoria', 'duracion']));
+        return redirect()->back()->with('success', 'Módulo actualizado con éxito.');
     }
 
     public function actualizarTema(Request $request, $id)
     {
-    $tema = Temas::findOrFail($id);
-    $tema->update($request->only(['nombre', 'descripcion']));
-    return redirect()->back()->with('success', 'Tema actualizado con éxito.');
+        $tema = Temas::findOrFail($id);
+        $tema->update($request->only(['nombre', 'descripcion']));
+        return redirect()->back()->with('success', 'Tema actualizado con éxito.');
     }
 
 
@@ -558,6 +558,33 @@ class PlataformaController extends Controller
         $usuario = User::find($request->usuario_id);
         $usuario->assignRole('estudiante');
 
+        $persona = $usuario->persona;
+        $persona->update([
+            'nombre' => $request->nombre,
+            'ap_paterno' => $request->ap_paterno,
+            'ap_materno' => $request->ap_materno,
+            'telefono' => $request->telefono,
+            'ciudad' => $request->ciudad,
+            'zipcode' => $request->zipcode,
+            'colonia' => $request->colonia,
+            'calle' => $request->calle,
+            'num_ext' => $request->num_ext,
+            'num_int' => $request->num_int,
+        ]);
+
+        Estudiante::create([
+            'id_persona' => $persona->id,
+            'id_inscripcion' => $request->inscripcion_id,
+            'fecha_inscripcion' => $request->fecha_inscripcion,
+            'grado_estudio' => $request->grado_estudio,
+            'zipcode' => $request->zipcode,
+            'ciudad' => $request->ciudad,
+            'colonia' => $request->colonia,
+            'calle' => $request->calle,
+            'num_ext' => $request->num_ext,
+            'num_int' => $request->num_int,
+        ]);
+
         return redirect()->route('plataforma.estudiantes')->with('success', 'Rol asignado con éxito');
     }
 
@@ -569,9 +596,9 @@ class PlataformaController extends Controller
             'ap_paterno' => 'required|string',
             'ap_materno' => 'nullable|string',
             'telefono' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'id_inscripcion' => 'required|exists:inscripciones,id',
-            'fecha_inscripcion' => 'required|date',
+            'fecha_inscripcion_estudiante' => 'required|date',
             'grado_estudio' => 'required|string',
             'zipcode' => 'required|string',
             'ciudad' => 'required|string',
@@ -587,7 +614,9 @@ class PlataformaController extends Controller
         $usuario = User::create([
             'username' => random_int(1,10000).now(),
             'email' => $request->email,
-            'password' => Hash::make($password), // Contraseña por defecto
+            'password' => Hash::make($password),
+            'provider' => 'default',
+            'profile_photo_url' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/profiles/default_profile.jpg',
         ]);
 
         $usuario->assignRole('cliente');
@@ -605,12 +634,14 @@ class PlataformaController extends Controller
         // Asignar rol de estudiante
         $usuario->assignRole('estudiante');
 
+
+
         // Crear Estudiante
         $estudiante = Estudiante::create([
             'estado' => 'activo',
             'id_persona' => $persona->id,
             'id_inscripcion' => $request->id_inscripcion,
-            'fecha_inscripcion' => $request->fecha_inscripcion,
+            'fecha_inscripcion' => $request->fecha_inscripcion_estudiante,
             'grado_estudio' => $request->grado_estudio,
             'zipcode' => $request->zipcode,
             'ciudad' => $request->ciudad,
@@ -619,14 +650,13 @@ class PlataformaController extends Controller
             'num_ext' => $request->num_ext,
             'num_int' => $request->num_int,
         ]);
+        $prefix = date('y') . date('m');
+        $estudiante->matricula = $prefix . $estudiante->matricula;
+        $estudiante->save();
 
-    $prefix = date('y') . date('m');
-    $matricula_username = $prefix . $usuario->id;
-
-            $usuario->username = $matricula_username;
-            $estudiante->matricula = $matricula_username;
-            $usuario->save();
-            $estudiante->save;
+        $usuario->username = $estudiante->matricula;
+        $usuario->save();
+        $estudiante->save;
 
 
         if ($estudiante)
@@ -652,7 +682,7 @@ class PlataformaController extends Controller
         }
 
         // Cambiar el estado a baja
-        $estudiante->estado = 'baja';  // Asumiendo que el campo 'estado' es 'activo' o 'baja'
+        $estudiante->estado = 'baja';
         $estudiante->save();
 
         return redirect()->route('plataforma.estudiantes')->with('success', 'Estudiante dado de baja correctamente.');
@@ -725,22 +755,22 @@ class PlataformaController extends Controller
 
 
     public function bajaProfesor($id)
-{
-    // Buscar al profesor por su ID
-    $profesor = Profesor::find($id);
+    {
+        // Buscar al profesor por su ID
+        $profesor = Profesor::find($id);
 
-    // Verificar que el profesor exista
-    if (!$profesor) {
-        return redirect()->back()->with('error', 'Profesor no encontrado.');
+        // Verificar que el profesor exista
+        if (!$profesor) {
+            return redirect()->back()->with('error', 'Profesor no encontrado.');
+        }
+
+        // Cambiar su estado a 'inactivo'
+        $profesor->estado = 'inactivo';
+        $profesor->save();
+
+        // Redirigir con un mensaje de éxito
+        return redirect()->route('plataforma.profesores')->with('success', 'Profesor dado de baja correctamente.');
     }
-
-    // Cambiar su estado a 'inactivo'
-    $profesor->estado = 'inactivo';
-    $profesor->save();
-
-    // Redirigir con un mensaje de éxito
-    return redirect()->route('plataforma.profesores')->with('success', 'Profesor dado de baja correctamente.');
-}
 
 
 
@@ -748,30 +778,30 @@ class PlataformaController extends Controller
 
 // En tu controlador, por ejemplo, EstudianteController.php
 // App\Http\Controllers\EstudianteController.php
-public function historialPagos()
-{
-    $subquery = DB::table('colegiaturas')
-        ->select('id_estudiante_curso', DB::raw('MAX(fecha_pago) as max_fecha_pago'))
-        ->groupBy('id_estudiante_curso');
+    public function historialPagos()
+    {
+        $subquery = DB::table('colegiaturas')
+            ->select('id_estudiante_curso', DB::raw('MAX(fecha_pago) as max_fecha_pago'))
+            ->groupBy('id_estudiante_curso');
 
-    $colegiaturas = Colegiaturas::joinSub($subquery, 'ultimo_pago', function ($join) {
+        $colegiaturas = Colegiaturas::joinSub($subquery, 'ultimo_pago', function ($join) {
             $join->on('colegiaturas.id_estudiante_curso', '=', 'ultimo_pago.id_estudiante_curso')
-                 ->on('colegiaturas.fecha_pago', '=', 'ultimo_pago.max_fecha_pago');
+                ->on('colegiaturas.fecha_pago', '=', 'ultimo_pago.max_fecha_pago');
         })
-        ->with(['estudianteCurso.estudiante.persona', 'estudianteCurso.cursoApertura', 'estudianteCurso.colegiaturas'])
-        ->get();
+            ->with(['estudianteCurso.estudiante.persona', 'estudianteCurso.cursoApertura', 'estudianteCurso.colegiaturas'])
+            ->get();
 
-    foreach ($colegiaturas as $colegiatura) {
-        // Suma de las semanas no pagadas
-        $adeudo = $colegiatura->estudianteCurso->colegiaturas
-            ->where('colegiatura', 0) // 0 indica no pagado
-            ->sum('Monto');
+        foreach ($colegiaturas as $colegiatura) {
+            // Suma de las semanas no pagadas
+            $adeudo = $colegiatura->estudianteCurso->colegiaturas
+                ->where('colegiatura', 0) // 0 indica no pagado
+                ->sum('Monto');
 
-        $colegiatura->adeudo = $adeudo; // Añadimos el total adeudado a cada colegiatura
+            $colegiatura->adeudo = $adeudo; // Añadimos el total adeudado a cada colegiatura
+        }
+
+        return view('plataforma.index', compact('colegiaturas'));
     }
-
-    return view('plataforma.index', compact('colegiaturas'));
-}
 
 
 
@@ -787,7 +817,7 @@ public function historialPagos()
         $username = auth()->user()->username;
 
         // Obtener la persona asociada al usuario
-         $persona = DB::table('personas')
+        $persona = DB::table('personas')
             ->join('users', 'personas.usuario', '=', 'users.id')
             ->where('users.username', $username)
             ->select('personas.id')
@@ -807,18 +837,18 @@ public function historialPagos()
         }
 
         $cursos = DB::table('estudiante_curso')
-        ->join('curso_apertura', 'estudiante_curso.id_curso_apertura', '=', 'curso_apertura.id')
-        ->join('cursos', 'curso_apertura.id_curso', '=', 'cursos.id')
-        ->join('certificados', 'cursos.id_certificacion', '=', 'certificados.id')
-        ->where('estudiante_curso.id_estudiante', $estudiante->matricula)
-        ->select(
-            'cursos.nombre as nombre_curso',
-            'cursos.descripcion as descripcion_curso',
-            'cursos.duracion_semanas',
-            'certificados.nombre as nombre_certificado',
-            'curso_apertura.fecha_inicio'
-        )
-        ->get();
+            ->join('curso_apertura', 'estudiante_curso.id_curso_apertura', '=', 'curso_apertura.id')
+            ->join('cursos', 'curso_apertura.id_curso', '=', 'cursos.id')
+            ->join('certificados', 'cursos.id_certificacion', '=', 'certificados.id')
+            ->where('estudiante_curso.id_estudiante', $estudiante->matricula)
+            ->select(
+                'cursos.nombre as nombre_curso',
+                'cursos.descripcion as descripcion_curso',
+                'cursos.duracion_semanas',
+                'certificados.nombre as nombre_certificado',
+                'curso_apertura.fecha_inicio'
+            )
+            ->get();
 
 
 
@@ -864,7 +894,7 @@ public function historialPagos()
             ->join('cursos', 'curso_apertura.id_curso', '=', 'cursos.id')
             ->joinSub($subquery, 'ultimo_pago', function ($join) {
                 $join->on('colegiaturas.id_estudiante_curso', '=', 'ultimo_pago.id_estudiante_curso')
-                     ->on('colegiaturas.fecha_pago', '=', 'ultimo_pago.max_fecha_pago');
+                    ->on('colegiaturas.fecha_pago', '=', 'ultimo_pago.max_fecha_pago');
             })
             ->where('estudiante_curso.id_estudiante', $estudiante->matricula)
             ->select(
