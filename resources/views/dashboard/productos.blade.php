@@ -166,40 +166,49 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="id_categoria" class="form-label">Categoría</label>
-                                <select class="form-select" id="id_categoria" name="id_categoria">
-                                    <option value="">Selecciona una categoría...</option>
-                                    @foreach($categorias as $categoria)
-                                        <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="row">
+                                <!-- Categoría -->
+                                <div class="col-md-12 mb-3">
+                                    <label for="id_categoria" class="form-label">Categoría</label>
+                                    <select class="form-select" id="id_categoria" name="id_categoria">
+                                        <option value="">Selecciona una categoría...</option>
+                                        @foreach($categorias as $categoria)
+                                            <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- Subcategoría 1 -->
+                                <div class="col-md-4 mb-3">
+                                    <label for="id_subcategoria_1" class="form-label">Subcategoría 1</label>
+                                    <select class="form-select" id="select_subcategoria_1" name="select_subcategoria_1">
+                                        <option value="">Selecciona una subcategoría...</option>
+                                    </select>
+                                    <input type="hidden" name="id_subcategoria_1" id="id_subcategoria_1">
+                                </div>
+
+                                <!-- Subcategoría 2 -->
+                                <div class="col-md-4 mb-3">
+                                    <label for="id_subcategoria_2" class="form-label">Subcategoría 2</label>
+                                    <select class="form-select" id="select_subcategoria_2" name="select_subcategoria_2">
+                                        <option value="">Selecciona una subcategoría...</option>
+                                    </select>
+                                    <input type="hidden" name="id_subcategoria_2" id="id_subcategoria_2">
+                                </div>
+
+                                <!-- Subcategoría 3 -->
+                                <div class="col-md-4 mb-3">
+                                    <label for="id_subcategoria_3" class="form-label">Subcategoría 3</label>
+                                    <select class="form-select" id="select_subcategoria_3" name="select_subcategoria_3">
+                                        <option value="">Selecciona una subcategoría...</option>
+                                    </select>
+                                    <input type="hidden" name="id_subcategoria_3" id="id_subcategoria_3">
+                                </div>
                             </div>
 
-                            <div class="col-md-4 mb-3">
-                                <label for="id_subcategoria_1" class="form-label">Subcategoría 1</label>
-                                <select class="form-select" id="id_subcategoria_1" name="id_subcategoria_1">
-                                    <option value="">Selecciona una subcategoría...</option>
-                                </select>
-                            </div>
+                            <!-- Añadir jQuery -->
+                            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-                            <div class="col-md-4 mb-3">
-                                <label for="id_subcategoria_2" class="form-label">Subcategoría 2</label>
-                                <select class="form-select" id="id_subcategoria_2" name="id_subcategoria_2">
-                                    <option value="">Selecciona una subcategoría...</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="id_subcategoria_3" class="form-label">Subcategoría 3</label>
-                                <select class="form-select" id="id_subcategoria_3" name="id_subcategoria_3">
-                                    <option value="">Selecciona una subcategoría...</option>
-                                </select>
-                            </div>
-
-
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                             <script>
                                 $(document).ready(function() {
                                     var selectedSubcategorias = {
@@ -208,92 +217,81 @@
                                         '3': null
                                     };
 
-                                    // Cuando cambia la categoría seleccionada
+                                    // Cargar subcategorías al cambiar la categoría
                                     $('#id_categoria').on('change', function() {
-                                        var categoriaId = $(this).val(); // Obtener el ID de la categoría seleccionada
+                                        var categoria_id = $(this).val();
 
-                                        if (categoriaId) {
+                                        if (categoria_id) {
                                             $.ajax({
-                                                url: '/dashboard/subcategorias/' + categoriaId, // URL para obtener las subcategorías
+                                                url: '/dashboard/subcategorias/' + categoria_id, // Asegúrate de que esta URL sea correcta
                                                 type: 'GET',
                                                 dataType: 'json',
-                                                success: function(data) {
-                                                    // Limpiar los tres selectores de subcategorías
-                                                    $('#id_subcategoria_1').empty().append('<option value="">Selecciona una subcategoría...</option>');
-                                                    $('#id_subcategoria_2').empty().append('<option value="">Selecciona una subcategoría...</option>');
-                                                    $('#id_subcategoria_3').empty().append('<option value="">Selecciona una subcategoría...</option>');
+                                                success: function(subcategorias) {
+                                                    // Limpiar selects de subcategorías
+                                                    $('#select_subcategoria_1, #select_subcategoria_2, #select_subcategoria_3').empty();
 
-                                                    // Agregar las subcategorías nuevas a los tres selectores
-                                                    $.each(data, function(index, subcategoria) {
-                                                        $('#id_subcategoria_1').append('<option value="' + subcategoria.id + '">' + subcategoria.nombre + '</option>');
-                                                        $('#id_subcategoria_2').append('<option value="' + subcategoria.id + '">' + subcategoria.nombre + '</option>');
-                                                        $('#id_subcategoria_3').append('<option value="' + subcategoria.id + '">' + subcategoria.nombre + '</option>');
+                                                    // Agregar opción por defecto
+                                                    $('#select_subcategoria_1, #select_subcategoria_2, #select_subcategoria_3').append(
+                                                        $('<option>', { value: '', text: 'Selecciona una subcategoría...' })
+                                                    );
+
+                                                    // Llenar los selects con las subcategorías recibidas
+                                                    $.each(subcategorias, function(index, subcategoria) {
+                                                        $('#select_subcategoria_1, #select_subcategoria_2, #select_subcategoria_3').append(
+                                                            $('<option>', {
+                                                                value: subcategoria.id,
+                                                                text: subcategoria.nombre
+                                                            })
+                                                        );
                                                     });
 
-                                                    // Llamar a la función para deshabilitar las opciones seleccionadas en los otros selectores
-                                                    disableSelectedSubcategorias();
+                                                    // Actualizar el estado de las opciones deshabilitadas
+                                                    updateDisabledOptions();
                                                 },
-                                                error: function() {
-                                                    alert("Error al obtener las subcategorías.");
+                                                error: function(xhr, status, error) {
+                                                    console.error('Error al cargar las subcategorías: ', error);
                                                 }
                                             });
                                         } else {
-                                            // Si no se selecciona categoría, limpiar todos los selectores
-                                            $('#id_subcategoria_1').empty().append('<option value="">Selecciona una subcategoría...</option>');
-                                            $('#id_subcategoria_2').empty().append('<option value="">Selecciona una subcategoría...</option>');
-                                            $('#id_subcategoria_3').empty().append('<option value="">Selecciona una subcategoría...</option>');
+                                            $('#select_subcategoria_1, #select_subcategoria_2, #select_subcategoria_3').empty();
                                         }
                                     });
 
-                                    // Deshabilitar las subcategorías seleccionadas en otros selects
-                                    function disableSelectedSubcategorias() {
-                                        // Habilitar todas las opciones primero
-                                        $('#id_subcategoria_1 option, #id_subcategoria_2 option, #id_subcategoria_3 option').prop('disabled', false);
+                                    // Sincronizar selects de subcategorías con campos ocultos y deshabilitar globalmente opciones seleccionadas
+                                    $('#select_subcategoria_1, #select_subcategoria_2, #select_subcategoria_3').on('change', function() {
+                                        var selectId = $(this).attr('id');
+                                        var selectNumber = selectId.split('_')[2];
+                                        var selectedValue = $(this).val();
 
-                                        // Deshabilitar las subcategorías seleccionadas en los otros selectores
-                                        $('#id_subcategoria_1 option').each(function() {
-                                            var value = $(this).val();
-                                            if (selectedSubcategorias['1'] === value || selectedSubcategorias['2'] === value || selectedSubcategorias['3'] === value) {
-                                                $(this).prop('disabled', true);
-                                            }
-                                        });
+                                        // Actualizar valores en el objeto y campos ocultos
+                                        selectedSubcategorias[selectNumber] = selectedValue || null;
+                                        $('#id_subcategoria_' + selectNumber).val(selectedValue);
 
-                                        $('#id_subcategoria_2 option').each(function() {
-                                            var value = $(this).val();
-                                            if (selectedSubcategorias['1'] === value || selectedSubcategorias['2'] === value || selectedSubcategorias['3'] === value) {
-                                                $(this).prop('disabled', true);
-                                            }
-                                        });
+                                        // Actualizar el estado de las opciones deshabilitadas
+                                        updateDisabledOptions();
+                                    });
 
-                                        $('#id_subcategoria_3 option').each(function() {
-                                            var value = $(this).val();
-                                            if (selectedSubcategorias['1'] === value || selectedSubcategorias['2'] === value || selectedSubcategorias['3'] === value) {
-                                                $(this).prop('disabled', true);
-                                            }
+                                    // Deshabilitar opciones seleccionadas globalmente
+                                    function updateDisabledOptions() {
+                                        $('#select_subcategoria_1 option, #select_subcategoria_2 option, #select_subcategoria_3 option').each(function() {
+                                            var optionValue = $(this).val();
+                                            var isDisabled = Object.values(selectedSubcategorias).includes(optionValue) && optionValue !== '';
+                                            $(this).prop('disabled', isDisabled);
                                         });
                                     }
 
-                                    // Cuando se cambia un selector de subcategorías, actualizar las demás opciones
-                                    $('#id_subcategoria_1, #id_subcategoria_2, #id_subcategoria_3').on('change', function() {
-                                        var selectId = $(this).attr('id');
-                                        var value = $(this).val();
-
-                                        if (selectId === 'id_subcategoria_1') {
-                                            selectedSubcategorias['1'] = value;
-                                        } else if (selectId === 'id_subcategoria_2') {
-                                            selectedSubcategorias['2'] = value;
-                                        } else if (selectId === 'id_subcategoria_3') {
-                                            selectedSubcategorias['3'] = value;
-                                        }
-
-                                        // Llamar a la función para deshabilitar las subcategorías seleccionadas en los otros selectores
-                                        disableSelectedSubcategorias();
+                                    // Antes de enviar el formulario, sincronizar selects con los campos ocultos
+                                    $('#form-producto').submit(function() {
+                                        $('#select_subcategoria_1, #select_subcategoria_2, #select_subcategoria_3').each(function() {
+                                            var selectId = $(this).attr('id');
+                                            var selectNumber = selectId.split('_')[2];
+                                            var selectedValue = $(this).val();
+                                            $('#id_subcategoria_' + selectNumber).val(selectedValue);
+                                        });
                                     });
                                 });
-
-
-
                             </script>
+
                         </div>
                         <!-- Stock y Estado -->
                         <div class="row">

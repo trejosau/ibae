@@ -40,6 +40,7 @@ class ProductosController extends Controller
 
         $url = $this->processImage($request, $data['nombre'], $data['cantidad'], $data['medida']);
 
+
         $nombre = $data['nombre'];
         $descripcion = $data['descripcion'];
         $marca = $data['marca'];
@@ -154,19 +155,19 @@ class ProductosController extends Controller
     private function validationRules()
     {
         return [
-            'nombre' => 'required|string|max:255',
+            'nombre' => 'required|string|max:255|unique:productos,nombre',
             'descripcion' => 'required|string',
-            'marca' => 'nullable|string|max:255',
+            'marca' => 'required|string|max:255',
             'precio_proveedor' => 'required|numeric|min:0',
             'precio_lista' => 'required|numeric|min:0',
             'precio_venta' => 'required|numeric|min:0',
             'cantidad' => 'required|integer|min:0',
-            'medida' => 'nullable|string|max:50',
+            'medida' => 'required|string|max:50',
             'id_categoria' => 'required|exists:categorias,id',
             'id_subcategoria_1' => 'nullable|exists:subcategorias,id',
             'id_subcategoria_2' => 'nullable|exists:subcategorias,id',
             'id_subcategoria_3' => 'nullable|exists:subcategorias,id',
-            'main_photo' => 'nullable|image|mimes:jpeg,png,jpg',
+            'main_photo' => 'required|image|mimes:jpeg,png,jpg',
             'stock' => 'required|integer|min:0',
             'estado' => 'required|in:activo,inactivo',
         ];
@@ -457,6 +458,7 @@ public function storeCategoria(Request $request)
     public function eliminarSubcategoria($id)
     {
         $subcategoria = Subcategoria::find($id);
+        ProductoSubcategoria::where('id_subcategoria', $id)->delete();
         $subcategoria->delete();
         return redirect()->route('dashboard.productos')->with('success', 'Subcategoría eliminada exitosamente');
     }
