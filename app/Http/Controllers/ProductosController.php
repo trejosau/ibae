@@ -167,7 +167,7 @@ class ProductosController extends Controller
             'id_subcategoria_1' => 'nullable|exists:subcategorias,id',
             'id_subcategoria_2' => 'nullable|exists:subcategorias,id',
             'id_subcategoria_3' => 'nullable|exists:subcategorias,id',
-            'main_photo' => 'required|image|mimes:jpeg,png,jpg',
+            'main_photo' => 'required|image|mimes:jpeg,png,jpg,webp',
             'stock' => 'required|integer|min:0',
             'estado' => 'required|in:activo,inactivo',
         ];
