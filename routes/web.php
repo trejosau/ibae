@@ -13,9 +13,14 @@ use App\Http\Controllers\SalonController;
 use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\VentaController;
+use App\Models\Productos;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redirect;
 
+Route::get('/todosLosProductos', function () {
+    $productos = Productos::all();
+       return $productosArray = $productos->toArray();
+});
 
 Route::get('/', function () {
     return view('index');
