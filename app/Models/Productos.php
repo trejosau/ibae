@@ -45,4 +45,8 @@ class Productos extends Model
      {
          return $this->hasMany(DetallePedido::class, 'id_producto');
      }
+     public function subcategoria()
+     {
+         return $this->belongsToMany(Subcategoria::class, 'producto_subcategorias', 'id_producto', 'id_subcategoria');
+     }
 }

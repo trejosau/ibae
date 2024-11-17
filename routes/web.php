@@ -100,6 +100,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/categorias/store', [ProductosController::class, 'storeCategoria'])->name('categorias.store');
         Route::post('/subcategorias/store', [ProductosController::class, 'storeSubcategoria'])->name('subcategorias.store');
         Route::delete('/subcategorias/{id}', [ProductosController::class, 'eliminarSubcategoria'])->name('subcategorias.destroy');
+        Route::delete('/productos/{producto}/subcategoria/{subcategoria}', [ProductosController::class, 'eliminarSubcategoriaProducto'])->name('productos.subcategoria.destroy');
+        Route::post('/productos/{producto}/subcategoria', [ProductosController::class, 'agregarSubcategoria'])->name('productos.subcategoria.agregar');
         Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
         Route::post('/dashboard/usuarios/agregarAdmin', [UsuarioController::class, 'agregarAdmin'])->name('usuarios.agregarAdmin');
         Route::post('/dashboard/usuarios/agregarEstilista', [UsuarioController::class, 'agregarEstilista'])->name('usuarios.agregarEstilista');

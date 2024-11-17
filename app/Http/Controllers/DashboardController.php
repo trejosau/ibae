@@ -344,7 +344,7 @@ class DashboardController extends Controller
         $categorias = Categorias::with('subcategorias')->get();
         $subcategorias = Subcategoria::all();
         $marcas = Proveedores::all();
-        $productos = Productos::with('proveedor')->orderBy('fecha_agregado', 'desc')->paginate(6);
+        $productos = Productos::with('proveedor','subcategoria')->orderBy('fecha_agregado', 'desc')->paginate(6);
         $medidas = [
             'pzas' => 'Piezas',
             'ml' => 'Mililitros',

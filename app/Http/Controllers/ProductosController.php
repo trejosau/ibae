@@ -455,13 +455,33 @@ public function storeCategoria(Request $request)
         return redirect()->route('dashboard.productos')->with('success', 'Subcategoría creada exitosamente');
     }
 
-    public function eliminarSubcategoria($id)
+    public function eliminarSubcategoriaProducto($productoId, $subcategoriaId)
     {
-        $subcategoria = Subcategoria::find($id);
-        ProductoSubcategoria::where('id_subcategoria', $id)->delete();
-        $subcategoria->delete();
-        return redirect()->route('dashboard.productos')->with('success', 'Subcategoría eliminada exitosamente');
+        $producto = Productos::findOrFail($productoId);
+        $subcategoria = Subcategoria::findOrFail($subcategoriaId);
+
+        // Elimina la subcategoría de la relación
+        $producto->subcategoria()->detach($subcategoria->id);
+
+        return redirect()->route('dashboard.productos')->with('success', 'Subcategoría eliminada');
     }
+
+    public function agregarSubcategoria(Request $request, Productos $producto)
+    {
+        $request->validate([
+            'subcategorias' => 'required|exists:subcategorias,id', // Validar que la subcategoría exista
+        ]);
+
+        $producto->subcategoria()->attach($request->subcategorias);
+
+        return back()->with('success', 'Subcategoría agregada exitosamente.');
+    }
+
+
+
+
+
+
 
     public function pago()
     {

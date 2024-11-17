@@ -667,6 +667,11 @@
                                             </div>
                                         </div>
 
+
+
+
+
+
                                         <!-- Stock y Estado -->
                                         <div class="row">
                                             <div class="col-md-6 mb-3">
@@ -743,6 +748,53 @@
                                         <button type="submit" class="btn btn-primary">Guardar cambios</button>
                                     </div>
                                 </form>
+
+                                <!-- Subcategorías -->
+                                <div class="mb-4">
+                                    <label for="subcategorias{{ $producto->id }}" class="form-label fs-5">Subcategorías</label>
+                                    <div class="mb-3">
+                                        <!-- Subcategorías asignadas -->
+                                        <div class="d-flex flex-wrap gap-3">
+                                            @foreach($producto->subcategoria as $subcategoria)
+                                                <span class="badge bg-primary d-flex align-items-center gap-2 mb-2">
+                    {{ $subcategoria->nombre }}
+                    <form action="{{ route('productos.subcategoria.destroy', ['producto' => $producto->id, 'subcategoria' => $subcategoria->id]) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-danger" style="border: none; padding: 0.2rem 0.4rem;" title="Eliminar subcategoría">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </form>
+                </span>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                    <!-- Agregar subcategorías (ocultar si ya hay 3 subcategorías) -->
+                                    <div class="mb-3">
+                                        <label for="subcategorias{{ $producto->id }}" class="form-label fs-5">Agregar subcategorías</label>
+                                        @if($producto->subcategoria->count() < 3) <!-- Mostrar solo si hay menos de 3 subcategorías -->
+                                        <form action="{{ route('productos.subcategoria.agregar', ['producto' => $producto->id]) }}" method="POST">
+                                            @csrf
+                                            <div class="input-group">
+                                                <select class="form-select" id="subcategorias{{ $producto->id }}" name="subcategorias" required>
+                                                    <option value="">Selecciona una subcategoría...</option>
+                                                    @foreach($subcategorias as $subcategoria)
+                                                        @if(!$producto->subcategoria->contains('id', $subcategoria->id)) <!-- Excluir subcategorías ya asignadas -->
+                                                        <option value="{{ $subcategoria->id }}">{{ $subcategoria->nombre }}</option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                                <button type="submit" class="btn btn-success" style="border-radius: 0 0.25rem 0.25rem 0;">
+                                                    <i class="fa fa-plus"></i> Agregar
+                                                </button>
+                                            </div>
+                                        </form>
+                                        @else
+                                            <p class="text-muted">Ya tienes 3 subcategorías asignadas.</p>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
