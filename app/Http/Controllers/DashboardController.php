@@ -332,10 +332,16 @@ class DashboardController extends Controller
         return view('dashboard.index', compact('servicios', 'categorias'));
     }
 
+    public function obtenerSubcategorias(Request $request)
+    {
+        $subcategorias = Subcategoria::where('categoria_id', $request->id_categoria)->get();
+        return response()->json($subcategorias);
+    }
+
     public function productos(Request $request)
     {
 
-        $categorias = Categorias::all();
+        $categorias = Categorias::with('subcategorias')->get();
         $subcategorias = Subcategoria::all();
         $marcas = Proveedores::all();
         $productos = Productos::with('proveedor')->orderBy('fecha_agregado', 'desc')->paginate(6);
@@ -347,7 +353,7 @@ class DashboardController extends Controller
             'cm' => 'Centímetros',
         ];
 
-        return view('dashboard.index', compact('productos', 'marcas', 'medidas', 'categorias'));
+        return view('dashboard.index', compact('productos', 'marcas', 'medidas', 'categorias', 'subcategorias'));
     }
 
     public function usuarios(Request $request)

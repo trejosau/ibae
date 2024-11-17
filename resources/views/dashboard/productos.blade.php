@@ -5,30 +5,106 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 
 <div class="container">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     <h1 class="mb-4">Gestión de Productos</h1>
 
-  
-    <!-- Botón para abrir el modal de agregar Producto -->
-<button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#agregarProductoModal"
-style="width: 200px; margin-right: 10px; background-color: #4CAF50; border-color: #4CAF50; color: white; border-radius: 8px;">
-Agregar Producto
-</button>
+        <div class="d-flex mb-3">
+            <!-- Botón de Agregar Producto -->
+            <div class="input-group me-3">
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#agregarProductoModal"
+                        style="background-color: #4CAF50; border-color: #4CAF50; color: white; border-radius: 8px;">
+                    Agregar Producto
+                </button>
+            </div>
 
-<!-- Botón para abrir el modal de agregar Categoría -->
-<button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#modalAgregarCategoria"
-style="width: 200px; margin-right: 10px; background-color: #2196F3; border-color: #2196F3; color: white; border-radius: 8px;">
-Agregar Categoría
-</button>
+            <!-- Botón de Agregar Categoría -->
+            <div class="input-group me-3">
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalAgregarCategoria"
+                        style="background-color: #2196F3; border-color: #2196F3; color: white; border-radius: 8px 0 0 8px; border-right: 0;">
+                    Agregar Categoría
+                </button>
+                <!-- Botón de Ojo para Ver Categoría -->
+                <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#modalVerCategoria" style="border-radius: 0 8px 8px 0; background-color: #1976D2; border-left: 0;">
+                    <i class="bi bi-eye" style="font-size: 1.5rem; color: white;"></i>
+                </button>
 
-<!-- Botón para abrir el modal de agregar Subcategoría -->
-<button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#modalAgregarSubcategoria"
-style="width: 300px; background-color: #FF9800; border-color: #FF9800; color: white; border-radius: 8px;">
-Agregar Subcategoría
-</button>
+            </div>
+
+            <!-- Botón de Agregar Subcategoría -->
+            <div class="input-group me-3">
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalAgregarSubcategoria"
+                        style="background-color: #FF9800; border-color: #FF9800; color: white; border-radius: 8px;">
+                    Agregar Subcategoría
+                </button>
+            </div>
+        </div>
+
+
+        <!-- Modal para Ver Categorías -->
+        <div class="modal fade" id="modalVerCategoria" tabindex="-1" aria-labelledby="modalVerCategoriaLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalVerCategoriaLabel">Ver Categorías y Subcategorías</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                        @foreach ($categorias as $categoria)
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $categoria->nombre }}</h5>
+                                    <p class="card-text">{{ $categoria->descripcion }}</p>
+                                    <p class="card-text">
+                                        <strong>Subcategorías:</strong>
+                                    @foreach ($categoria->subcategorias as $subcategoria)
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-secondary" style="font-size: 1rem;">{{ $subcategoria->nombre }}</span>
+                                            <!-- Botón de eliminar subcategoría -->
+                                            <form action="{{ route('subcategorias.destroy', $subcategoria->id) }}" method="POST" class="ms-2">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="bi bi-trash"></i> Eliminar
+                                                </button>
+                                            </form>
+                                        </div>
+                                        @endforeach
+                                        </p>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 
-    <!-- Modal -->
+
+        <!-- Modal -->
     <div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-labelledby="agregarProductoModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -99,6 +175,125 @@ Agregar Subcategoría
                                     @endforeach
                                 </select>
                             </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="id_subcategoria_1" class="form-label">Subcategoría 1</label>
+                                <select class="form-select" id="id_subcategoria_1" name="id_subcategoria_1">
+                                    <option value="">Selecciona una subcategoría...</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="id_subcategoria_2" class="form-label">Subcategoría 2</label>
+                                <select class="form-select" id="id_subcategoria_2" name="id_subcategoria_2">
+                                    <option value="">Selecciona una subcategoría...</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="id_subcategoria_3" class="form-label">Subcategoría 3</label>
+                                <select class="form-select" id="id_subcategoria_3" name="id_subcategoria_3">
+                                    <option value="">Selecciona una subcategoría...</option>
+                                </select>
+                            </div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                            <script>
+                                $(document).ready(function() {
+                                    var selectedSubcategorias = {
+                                        '1': null,
+                                        '2': null,
+                                        '3': null
+                                    };
+
+                                    // Cuando cambia la categoría seleccionada
+                                    $('#id_categoria').on('change', function() {
+                                        var categoriaId = $(this).val(); // Obtener el ID de la categoría seleccionada
+
+                                        if (categoriaId) {
+                                            $.ajax({
+                                                url: '/dashboard/subcategorias/' + categoriaId, // URL para obtener las subcategorías
+                                                type: 'GET',
+                                                dataType: 'json',
+                                                success: function(data) {
+                                                    // Limpiar los tres selectores de subcategorías
+                                                    $('#id_subcategoria_1').empty().append('<option value="">Selecciona una subcategoría...</option>');
+                                                    $('#id_subcategoria_2').empty().append('<option value="">Selecciona una subcategoría...</option>');
+                                                    $('#id_subcategoria_3').empty().append('<option value="">Selecciona una subcategoría...</option>');
+
+                                                    // Agregar las subcategorías nuevas a los tres selectores
+                                                    $.each(data, function(index, subcategoria) {
+                                                        $('#id_subcategoria_1').append('<option value="' + subcategoria.id + '">' + subcategoria.nombre + '</option>');
+                                                        $('#id_subcategoria_2').append('<option value="' + subcategoria.id + '">' + subcategoria.nombre + '</option>');
+                                                        $('#id_subcategoria_3').append('<option value="' + subcategoria.id + '">' + subcategoria.nombre + '</option>');
+                                                    });
+
+                                                    // Llamar a la función para deshabilitar las opciones seleccionadas en los otros selectores
+                                                    disableSelectedSubcategorias();
+                                                },
+                                                error: function() {
+                                                    alert("Error al obtener las subcategorías.");
+                                                }
+                                            });
+                                        } else {
+                                            // Si no se selecciona categoría, limpiar todos los selectores
+                                            $('#id_subcategoria_1').empty().append('<option value="">Selecciona una subcategoría...</option>');
+                                            $('#id_subcategoria_2').empty().append('<option value="">Selecciona una subcategoría...</option>');
+                                            $('#id_subcategoria_3').empty().append('<option value="">Selecciona una subcategoría...</option>');
+                                        }
+                                    });
+
+                                    // Deshabilitar las subcategorías seleccionadas en otros selects
+                                    function disableSelectedSubcategorias() {
+                                        // Habilitar todas las opciones primero
+                                        $('#id_subcategoria_1 option, #id_subcategoria_2 option, #id_subcategoria_3 option').prop('disabled', false);
+
+                                        // Deshabilitar las subcategorías seleccionadas en los otros selectores
+                                        $('#id_subcategoria_1 option').each(function() {
+                                            var value = $(this).val();
+                                            if (selectedSubcategorias['1'] === value || selectedSubcategorias['2'] === value || selectedSubcategorias['3'] === value) {
+                                                $(this).prop('disabled', true);
+                                            }
+                                        });
+
+                                        $('#id_subcategoria_2 option').each(function() {
+                                            var value = $(this).val();
+                                            if (selectedSubcategorias['1'] === value || selectedSubcategorias['2'] === value || selectedSubcategorias['3'] === value) {
+                                                $(this).prop('disabled', true);
+                                            }
+                                        });
+
+                                        $('#id_subcategoria_3 option').each(function() {
+                                            var value = $(this).val();
+                                            if (selectedSubcategorias['1'] === value || selectedSubcategorias['2'] === value || selectedSubcategorias['3'] === value) {
+                                                $(this).prop('disabled', true);
+                                            }
+                                        });
+                                    }
+
+                                    // Cuando se cambia un selector de subcategorías, actualizar las demás opciones
+                                    $('#id_subcategoria_1, #id_subcategoria_2, #id_subcategoria_3').on('change', function() {
+                                        var selectId = $(this).attr('id');
+                                        var value = $(this).val();
+
+                                        if (selectId === 'id_subcategoria_1') {
+                                            selectedSubcategorias['1'] = value;
+                                        } else if (selectId === 'id_subcategoria_2') {
+                                            selectedSubcategorias['2'] = value;
+                                        } else if (selectId === 'id_subcategoria_3') {
+                                            selectedSubcategorias['3'] = value;
+                                        }
+
+                                        // Llamar a la función para deshabilitar las subcategorías seleccionadas en los otros selectores
+                                        disableSelectedSubcategorias();
+                                    });
+                                });
+
+
+
+                            </script>
                         </div>
                         <!-- Stock y Estado -->
                         <div class="row">
@@ -184,6 +379,128 @@ Agregar Subcategoría
         </div>
     </div>
 
+    <!-- Modal para agregar Categoría -->
+    <div class="modal fade" id="modalAgregarCategoria" tabindex="-1" aria-labelledby="modalAgregarCategoriaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAgregarCategoriaLabel">Agregar Categoría</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('categorias.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <!-- Nombre de la Categoría -->
+                        <div class="mb-3">
+                            <label for="nombre_categoria" class="form-label">Nombre de la Categoría</label>
+                            <input type="text" class="form-control" id="nombre_categoria" name="nombre_categoria" required>
+                        </div>
+
+                        <!-- Foto -->
+                        <div class="mb-3">
+                            <label for="foto_categoria" class="form-label">Foto de la Categoría</label>
+                            <div class="d-flex align-items-center">
+                                <div class="photo-upload-btn position-relative">
+                                    <input type="file" class="form-control position-absolute top-0 start-0 opacity-0" id="foto_categoria" name="foto_categoria" accept="image/*" style="width: 100%; height: 100%;" onchange="previewImageCategoria(event)">
+                                    <input type="hidden" id="crop_x_categoria" name="crop_x_categoria">
+                                    <input type="hidden" id="crop_y_categoria" name="crop_y_categoria">
+                                    <input type="hidden" id="crop_width_categoria" name="crop_width_categoria">
+                                    <input type="hidden" id="crop_height_categoria" name="crop_height_categoria">
+                                    <div class="btn-circle">
+                                        <i class="fa fa-camera"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contenedor para la imagen y el área de recorte -->
+                            <div class="mt-3">
+                                <img id="image_to_crop_categoria" src="#" alt="Image to crop" style="max-width: 100%; display: none;">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cropperCategoria;
+
+        function previewImageCategoria(event) {
+            if (event.target.files.length === 0) {
+                return;
+            }
+
+            var image = document.getElementById('image_to_crop_categoria');
+            var reader = new FileReader();
+
+            reader.onload = function () {
+                image.src = reader.result;
+                image.style.display = 'block';
+
+                if (cropperCategoria) {
+                    cropperCategoria.destroy();
+                }
+
+                cropperCategoria = new Cropper(image, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    autoCropArea: 0.8,
+                    minContainerWidth: 300,
+                    minContainerHeight: 300,
+                    responsive: true,
+                    crop(event) {
+                        document.getElementById('crop_x_categoria').value = event.detail.x;
+                        document.getElementById('crop_y_categoria').value = event.detail.y;
+                        document.getElementById('crop_width_categoria').value = event.detail.width;
+                        document.getElementById('crop_height_categoria').value = event.detail.height;
+                    }
+                });
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+
+
+    <!-- Modal para agregar Subcategoría -->
+    <div class="modal fade" id="modalAgregarSubcategoria" tabindex="-1" aria-labelledby="modalAgregarSubcategoriaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAgregarSubcategoriaLabel">Agregar Subcategoría</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('subcategorias.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nombre_subcategoria" class="form-label">Nombre de la Subcategoría</label>
+                            <input type="text" class="form-control" id="nombre_subcategoria" name="nombre_subcategoria" required>
+                            <small class="form-text text-muted">Solo puedes tener un maximo de 3 subcategorías por categoría.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoria_id" class="form-label">Categoría</label>
+                            <select class="form-select" id="categoria_id" name="categoria_id" required>
+                                <option value="">Seleccione una categoría</option>
+                                @foreach($categorias as $categoria)
+                                    <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Tabla de productos -->
@@ -261,65 +578,8 @@ Agregar Subcategoría
                     </tr>
 
 
-                    <!-- Modal para agregar Categoría -->
-<div class="modal fade" id="modalAgregarCategoria" tabindex="-1" aria-labelledby="modalAgregarCategoriaLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalAgregarCategoriaLabel">Agregar Categoría</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form action="{{ route('categorias.store') }}" method="POST">
-          @csrf
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="nombre_categoria" class="form-label">Nombre de la Categoría</label>
-              <input type="text" class="form-control" id="nombre_categoria" name="nombre_categoria" required>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-primary">Guardar</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Modal para agregar Subcategoría -->
-  <div class="modal fade" id="modalAgregarSubcategoria" tabindex="-1" aria-labelledby="modalAgregarSubcategoriaLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalAgregarSubcategoriaLabel">Agregar Subcategoría</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form action="{{ route('subcategorias.store') }}" method="POST">
-          @csrf
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="nombre_subcategoria" class="form-label">Nombre de la Subcategoría</label>
-              <input type="text" class="form-control" id="nombre_subcategoria" name="nombre_subcategoria" required>
-            </div>
-            <div class="mb-3">
-              <label for="categoria_id" class="form-label">Categoría</label>
-              <select class="form-select" id="categoria_id" name="categoria_id" required>
-                <option value="">Seleccione una categoría</option>
-                @foreach($categorias as $categoria)
-                  <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
-                @endforeach
-              </select>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-primary">Guardar</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-  
+
+
                     <script>
                         document.addEventListener("DOMContentLoaded", function () {
                             const productoId = "{{ $producto->id }}";
@@ -338,6 +598,7 @@ Agregar Subcategoría
                             });
                         });
                     </script>
+
                     <div class="modal fade" id="editarProductoModal{{ $producto->id }}" tabindex="-1" aria-labelledby="editarProductoModalLabel{{ $producto->id }}" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">

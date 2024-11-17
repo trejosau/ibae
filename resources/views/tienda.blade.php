@@ -214,46 +214,18 @@
 <div class="tittle p-5 fs-4"><h1>ECHA UN VISTAZO A NUESTRAS CATEGORIAS</h1></div>
 
 <div class="contenedor pb-4">
-    <div>
-        <div class="tittle">
-            <a href="{{ route('productos.categoria', ['id_categoria' => 1]) }}">
-                <img src="{{ asset('images/young-brunette-woman-grey-dress-posing.jpg') }}" alt="Cabello" class="imagen-circular" loading="lazy">
-            </a>
+    @foreach ($categorias as $categoria)
+        <div>
+            <div class="tittle">
+                <a href="{{ route('productos.categoria', ['id_categoria' => $categoria->id]) }}">
+                    <img src="{{ $categoria->photo }}" alt="{{ $categoria->nombre }}" class="imagen-circular" loading="lazy">
+                </a>
+            </div>
+            <div class="tittle">
+                <h2>{{ $categoria->nombre }}</h2>
+            </div>
         </div>
-        <div class="tittle"><h2>Cabello</h2></div>
-    </div>
-    <div>
-        <div class="tittle">
-            <a href="{{ route('productos.categoria', ['id_categoria' => 2]) }}">
-                <img src="{{ asset('images/hairdresser-styling-client-s-hair.jpg') }}" alt="Electricos" class="imagen-circular" loading="lazy">
-            </a>
-        </div>
-        <div class="tittle"><h2>Electricos</h2></div>
-    </div>
-    <div>
-        <div class="tittle">
-            <a href="{{ route('productos.categoria', ['id_categoria' => 3]) }}">
-                <img src="{{ asset('images/woman-using-pink-beauty-product-her-face.jpg') }}" alt="Skincare" class="imagen-circular" loading="lazy">
-            </a>
-        </div>
-        <div class="tittle"><h2>Skincare</h2></div>
-    </div>
-    <div>
-        <div class="tittle">
-            <a href="{{ route('productos.categoria', ['id_categoria' => 4]) }}">
-                <img src="{{ asset('images/woman-with-nail-art-promoting-design-luxury-earrings-ring.jpg') }}" alt="Uñas" class="imagen-circular" loading="lazy">
-            </a>
-        </div>
-        <div class="tittle"><h2>Uñas</h2></div>
-    </div>
-    <div>
-        <div class="tittle">
-            <a href="{{ route('productos.categoria', ['id_categoria' => 5]) }}">
-                <img src="{{ asset('images/makeup-brushes-with-whirling-pink-powder.jpg') }}" alt="Maquillaje" class="imagen-circular" loading="lazy">
-            </a>
-        </div>
-        <div class="tittle"><h2>Maquillaje</h2></div>
-    </div>
+    @endforeach
 </div>
 
 
@@ -271,19 +243,19 @@
                         <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
                     </div>
                 </a>
-            
+
                 <!-- Formulario para agregar al carrito fuera del enlace -->
                 <form id="agregar-carrito-form">
                     @csrf
                     <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
-                    <button type="button" class="btn btn-agg btn-lg fw-bold mt-3" 
-                            aria-label="Agregar {{ $producto->nombre }} al carrito" 
+                    <button type="button" class="btn btn-agg btn-lg fw-bold mt-3"
+                            aria-label="Agregar {{ $producto->nombre }} al carrito"
                             onclick="agregarAlCarrito({{ $producto->id }})">
                         <i class="fas fa-shopping-cart"></i> Agregar al carrito
                     </button>
                 </form>
             </div>
-            
+
             @empty
                 <div class="col-md-12">
                     <p class="text-center text-muted">No se encontraron productos recientes.</p>
@@ -317,8 +289,8 @@
                 <form id="agregar-carrito-form">
                     @csrf
                     <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
-                    <button type="button" class="btn btn-agg btn-lg fw-bold mt-3" 
-                            aria-label="Agregar {{ $producto->nombre }} al carrito" 
+                    <button type="button" class="btn btn-agg btn-lg fw-bold mt-3"
+                            aria-label="Agregar {{ $producto->nombre }} al carrito"
                             onclick="agregarAlCarrito({{ $producto->id }})">
                         <i class="fas fa-shopping-cart"></i> Agregar al carrito
                     </button>
@@ -373,7 +345,7 @@
         function agregarAlCarrito(productoId) {
             const cantidad = document.getElementById('cantidad-input').value;
             const token = document.querySelector('input[name="_token"]').value;
-    
+
             fetch(`/producto/${productoId}/agregar-al-carrito`, {
                 method: 'POST',
                 headers: {
@@ -397,19 +369,19 @@
                 mostrarMensaje('Error al procesar la solicitud', 'error');
             });
         }
-    
+
         function mostrarMensaje(mensaje, tipo) {
             const mensajeDiv = document.createElement('div');
             mensajeDiv.className = `mensaje-ajax ${tipo}`;
             mensajeDiv.textContent = mensaje;
-            
+
             document.body.appendChild(mensajeDiv);
-            
+
             // Activa la animación después de un breve retraso
             setTimeout(() => {
                 mensajeDiv.classList.add('show');
             }, 10);
-            
+
             // Elimina el mensaje después de 3 segundos
             setTimeout(() => {
                 mensajeDiv.remove();

@@ -93,11 +93,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/compras/limpiar-carrito/{id}', [CompraController::class, 'limpiarCarrito'])->name('compra.limpiarCarrito');
         Route::post('/dashboard/compras/quitar-producto', [CompraController::class, 'quitarProducto'])->name('compra.quitarProducto');
         Route::get('/dashboard/productos', [DashboardController::class, 'productos'])->name('dashboard.productos');
+        Route::get('/dashboard/subcategorias/{id_categoria}', [DashboardController::class, 'obtenerSubcategorias']);
         Route::post('/dashboard/productos/agregar', [ProductosController::class, 'agregar'])->name('productos.agregar');
         Route::put('/dashboard/productos/actualizar/{id}', [ProductosController::class, 'actualizar'])->name('productos.update');
         Route::put('/dashboard/productos/retirar/{id}', [ProductosController::class, 'retirar'])->name('productos.retirar');
         Route::post('/categorias/store', [ProductosController::class, 'storeCategoria'])->name('categorias.store');
         Route::post('/subcategorias/store', [ProductosController::class, 'storeSubcategoria'])->name('subcategorias.store');
+        Route::delete('/subcategorias/{id}', [ProductosController::class, 'eliminarSubcategoria'])->name('subcategorias.destroy');
         Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
         Route::post('/dashboard/usuarios/agregarAdmin', [UsuarioController::class, 'agregarAdmin'])->name('usuarios.agregarAdmin');
         Route::post('/dashboard/usuarios/agregarEstilista', [UsuarioController::class, 'agregarEstilista'])->name('usuarios.agregarEstilista');
@@ -184,7 +186,7 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
 
 
 
-    Route::get('/tienda', [ProductosController::class, 'index'])->name('tienda');
+
     Route::get('/catalogo', [ProductosController::class, 'catalogo'])->name('catalogo');
 
     // Filtrar productos desde el formulario

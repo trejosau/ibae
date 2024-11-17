@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetallePedido;
+use App\Models\ProductoSubcategoria;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Productos;
@@ -48,10 +49,13 @@ class ProductosController extends Controller
         $cantidad = $data['cantidad'];
         $medida = $data['medida'];
         $id_categoria = $data['id_categoria'];
+        $id_subcategoria_1 = $data['id_subcategoria_1'];
+        $id_subcategoria_2 = $data['id_subcategoria_2'];
+        $id_subcategoria_3 = $data['id_subcategoria_3'];
         $stock = $data['stock'];
         $estado = $data['estado'];
 
-        Productos::create([
+        $producto = Productos::create([
             'nombre' => $nombre,
             'descripcion' => $descripcion,
             'precio_proveedor' => $precio_proveedor,
@@ -66,6 +70,29 @@ class ProductosController extends Controller
             'estado' => $estado,
             'fecha_agregado' => now(),
         ]);
+
+        // Asignar subcategorías al producto
+        if ($id_subcategoria_1) {
+            ProductoSubcategoria::create([
+                'id_producto' => $producto->id,
+                'id_subcategoria' => $id_subcategoria_1,
+            ]);
+        }
+        if ($id_subcategoria_2) {
+            ProductoSubcategoria::create([
+                'id_producto' => $producto->id,
+                'id_subcategoria' => $id_subcategoria_2,
+            ]);
+        }
+        if ($id_subcategoria_3) {
+            ProductoSubcategoria::create([
+                'id_producto' => $producto->id,
+                'id_subcategoria' => $id_subcategoria_3,
+            ]);
+        }
+
+
+
 
 
         return redirect()->back()->with('success', 'Producto agregado correctamente.');
@@ -136,6 +163,9 @@ class ProductosController extends Controller
             'cantidad' => 'required|integer|min:0',
             'medida' => 'nullable|string|max:50',
             'id_categoria' => 'required|exists:categorias,id',
+            'id_subcategoria_1' => 'nullable|exists:subcategorias,id',
+            'id_subcategoria_2' => 'nullable|exists:subcategorias,id',
+            'id_subcategoria_3' => 'nullable|exists:subcategorias,id',
             'main_photo' => 'nullable|image|mimes:jpeg,png,jpg',
             'stock' => 'required|integer|min:0',
             'estado' => 'required|in:activo,inactivo',
@@ -248,10 +278,13 @@ class ProductosController extends Controller
             ->take(10)
             ->get();
 
+        $categorias = Categorias::with('subcategorias')->get();
+
         // Retornar la vista con ambos conjuntos de datos
         return view('tienda', [
             'productosMasVendidos' => $productosMasVendidos,
             'productosMasRecientes' => $productosMasRecientes,
+            'categorias' => $categorias,
         ]);
     }
 
@@ -361,18 +394,43 @@ public function checkout()
     return view('checkout', compact('carrito', 'subtotal'));
 }
 public function storeCategoria(Request $request)
-    {
+{
         $request->validate([
-            'nombre_categoria' => 'required|string|max:255',
+            'nombre_categoria' => 'required|string|max:255|unique:categorias,nombre',
+            'foto_categoria' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'crop_x_categoria' => 'nullable|numeric',
+            'crop_y_categoria' => 'nullable|numeric',
+            'crop_width_categoria' => 'nullable|numeric',
+            'crop_height_categoria' => 'nullable|numeric',
         ]);
 
 
-        Categorias::create([
+
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($request->file('foto_categoria')->getContent());
+        if ($request->has('crop_x_categoria') && $request->has('crop_y_categoria') && $request->has('crop_width_categoria') && $request->has('crop_height_categoria')) {
+            $image->crop(
+                $request->input('crop_width_categoria'),
+                $request->input('crop_height_categoria'),
+                $request->input('crop_x_categoria'),
+                $request->input('crop_y_categoria')
+            );
+        }
+
+
+        $image = $image->toWebp(90);
+        $fileName = "{$request->nombre_categoria}.webp";
+        Storage::disk('s3')->put("images/categorias/{$fileName}", $image);
+
+        $url = Storage::disk('s3')->url("images/categorias/{$fileName}");
+        $categoria = Categorias::create([
             'nombre' => $request->nombre_categoria,
+            'photo' => $url,
         ]);
 
-        return redirect()->route('dashboard.index')->with('success', 'Categoría creada exitosamente');
+        return redirect()->route('dashboard.productos')->with('success', 'Categoría creada exitosamente');
     }
+
 
     // Método para almacenar una nueva subcategoría
     public function storeSubcategoria(Request $request)
@@ -382,12 +440,25 @@ public function storeCategoria(Request $request)
             'categoria_id' => 'required|exists:categorias,id',
         ]);
 
+        $cantidadSubcategorias = Subcategoria::where('categoria_id', $request->categoria_id)->count();
+
+        if ($cantidadSubcategorias >= 3) {
+            return redirect()->route('dashboard.productos')->with('error', 'No puedes tener más de 3 subcategorías por categoría elimina alguna.');
+        }
+
         Subcategoria::create([
             'nombre' => $request->nombre_subcategoria,
             'categoria_id' => $request->categoria_id,
         ]);
 
-        return redirect()->route('dashboard.index')->with('success', 'Subcategoría creada exitosamente');
+        return redirect()->route('dashboard.productos')->with('success', 'Subcategoría creada exitosamente');
+    }
+
+    public function eliminarSubcategoria($id)
+    {
+        $subcategoria = Subcategoria::find($id);
+        $subcategoria->delete();
+        return redirect()->route('dashboard.productos')->with('success', 'Subcategoría eliminada exitosamente');
     }
 
     public function pago()

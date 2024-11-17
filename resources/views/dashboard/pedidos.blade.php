@@ -57,17 +57,17 @@
 
                     <!-- Floating Badge for Estado -->
                     <span class="badge" style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); padding: 7px 15px; font-size: 0.8rem;
-    @if ($pedido->estado == 'entregado')
-        background-color: #2ecc71; color: white;
-    @elseif ($pedido->estado == 'listo para entrega')
-        background-color: #3498db; color: white;
-    @elseif ($pedido->estado == 'preparando para entrega')
-        background-color: #f39c12; color: white;
-    @else
-        background-color: #95a5a6; color: white;
-    @endif">
-    {{ ucfirst($pedido->estado) }}
-</span>
+                        @if ($pedido->estado == 'entregado')
+                            background-color: #2ecc71; color: white;
+                        @elseif ($pedido->estado == 'listo para entrega')
+                            background-color: #3498db; color: white;
+                        @elseif ($pedido->estado == 'preparando para entrega')
+                            background-color: #f39c12; color: white;
+                        @else
+                            background-color: #95a5a6; color: white;
+                        @endif">
+                        {{ ucfirst($pedido->estado) }}
+                    </span>
 
 
                     <!-- Card Body: Basic Info -->

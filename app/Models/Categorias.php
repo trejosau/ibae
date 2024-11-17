@@ -14,7 +14,7 @@ class Categorias extends Model
 
     protected $fillable = [
         'nombre',
-        'descripcion',
+        'photo',
     ];
 
     public function subcategorias()
