@@ -114,7 +114,7 @@
                                     <strong>Nombre Completo:</strong> {{ $estudiante->persona->nombre }} {{ $estudiante->persona->ap_paterno }} {{ $estudiante->persona->ap_materno }}
                                 </div>
                                 <div class="d-flex align-items-center mb-3" style="border-bottom: 1px solid #F2C6D1; padding-bottom: 5px;">
-                                    <strong>Correo:</strong> {{ $estudiante->persona->usuario->email ?? 'No disponible' }}
+                                    <strong>Correo:</strong> {{ $estudiante->persona->Usuario->email  }}
                                 </div>
                                 <div class="d-flex align-items-center mb-3" style="border-bottom: 1px solid #F2C6D1; padding-bottom: 5px;">
                                     <strong>Grado de Estudios:</strong> {{ $estudiante->grado_estudio }}

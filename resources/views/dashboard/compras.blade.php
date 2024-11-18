@@ -88,6 +88,42 @@
                                             <input type="date" class="form-control" id="fecha" name="fecha" required>
                                         </div>
 
+                                        <!-- Agregar el script al final del HTML o dentro de un archivo JS -->
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function () {
+                                                const fechaInput = document.getElementById('fecha');
+
+                                                // Obtener la fecha actual
+                                                const today = new Date();
+
+                                                // Calcular la fecha de hace 14 días
+                                                const fourteenDaysAgo = new Date();
+                                                fourteenDaysAgo.setDate(today.getDate() - 14);
+
+                                                // Formatear las fechas en formato YYYY-MM-DD
+                                                const formattedToday = today.toISOString().split('T')[0];
+                                                const formattedFourteenDaysAgo = fourteenDaysAgo.toISOString().split('T')[0];
+
+                                                // Establecer el valor de min y max en el input de fecha
+                                                fechaInput.setAttribute('min', formattedFourteenDaysAgo);
+                                                fechaInput.setAttribute('max', formattedToday);
+
+                                                // Validación adicional cuando se intente enviar el formulario
+                                                fechaInput.addEventListener('change', function () {
+                                                    const selectedDate = new Date(fechaInput.value);
+
+                                                    if (selectedDate < fourteenDaysAgo || selectedDate > today) {
+                                                        alert('La fecha seleccionada debe estar entre los 14 días anteriores y la fecha de hoy.');
+                                                        fechaInput.setCustomValidity(''); // Invalidar el campo
+                                                    } else {
+                                                        fechaInput.setCustomValidity(''); // Validar correctamente
+                                                    }
+                                                });
+                                            });
+                                        </script>
+
+
+
                                         <button type="submit" class="btn btn-primary">Agregar Compra</button>
                                     </form>
                                 </div>
