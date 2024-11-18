@@ -626,5 +626,12 @@ public function __construct()
 }
 
 
+public function obtenerCategorias()
+{
+    // Obtener categorías con sus subcategorías
+    $categorias = Categorias::with('subcategorias')->get();
+    return view('tuVista', compact('categorias'));
+}
+
 
 }

@@ -130,29 +130,77 @@
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <div class="sidebar">
-                        <div class="">
-                            <form id="filterForm" method="POST" action="{{ route('productos.filtrar') }}">
-                                @csrf
-                                <label for="id_categoria" class="form-label">Categoría:</label>
-                                <select id="id_categoria" name="id_categoria" class="form-select">
-                                    <option value="">Todas</option>
-                                    <option value="1" {{ old('id_categoria') == 1 ? 'selected' : '' }}>Tintes</option>
-                                    <option value="2" {{ old('id_categoria') == 2 ? 'selected' : '' }}>Cabello</option>
-                                    <option value="3" {{ old('id_categoria') == 3 ? 'selected' : '' }}>Barbería</option>
-                                    <option value="4" {{ old('id_categoria') == 4 ? 'selected' : '' }}>Maquillaje</option>
-                                </select>
-
-                                <label for="precio_min" class="form-label">Precio mínimo:</label>
-                                <input type="number" id="precio_min" name="precio_min" min="0" value="{{ old('precio_min') }}" class="form-control" placeholder="$0">
-
-                                <label for="precio_max" class="form-label">Precio máximo:</label>
-                                <input type="number" id="precio_max" name="precio_max" min="0" value="{{ old('precio_max') }}" class="form-control" placeholder="$500">
-
-                                <button type="submit" class="btn btn-filtro mt-3">Aplicar Filtros</button>
-                            </form>
-                        </div>
+                        <form id="filterForm">
+                            @csrf
+                            <label for="id_categoria" class="form-label">Categoría:</label>
+                            <select id="id_categoria" name="id_categoria" class="form-select">
+                                <option value="">Todas</option>
+                                <option value="1">Tintes</option>
+                                <option value="2">Cabello</option>
+                                <option value="3">Barbería</option>
+                                <option value="4">Maquillaje</option>
+                            </select>
+                
+                            <label for="precio_min" class="form-label">Precio mínimo:</label>
+                            <input type="number" id="precio_min" name="precio_min" min="0" class="form-control" placeholder="$0">
+                
+                            <label for="precio_max" class="form-label">Precio máximo:</label>
+                            <input type="number" id="precio_max" name="precio_max" min="0" class="form-control" placeholder="$500">
+                        </form>
                     </div>
                 </div>
+                
+                <div id="productos-list" class="row">
+                    <!-- Aquí se cargarán los productos dinámicamente -->
+                </div>
+                
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const form = document.getElementById("filterForm");
+                        const productosList = document.getElementById("productos-list");
+                
+                        form.addEventListener("change", function () {
+                            const formData = new FormData(form);
+                
+                            fetch("{{ route('productos.filtrar') }}", {
+                                method: "POST",
+                                headers: {
+                                    "X-CSRF-TOKEN": formData.get('_token'),
+                                },
+                                body: formData,
+                            })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    // Limpiar los productos existentes
+                                    productosList.innerHTML = "";
+                
+                                    // Insertar los productos filtrados
+                                    if (data.length > 0) {
+                                        data.forEach((producto) => {
+                                            const productDiv = document.createElement("div");
+                                            productDiv.classList.add("col-md-4", "mb-4");
+                                            productDiv.innerHTML = `
+                                                <div class="card">
+                                                    <img src="${producto.imagen}" class="card-img-top" alt="${producto.nombre}">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">${producto.nombre}</h5>
+                                                        <p class="card-text">$${producto.precio_venta}</p>
+                                                    </div>
+                                                </div>
+                                            `;
+                                            productosList.appendChild(productDiv);
+                                        });
+                                    } else {
+                                        productosList.innerHTML = "<p>No se encontraron productos.</p>";
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.error("Error al filtrar los productos:", error);
+                                });
+                        });
+                    });
+                </script>
+                
 
                 <!-- Productos en la columna derecha -->
                 <div class="col-md-8">

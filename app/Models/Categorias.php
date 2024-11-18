@@ -22,4 +22,5 @@ class Categorias extends Model
         return $this->hasMany(Subcategoria::class, 'categoria_id');
     }
 
+    
 }

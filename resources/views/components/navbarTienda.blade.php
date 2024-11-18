@@ -111,88 +111,38 @@
     }
 
     .navegacion-item {
-        position: relative;
-    }
+    position: relative;
+}
 
-    .mega-menu {
-        display: none;
-        position: absolute;
-        background-color: #f9f9f9;
-        padding: 10px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        border-radius: 8px;
-        width: auto;
-        white-space: nowrap;
-        overflow: visible;
-    }
+.navegacion-item:hover .mega-menu {
+    display: block;
+}
 
-    .mega-menu .container-fluid {
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-    }
+.mega-menu {
+    display: none;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+}
 
-    .mega-menu .col-md-4,
-    .mega-menu .col-md-3,
-    .mega-menu .col-md-2,
-    .mega-menu .col-md-5 {
-        flex: 1;
-        box-sizing: border-box;
-        padding: 10px;
-        margin-right: 10px;
-        border-right: 1px dashed #ccc;
-        min-width: 180px;
-        max-width: 250px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: normal;
-        background-color: #ffeef8; /* Rosa clarito */
-    }
+.mega-menu a:hover {
+    color: #007bff;
+}
 
-    .mega-menu .col-md-4:last-child,
-    .mega-menu .col-md-3:last-child,
-    .mega-menu .col-md-2:last-child,
-    .mega-menu .col-md-5:last-child {
-        border-right: none;
-        margin-right: 0;
-    }
+.carousel .card {
+    transition: transform 0.3s ease;
+}
 
-    .mega-menu h3 {
-        margin-top: 0;
-        margin-bottom: 10px;
-        font-size: 18px;
-        background-color: #f0c4d0; /* Rosa clarito */
-        padding: 5px;
-        border-radius: 4px;
-        color: #333;
-    }
+.carousel .card:hover {
+    transform: scale(1.05);
+}
 
-    .mega-menu a {
-        display: block;
-        margin-bottom: 5px;
-        padding: 5px;
-        color: #555;
-        transition: background-color 0.3s ease;
-        border-radius: 3px;
-        position: relative;
-    }
+.carousel-inner .row {
+    justify-content: center;
+}
 
-    .mega-menu a:before {
-        content: "•";
-        color: #e63946; /* Rojo */
-        margin-right: 5px;
-    }
 
-    .mega-menu a:hover {
-        background-color: #f0e1e5; /* Rosa más claro */
-    }
-
-    .navegacion-item:hover .mega-menu {
-        display: block;
-    }
 
     .clearfix::after {
         content: "";
@@ -576,116 +526,87 @@
     </div>
 </nav>
 
-<nav class="navegacion">
-
-    <div class="navegacion-item">
-        <a href="#">Tintes</a>
-        <div class="mega-menu clearfix">
-            <div class="container-fluid">
-                <div class="col-md-4">
-                    <h3>TINTES</h3>
-                    <a href="#">Tintes Permanentes</a>
-                    <a href="#">Tintes Temporales</a>
-                    <a href="#">Tintes Orgánicos</a>
-                    <a href="#">Tintes Sin Amoniaco</a>
+<nav class="navegacion bg-dark text-light py-3">
+    <div class="container-fluid">
+        <div class="row">
+            @foreach ($categorias as $categoria)
+                <div class="col-md-2 col-sm-4 col-6 text-center mb-2">
+                    <div class="navegacion-item">
+                        <a href="#" class="text-light text-decoration-none fw-bold">
+                            {{ $categoria->nombre }}
+                        </a>
+                        <!-- Mega Menu -->
+                        <div class="mega-menu bg-white shadow rounded p-3 mt-2 position-absolute">
+                            <div class="row">
+                                @foreach ($categoria->subcategorias->chunk(4) as $chunk)
+                                    <div class="col-md-3">
+                                        <h6 class="fw-bold text-primary">{{ $categoria->nombre }}</h6>
+                                        @foreach ($chunk as $subcategoria)
+                                            <a href="#" class="d-block text-dark text-decoration-none mb-2">
+                                                {{ $subcategoria->nombre }}
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <h3>Productos Relacionados</h3>
-                    <a href="#">Shampoo para tintes</a>
-                    <a href="#">Acondicionadores</a>
-                    <a href="#">Tratamientos Post-Tinte</a>
-                    <a href="#">Protección del Color</a>
-                </div>
-                <div class="col-md-4">
-                    <h3>Accesorios</h3>
-                    <a href="#">Accesorios para teñir</a>
-                    <a href="#">Peróxido</a>
-                    <a href="#">Decolorantes</a>
-                    <a href="#">Pinceles y Bowls</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="navegacion-item">
-        <a href="#">Cabello</a>
-        <div class="mega-menu clearfix">
-            <div class="container-fluid">
-                <div class="col-md-3">
-                    <h3>CABELLO</h3>
-                    <a href="#">Shampoo y Acondicionador</a>
-                    <a href="#">Tratamientos capilares</a>
-                    <a href="#">Cuidado del cuero cabelludo</a>
-                </div>
-                <div class="col-md-3">
-                    <h3>Estilo</h3>
-                    <a href="#">Geles y ceras</a>
-                    <a href="#">Lacas</a>
-                    <a href="#">Pomadas</a>
-                </div>
-                <div class="col-md-3">
-                    <h3>Secado</h3>
-                    <a href="#">Secadoras de cabello</a>
-                    <a href="#">Difusores</a>
-                </div>
-                <div class="col-md-3">
-                    <h3>Accesorios</h3>
-                    <a href="#">Planchas</a>
-                    <a href="#">Rizadores</a>
-                    <a href="#">Peines</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="navegacion-item">
-        <a href="#">Barbería</a>
-        <div class="mega-menu clearfix">
-            <div class="container-fluid">
-                <div class="col-md-4">
-                    <h3>BARBERÍA</h3>
-                    <a href="#">Cortes</a>
-                    <a href="#">Rasuradoras</a>
-                    <a href="#">Navajas</a>
-                </div>
-                <div class="col-md-4">
-                    <h3>Cuidado</h3>
-                    <a href="#">Cremas y lociones</a>
-                    <a href="#">Aceites para barba</a>
-                </div>
-                <div class="col-md-4">
-                    <h3>Accesorios</h3>
-                    <a href="#">Peines y cepillos</a>
-                    <a href="#">Tijeras</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="navegacion-item">
-        <a href="#">Uñas</a>
-        <div class="mega-menu clearfix">
-            <div class="container-fluid">
-                <div class="col-md-5">
-                    <h3>UÑAS</h3>
-                    <a href="#">Esmaltes</a>
-                    <a href="#">Gel para uñas</a>
-                    <a href="#">Tratamientos para uñas</a>
-                </div>
-                <div class="col-md-5">
-                    <h3>Accesorios</h3>
-                    <a href="#">Limas</a>
-                    <a href="#">Pinceless</a>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </nav>
 
 
+<div id="carouselCategorias" class="carousel slide mt-4" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        @foreach ($categorias->chunk(6) as $index => $chunk)
+            <div class="carousel-item @if ($index === 0) active @endif">
+                <div class="row text-center">
+                    @foreach ($chunk as $categoria)
+                        <div class="col-md-2 col-sm-4 col-6">
+                            <a href="#" class="text-decoration-none text-dark">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-body py-3">
+                                        <h6 class="card-title fw-bold">{{ $categoria->nombre }}</h6>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endforeach
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselCategorias" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselCategorias" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+
 
 
 <script>
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Inicializar carrusel si no se usa el atributo data-bs-ride
+        const carouselElement = document.querySelector('#carouselCategorias');
+        if (carouselElement) {
+            const carousel = new bootstrap.Carousel(carouselElement, {
+                interval: 5000, // Cambia de slide cada 5 segundos
+                ride: 'carousel',
+                wrap: true // Cicla al inicio después del último slide
+            });
+        }
+    });
+
+
     document.addEventListener('DOMContentLoaded', function () {
         // Actualizar el subtotal al cargar la página
         actualizarTotalCarrito();
