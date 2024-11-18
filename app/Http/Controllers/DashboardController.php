@@ -160,13 +160,21 @@ class DashboardController extends Controller
         return view('dashboard.index', compact('pedidos'));
     }
 
-    public function compraRecibida($id)
+    public function compraDetallada($id)
     {
 
         $compra = Compras::find($id);
-        $compra->estado = 'entregado';
+        $compra->estado = 'pendiente de entrega';
         $compra->save();
         return redirect()->route('dashboard.compras');
+    }
+
+    public function compraEntregada($id)
+    {
+        $compra = Compras::find($id);
+        $compra->estado = 'entregado';
+        $compra->save();
+        return redirect()->route('dashboard.compras')->with('success', 'Compra actualizada el stock se actualizara automaticamente.');
     }
 
     public function compraCancelar(Request $request, $id)
@@ -227,6 +235,7 @@ class DashboardController extends Controller
     }
     public function compras(Request $request)
     {
+        $todosLosProveedores = Proveedores::all();
         $proveedores = Proveedores::paginate(4, ['*'], 'proveedores_page');
         $proveedores->load(['productos' => function($query) {
             $query->whereIn('estado', ['activo', 'agotado']);
@@ -238,7 +247,7 @@ class DashboardController extends Controller
 
         $productos = Productos::where('estado', '!=', 'inactivo')
             ->with('proveedor')
-            ->paginate(10, ['*'], 'productos_page');
+            ->paginate(10, ['*'], 'productos_page')->onEachSide(2);
 
         $catalogoProductos = Productos::where('estado', '!=', 'inactivo')->get();
 
@@ -254,7 +263,7 @@ class DashboardController extends Controller
         $notificaciones = $notificaciones->get();
 
 
-        return view('dashboard.index', compact('proveedores', 'compras', 'productos', 'catalogoProductos', 'notificaciones'));
+        return view('dashboard.index', compact('proveedores', 'compras', 'productos', 'catalogoProductos', 'notificaciones', 'todosLosProveedores'));
     }
 
 

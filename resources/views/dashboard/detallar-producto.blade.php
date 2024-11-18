@@ -105,7 +105,7 @@
                 <!-- Action Buttons -->
                 <div class="d-flex justify-content-between mb-3 mt-2">
                     <a class="btn btn-outline-danger" href="{{ route('compra.limpiarCarrito', $compra->id) }}" style="width: 45%; background-color: #ffcccc; color: #d32f2f;">Limpiar Resumen</a>
-                    <a class="btn btn-success" href="{{ route('compra.recibida', $compra->id) }}" style="width: 45%; background-color: #c5e1a5; color: #388e3c;">Confirmar Compra</a>
+                    <a class="btn btn-success" href="{{ route('compra.detallada', $compra->id) }}" style="width: 45%; background-color: #c5e1a5; color: #388e3c;">Confirmar Compra</a>
                 </div>
             </div>
         </div>

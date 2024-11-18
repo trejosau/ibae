@@ -91,8 +91,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/compras/proveedores', [DashboardController::class, 'proveedoresCreate'])->name('proveedores.store');
         Route::put('/dashboard/compras/proveedores/{id}/update', [DashboardController::class, 'proveedoresUpdate'])->name('proveedores.update');
         Route::delete('/dashboard/compras/proveedores/{id}', [DashboardController::class, 'proveedoresDestroy'])->name('proveedores.destroy');
+        Route::post('/dashboard/compras/agregar', [CompraController::class, 'agregar'])->name('compra.agregar');
         Route::post('/dashboard/compras/cancelar/{id}', [DashboardController::class, 'compraCancelar'])->name('compra.cancelar');
-        Route::get('/dashboard/compras/recibida/{id}', [DashboardController::class, 'compraRecibida'])->name('compra.recibida');
+        Route::get('/dashboard/compras/detallada/{id}', [DashboardController::class, 'compraDetallada'])->name('compra.detallada');
+        Route::post('/dashboard/compras/entregada/{id}', [DashboardController::class, 'compraEntregada'])->name('compra.entregada');
         Route::get('/dashboard/compras/catalogo/{id}', [CompraController::class, 'detallarProducto'])->name('detallar.producto');
         Route::post('/dashboard/compras/agregar-producto', [CompraController::class, 'agregarProducto'])->name('compra.agregarProducto');
         Route::get('/dashboard/compras/limpiar-carrito/{id}', [CompraController::class, 'limpiarCarrito'])->name('compra.limpiarCarrito');

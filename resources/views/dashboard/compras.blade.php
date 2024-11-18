@@ -32,19 +32,23 @@
                                 <td>
                                     @if($compra->estado == 'entregado')
                                         <span class="badge bg-success text-white">Entregado</span>
-                                    @elseif($compra->estado == 'pendiente')
-                                        <span class="badge bg-warning text-dark">Pendiente</span>
+                                    @elseif($compra->estado == 'pendiente de entrega')
+                                        <span class="badge bg-warning text-dark">Pendiente de Entrega</span>
+                                        @elseif($compra->estado == 'pendiente de detalle')
+                                            <span class="badge bg-warning text-dark">Pendiente de Detalle</span>
                                     @elseif($compra->estado == 'cancelado')
                                         <span class="badge bg-danger text-white">Cancelado</span>
                                     @endif
                                 </td>
                                 <td>
-                                    @if($compra->estado == 'entregado')
+                                    @if($compra->estado == 'pendiente de entrega')
                                         <button class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-detalle-productos-{{ $compra->id }}">Ver Detalle</button>
-                                    @elseif($compra->estado == 'pendiente')
+                                    @elseif($compra->estado == 'pendiente de detalle')
                                         <a class="btn btn-outline-primary btn-sm w-100" href="{{ route('detallar.producto', ['id' => $compra->id]) }}">Detallar</a>
                                     @elseif($compra->estado == 'cancelado')
                                         <button class="btn btn-outline-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-motivo-cancelacion-{{ $compra->id }}">Ver Motivo</button>
+                                    @elseif($compra->estado == 'entregado')
+                                        <button class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-detalle-productos-{{ $compra->id }}">Ver Detalle</button>
                                     @endif
                                 </td>
 
@@ -57,6 +61,39 @@
                         {{ $compras->appends(['proveedores_page' => $proveedores->currentPage(), 'productos_page' => $productos->currentPage()])->links('pagination::bootstrap-5') }}
                     </div>
                     <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modal-agregar-compra">Agregar Compra</button>
+                    <div class="modal fade" id="modal-agregar-compra" tabindex="-1" aria-labelledby="modal-agregar-compra-label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modal-agregar-compra-label">Agregar Compra</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Formulario para agregar compra -->
+                                    <form action="{{ route('compra.agregar') }}" method="POST">
+                                        @csrf
+                                        <div class="mb-3">
+                                            <label for="proveedor" class="form-label">Seleccionar Proveedor</label>
+                                            <select id="proveedor" name="proveedor_id" class="form-select" required>
+                                                <option value="">Seleccione un proveedor</option>
+                                                <!-- Aquí se llenarán los proveedores -->
+                                                @foreach ($todosLosProveedores as $proveedor)
+                                                    <option value="{{ $proveedor->id }}">{{ $proveedor->nombre_empresa }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="fecha" class="form-label">Fecha de Compra</label>
+                                            <input type="date" class="form-control" id="fecha" name="fecha" required>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">Agregar Compra</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -96,7 +133,7 @@
                     </table>
                     <!-- Paginación Productos -->
                     <div class="d-flex justify-content-between mt-3">
-                        {{ $productos->appends(['proveedores_page' => $proveedores->currentPage(), 'compras_page' => $compras->currentPage()])->links('pagination::bootstrap-5') }}
+                        {{ $productos->appends(['proveedores_page' => $proveedores->currentPage(), 'productos_page' => $productos->currentPage()])->links('pagination::bootstrap-5', ['onEachSide' => 2]) }}
                     </div>
                 </div>
             </div>
@@ -276,7 +313,7 @@
 
     <!-- Modal para ver Detalle Compra (Estado: Entregado o Pendiente) -->
         @foreach($compras as $compra)
-            @if($compra->estado == 'pendiente' || $compra->estado == 'entregado')
+            @if($compra->estado == 'pendiente de entrega' || $compra->estado == 'entregado')
                 <!-- Modal principal de detalle de la compra -->
                 <div class="modal fade" id="modal-detalle-productos-{{ $compra->id }}" tabindex="-1" aria-labelledby="modal-detalle-productos-{{ $compra->id }}-label" aria-hidden="true">
                     <div class="modal-dialog" style="max-width: 95%; max-height: 90%; margin: auto;">
@@ -318,9 +355,9 @@
                                 </div>
                             </div>
                             <div class="modal-footer" style="background-color: #f7c8d7; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
-                                @if($compra->estado == 'pendiente')
+                                @if($compra->estado == 'pendiente de entrega')
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-cancelar-compra-{{ $compra->id }}">Cancelar</button>
-                                    <form method="POST" action="{{ route('compra.recibida', $compra->id) }}" style="display: inline;">
+                                    <form method="POST" action="{{ route('compra.entregada', $compra->id) }}" style="display: inline;">
                                         @csrf
                                         <button type="submit" class="btn btn-success">Marcar como Recibido</button>
                                     </form>

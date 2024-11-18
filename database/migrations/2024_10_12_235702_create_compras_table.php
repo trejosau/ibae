@@ -12,8 +12,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_proveedor');
             $table->date('fecha_compra');
-            $table->date('fecha_entrega');
-            $table->enum('estado', ['entregado', 'pendiente', 'cancelado']);
+            $table->date('fecha_entrega')->nullable();
+            $table->enum('estado', ['entregado', 'pendiente de detalle', 'cancelado', 'pendiente de entrega']);
             $table->text('motivo')->nullable();
             $table->decimal('total', 10);
             $table->foreign('id_proveedor')->references('id')->on('proveedores')->onDelete('cascade');

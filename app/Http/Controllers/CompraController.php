@@ -9,6 +9,22 @@ use Illuminate\Http\Request;
 
 class CompraController extends Controller
 {
+    public function agregar(Request $request)
+    { $request->validate([
+            'proveedor_id' => 'required|exists:proveedores,id',
+            'fecha' => 'required|date',
+        ]);
+        $compra = Compras::create([
+            'id_proveedor' => $request->proveedor_id,
+            'fecha_compra' => $request->fecha,
+            'fecha_entrega' => null,
+            'estado' => 'pendiente de detalle',
+            'total' => 0,
+        ]);
+
+        return redirect()->route('dashboard.compras');
+    }
+
     public function detallarProducto($id)
     {
         $compra = Compras::find($id);

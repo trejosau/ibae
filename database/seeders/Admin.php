@@ -70,12 +70,20 @@ class Admin extends Seeder
         ]);
 
         $profesor = Profesor::create([
+            'id_persona' => $persona->id,
             'especialidad' => 'barberia',
             'fecha_contratacion' => now(),
             'RFC' => '123456789',
             'CURP' => '123456789',
+            'zipcode' => '270' . random_int(1, 8),
+            'ciudad' => 'Torreon',
+            'colonia' => 'UTT',
+            'calle' => 'Utt',
+            'n_ext' => 'Ext. ' . random_int(123, 600),
+            'n_int' => null,
             'created_at' => now(),
             'updated_at' => now(),
+
         ]);
 
         $administrador = Administrador::create([
@@ -89,7 +97,7 @@ class Admin extends Seeder
         $user->assignRole('estudiante');
         $user->assignRole('profesor');
         $user->assignRole('estilista');
-        $user->assignRole('administrdor');
+        $user->assignRole('admin');
 
     }
 }
