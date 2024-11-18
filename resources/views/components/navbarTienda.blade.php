@@ -81,53 +81,91 @@
     }
 
     /* Navegación */
-    .navegacion {
-        position: fixed;
-        top: 60px;
-        left: 0;
-        right: 0;
-        z-index: 999;
-        text-align: center;
-        padding: 20px 0;
-        display: flex;
-        justify-content: center;
-        gap: 30px;
-        font-family: 'Arial', sans-serif;
-        font-size: 16px;
-        background-color: #fff;
-    }
+  /* Diseño de la navegación */
+.navegacion {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    text-align: center;
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Añadido para darle un poco de sombra */
+}
 
-    .navegacion a {
-        color: #333;
-        text-decoration: none;
-        font-weight: bold;
-        padding: 10px;
-        position: relative;
-        transition: color 0.3s ease;
-    }
+/* Estilo para los enlaces */
+.navegacion a {
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px;
+    position: relative;
+    transition: color 0.3s ease;
+}
 
-    .navegacion a:hover {
-        color: #f1c6d4; /* Rosa clarito */
-    }
+.navegacion a:hover {
+    color: #f1c6d4; /* Rosa clarito */
+}
 
-    .navegacion-item {
+/* Estilo para el mega menú */
+.navegacion-item {
     position: relative;
 }
 
+/* Mostrar mega-menu al pasar el mouse */
 .navegacion-item:hover .mega-menu {
     display: block;
+    opacity: 1;
+    visibility: visible;
 }
 
+/* Estilo del mega-menu oculto inicialmente */
 .mega-menu {
     display: none;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
     top: 100%;
     left: 0;
-    z-index: 1000;
     width: 100%;
+    z-index: 1000;
+    background-color: white;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Sombra para el mega menú */
+    padding: 20px 0;
+    transition: opacity 0.3s ease, visibility 0s 0.3s;
+}
+
+/* Mejorar la presentación de los enlaces del mega-menu */
+.mega-menu a {
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 6px 20px;
+    display: block;
+    transition: background-color 0.3s ease;
 }
 
 .mega-menu a:hover {
-    color: #007bff;
+    background-color: #f1f1f1;
+}
+
+/* Organización en columnas dentro del mega menú */
+.mega-menu .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* Ajuste para las columnas del mega menú */
+.mega-menu .col-md-3 {
+    width: 23%; /* Ajuste para que las columnas no se vean demasiado anchas */
 }
 
 .carousel .card {
@@ -526,28 +564,30 @@
     </div>
 </nav>
 
-<nav class="navegacion bg-dark text-light py-3">
+<nav class="navegacion py-3 pt-4">
     <div class="container-fluid">
         <div class="row">
             @foreach ($categorias as $categoria)
                 <div class="col-md-2 col-sm-4 col-6 text-center mb-2">
                     <div class="navegacion-item">
-                        <a href="#" class="text-light text-decoration-none fw-bold">
+                        <a href="#" class="text-decoration-none fw-bold">
                             {{ $categoria->nombre }}
                         </a>
                         <!-- Mega Menu -->
                         <div class="mega-menu bg-white shadow rounded p-3 mt-2 position-absolute">
-                            <div class="row">
-                                @foreach ($categoria->subcategorias->chunk(4) as $chunk)
-                                    <div class="col-md-3">
-                                        <h6 class="fw-bold text-primary">{{ $categoria->nombre }}</h6>
-                                        @foreach ($chunk as $subcategoria)
-                                            <a href="#" class="d-block text-dark text-decoration-none mb-2">
-                                                {{ $subcategoria->nombre }}
-                                            </a>
-                                        @endforeach
-                                    </div>
-                                @endforeach
+                            <div class="container-fluid">
+                                <div class="row">
+                                    @foreach ($categoria->subcategorias->chunk(4) as $chunk)
+                                        <div class="col-md-3">
+                                            <h6 class="fw-bold text-primary">{{ $categoria->nombre }}</h6>
+                                            @foreach ($chunk as $subcategoria)
+                                                <a href="#" class="d-block text-dark text-decoration-none mb-2">
+                                                    {{ $subcategoria->nombre }}
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -557,17 +597,16 @@
     </div>
 </nav>
 
-
 <div id="carouselCategorias" class="carousel slide mt-4" data-bs-ride="carousel">
     <div class="carousel-inner">
         @foreach ($categorias->chunk(6) as $index => $chunk)
             <div class="carousel-item @if ($index === 0) active @endif">
-                <div class="row text-center">
+                <div class="d-flex justify-content-center gap-3">
                     @foreach ($chunk as $categoria)
-                        <div class="col-md-2 col-sm-4 col-6">
+                        <div class="col-md-2">
                             <a href="#" class="text-decoration-none text-dark">
                                 <div class="card border-0 shadow-sm">
-                                    <div class="card-body py-3">
+                                    <div class="card-body py-3 text-center">
                                         <h6 class="card-title fw-bold">{{ $categoria->nombre }}</h6>
                                     </div>
                                 </div>
@@ -589,19 +628,15 @@
 </div>
 
 
-
-
 <script>
 
-
-    document.addEventListener('DOMContentLoaded', function () {
-        // Inicializar carrusel si no se usa el atributo data-bs-ride
+document.addEventListener('DOMContentLoaded', function () {
         const carouselElement = document.querySelector('#carouselCategorias');
         if (carouselElement) {
             const carousel = new bootstrap.Carousel(carouselElement, {
-                interval: 5000, // Cambia de slide cada 5 segundos
+                interval: 3000, // Cambiar slide cada 3 segundos
                 ride: 'carousel',
-                wrap: true // Cicla al inicio después del último slide
+                wrap: true
             });
         }
     });

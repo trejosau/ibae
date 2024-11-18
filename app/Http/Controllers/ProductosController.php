@@ -252,16 +252,22 @@ class ProductosController extends Controller
 
     public function mostrarDetalle($id)
     {
+        // Obtener el producto por su ID
         $producto = Productos::findOrFail($id);
 
-        // Suponiendo que tienes una lógica para obtener productos relacionados
+        // Obtener productos relacionados de la misma categoría
         $productosRelacionados = Productos::where('id_categoria', $producto->id_categoria)
             ->where('id', '!=', $id) // Excluir el producto actual
-            ->take(4) // Limitar a 3 productos relacionados
+            ->take(4) // Limitar a 4 productos relacionados
             ->get();
 
-        return view('detalle', compact('producto', 'productosRelacionados'));
+        // Obtener todas las categorías
+        $categorias = Categorias::with('subcategorias')->get();
+
+        // Pasar las variables 'producto', 'productosRelacionados' y 'categorias' a la vista
+        return view('detalle', compact('producto', 'productosRelacionados', 'categorias'));
     }
+
 
 
     public function mostrar()
