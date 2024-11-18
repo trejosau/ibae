@@ -220,9 +220,10 @@ Route::get('/tienda', [ProductosController::class, 'mostrar'])->name('tienda.mos
 Route::get('/carrito', [ProductosController::class, 'verCarrito'])->name('carrito.ver');
 Route::get('/carrito/contenido', [ProductosController::class, 'cargarContenidoCarrito'])->name('carrito.contenido');
 Route::get('/productos', [ProductosController::class, 'index'])->name('productos.index');
-
 Route::post('/producto/{id}/agregar-al-carrito', [ProductosController::class, 'agregarAlCarrito'])->name('producto.agregar');
 Route::delete('/carrito/{id}', [ProductosController::class, 'eliminarDelCarrito'])->name('carrito.eliminar');
+Route::get('/categorias', [ProductosController::class, 'obtenerCategorias']);
+
 
 
 
