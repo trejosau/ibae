@@ -270,7 +270,7 @@
                         <h5 class="mb-4">Información del Comprador</h5>
                         <form id="form-venta" action="{{ route('ventas.store') }}" method="POST">
                             @csrf
-                            <input type="hidden" name="es_estudiante" value="false"> <!-- Campo oculto -->
+
                             <div class="mb-3">
                                 <label for="nombre-comprador-nueva" class="form-label">Nombre del Comprador</label>
                                 <input type="text" class="form-control" name="nombre_comprador" id="nombre-comprador-nueva" placeholder="Ingrese el nombre del comprador" required autocomplete="off">
@@ -318,8 +318,9 @@
                                 <span class="fw-bold" id="total-venta">
         <!-- Aquí va el total dinámicamente -->
     </span>
-                            </div>
 
+                            </div>
+                            <small class="text-muted">El total si es estudiante se puede ver al realizar la venta</small>
 
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <button type="submit" class="btn btn-primary mt-3">Realizar Venta</button>
@@ -342,7 +343,8 @@
                                     <div class="card-body text-center p-2">
                                         <h6 class="card-title fw-semibold mb-2" style="font-size: 1rem;">{{ $producto->nombre }}</h6>
                                         <p class="card-text text-muted mb-1" style="font-size: 0.85rem;">{{ Str::limit($producto->descripcion, 50) }}</p>
-                                        <p class="card-text text-primary fw-bold mb-2" style="font-size: 0.9rem;">${{ number_format($producto->precio_venta, 2) }}</p>
+                                        <p class="card-text text-primary fw-bold mb-2" style="font-size: 0.9rem;">Publico: ${{ number_format($producto->precio_venta, 2) }} - Estudiante: ${{ number_format($producto->precio_lista, 2) }}</p>
+                                        <!-- este form se manda con el action de jquery -->
                                         <form action="{{ route('ventas.agregarProducto') }}" method="POST" class="form-agregar-producto">
                                             @csrf
                                             <input type="hidden" name="producto_id" value="{{ $producto->id }}">

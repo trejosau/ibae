@@ -7,5 +7,5 @@
         </li>
     @endforeach
 @else
-    <li class="list-group-item text-center">No hay productos en el carrito</li>
+    <li class="list-group-item text-center">No hay productos</li>
 @endif
