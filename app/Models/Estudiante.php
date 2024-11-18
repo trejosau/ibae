@@ -67,4 +67,9 @@ class Estudiante extends Model
     {
         return $this->belongsToMany(CursoApertura::class, 'estudiante_curso', 'id_estudiante', 'id_curso_apertura');
     }
+
+    public function ventas()
+    {
+        return $this->hasMany(Ventas::class, 'matricula');
+    }
 }

@@ -88,12 +88,6 @@
         </div>
     </div>
 
-    <!-- Gráfico de Ingresos -->
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <div id="chart" class="h-100"></div>
-        </div>
-    </div>
 
     <!-- Detalles de Usuarios -->
     <div class="row text-center mb-4">

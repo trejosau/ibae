@@ -62,6 +62,15 @@ class VentaController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+            'es_estudiante' => filter_var($request->input('es_estudiante'), FILTER_VALIDATE_BOOLEAN),
+        ]);
+        $request->validate([
+            'es_estudiante' => 'required|boolean',
+            'nombre_comprador' => 'required|string|max:255',
+            'matricula' => 'nullable|string|max:20',
+        ]);
+
 
         $id_usuario = auth()->id();
 
@@ -77,9 +86,10 @@ class VentaController extends Controller
         }
 
         $es_estudiante = $request->es_estudiante ? 'si' : 'no';
-        $matricula = $request->matricula;
+
 
         if ($es_estudiante === 'si') {
+            $matricula = $request->matricula;
             $estudianteValido = Estudiante::where('matricula', $matricula)->exists();
             if (!$estudianteValido) {
                 return redirect()->back()->with('error', 'El usuario con matricula ' . $matricula . ' no existe');

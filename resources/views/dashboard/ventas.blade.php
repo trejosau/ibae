@@ -1,12 +1,24 @@
 @if(session('success'))
-    <div class="alert alert-success">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
 
 @if(session('error'))
-    <div class="alert alert-danger">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
         {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
     </div>
 @endif
 <div class="ventas-section">
@@ -143,9 +155,6 @@
                     <h5 class="card-title text-center">
                         <i class="fas fa-chart-line fa-2x text-info"></i> Gráfica de Ventas
                     </h5>
-                    <div id="grafica-ventas" class="text-center">
-                        <div id="chart"></div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -162,13 +171,14 @@
                                 <p class="mb-1 me-2"><strong>Cliente:</strong> {{ $venta->nombre_comprador }}</p>
                                 <p class="mb-1 me-2"><strong>Fecha:</strong> {{ $venta->fecha_compra }}</p>
                                 <p class="mb-1 me-2"><strong>Estudiante?:</strong> {{ $venta->es_estudiante === 'si' ? 'Sí' : 'No' }}</p>
-                                <p class="mb-1"><strong>Vendedor:</strong>
+                                <p class="mb-1 me-2"><strong>Vendedor:</strong>
                                     @if($venta->administrador && $venta->administrador->persona)
                                         {{ $venta->administrador->persona->nombre }} {{ $venta->administrador->persona->apellido_pa }}
                                     @else
                                         N/A
                                     @endif
                                 </p>
+                                <p class="mb-1"><strong>Matricula:</strong> {{ $venta->estudiante ? $venta->estudiante->matricula : 'N/A' }}</p>
                             </div>
                         </div>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -182,17 +192,24 @@
                                     $total = $detalle->precio_aplicado * $detalle->cantidad; // Calcular el total por detalle
                                 @endphp
                                 <div class="col">
-                                    <div class="card text-center border-0 shadow-sm">
-                                        <img src="{{ $detalle->producto->main_photo ?? 'https://picsum.photos/100' }}" class="card-img-top rounded" alt="{{ $detalle->producto->nombre ?? 'Producto no disponible' }}">
-                                        <div class="card-body p-1">
-                                            <h6 class="card-title fw-semibold" style="font-size: 1rem;">
+                                    <div class="card text-center border-0 shadow-sm" style="width: 150px; height: 250px;">
+                                        <div class="image-container" style="width: 100%; height: 100px; overflow: hidden;">
+                                            <img src="{{ $detalle->producto->main_photo ?? 'https://picsum.photos/100' }}"
+                                                 class="card-img-top rounded"
+                                                 alt="{{ $detalle->producto->nombre ?? 'Producto no disponible' }}"
+                                                 style="width: 100%; height: 100%; object-fit: contain;">
+                                        </div>
+                                        <div class="card-body p-1 d-flex flex-column justify-content-between" style="height: 150px;">
+                                            <h6 class="card-title fw-semibold text-truncate"
+                                                style="font-size: 1rem;"
+                                                title="{{ $detalle->producto->nombre ?? 'Producto no disponible' }}">
                                                 {{ $detalle->producto->nombre ?? 'Producto no disponible' }}
                                             </h6>
                                             <p class="card-text mb-1" style="font-size: 0.75rem;">
                                                 Cantidad: {{ $detalle->cantidad }}
                                             </p>
                                             <p class="card-text text-primary fw-bold" style="font-size: 0.85rem;">
-                                                Total: ${{ number_format($total, 2) }} <!-- Total calculado -->
+                                                Total: ${{ number_format($total, 2) }}
                                             </p>
                                         </div>
                                     </div>
@@ -200,6 +217,7 @@
                             @endforeach
                         </div>
                     </div>
+
 
 
                     <div class="modal-footer justify-content-center">

@@ -34,5 +34,10 @@ class Ventas extends Model
         return $this->belongsTo(Administrador::class, 'id_admin'); // 'id_admin' es la clave foránea
     }
 
+    public function estudiante()
+    {
+        return $this->belongsTo(Estudiante::class, 'matricula');
+    }
+
 }
 
