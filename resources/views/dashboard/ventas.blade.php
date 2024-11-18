@@ -219,7 +219,32 @@
             <div class="modal-content h-100">
                 <div class="modal-header d-flex align-items-center">
                     <h5 class="modal-title mb-0 me-3" id="modal-agregar-venta-label">Agregar Venta</h5>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <input type="text" id="buscador" class="form-control" placeholder="Buscar productos...">
+                        </div>
+                    </div>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const buscador = document.getElementById("buscador");
+                            const productos = document.querySelectorAll(".producto-card");
+
+                            buscador.addEventListener("input", function () {
+                                const filtro = buscador.value.toLowerCase();
+
+                                productos.forEach(producto => {
+                                    const nombreProducto = producto.getAttribute("data-nombre");
+                                    if (nombreProducto.includes(filtro)) {
+                                        producto.style.display = "block"; // Mostrar
+                                    } else {
+                                        producto.style.display = "none"; // Ocultar
+                                    }
+                                });
+                            });
+                        });
+                    </script>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
                 </div>
                 <div class="modal-body d-flex p-0">
                     <!-- Sidebar con Información del Comprador y Resumen de la Venta -->
@@ -288,10 +313,14 @@
 
                     <!-- Catálogo de productos -->
                     <div class="col-9 row row-cols-1 row-cols-md-4 g-3 p-3" style="height: 100%; overflow-y: auto;">
+
                         @foreach ($productos as $producto)
-                            <div class="col">
+                            <div class="col producto-card" data-nombre="{{ strtolower($producto->nombre) }}">
                                 <div class="card h-100 border-0 shadow-sm">
-                                    <img src="{{ $producto->main_photo }}" class="card-img-top rounded-top" style="height: 150px; object-fit: cover;" alt="{{ $producto->nombre }}">
+                                    <img src="{{ $producto->main_photo }}"
+                                         class="card-img-top rounded-top"
+                                         style="width: 100%; height: auto;"
+                                         alt="{{ $producto->nombre }}">
                                     <div class="card-body text-center p-2">
                                         <h6 class="card-title fw-semibold mb-2" style="font-size: 1rem;">{{ $producto->nombre }}</h6>
                                         <p class="card-text text-muted mb-1" style="font-size: 0.85rem;">{{ Str::limit($producto->descripcion, 50) }}</p>
