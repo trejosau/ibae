@@ -258,7 +258,7 @@ class ProductosController extends Controller
         // Obtener productos relacionados de la misma categoría
         $productosRelacionados = Productos::where('id_categoria', $producto->id_categoria)
             ->where('id', '!=', $id) // Excluir el producto actual
-            ->take(4) // Limitar a 4 productos relacionados
+            ->take(3) // Limitar a 4 productos relacionados
             ->get();
 
         // Obtener todas las categorías
