@@ -219,7 +219,6 @@
     @endforeach
 
 
-
     <!-- Modal Agregar Venta -->
 <div class="modal fade" id="modal-agregar-venta" tabindex="-1" aria-labelledby="modalAgregarVentaLabel" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
@@ -231,10 +230,6 @@
             <div class="modal-body">
                 <!-- Componente Livewire ResumenVenta -->
                 <livewire:resumen-venta />
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-success" onclick="finalizarVenta()">Finalizar Venta</button>
             </div>
         </div>
     </div>

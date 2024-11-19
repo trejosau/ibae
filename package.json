@@ -17,6 +17,7 @@
     "@fullcalendar/timegrid": "^6.1.15",
     "@popperjs/core": "^2.11.8",
     "@splidejs/splide": "^4.1.4",
+    "alpinejs": "^3.14.3",
     "apexcharts": "^3.54.1",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
