@@ -14,6 +14,10 @@ use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\VentaController;
 use App\Models\Productos;
+use App\Models\User;
+use Illuminate\Http\Request;
+
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redirect;
 
@@ -190,6 +194,18 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
             Route::put('/inscripciones/{id}', [PlataformaController::class, 'update'])->name('plataforma.updateInscripcion');
             Route::post('/plataforma/bajaProfesor/{id}', [PlataformaController::class, 'bajaProfesor'])->name('plataforma.bajaProfesor');
             Route::post('/plataforma/asignar-rol', [PlataformaController::class, 'asignarRol'])->name('plataforma.asignarRol');
+
+
+            Route::get('/buscar-usuarios', function (Request $request) {
+                $query = $request->get('q');
+                $usuarios = User::where('nombre', 'LIKE', "%$query%")
+                                ->orWhere('username', 'LIKE', "%$query%")
+                                ->take(10)
+                                ->get(['nombre', 'ap_paterno', 'username']);
+            
+                return response()->json($usuarios);
+            });
+            
         });
 });
 

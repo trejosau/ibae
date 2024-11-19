@@ -25,12 +25,6 @@
 
     <div class="row">
         <div class="text-center mb-4">
-            <button type="button" class="btn" data-toggle="modal" data-target="#modalAsignarRol"
-                    style="background-color: #ffdab9; color: #4a4e69; font-weight: bold; padding: 12px 24px; border-radius: 8px; border: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: background-color 0.3s, color 0.3s;"
-                    onmouseover="this.style.backgroundColor='#ffb48a'; this.style.color='#ffffff';"
-                    onmouseout="this.style.backgroundColor='#ffdab9'; this.style.color='#4a4e69';">
-                Asignar Rol de Estudiante
-            </button>
             <button type="button" class="btn" data-toggle="modal" data-target="#modalRegistrarEstudiante"
                     style="background-color: #ffdab9; color: #4a4e69; font-weight: bold; padding: 12px 24px; border-radius: 8px; border: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: background-color 0.3s, color 0.3s;"
                     onmouseover="this.style.backgroundColor='#ffb48a'; this.style.color='#ffffff';"
@@ -135,134 +129,6 @@
             </div>
         @endforeach
     </div>
-    <div class="modal fade" id="modalAsignarRol" tabindex="-1" role="dialog" aria-labelledby="modalAsignarRolLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document"> <!-- modal-lg aumenta el ancho del modal -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalAsignarRolLabel">Asignar Rol de Estudiante</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="{{ route('plataforma.asignarRol') }}" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="row">
-                            <!-- Sección 1: Información de Usuario y Datos Personales -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="usuario">Seleccionar Usuario</label>
-                                    <select class="form-control" id="usuario" name="usuario_id" required>
-                                        <option value="">Seleccione un usuario</option>
-                                        @foreach($usuariosSinRolEstudiante as $usuario)
-                                            <option value="{{ $usuario->id }}">{{ optional($usuario->persona)->nombre }} {{ optional($usuario->persona)->ap_paterno }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <h6>Datos de Persona</h6>
-                                <div class="form-group">
-                                    <label for="nombre">Nombre</label>
-                                    <input type="text" class="form-control" id="nombre" name="nombre" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ap_paterno">Apellido Paterno</label>
-                                    <input type="text" class="form-control" id="ap_paterno" name="ap_paterno" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ap_materno">Apellido Materno</label>
-                                    <input type="text" class="form-control" id="ap_materno" name="ap_materno" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="telefono">Teléfono</label>
-                                    <input type="text" class="form-control" id="telefono" name="telefono" required>
-                                </div>
-                            </div>
-
-                            <!-- Sección 2: Datos de Inscripción y Ubicación -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="inscripcion">Seleccionar Inscripción</label>
-                                    <select class="form-control" id="inscripcion" name="inscripcion_id" required>
-                                        <option value="">Seleccione una inscripción</option>
-                                        @foreach($inscripciones as $inscripcion)
-                                            <option value="{{ $inscripcion->id }}">{{ $inscripcion->nombre }} - {{ $inscripcion->precio }} {{ $inscripcion->material_incluido ? '(Material incluido)' : '' }}</option>
-                                        @endforeach
-                                    </select>
-                                    <small class="form-text text-muted">Selecciona la inscripción con la que se está inscribiendo el estudiante.</small>
-                                </div>
-                                <div class="form-group">
-                                    <label for="fecha_inscripcion">Fecha de Inscripción</label>
-                                    <input type="date" class="form-control" id="fecha_inscripcion" name="fecha_inscripcion" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="grado_estudio">Grado de Estudio</label>
-                                    <input type="text" class="form-control" id="grado_estudio" name="grado_estudio" required>
-                                </div>
-                                <script>
-                                    document.addEventListener("DOMContentLoaded", function() {
-                                        const fechaInscripcion = document.getElementById("fecha_inscripcion");
-
-                                        // Función para establecer la fecha mínima (14 días antes de hoy) y la fecha máxima (hoy)
-                                        function setFechaLimites() {
-                                            const today = new Date();
-                                            const maxDate = today.toISOString().split("T")[0]; // Fecha máxima = hoy (YYYY-MM-DD)
-
-                                            today.setDate(today.getDate() - 14); // Restar 14 días
-                                            const minDate = today.toISOString().split("T")[0]; // Fecha mínima = 14 días atrás (YYYY-MM-DD)
-
-                                            fechaInscripcion.setAttribute("max", maxDate); // Establecer fecha máxima (hoy)
-                                            fechaInscripcion.setAttribute("min", minDate); // Establecer fecha mínima (14 días atrás)
-                                        }
-
-                                        // Establecer las fechas límite al cargar la página
-                                        setFechaLimites();
-                                    });
-                                </script>
-
-
-
-                            </div>
-
-                            <!-- Sección 3: Grado de Estudio y Dirección -->
-                            <div class="col-md-4">
-                                <h6>Ubicación</h6>
-                                <div class="form-group">
-                                    <label for="ciudad">Ciudad</label>
-                                    <input type="text" class="form-control" id="ciudad" name="ciudad" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="zipcode">Código Postal</label>
-                                    <input type="text" class="form-control" id="zipcode" name="zipcode" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="calle">Calle</label>
-                                    <input type="text" class="form-control" id="calle" name="calle" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="colonia">Colonia</label>
-                                    <input type="text" class="form-control" id="colonia" name="colonia" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="num_ext">Número Exterior</label>
-                                    <input type="text" class="form-control" id="num_ext" name="num_ext" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="num_int">Número Interior</label>
-                                    <input type="text" class="form-control" id="num_int" name="num_int">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
 
 </div>
 
@@ -323,6 +189,10 @@
                                 <label for="fecha_inscripcion_estudiante">Fecha de Inscripción</label>
                                 <input type="date" class="form-control" id="fecha_inscripcion_estudiante" name="fecha_inscripcion_estudiante" required>
                             </div>
+                            <div class="form-group">
+                                <label for="grado_estudio">Grado de Estudio</label>
+                                <input type="text" class="form-control" id="grado_estudio" name="grado_estudio" required>
+                            </div>
                             <script>
                                 document.addEventListener("DOMContentLoaded", function() {
                                     const fechaInscripcion = document.getElementById("fecha_inscripcion_estudiante");
@@ -349,10 +219,6 @@
                         <!-- Columna 3: Datos de Dirección -->
                         <div class="col-4">
                             <h6>Dirección</h6>
-                            <div class="form-group">
-                                <label for="grado_estudio">Grado de Estudio</label>
-                                <input type="text" class="form-control" id="grado_estudio" name="grado_estudio" required>
-                            </div>
                             <div class="form-group">
                                 <label for="zipcode">Código Postal</label>
                                 <input type="text" class="form-control" id="zipcode" name="zipcode" required>

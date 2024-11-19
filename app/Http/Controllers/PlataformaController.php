@@ -553,41 +553,6 @@ class PlataformaController extends Controller
         return str_shuffle($contrasena);
     }
 
-    public function asignarRol(Request $request)
-    {
-        $usuario = User::find($request->usuario_id);
-        $usuario->assignRole('estudiante');
-
-        $persona = $usuario->persona;
-        $persona->update([
-            'nombre' => $request->nombre,
-            'ap_paterno' => $request->ap_paterno,
-            'ap_materno' => $request->ap_materno,
-            'telefono' => $request->telefono,
-            'ciudad' => $request->ciudad,
-            'zipcode' => $request->zipcode,
-            'colonia' => $request->colonia,
-            'calle' => $request->calle,
-            'num_ext' => $request->num_ext,
-            'num_int' => $request->num_int,
-        ]);
-
-        Estudiante::create([
-            'id_persona' => $persona->id,
-            'id_inscripcion' => $request->inscripcion_id,
-            'fecha_inscripcion' => $request->fecha_inscripcion,
-            'grado_estudio' => $request->grado_estudio,
-            'zipcode' => $request->zipcode,
-            'ciudad' => $request->ciudad,
-            'colonia' => $request->colonia,
-            'calle' => $request->calle,
-            'num_ext' => $request->num_ext,
-            'num_int' => $request->num_int,
-        ]);
-
-        return redirect()->route('plataforma.estudiantes')->with('success', 'Rol asignado con éxito');
-    }
-
     public function registrarEstudiante(Request $request)
     {
         // Validar datos
