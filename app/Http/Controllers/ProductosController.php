@@ -301,26 +301,34 @@ class ProductosController extends Controller
     public function agregarAlCarrito(Request $request, $id)
     {
         $producto = Productos::find($id);
-        $cantidad = $request->cantidad;
-
-        if ($producto) {
-            $carrito = session()->get('carrito', []);
-            if (isset($carrito[$id])) {
-                $carrito[$id]['cantidad'] += $cantidad;
-            } else {
-                $carrito[$id] = [
-                    "nombre" => $producto->nombre,
-                    "precio" => $producto->precio_venta,
-                    "cantidad" => $cantidad,
-                    "main_photo" => $producto->main_photo  // Agregar la imagen aquí
-                ];
-            }
-            session()->put('carrito', $carrito);
-            return response()->json(['success' => true, 'carrito' => $carrito]);
+        $cantidad = (int)$request->cantidad;
+    
+        if (!$producto || $cantidad <= 0 || $cantidad > $producto->stock) {
+            return response()->json(['success' => false, 'message' => 'Cantidad inválida o insuficiente stock']);
         }
-
-        return response()->json(['success' => false]);
+    
+        $carrito = session()->get('carrito', []);
+    
+        if (isset($carrito[$id])) {
+            // Asegúrate de no exceder el stock total
+            if ($carrito[$id]['cantidad'] + $cantidad > $producto->stock) {
+                return response()->json(['success' => false, 'message' => 'Cantidad excede el stock disponible']);
+            }
+            $carrito[$id]['cantidad'] += $cantidad;
+        } else {
+            $carrito[$id] = [
+                "nombre" => $producto->nombre,
+                "precio" => $producto->precio_venta,
+                "cantidad" => $cantidad,
+                "main_photo" => $producto->main_photo
+            ];
+        }
+    
+        session()->put('carrito', $carrito);
+    
+        return response()->json(['success' => true, 'carrito' => $carrito]);
     }
+    
 
 
 

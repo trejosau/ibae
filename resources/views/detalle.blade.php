@@ -242,9 +242,18 @@
 
             <div class="cantidad-container">
                 <button class="btn-cantidad" id="decrementar">-</button>
-                <input type="number" id="cantidad" class="cantidad-input" value="1" min="1" max="{{ $producto->stock }}" />
+                <!-- Campo de cantidad con validación -->
+                <input 
+                    type="number" 
+                    id="cantidad" 
+                    class="cantidad-input" 
+                    value="1" 
+                    min="1" 
+                    max="{{ $producto->stock }}" 
+                />
                 <button class="btn-cantidad" id="incrementar">+</button>
             </div>
+            
             
             <form id="agregar-carrito-form">
                 @csrf
@@ -256,11 +265,7 @@
                 </button>
             </form>
             
-            
-            
-            
-            
-                    </div>
+        </div>
     </div>
 
     <hr class="my-4">
@@ -330,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function agregarAlCarrito(productoId) {
-    const cantidad = document.getElementById('cantidad').value;
+    const cantidad = parseInt(document.getElementById('cantidad').value, 10);
     const token = document.querySelector('input[name="_token"]').value;
 
     fetch(`/producto/${productoId}/agregar-al-carrito`, {
@@ -348,7 +353,7 @@ function agregarAlCarrito(productoId) {
             cargarContenidoCarrito();
             mostrarMensaje('Producto agregado al carrito', 'exito');
         } else {
-            mostrarMensaje('Hubo un problema al agregar el producto al carrito', 'error');
+            mostrarMensaje(data.message || 'Error al agregar el producto', 'error');
         }
     })
     .catch(error => {
@@ -356,6 +361,42 @@ function agregarAlCarrito(productoId) {
         mostrarMensaje('Error al procesar la solicitud', 'error');
     });
 }
+
+
+document.getElementById('incrementar').addEventListener('click', () => {
+    const cantidadInput = document.getElementById('cantidad');
+    const maxCantidad = parseInt(cantidadInput.max, 10);
+    let cantidad = parseInt(cantidadInput.value, 10);
+
+    if (cantidad < maxCantidad) {
+        cantidad++;
+        cantidadInput.value = cantidad;
+    }
+});
+
+document.getElementById('decrementar').addEventListener('click', () => {
+    const cantidadInput = document.getElementById('cantidad');
+    let cantidad = parseInt(cantidadInput.value, 10);
+
+    if (cantidad > 1) {
+        cantidad--;
+        cantidadInput.value = cantidad;
+    }
+});
+
+document.getElementById('cantidad').addEventListener('input', (event) => {
+    const input = event.target;
+    const min = parseInt(input.min, 10);
+    const max = parseInt(input.max, 10);
+    let value = parseInt(input.value, 10);
+
+    if (value < min) {
+        input.value = min;
+    } else if (value > max) {
+        input.value = max;
+    }
+});
+
 
 function mostrarMensaje(mensaje, tipo) {
     const mensajeDiv = document.createElement('div');
