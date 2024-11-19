@@ -59,41 +59,6 @@
 
         /* Contenedor de productos */
   /* Contenedor de productos */
-.products-container .card {
-    border: 1px solid #ddd; /* Contorno alrededor de cada tarjeta */
-    border-radius: 10px;
-    width: 100%;
-    height: 600px;
-    overflow: hidden;
-    transition: box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.products-container .card:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra en hover */
-}
-
-.products-container .card img {
-    max-height: 400px;
-    object-fit: cover;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    transition: transform 0.3s ease;
-    width: 100%;
-}
-
-.products-container .card:hover img {
-    transform: scale(1.1); /* Solo agrandar la imagen en hover */
-}
-
-.products-container .card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-}
 
 .precio {
     color: #ff5722;
@@ -103,7 +68,7 @@
 
 /* Estilo para el botón "Agregar al carrito" */
 .btn-agg {
-    background-color: #ff5a5f; /* Color de fondo */
+    background-color: #333; /* Color de fondo */
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -131,6 +96,16 @@
     transition: transform 0.5s ease;
 }
 
+.card-title {
+    height: 2.5rem; /* Fija la altura del título */
+    overflow: hidden; /* Oculta el contenido que sobrepasa la altura */
+    text-overflow: ellipsis; /* Agrega puntos suspensivos al texto largo */
+    white-space: nowrap; /* Evita que el texto haga salto de línea */
+    font-size: 1rem; /* Ajusta el tamaño de la fuente */
+    margin-bottom: 0.5rem; /* Asegura espacio entre elementos */
+}
+
+
 .producto-card {
     min-width: 220px;
     margin: 0 10px;
@@ -150,10 +125,6 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra en hover */
 }
 
-.precio {
-    color: #ff5722; /* Color vibrante para el precio */
-    font-size: 1.2rem; /* Tamaño de fuente más grande para el precio */
-}
 
 /* Ajuste de la posición de los controles de navegación del carrusel */
 .carousel-control-prev,
@@ -278,9 +249,9 @@
             <div class="producto-card">
                 <!-- Enlace al detalle del producto -->
                 <a href="{{ route('producto.detalle', $producto->id) }}" class="card h-100 shadow-sm border-0">
-                    <img src="{{ $producto->main_photo }}" class="card-img-top img-fluid" alt="{{ $producto->nombre }}">
+                    <img src="{{ $producto->main_photo }}" class="card-img-top img-fluid " alt="{{ $producto->nombre }}">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title fw-bold text-dark">{{ $producto->nombre }}</h5>
+                        <h5 class="card-title fw-bold text-dark" style="font-size: 15px">{{ $producto->nombre }}</h5>
                         <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
                     </div>
                 </a>
