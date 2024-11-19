@@ -147,18 +147,7 @@
         </div>
     </div>
 
-    <!-- Gráfica de Ventas -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card border-info h-100 mb-4">
-                <div class="card-body">
-                    <h5 class="card-title text-center">
-                        <i class="fas fa-chart-line fa-2x text-info"></i> Gráfica de Ventas
-                    </h5>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Modal ver Venta -->
     @foreach($ventas as $venta)
