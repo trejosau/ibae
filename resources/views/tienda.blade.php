@@ -14,47 +14,91 @@
         font-size: 30px; /* Tamaño de la fuente más grande */
         font-weight: bold; /* Asegura que el texto sea más visible */
     }
-/* Espaciado superior para el contenedor de imágenes */
-.contenedor-imagen {
-    padding-top: 120px;
-}
-
-/* Configuración del grid */
+/* Configuración base del contenedor */
 .contenedor {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, 1fr); /* Cinco columnas en pantallas grandes */
     gap: 20px; /* Espacio entre las columnas */
-    justify-items: center; /* Centra los elementos en cada columna */
+    justify-items: center; /* Centrar los elementos en cada celda */
+    padding: 0 20px; /* Espaciado horizontal */
 }
 
-/* Estilos para los títulos */
-.tittle {
-    text-align: center;
-    margin-top: 10px;
-    transition: color 0.3s ease, transform 0.3s ease; /* Transiciones para el efecto en el título */
+/* Estilo de las tarjetas individuales */
+.categoria-card {
+    text-align: center; /* Centrar texto e imágenes */
+    width: 100%;
 }
 
-/* Efecto en el título al pasar el cursor */
-.tittle:hover {
-    color: #ff5a5f; /* Cambia el color al pasar el cursor */
-    transform: translateY(-5px); /* Mueve el texto un poco hacia arriba */
-}
-
-/* Estilos para las imágenes circulares */
+/* Estilo de las imágenes circulares */
 .imagen-circular {
     width: 150px;
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transiciones para efectos en la imagen */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Sombra inicial */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Efecto en la imagen al pasar el cursor */
+/* Efecto en hover para las imágenes */
 .imagen-circular:hover {
-    transform: scale(1.1); /* Aumenta el tamaño ligeramente */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada en hover */
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
+
+/* Estilo para los nombres de las categorías */
+.categoria-nombre {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    color: #333;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.categoria-nombre:hover {
+    color: #ff5a5f;
+    transform: translateY(-5px);
+}
+
+/* Responsividad para pantallas medianas (tablets) */
+@media (max-width: 992px) {
+    .contenedor {
+        grid-template-columns: repeat(3, 1fr); /* Tres columnas */
+    }
+
+    .imagen-circular {
+        width: 120px; /* Tamaño ajustado */
+        height: 120px;
+    }
+}
+
+/* Responsividad para pantallas pequeñas (móviles) */
+@media (max-width: 576px) {
+    .contenedor {
+        grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+        gap: 15px;
+    }
+
+    .imagen-circular {
+        width: 100px;
+        height: 100px;
+    }
+
+    .categoria-nombre {
+        font-size: 1rem; /* Texto más pequeño */
+    }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 360px) {
+    .contenedor {
+        grid-template-columns: 1fr; /* Una sola columna */
+    }
+
+    .categoria-nombre {
+        font-size: 0.9rem; /* Texto aún más pequeño */
+    }
+}
+
+
 
 
         /* Contenedor de productos */
@@ -186,18 +230,19 @@
 
 <div class="contenedor pb-4">
     @foreach ($categorias as $categoria)
-        <div>
+        <div class="categoria-card">
             <div class="tittle">
                 <a href="{{ route('productos.categoria', ['id_categoria' => $categoria->id]) }}">
                     <img src="{{ $categoria->photo }}" alt="{{ $categoria->nombre }}" class="imagen-circular" loading="lazy">
                 </a>
             </div>
             <div class="tittle">
-                <h2>{{ $categoria->nombre }}</h2>
+                <h2 class="categoria-nombre">{{ $categoria->nombre }}</h2>
             </div>
         </div>
     @endforeach
 </div>
+
 
 
 <div class="col-md-12">
