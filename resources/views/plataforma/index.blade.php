@@ -374,6 +374,8 @@
         @include(Route::currentRouteName())
     </div>
 </div>
+
+
 </body>
 <script>
     const themeToggle = document.getElementById('theme-toggle');

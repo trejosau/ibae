@@ -23,6 +23,26 @@
     @endif
     <h2 class="text-center mb-4">Gestión de Estudiantes</h2>
 
+    <div>
+        <div class="form-group">
+            <label for="buscarMatricula">Buscar por Matrícula:</label>
+            <input type="text" id="buscarMatricula" class="form-control" placeholder="Escribe una matrícula"
+                   wire:model="matricula">
+        </div>
+    
+        @if(!empty($matricula))
+            <ul class="list-group mt-3">
+                @forelse($estudiantes as $estudiante)
+                    <li class="list-group-item">
+                        <strong>{{ $estudiante->matricula }}</strong> - {{ $estudiante->persona->nombre }}
+                    </li>
+                @empty
+                    <li class="list-group-item text-muted">No se encontraron estudiantes.</li>
+                @endforelse
+            </ul>
+        @endif
+    </div>
+    
     <div class="row">
         <div class="text-center mb-4">
             <button type="button" class="btn" data-toggle="modal" data-target="#modalRegistrarEstudiante"
@@ -254,3 +274,7 @@
         </div>
     </div>
 </div>
+
+@livewireStyles
+@livewireScripts
+
