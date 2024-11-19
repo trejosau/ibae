@@ -14,3 +14,6 @@ class ResumenVenta extends Component
         return view('livewire.resumen-venta');
     }
 }
+
+
+

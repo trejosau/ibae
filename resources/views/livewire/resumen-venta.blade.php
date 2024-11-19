@@ -17,6 +17,7 @@
         <!-- Si es estudiante, mostrar el componente de búsqueda -->
         <div x-show="esEstudiante" class="mb-3">
             <livewire:buscador-estudiantes />
+
         </div>
 
     </div>
