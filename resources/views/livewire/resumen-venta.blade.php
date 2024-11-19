@@ -1,24 +1,23 @@
 <div class="d-flex" style="height: 100vh;">
-    <div class="p-3 bg-light border-end" style="width: 300px;">
+    <!-- Sidebar -->
+    <div class="p-3 bg-light border-end" style="width: 300px;" x-data="{ esEstudiante: @entangle('esEstudiante') }">
         <h5>Detalles del Comprador</h5>
 
-        <!-- Checkbox "¿Es estudiante?" -->
+        <!-- Checkbox para "¿Es estudiante?" -->
         <div class="mb-3 form-check">
-            <input type="checkbox" id="esEstudiante" class="form-check-input" wire:model="esEstudiante">
+            <input
+                type="checkbox"
+                id="esEstudiante"
+                class="form-check-input"
+                x-model="esEstudiante"
+            >
             <label for="esEstudiante" class="form-check-label">¿Es estudiante?</label>
         </div>
 
-        <!-- Mostrar valor de "¿Es estudiante?" -->
-        <div>
-            <p>Valor de "¿Es estudiante?": <strong>{{ $esEstudiante ? 'true' : 'false' }}</strong></p>
+        <!-- Si es estudiante, mostrar el componente de búsqueda -->
+        <div x-show="esEstudiante" class="mb-3">
+            <livewire:buscador-estudiantes />
         </div>
 
-        <!-- Campo de Matrícula (se muestra solo si es estudiante) -->
-        @if($esEstudiante)
-            <div class="mb-3">
-                <label for="matricula" class="form-label">Matrícula</label>
-                <input type="text" id="matricula" class="form-control" wire:model="matricula">
-            </div>
-        @endif
     </div>
 </div>

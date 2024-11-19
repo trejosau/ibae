@@ -14,11 +14,6 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import 'lightbox2/dist/js/lightbox.min.js';
 import ApexCharts from 'apexcharts';
-import Alpine from 'alpinejs';
-
-window.Alpine = Alpine;
-
-Alpine.start();
 
 
 

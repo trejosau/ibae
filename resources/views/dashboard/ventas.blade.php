@@ -234,6 +234,11 @@
         </div>
     </div>
 </div>
+@livewireScripts
+
+
+
+
 
 
 

@@ -7,8 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sidebar</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @livewireStyles
-    @livewireScripts
+
 </head>
 <style>
     ::after,
@@ -297,6 +296,7 @@
         display: block; /* Mostrar cuando hay elementos */
     }
 </style>
+
 <body>
 
 
