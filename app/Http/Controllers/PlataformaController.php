@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CursoAperturaRequest;
-use App\Mail\CredencialesEstudiantesMail;
 use App\Mail\EnvioCredenciales;
 use App\Models\Estudiante;
 use App\Models\EstudianteCurso;
@@ -20,11 +19,11 @@ use App\Models\Colegiaturas;
 use App\Models\User;
 use App\Models\CursoApertura;
 use App\Models\Inscripcion ;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Models\Persona;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+
 
 
 
@@ -516,19 +515,21 @@ class PlataformaController extends Controller
 
 
 
-
     public function estudiantes()
     {
-        $estudiantes = Estudiante::with(['persona.usuario', 'inscripcion'])->get();
-        $inscripciones = Inscripcion::all();
-
+        // Paginación de estudiantes
+        $estudiantes = Estudiante::with(['persona.usuario', 'inscripcion'])->paginate(10);
+    
         // Obtener usuarios sin el rol de "estudiante"
         $usuariosSinRolEstudiante = User::whereDoesntHave('roles', function ($query) {
             $query->where('name', 'estudiante');
         })->get();
-
+    
+        $inscripciones = Inscripcion::all();
+    
         return view('plataforma.index', compact('estudiantes', 'usuariosSinRolEstudiante', 'inscripciones'));
     }
+    
 
     function generarContrasenaAleatoria($longitud = 8) {
         // Caracteres permitidos en cada categoría
@@ -648,6 +649,22 @@ class PlataformaController extends Controller
 
         // Cambiar el estado a baja
         $estudiante->estado = 'baja';
+        $estudiante->save();
+
+        return redirect()->route('plataforma.estudiantes')->with('success', 'Estudiante dado de baja correctamente.');
+    }
+    
+
+    public function darDeAlta($matricula)
+    {
+        $estudiante = Estudiante::where('matricula', $matricula)->first();
+
+        if (!$estudiante) {
+            return redirect()->back()->with('error', 'Estudiante no encontrado.');
+        }
+
+        // Cambiar el estado a baja
+        $estudiante->estado = 'activo';
         $estudiante->save();
 
         return redirect()->route('plataforma.estudiantes')->with('success', 'Estudiante dado de baja correctamente.');
