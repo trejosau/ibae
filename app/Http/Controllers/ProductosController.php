@@ -301,14 +301,17 @@ class ProductosController extends Controller
     public function agregarAlCarrito(Request $request, $id)
     {
         $producto = Productos::find($id);
+        $esEstudiante = Auth::user()->persona->estudiante ? 1 : 0;
         $cantidad = (int)$request->cantidad;
-    
+
         if (!$producto || $cantidad <= 0 || $cantidad > $producto->stock) {
             return response()->json(['success' => false, 'message' => 'Cantidad inválida o insuficiente stock']);
         }
-    
+
         $carrito = session()->get('carrito', []);
-    
+
+
+
         if (isset($carrito[$id])) {
             // Asegúrate de no exceder el stock total
             if ($carrito[$id]['cantidad'] + $cantidad > $producto->stock) {
@@ -316,19 +319,21 @@ class ProductosController extends Controller
             }
             $carrito[$id]['cantidad'] += $cantidad;
         } else {
+            $precio = $esEstudiante ? $producto->precio_lista : $producto->precio_venta; // Determinar precio según condición
+
             $carrito[$id] = [
                 "nombre" => $producto->nombre,
-                "precio" => $producto->precio_venta,
+                "precio" => $precio,
                 "cantidad" => $cantidad,
                 "main_photo" => $producto->main_photo
             ];
         }
-    
+
         session()->put('carrito', $carrito);
-    
+
         return response()->json(['success' => true, 'carrito' => $carrito]);
     }
-    
+
 
 
 
@@ -548,25 +553,25 @@ public function storeCategoria(Request $request)
         try {
             $session = Session::retrieve($sessionId);
 
-
-
-
             $usuario = Auth::user();
 
-            $total =number_format($session->amount_total / 100, 2);
+            $total = 0; // Inicializa el total en 0
+            $descuentoTotal = 0; // Inicializa el descuento total en 0
             $estado = 'preparando para entrega';
             $claveEntrega = $this->generarClaveEntrega();
             $idComprador = $usuario->persona->comprador->id;
-            $esEstudiante = $usuario->persona->estudiante ? 1 : 1;
+            $esEstudiante = $usuario->persona->estudiante ? 1 : 0;
             $idEstudiante = $usuario->persona->estudiante ? $usuario->persona->estudiante->matricula : null;
             $stripe_paymet_id = $session->payment_intent;
             $fechaPago = date('Y-m-d H:i:s', $session->created);
             $sessionCarrito = session()->get('carrito', []);
+
+            // Crear el pedido
             $pedido = Pedidos::create([
-                'total' => $total,
+                'total' => 0, // Será actualizado después de calcular el total
                 'estado' => $estado,
                 'clave_entrega' => $claveEntrega,
-                'fecha_pedido' => now(),
+                'fecha-hora_pedido' => now(),
                 'id_comprador' => $idComprador,
                 'es_estudiante' => $esEstudiante,
                 'id_estudiante' => $idEstudiante,
@@ -575,24 +580,27 @@ public function storeCategoria(Request $request)
                 'fecha_pago' => $fechaPago,
             ]);
 
-
-
-            $descuento = 0;
+            // Procesar los productos del carrito
             foreach ($sessionCarrito as $index => $producto) {
-
-
                 $productoId = $index;
-
                 $productoRegistro = Productos::findOrFail($productoId);
-                $precioAplicado = $productoRegistro->precio_venta;
-                // Acumulamos el descuento solo si el usuario es estudiante
-                if ($esEstudiante) {
-                    $precioAplicado = $productoRegistro->precio_lista;
-                    $descuento += $productoRegistro->precio_venta - $productoRegistro->precio_lista; // Suma el descuento al acumulado
-                }
 
+                // Determinar el precio aplicado
+                $precioAplicado = $esEstudiante
+                    ? $productoRegistro->precio_lista
+                    : $productoRegistro->precio_venta;
 
-                $detalle = DetallePedido::create([
+                // Calcular descuento por producto (si aplica)
+                $descuento = $esEstudiante
+                    ? $productoRegistro->precio_venta - $productoRegistro->precio_lista
+                    : 0;
+
+                // Actualizar el total y el descuento acumulado
+                $total += $precioAplicado * $producto['cantidad'];
+                $descuentoTotal += $descuento * $producto['cantidad'];
+
+                // Crear el detalle del pedido
+                DetallePedido::create([
                     'id_pedido' => $pedido->id,
                     'id_producto' => $productoId,
                     'cantidad' => $producto['cantidad'],
@@ -601,6 +609,10 @@ public function storeCategoria(Request $request)
                 ]);
             }
 
+            // Actualizar el total del pedido
+            $pedido->update([
+                'total' => $total,
+            ]);
 
             return redirect()->route('tienda.mis-pedidos');
 

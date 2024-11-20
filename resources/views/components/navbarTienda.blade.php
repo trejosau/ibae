@@ -55,7 +55,7 @@
 }
 
 .form-inline button:hover {
-    background-color: #f4d1db; 
+    background-color: #f4d1db;
     color: #333;
     transform: scale(1.05);
 }
@@ -461,7 +461,7 @@
     padding: 10px 20px; /* Tamaño del botón */
     border: 2px solid #333; /* Borde para darle definición */
     border-radius: 5px; /* Esquinas redondeadas */
-    font-size: 16px; /* Tamaño del texto */ 
+    font-size: 16px; /* Tamaño del texto */
     cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
     transition: all 0.3s ease; /* Transición suave para todos los cambios */
 }
@@ -479,7 +479,8 @@
 <nav class="navbar navbar-expand-lg p-0">
     <div class="container p-0">
         <a class="navbar-brand" href="{{ route('home') }}">
-            <img class="logo" src="{{ asset('images/logo.png') }}" alt="Logo" class="img-fluid">
+            <img class="logo img-fluid" src="{{ asset('images/logo.png') }}" alt="Logo">
+
         </a>
 
 
@@ -489,11 +490,11 @@
                 <button type="submit" class="btn btn-primary ml-2">Buscar</button>
             </form>
         </div>
-        
-        
-        
-        
-        
+
+
+
+
+
 
    <!-- Icono del carrito -->
 <div class="nav-icons">
@@ -519,7 +520,7 @@
     </div>
 
 
-</div>     
+</div>
             <!-- Avatar -->
             <div class="dropdown padding-left">
                 @if(auth()->check())
@@ -645,14 +646,14 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('DOMContentLoaded', function () {
         // Actualizar el subtotal al cargar la página
         actualizarTotalCarrito();
-    
+
         // Abrir el carrito al hacer clic en el ícono
         document.getElementById('cart-icon').addEventListener('click', function(event) {
             event.preventDefault();
             document.getElementById('cart-sidebar').classList.add('active');
             cargarContenidoCarrito();
         });
-    
+
         // Cerrar el sidebar del carrito al hacer clic en el botón "X"
         document.getElementById('close-sidebar').addEventListener('click', function() {
             document.getElementById('cart-sidebar').classList.remove('active');
@@ -676,9 +677,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     cartContent.innerHTML += `
 <div class="cart-item">
     <div class="product-image-container">
-        <img 
-            src="${product.main_photo || '/ruta/a/imagen-placeholder.jpg'}" 
-            alt="${product.nombre}" 
+        <img
+            src="${product.main_photo || '/ruta/a/imagen-placeholder.jpg'}"
+            alt="${product.nombre}"
             class="img-fluid rounded shadow mb-4"
             onerror="this.src='/ruta/a/imagen-placeholder.jpg'; this.alt='Imagen no disponible';"
         >
@@ -772,7 +773,7 @@ function removeFromCart(productId) {
     .catch(error => console.error('Error al eliminar el producto del carrito:', error));
 }
 
-    
+
 function mostrarCarritoVacio(cartContent) {
     cartContent.innerHTML = `
         <div class="empty-cart">
@@ -782,18 +783,18 @@ function mostrarCarritoVacio(cartContent) {
     `;
     document.getElementById('cart-icon-total').innerText = '$0.00';
     document.getElementById('cart-total-sidebar').innerText = 'Total: $0.00';
-    
+
     // Oculta el contenedor del subtotal y botón de compra
     document.querySelector('.cart-footer').style.display = 'none';
 }
 
-    
-    
+
+
     function mostrarMensajeEliminacion(mensaje) {
     const mensajeElemento = document.createElement('div');
     mensajeElemento.textContent = mensaje;
     mensajeElemento.className = 'mensaje-ajax';
-    
+
     document.body.appendChild(mensajeElemento);
 
     // Mostrar el mensaje
@@ -830,4 +831,3 @@ function removeFromCart(productId) {
 
 
     </script>
-    

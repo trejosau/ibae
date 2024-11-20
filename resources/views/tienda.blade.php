@@ -256,7 +256,12 @@
                     <img src="{{ $producto->main_photo }}" class="card-img-top img-fluid" alt="{{ $producto->nombre }}">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title fw-bold text-dark">{{ $producto->nombre }}</h5>
-                        <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
+                        @if (auth()->user()->Persona->Estudiante)
+                            <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_lista, 2) }}</p>
+                            <small class="text-muted">Descuento: {{ $producto->precio_venta - $producto->precio_lista }}</small>
+                        @else
+                            <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
+                        @endif
                     </div>
                 </a>
 
@@ -297,7 +302,13 @@
                     <img src="{{ $producto->main_photo }}" class="card-img-top img-fluid " alt="{{ $producto->nombre }}">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title fw-bold text-dark" style="font-size: 15px">{{ $producto->nombre }}</h5>
-                        <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
+                        @if (auth()->user()->Persona->Estudiante)
+                            <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_lista, 2) }}</p>
+                            <small class="text-muted">Descuento: {{ $producto->precio_venta - $producto->precio_lista }}</small>
+
+                        @else
+                            <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
+                        @endif
                     </div>
                 </a>
 
