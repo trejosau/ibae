@@ -18,6 +18,7 @@ class Pedidos extends Model
         'clave_entrega',
         'id_comprador',
         'es_estudiante',
+        'id_estudiante',
         'estado_pago',
     ];
     public function detalles()

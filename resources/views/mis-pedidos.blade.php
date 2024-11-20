@@ -180,6 +180,9 @@
             <p><strong>Fecha:</strong> {{ \Carbon\Carbon::parse($pedido['fecha-hora_pedido'])->format('d/m/Y H:i') }}</p>
 
             <p><strong>Estado:</strong> {{ ucfirst($pedido->estado) }}</p>
+            @if ($pedido->estado == 'listo para entrega')
+                <p><strong>Puedes pasar a recoger el pedido:</strong> Clave: {{ $pedido->clave_entrega }}</p>
+            @endif
             <hr>
             <div class="productos-grid">
                 @foreach ($pedido->detalles as $detalle)
