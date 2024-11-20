@@ -1,124 +1,157 @@
 <div class="d-flex" style="height: 100%;">
-    <!-- Sidebar -->
-    <div style="width: 300px; background-color: #f8f9fa; padding: 1rem; overflow-y: auto; border-right: 1px solid #dee2e6;">
+    <div
+        style="
+        width: 300px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-right: 1px solid #dee2e6;"
+    >
         <h5 class="mb-3">Resumen de Venta</h5>
-        <div>
-            <label for="comprador">Comprador:</label>
-            <input type="text" id="comprador" class="form-control mb-3" placeholder="Ingrese el nombre del comprador" wire:model="comprador">
-        </div>
+        <div style="flex: 1; overflow-y: auto;">
+            <div>
+                <label for="comprador">Comprador:</label>
+                <input
+                    type="text"
+                    id="comprador"
+                    class="form-control mb-3"
+                    placeholder="Ingrese el nombre del comprador"
+                    wire:model="comprador"
+                />
+            </div>
 
-        <div>
-            <label for="esEstudiante">¿Es estudiante?:</label>
-            <small class="form-text text-muted">Si estudiante, se le dará precio lista.</small>
-            <input type="checkbox" id="esEstudiante" class="form-check-input mb-3" wire:model.live="esEstudiante">
+            <div>
+                <label for="esEstudiante">¿Es estudiante?:</label>
+                <small class="form-text text-muted">Si estudiante, se le dará precio lista.</small>
+                <input
+                    type="checkbox"
+                    id="esEstudiante"
+                    class="form-check-input mb-3"
+                    wire:model.live="esEstudiante"
+                />
 
+                @if ($esEstudiante)
+                    <div>
+                        <label for="matricula">Buscar matrícula:</label>
+                        <input
+                            type="text"
+                            id="matricula"
+                            class="form-control"
+                            placeholder="Ingrese matrícula"
+                            wire:model.live="query"
+                        />
+                    </div>
+                @endif
 
-            @if ($esEstudiante)
-                <div>
-                    <label for="matricula">Buscar matrícula:</label>
-                    <input
-                        type="text"
-                        id="matricula"
-                        class="form-control"
-                        placeholder="Ingrese matrícula"
-                        wire:model.live="query"
+                @if (!empty($resultados))
+                    <div class="mt-3">
+                        <label for="resultados">Resultados:</label>
+                        <select id="resultados" class="form-control" wire:model="matricula">
+                            <option disabled selected>Seleccione una matrícula</option>
+                            @foreach ($resultados as $resultado)
+                                <option value="{{ $resultado['matricula'] }}">
+                                    {{ $resultado['persona']['nombre'] }}
+                                    {{ $resultado['persona']['ap_paterno'] }}
+                                    - {{ $resultado['matricula'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @else
+                    <p class="text-muted mt-3">No se encontraron resultados.</p>
+                @endif
+            </div>
+
+            <ul class="list-group mt-3">
+                @forelse ($productosAgregados as $index => $producto)
+                    <li
+                        class="list-group-item d-flex justify-content-between align-items-center"
+                        style="overflow: hidden; text-overflow: ellipsis;"
                     >
-                </div>
-            @endif
-
-
-            @if (!empty($resultados))
-                <div class="mt-3">
-                    <label for="resultados">Resultados:</label>
-                    <select id="resultados" class="form-control" wire:model="matricula">
-                        <option disabled selected>Seleccione una matrícula</option>
-                        @foreach ($resultados as $resultado)
-                            <option value="{{ $resultado['matricula'] }}">
-                                {{ $resultado['persona']['nombre'] }}
-                                {{ $resultado['persona']['ap_paterno'] }}
-                                - {{ $resultado['matricula'] }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-            @else
-                <p class="text-muted mt-3">No se encontraron resultados.</p>
-            @endif
-
+                        <div
+                            class="d-flex flex-column"
+                            style="flex: 1; min-width: 0;"
+                        >
+                            <!-- Primera línea: Nombre del producto (truncado con ellipsis) -->
+                            <span
+                                class="text-truncate"
+                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                            >
+                            {{ $producto['nombre'] }}
+                        </span>
+                            <!-- Segunda línea: Detalles (cantidad x precio) -->
+                            <small class="text-muted">
+                                {{ $producto['cantidad'] }} x
+                                @if ($esEstudiante)
+                                    ${{ number_format($producto['precio_lista'], 2) }}
+                                @else
+                                    ${{ number_format($producto['precio_venta'], 2) }}
+                                @endif
+                            </small>
+                        </div>
+                        <!-- Badge para el total -->
+                        <div class="d-flex align-items-center">
+                        <span
+                            class="badge @if ($esEstudiante) bg-success @else bg-primary @endif rounded-pill me-3"
+                        >
+                            ${{ number_format($producto['cantidad'] * ($esEstudiante ? $producto['precio_lista'] : $producto['precio_venta']), 2) }}
+                        </span>
+                            <!-- Botón para eliminar el producto -->
+                            <button
+                                class="btn btn-sm btn-danger"
+                                wire:click="eliminarProducto({{ $index }})"
+                            >
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </li>
+                @empty
+                    <li class="list-group-item text-muted">
+                        No hay productos agregados.
+                    </li>
+                @endforelse
+            </ul>
         </div>
-
-        <ul class="list-group mt-3">
-            @forelse ($productosAgregados as $index => $producto)
-                <li class="list-group-item d-flex justify-content-between align-items-center" style="overflow: hidden; text-overflow: ellipsis;">
-                    <div class="d-flex flex-column" style="flex: 1; min-width: 0;">
-                        <!-- Primera línea: Nombre del producto (truncado con ellipsis) -->
-                        <span class="text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        {{ $producto['nombre'] }}
-                    </span>
-                        <!-- Segunda línea: Detalles (cantidad x precio) -->
-                        <small class="text-muted">
-                            {{ $producto['cantidad'] }} x
-                            @if ($esEstudiante)
-                                ${{ number_format($producto['precio_lista'], 2) }}
-                            @else
-                                ${{ number_format($producto['precio_venta'], 2) }}
-                            @endif
-                        </small>
-                    </div>
-                    <!-- Badge para el total -->
-                    <div class="d-flex align-items-center">
-                    <span class="badge
-                        @if ($esEstudiante) bg-success @else bg-primary @endif
-                        rounded-pill me-3">
-                        ${{ number_format($producto['cantidad'] * ($esEstudiante ? $producto['precio_lista'] : $producto['precio_venta']), 2) }}
-                    </span>
-                        <!-- Botón para eliminar el producto -->
-                        <button class="btn btn-sm btn-danger" wire:click="eliminarProducto({{ $index }})">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </div>
-                </li>
-            @empty
-                <li class="list-group-item text-muted">No hay productos agregados.</li>
-            @endforelse
-        </ul>
-
 
         <div class="row mt-3">
             <!-- Botón Limpiar Venta -->
             <div class="col-6">
-                <button class="btn btn-outline-danger w-100" wire:click="limpiarVenta">Limpiar Venta</button>
+                <button class="btn btn-outline-danger w-100" wire:click="limpiarVenta">
+                    Limpiar Venta
+                </button>
             </div>
 
             <!-- Total -->
             <div class="col-6 text-end">
-        <span class="badge
-            @if ($esEstudiante)
-                bg-success
-            @else
-                bg-primary
-            @endif
-            rounded-pill" style="font-size: 1rem;">
-            Total: ${{ number_format($this->calcularTotal(), 2) }}
-        </span>
+            <span
+                class="badge @if ($esEstudiante) bg-success @else bg-primary @endif rounded-pill"
+                style="font-size: 1rem;"
+            >
+                Total: ${{ number_format($this->calcularTotal(), 2) }}
+            </span>
             </div>
         </div>
 
-        <!-- Descuento -->
-
-
         <!-- Botón Confirmar Venta -->
-        <button class="btn btn-success mt-3 w-100" wire:click="confirmarVenta">Confirmar Venta</button>
+        <button
+            class="btn btn-success mt-3 w-100"
+            wire:click="confirmarVenta"
+        >
+            Confirmar Venta
+        </button>
 
         <div class="text-end mt-2">
             <small class="text-muted">
                 Descuento:
                 <span class="fw-bold">
-            ${{ number_format($this->calcularTotalDescuento(), 2) }}
-        </span>
+                ${{ number_format($this->calcularTotalDescuento(), 2) }}
+            </span>
             </small>
         </div>
     </div>
+
 
     <!-- Main content -->
     <div style="flex: 1; padding: 1rem; overflow-y: auto;">
