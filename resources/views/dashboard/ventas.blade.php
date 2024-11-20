@@ -1,19 +1,19 @@
 @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div class="alert alert-success alert-dismissible fade show" role="alert" style="z-index: 2000; position: relative;">
         {{ session('success') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
 
 @if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="z-index: 2000; position: relative;">
         {{ session('error') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
 
 @if ($errors->any())
-    <div class="alert alert-danger">
+    <div class="alert alert-danger" style="z-index: 2000; position: relative;">
         <ul>
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -21,6 +21,7 @@
         </ul>
     </div>
 @endif
+
 <div class="ventas-section">
 
     <h2 class="text-center mb-4">Sección de Ventas</h2>
@@ -219,6 +220,7 @@
     @endforeach
 
 
+
     <!-- Modal Agregar Venta -->
 <div class="modal fade" id="modal-agregar-venta" tabindex="-1" aria-labelledby="modalAgregarVentaLabel" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
@@ -228,9 +230,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <!-- Componente Livewire ResumenVenta -->
-                <livewire:resumen-venta />
+                <livewire:ventas-modal />
             </div>
+
         </div>
     </div>
 </div>
