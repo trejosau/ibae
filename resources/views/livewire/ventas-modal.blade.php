@@ -10,61 +10,64 @@
         border-right: 1px solid #dee2e6;"
     >
         <h5 class="mb-3">Resumen de Venta</h5>
-        <div style="flex: 1; overflow-y: auto;">
-            <div>
-                <label for="comprador">Comprador:</label>
-                <input
-                    type="text"
-                    id="comprador"
-                    class="form-control mb-3"
-                    placeholder="Ingrese el nombre del comprador"
-                    wire:model="comprador"
-                />
-            </div>
 
-            <div>
-                <label for="esEstudiante">¿Es estudiante?:</label>
-                <small class="form-text text-muted">Si estudiante, se le dará precio lista.</small>
-                <input
-                    type="checkbox"
-                    id="esEstudiante"
-                    class="form-check-input mb-3"
-                    wire:model.live="esEstudiante"
-                />
+        <!-- Otros elementos del sidebar -->
+        <div>
+            <label for="comprador">Comprador:</label>
+            <input
+                type="text"
+                id="comprador"
+                class="form-control mb-3"
+                placeholder="Ingrese el nombre del comprador"
+                wire:model="comprador"
+            />
+        </div>
 
-                @if ($esEstudiante)
-                    <div>
-                        <label for="matricula">Buscar matrícula:</label>
-                        <input
-                            type="text"
-                            id="matricula"
-                            class="form-control"
-                            placeholder="Ingrese matrícula"
-                            wire:model.live="query"
-                        />
-                    </div>
-                @endif
+        <div>
+            <label for="esEstudiante">¿Es estudiante?:</label>
+            <small class="form-text text-muted">Si estudiante, se le dará precio lista.</small>
+            <input
+                type="checkbox"
+                id="esEstudiante"
+                class="form-check-input mb-3"
+                wire:model.live="esEstudiante"
+            />
 
-                @if (!empty($resultados))
-                    <div class="mt-3">
-                        <label for="resultados">Resultados:</label>
-                        <select id="resultados" class="form-control" wire:model="matricula">
-                            <option disabled selected>Seleccione una matrícula</option>
-                            @foreach ($resultados as $resultado)
-                                <option value="{{ $resultado['matricula'] }}">
-                                    {{ $resultado['persona']['nombre'] }}
-                                    {{ $resultado['persona']['ap_paterno'] }}
-                                    - {{ $resultado['matricula'] }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                @else
-                    <p class="text-muted mt-3">No se encontraron resultados.</p>
-                @endif
-            </div>
+            @if ($esEstudiante)
+                <div>
+                    <label for="matricula">Buscar matrícula:</label>
+                    <input
+                        type="text"
+                        id="matricula"
+                        class="form-control"
+                        placeholder="Ingrese matrícula"
+                        wire:model.live="query"
+                    />
+                </div>
+            @endif
 
-            <ul class="list-group mt-3">
+            @if (!empty($resultados))
+                <div class="mt-3">
+                    <label for="resultados">Resultados:</label>
+                    <select id="resultados" class="form-control" wire:model="matricula">
+                        <option disabled selected>Seleccione una matrícula</option>
+                        @foreach ($resultados as $resultado)
+                            <option value="{{ $resultado['matricula'] }}">
+                                {{ $resultado['persona']['nombre'] }}
+                                {{ $resultado['persona']['ap_paterno'] }}
+                                - {{ $resultado['matricula'] }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            @else
+                <p class="text-muted mt-3">No se encontraron resultados.</p>
+            @endif
+        </div>
+
+        <!-- Contenedor para la lista con scroll -->
+        <div style="flex: 1; overflow-y: auto; margin-top: 1rem;">
+            <ul class="list-group">
                 @forelse ($productosAgregados as $index => $producto)
                     <li
                         class="list-group-item d-flex justify-content-between align-items-center"
@@ -115,15 +118,13 @@
             </ul>
         </div>
 
+        <!-- Total y botones de acción -->
         <div class="row mt-3">
-            <!-- Botón Limpiar Venta -->
             <div class="col-6">
                 <button class="btn btn-outline-danger w-100" wire:click="limpiarVenta">
                     Limpiar Venta
                 </button>
             </div>
-
-            <!-- Total -->
             <div class="col-6 text-end">
             <span
                 class="badge @if ($esEstudiante) bg-success @else bg-primary @endif rounded-pill"
@@ -134,11 +135,7 @@
             </div>
         </div>
 
-        <!-- Botón Confirmar Venta -->
-        <button
-            class="btn btn-success mt-3 w-100"
-            wire:click="confirmarVenta"
-        >
+        <button class="btn btn-success mt-3 w-100" wire:click="confirmarVenta">
             Confirmar Venta
         </button>
 

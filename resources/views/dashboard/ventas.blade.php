@@ -229,7 +229,7 @@
                 <h5 class="modal-title" id="modalAgregarVentaLabel">Agregar Venta</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                 <livewire:ventas-modal />
             </div>
 
