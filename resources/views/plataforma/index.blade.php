@@ -50,13 +50,15 @@
 }
 .card {
     transition: transform 0.2s; /* Animación suave al hacer hover */
-    border: 2px solid transparent
+    border: 2px solid transparent;
 }
 
 
 
 .card-body {
-    background-color: #f9f9f9; /* Color de fondo más suave para el contenido de la tarjeta */
+    background-color: #f9f9f9;
+    border-radius: 10px; /* Color de fondo más suave para el contenido de la tarjeta */
+    box-shadow: 0 px 10px rgba(0, 0, 0, 0.1);
 }
 
 .card-title {
@@ -368,9 +370,9 @@
 </style>
 
 <body>
-<div class="wrapper">
+<div class="wrapper" >
     @include('components.sidebarPlataforma')
-    <div class="main p-3">
+    <div class="main p-3" style="background-color: #E5C9D7;">
         @include(Route::currentRouteName())
     </div>
 </div>

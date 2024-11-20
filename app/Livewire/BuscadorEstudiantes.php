@@ -14,9 +14,14 @@ class BuscadorEstudiantes extends Component
     public function updatedQuery()
     {
         // Solo buscar por la matrícula (campo clave primaria)
-        $this->resultados = Estudiante::where('matricula', 'like', '%' . $this->query . '%')
-            ->take(10) // Limitar los resultados a 10
-            ->get();
+        $this->resultados = Estudiante::with('persona.usuario')
+        ->where('matricula', 'like', '%' . $this->query . '%')
+        ->orWhereHas('persona', function ($query) {
+            $query->where('nombre', 'like', '%' . $this->query . '%')
+                ->orWhere('ap_paterno', 'like', '%' . $this->query . '%')
+                ->orWhere('ap_materno', 'like', '%' . $this->query . '%');
+        })
+        ->get();
     }
 
     public function render()

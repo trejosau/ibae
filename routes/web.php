@@ -190,21 +190,12 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
             Route::put('/plataforma/actualizarTema/{id}', [PlataformaController::class, 'actualizarTema'])->name('plataforma.actualizarTema');
             Route::post('/registrar-estudiante', [PlataformaController::class, 'registrarEstudiante'])->name('plataforma.registrarEstudiante');
             Route::post('/estudiante/{matricula}/baja', [PlataformaController::class, 'darDeBaja'])->name('plataforma.baja');
+            Route::post('/estudiante/{matricula}/alta', [PlataformaController::class, 'darDeAlta'])->name('plataforma.alta');
             Route::post('/inscripciones', [PlataformaController::class, 'storeInscripcion'])->name('plataforma.storeInscripcion');
             Route::put('/inscripciones/{id}', [PlataformaController::class, 'update'])->name('plataforma.updateInscripcion');
             Route::post('/plataforma/bajaProfesor/{id}', [PlataformaController::class, 'bajaProfesor'])->name('plataforma.bajaProfesor');
             Route::post('/plataforma/asignar-rol', [PlataformaController::class, 'asignarRol'])->name('plataforma.asignarRol');
 
-
-            Route::get('/buscar-usuarios', function (Request $request) {
-                $query = $request->get('q');
-                $usuarios = User::where('nombre', 'LIKE', "%$query%")
-                                ->orWhere('username', 'LIKE', "%$query%")
-                                ->take(10)
-                                ->get(['nombre', 'ap_paterno', 'username']);
-            
-                return response()->json($usuarios);
-            });
             
         });
 });
