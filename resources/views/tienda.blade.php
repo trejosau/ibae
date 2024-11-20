@@ -206,7 +206,7 @@
 
 <div class="contenedor-imagen container-fluid ps-0 pe-0">
     <div class="row g-0">
-        <div class="col-lg-8 col-12 px-1"> <!-- Usamos padding en lugar de margen -->
+        <div class="col-lg-8 col-12 px-1">
             <img src="{{asset('images/BANNER1.jpg')}}" alt="Banner 1" class="img-fluid banner border-top-right border-bottom-right">
         </div>
 

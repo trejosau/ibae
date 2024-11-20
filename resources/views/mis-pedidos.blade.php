@@ -154,7 +154,7 @@
 <!-- Navbar -->
 <nav class="navbar">
     <div class="container">
-        <a href="#" class="navbar-brand">Tienda Moderna</a>
+        <a href="/" class="navbar-brand">IBA&E</a>
         <div>
             <a href="/">Inicio</a>
             <a href="{{ route('tienda.mostrar') }}">Tienda</a>
