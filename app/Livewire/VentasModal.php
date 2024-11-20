@@ -13,6 +13,10 @@ use Livewire\Component;
 
 class VentasModal extends Component
 {
+    protected $listeners = [
+        'cerrarDropdown',
+    ];
+
     public $esEstudiante = false;
     public $query = '';
     public $queryProductos = '';
@@ -21,12 +25,14 @@ class VentasModal extends Component
     public $categoriaSeleccionada = '';
     public $categorias;
     public $resultados = [];
+
     public $matricula ;
 
     public $productos;
     public $productosAgregados = [];
     public $cantidades = [];
     public $comprador;
+
 
 
     public function mount()
@@ -182,30 +188,87 @@ class VentasModal extends Component
     }
 
 
-    public function confirmarVenta()
+    public $mostrarDropdown = false;
+
+    public function abrirDropdown()
     {
-        // Validar si hay productos agregados
-        if (empty($this->productosAgregados)) {
-            session()->flash('error', 'No hay productos para confirmar la venta.');
+        $this->mostrarDropdown = true;
+    }
+
+    public function cerrarDropdown()
+    {
+        $this->mostrarDropdown = false;
+    }
+
+    public function selectMatricula($matricula)
+    {
+        $this->matricula = $matricula;
+        $this->cerrarDropdown(); // Cierra el dropdown después de seleccionar
+        $this->resultados = []; // Limpia los resultados después de la selección
+    }
+
+
+    public function updatedMatricula($value)
+    {
+        // Evitar consultas innecesarias si la longitud del input es menor a 1
+        if (strlen($value) < 1) {
+            $this->resultados = [];
             return;
         }
 
+        // Buscar estudiantes por matrícula (mínimo un carácter)
+        $this->resultados = Estudiante::where('matricula', 'like', "%$value%")
+            ->orWhereHas('persona', function ($query) use ($value) {
+                $query->where('nombre', 'like', "%$value%")
+                    ->orWhere('ap_paterno', 'like', "%$value%");
+            })->get()->map(function ($estudiante) {
+                return [
+                    'matricula' => $estudiante->matricula,
+                    'persona' => [
+                        'nombre' => $estudiante->persona->nombre,
+                        'ap_paterno' => $estudiante->persona->ap_paterno,
+                    ],
+                ];
+            })->toArray();
+    }
+
+
+    public function confirmarVenta()
+    {
+
+        // Validar si hay productos agregados
+        if (empty($this->productosAgregados)) {
+            session()->flash('error', 'No hay productos para confirmar la venta.');
+            return redirect()->back();
+        }
+
+        // Validar si es estudiante y verificar matrícula
+        if ($this->esEstudiante) {
+            if (empty($this->matricula)) {
+                session()->flash('error', 'Ocurrió un error con la matrícula: no la ingresaste.');
+                return redirect()->back();
+            }
+
+            $estudiante = Estudiante::where('matricula', $this->matricula)->first();
+            if (!$estudiante) {
+                session()->flash('error', 'Ocurrió un error: la matrícula no existe en el sistema.');
+                return redirect()->back();
+            }
+        }
+
         try {
-            // Calcular el total
+            // Calcular el total de la venta y los descuentos
             $totalVenta = $this->calcularTotal();
-            $totalDescuento = $this->calcularTotalDescuento(); // Total de descuentos si aplica
+            $totalDescuento = $this->calcularTotalDescuento();
 
             // Obtener el administrador asociado al usuario actual
             $usuario = Auth::user();
-
             if (!$usuario || !$usuario->Persona || !$usuario->Persona->Administrador) {
                 session()->flash('error', 'El usuario actual no tiene un administrador asociado.');
                 return;
             }
 
             $id_admin = $usuario->Persona->Administrador->id;
-
-
 
             // Crear la venta
             $venta = Ventas::create([
@@ -217,32 +280,40 @@ class VentasModal extends Component
                 'matricula' => $this->matricula ?? null,
             ]);
 
-
-            // Crear los detalles de la venta
+            // Crear los detalles de la venta y actualizar el stock
             foreach ($this->productosAgregados as $producto) {
                 $precioAplicado = $this->esEstudiante ? $producto['precio_lista'] : $producto['precio_venta'];
-                $descuento = $producto['precio_venta'] - $producto['precio_lista']; // Descuento por producto
+                $descuento = $this->esEstudiante ? $producto['precio_venta'] - $producto['precio_lista'] : 0;
 
                 DetalleVenta::create([
                     'id_venta' => $venta->id,
                     'id_producto' => $producto['id'],
                     'cantidad' => $producto['cantidad'],
                     'precio_aplicado' => $precioAplicado,
-                    'descuento' => $this->esEstudiante ? $descuento : 0,
+                    'descuento' => $descuento,
                 ]);
 
-                Productos::where('id', $producto['id'])->decrement('stock', $producto['cantidad']);
+                // decrementar el stock del producto
+
+                Productos::where('id', $producto['id'])->decrement('stock', $producto['cantidad']); // Decrementar el stock del producto
             }
+
             // Limpiar el estado del componente
             $this->reset(['productosAgregados', 'cantidades', 'comprador', 'esEstudiante', 'matricula']);
-            session()->flash('success', 'Venta confirmada exitosamente.');
 
+            // Mensaje de éxito
+            session()->flash('success', 'Venta confirmada exitosamente.');
             return redirect()->route('dashboard.ventas');
         } catch (\Exception $e) {
-            // Capturar errores y mostrar un mensaje de error
+            // Registrar el error en los logs
+            \Log::error('Error al confirmar la venta: ' . $e->getMessage());
+
+            // Mostrar mensaje de error al usuario
             session()->flash('error', 'Ocurrió un error al confirmar la venta: ' . $e->getMessage());
+            return redirect()->back();
         }
     }
+
 
 
     public function render()

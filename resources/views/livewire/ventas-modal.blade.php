@@ -1,39 +1,19 @@
 <div class="d-flex" style="height: 100%;">
-    <div
-        style="
-        width: 300px;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        background-color: #f8f9fa;
-        padding: 1rem;
-        border-right: 1px solid #dee2e6;"
-    >
+    <!-- Sidebar -->
+    <div style="width: 300px; background-color: #f8f9fa; padding: 1rem; overflow-y: none; border-right: 1px solid #dee2e6;">
         <h5 class="mb-3">Resumen de Venta</h5>
-
-        <!-- Otros elementos del sidebar -->
         <div>
             <label for="comprador">Comprador:</label>
-            <input
-                type="text"
-                id="comprador"
-                class="form-control mb-3"
-                placeholder="Ingrese el nombre del comprador"
-                wire:model="comprador"
-            />
+            <input type="text" id="comprador" class="form-control mb-3" placeholder="Ingrese el nombre del comprador" wire:model="comprador">
         </div>
 
-        <div>
+        <div style="position: relative;" wire:ignore.self>
             <label for="esEstudiante">¿Es estudiante?:</label>
             <small class="form-text text-muted">Si estudiante, se le dará precio lista.</small>
-            <input
-                type="checkbox"
-                id="esEstudiante"
-                class="form-check-input mb-3"
-                wire:model.live="esEstudiante"
-            />
+            <input type="checkbox" id="esEstudiante" class="form-check-input mb-3" wire:model.live="esEstudiante">
 
             @if ($esEstudiante)
+                <!-- Input para buscar matrícula -->
                 <div>
                     <label for="matricula">Buscar matrícula:</label>
                     <input
@@ -41,49 +21,64 @@
                         id="matricula"
                         class="form-control"
                         placeholder="Ingrese matrícula"
-                        wire:model.live="query"
-                    />
+                        wire:model.live.debounce.200ms="matricula"
+                        autocomplete="off"
+                        wire:focus="abrirDropdown"
+                    >
                 </div>
-            @endif
 
-            @if (!empty($resultados))
-                <div class="mt-3">
-                    <label for="resultados">Resultados:</label>
-                    <select id="resultados" class="form-control" wire:model="matricula">
-                        <option disabled selected>Seleccione una matrícula</option>
-                        @foreach ($resultados as $resultado)
-                            <option value="{{ $resultado['matricula'] }}">
-                                {{ $resultado['persona']['nombre'] }}
-                                {{ $resultado['persona']['ap_paterno'] }}
-                                - {{ $resultado['matricula'] }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-            @else
-                <p class="text-muted mt-3">No se encontraron resultados.</p>
+                <!-- Dropdown con resultados -->
+                @if ($mostrarDropdown)
+                    <div
+                        class="dropdown-menu show animate-dropdown"
+                        style="position: absolute; top: 100%; left: 0; width: 100%; z-index: 1000; max-height: 250px; overflow-y: auto; list-style: none; padding: 0; margin: 0; border: 1px solid #dee2e6; border-radius: 0.25rem; background: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
+                    >
+                        <!-- Header con el botón de cerrar -->
+                        <div class="dropdown-header d-flex justify-content-between align-items-center"
+                             style="padding: 0.5rem; font-weight: bold; background-color: #f1f1f1; border-bottom: 1px solid #dee2e6;">
+                            <span>Resultados de búsqueda</span>
+                            <button type="button" class="btn-close" aria-label="Cerrar" wire:click="cerrarDropdown"
+                                    style="border: none; background: transparent; font-size: 1rem; cursor: pointer;">
+                                ✖
+                            </button>
+                        </div>
+
+                        <!-- Resultados -->
+                        @if (!empty($resultados))
+                            @foreach ($resultados as $resultado)
+                                <div
+                                    class="dropdown-item"
+                                    style="padding: 0.5rem; cursor: pointer; transition: background-color 0.3s ease;"
+                                    wire:click="selectMatricula('{{ $resultado['matricula'] }}')"
+                                    onmouseover="this.style.backgroundColor='#f8f9fa';"
+                                    onmouseout="this.style.backgroundColor='';"
+                                >
+                                    <strong>{{ $resultado['persona']['nombre'] }} {{ $resultado['persona']['ap_paterno'] }}</strong>
+                                    - {{ $resultado['matricula'] }}
+                                </div>
+                            @endforeach
+                        @else
+                            <!-- Dropdown vacío -->
+                            <p style="padding: 0.5rem; margin: 0;">No se encontraron estudiantes con esa matrícula.</p>
+                        @endif
+                    </div>
+                @endif
             @endif
         </div>
 
-        <!-- Contenedor para la lista con scroll -->
-        <div style="flex: 1; overflow-y: auto; margin-top: 1rem;">
-            <ul class="list-group">
+
+        <div style="max-height: 150px; overflow-y: auto;">
+            <ul class="list-group mt-3">
                 @forelse ($productosAgregados as $index => $producto)
-                    <li
-                        class="list-group-item d-flex justify-content-between align-items-center"
-                        style="overflow: hidden; text-overflow: ellipsis;"
-                    >
-                        <div
-                            class="d-flex flex-column"
-                            style="flex: 1; min-width: 0;"
-                        >
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="d-flex flex-column" style="flex: 1; min-width: 0;">
                             <!-- Primera línea: Nombre del producto (truncado con ellipsis) -->
                             <span
                                 class="text-truncate"
                                 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
-                            >
-                            {{ $producto['nombre'] }}
-                        </span>
+                                title="{{ $producto['nombre'] }}">
+                        {{ $producto['nombre'] }}
+                    </span>
                             <!-- Segunda línea: Detalles (cantidad x precio) -->
                             <small class="text-muted">
                                 {{ $producto['cantidad'] }} x
@@ -96,63 +91,63 @@
                         </div>
                         <!-- Badge para el total -->
                         <div class="d-flex align-items-center">
-                        <span
-                            class="badge @if ($esEstudiante) bg-success @else bg-primary @endif rounded-pill me-3"
-                        >
-                            ${{ number_format($producto['cantidad'] * ($esEstudiante ? $producto['precio_lista'] : $producto['precio_venta']), 2) }}
-                        </span>
+                    <span class="badge
+                        @if ($esEstudiante) bg-success @else bg-primary @endif
+                        rounded-pill me-3">
+                        ${{ number_format($producto['cantidad'] * ($esEstudiante ? $producto['precio_lista'] : $producto['precio_venta']), 2) }}
+                    </span>
                             <!-- Botón para eliminar el producto -->
-                            <button
-                                class="btn btn-sm btn-danger"
-                                wire:click="eliminarProducto({{ $index }})"
-                            >
+                            <button class="btn btn-sm btn-danger" wire:click="eliminarProducto({{ $index }})">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
                     </li>
                 @empty
-                    <li class="list-group-item text-muted">
-                        No hay productos agregados.
-                    </li>
+                    <li class="list-group-item text-muted">No hay productos agregados.</li>
                 @endforelse
             </ul>
         </div>
 
-        <!-- Total y botones de acción -->
+
         <div class="row mt-3">
+            <!-- Botón Limpiar Venta -->
             <div class="col-6">
-                <button class="btn btn-outline-danger w-100" wire:click="limpiarVenta">
-                    Limpiar Venta
-                </button>
+                <button class="btn btn-outline-danger w-100" wire:click="limpiarVenta">Limpiar Venta</button>
             </div>
+
+            <!-- Total -->
             <div class="col-6 text-end">
-            <span
-                class="badge @if ($esEstudiante) bg-success @else bg-primary @endif rounded-pill"
-                style="font-size: 1rem;"
-            >
-                Total: ${{ number_format($this->calcularTotal(), 2) }}
-            </span>
+        <span class="badge
+            @if ($esEstudiante)
+                bg-success
+            @else
+                bg-primary
+            @endif
+            rounded-pill" style="font-size: 1rem;">
+            Total: ${{ number_format($this->calcularTotal(), 2) }}
+        </span>
             </div>
         </div>
 
-        <button class="btn btn-success mt-3 w-100" wire:click="confirmarVenta">
-            Confirmar Venta
-        </button>
+        <!-- Descuento -->
+
+
+        <!-- Botón Confirmar Venta -->
+        <button class="btn btn-success mt-3 w-100" wire:click="confirmarVenta">Confirmar Venta</button>
 
         <div class="text-end mt-2">
             <small class="text-muted">
                 Descuento:
                 <span class="fw-bold">
-                ${{ number_format($this->calcularTotalDescuento(), 2) }}
-            </span>
+            ${{ number_format($this->calcularTotalDescuento(), 2) }}
+        </span>
             </small>
         </div>
     </div>
 
-
     <!-- Main content -->
     <div style="flex: 1; padding: 1rem; overflow-y: auto;">
-        <h5 class="mb-3">Catálogo de Productos <small class="text-muted">Filtrado por: {{ $query }}</small></h5>
+        <h5 class="mb-3">Catálogo de Productos</h5>
         <div class="mb-3">
             <label for="queryProductos" class="form-label">Filtros de búsqueda</label>
             <div class="row g-3 align-items-end">
