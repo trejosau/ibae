@@ -40,65 +40,26 @@
             transform: translateY(0);
         }
         
-        .products-container .card {
-    border: 1px solid #ddd; /* Contorno alrededor de cada tarjeta */
-    border-radius: 10px;
+
+
+
+
+
+
+
+
+.btn-rel{
+    background-color: #333;
+    color: white;
     width: 100%;
-    height: 600px;
-    overflow: hidden;
-    transition: box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    margin-top: auto;
 }
 
-.products-container .card:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra en hover */
+.btn-rel:hover{
+    background-color: #e0a2a2;
+            color: #333;     
+            box-shadow: 0 4px 64px #dfadc3
 }
-
-.products-container .card img {
-    max-height: 400px;
-    object-fit: cover;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    transition: transform 0.3s ease;
-    width: 100%;
-}
-
-.products-container .card:hover img {
-    transform: scale(1.1); /* Solo agrandar la imagen en hover */
-}
-
-.products-container .card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-}
-
-.precio {
-    color: #ff5722;
-    font-size: 1.2rem;
-    margin-bottom: 1rem; /* Espacio debajo del precio */
-}
-
-/* Estilo para el botón "Agregar al carrito" */
-.btn-agg {
-    background-color: #ff5a5f; /* Color de fondo */
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-    width: 100%; /* Botón ancho */
-    margin-top: auto; /* Empuja el botón a la parte inferior del contenedor */
-}
-
-.btn-agg:hover {
-    background-color: #ff4146; /* Color de fondo en hover */
-}
-
 /* Ajuste adicional para el contenedor de productos */
 .productos-container {
     position: relative;
@@ -108,9 +69,36 @@
 }
 
 .productos-wrapper {
-    display: flex;
-    transition: transform 0.5s ease;
+    display: flex; /* Contenedor flexible */
+    justify-content: space-between; /* Espaciado uniforme entre los elementos */
+    align-items: center; /* Alineación vertical centrada */
+    flex-wrap: wrap; /* Permite que los elementos se ajusten a la siguiente línea si es necesario */
+    transition: transform 0.5s ease; /* Animación suave para transformaciones */
+    gap: 15px; /* Espaciado entre elementos */
 }
+
+/* Opcional: Limitar el tamaño de los elementos */
+.productos-wrapper > * {
+    flex: 1 1 calc(25% - 15px); /* Cada elemento ocupa 25% del espacio, menos el margen */
+    max-width: calc(25% - 15px); /* Control de tamaño máximo */
+    box-sizing: border-box; /* Incluye márgenes y bordes en el tamaño total */
+}
+
+/* Responsividad: Ajuste para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .productos-wrapper > * {
+        flex: 1 1 calc(50% - 15px); /* Cada elemento ocupa 50% en pantallas medianas */
+        max-width: calc(50% - 15px);
+    }
+}
+
+@media (max-width: 576px) {
+    .productos-wrapper > * {
+        flex: 1 1 100%; /* Cada elemento ocupa todo el ancho en pantallas pequeñas */
+        max-width: 100%;
+    }
+}
+
 
 .producto-card {
     min-width: 220px;
@@ -118,7 +106,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100%; /* Asegura que el contenido esté alineado correctamente */
+    height: 100%; 
 }
 
 .card {
@@ -278,14 +266,14 @@
             <div class="producto-card">
                 <a href="{{ route('producto.detalle', $productoRelacionado->id) }}" class="card h-100 shadow-sm border-0 text-decoration-none">
                     @if($productoRelacionado->main_photo)
-                        <img src="{{ asset($productoRelacionado->main_photo) }}" alt="{{ $productoRelacionado->nombre }}" class="card-img-top img-fluid rounded-top">
+                        <img src="{{ asset($productoRelacionado->main_photo) }}" alt="{{ $productoRelacionado->nombre }}" style="height: 300px; width:300px;" class="card-img-top img-fluid rounded-top">
                     @else
                         <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 200px; background-color: #f8f9fa;">
                             <p class="text-muted">Imagen no disponible</p>
                         </div>
                     @endif
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title fw-bold text-dark">{{ $productoRelacionado->nombre }}</h5>
+                        <h5 class="card-title fw-bold text-dark fs-4">{{ $productoRelacionado->nombre }}</h5>
                         <p class="card-text text-danger fw-bold precio mb-4">Precio: ${{ number_format($productoRelacionado->precio_venta, 2) }}</p>
                     </div>
                 </a>
@@ -294,7 +282,7 @@
                 <form id="agregar-carrito-form">
                     @csrf
                     <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
-                    <button type="button" class="btn btn-agg btn-lg fw-bold mt-3" 
+                    <button type="button" class="btn btn-rel fw-bold mt-3" 
                             aria-label="Agregar {{ $productoRelacionado->nombre }} al carrito" 
                             onclick="agregarAlCarrito({{ $productoRelacionado->id }})">
                         <i class="fas fa-shopping-cart"></i> Agregar al carrito
