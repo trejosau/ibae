@@ -511,12 +511,9 @@
 
         <!-- Logo -->
         <a class="navbar-brand" href="{{ route('home') }}">
-<<<<<<< HEAD
             <img src="{{ asset('images/logo.png') }}" alt="Logo" style="height: 40px;">
-=======
             <img class="logo img-fluid" src="{{ asset('images/logo.png') }}" alt="Logo">
 
->>>>>>> f0e73ac6d1bf0be4c6eb73db617cf32ecc5a8087
         </a>
 
         <!-- Barra de búsqueda -->
@@ -660,7 +657,7 @@
                             <ul style="list-style: none; padding-left: 20px; margin: 0;">
                                 @foreach ($categoria->subcategorias as $subcategoria)
                                     <li style="margin-bottom: 5px;">
-                                        <a href="#" 
+                                        <a href="#"
                                            style="display: block; text-decoration: none; color: #555; padding: 8px 12px; border-radius: 4px; transition: background-color 0.3s; cursor: pointer;"
                                            onmouseover="this.style.backgroundColor='#e0f7fa';"
                                            onmouseout="this.style.backgroundColor='transparent';">
