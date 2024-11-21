@@ -166,23 +166,7 @@
     background-color: rgba(0, 0, 0, 0.8);
 }
 
-/* Estilos del Dropdown */
-.dropdown-menu a {
-    color: #333;
-    text-decoration: none;
-    display: block;
-    padding: 8px 0;
-    font-size: 14px;
-}
 
-.dropdown-menu a:hover {
-    background-color: #f1f1f1;
-}
-
-/* Contenedor del dropdown */
-.dropdown:hover > .dropdown-menu {
-    display: block;
-}
 
 /* Ajustes para que los items no se superpongan */
 .mega-menu .row {
@@ -504,47 +488,54 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 10px;">
     <div class="container-fluid">
-        <!-- Botón sidebar (icono) -->
-        <button class="btn btn-outline-primary me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" style="display: flex; align-items: center;">
-            <i class="fas fa-bars"></i>
-        </button>
 
-        <!-- Logo -->
-        <a class="navbar-brand" href="{{ route('home') }}">
-            <img class="logo img-fluid" src="{{ asset('images/logo.png') }}" alt="Logo">
-        </a>
+        <div style="display: flex; align-items: center;">
+            <!-- Botón sidebar (icono) -->
+            <button class="btn btn-outline-primary me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" style="display: flex; align-items: center;">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Logo -->
+            <a class="navbar-brand" href="{{ route('home') }}">
+                <img class="logo img-fluid" src="{{ asset('images/logo.png') }}" alt="Logo">
+            </a>
+        </div>
+
+
 
         <!-- Barra de búsqueda -->
-        <form action="{{ route('buscar') }}" method="GET" style="flex-grow: 1; margin-left: 20px; display: flex; align-items: center;">
-            <input type="text" name="query" placeholder="Buscar productos..." required style="flex-grow: 1; padding: 5px; border: 1px solid #ccc; border-radius: 4px;">
+        <form action="{{ route('buscar') }}" method="GET"  style=" display: flex; align-items: center;">
+            <input type="text" name="query" placeholder="Buscar productos..." required style="flex-grow: 1; padding: 9px; width: 500px; border: 1px solid #ccc; border-radius: 4px;">
             <button type="submit" class="btn btn-primary" style="margin-left: 10px;">Buscar</button>
         </form>
 
-        <!-- Icono del carrito -->
-        <a href="#" id="cart-icon" style="margin-left: 20px; text-decoration: none; color: inherit; display: flex; align-items: center;">
-            <span id="cart-icon-total" style="margin-right: 5px;">$0.00</span>
-            <i class="fas fa-shopping-cart"></i>
-        </a>
+        <div style="display: flex; align-items: center; margin-right: 24px">
+            <!-- Icono del carrito -->
+            <a href="#" id="cart-icon" style="margin-left: 20px; text-decoration: none; color: inherit; display: flex; align-items: center;">
+                <span id="cart-icon-total" style="margin-right: 5px;">$0.00</span>
+                <i class="fas fa-shopping-cart"></i>
+            </a>
 
-        <!-- Avatar o sesión -->
-        <div class="dropdown ms-3" style="display: flex; align-items: center;">
-            @if(auth()->check())
-                <a href="#" id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: flex; align-items: center;">
-                    <img src="{{ auth()->user()->profile_photo_url }}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%;">
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Mi perfil</a></li>
-                    <li class="dropdown-divider"></li>
-                    <li>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button class="dropdown-item" type="submit">Cerrar sesión</button>
-                        </form>
-                    </li>
-                </ul>
-            @else
-                <a href="{{ route('login') }}" class="btn btn-outline-primary">Iniciar sesión</a>
-            @endif
+            <!-- Avatar o sesión -->
+            <div class="dropdown ms-3" style="display: flex; align-items: center;">
+                @if(auth()->check())
+                    <a href="#" id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: flex; align-items: center;">
+                        <img src="{{ auth()->user()->profile_photo_url }}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%;">
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Mi perfil</a></li>
+                        <li class="dropdown-divider"></li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button class="dropdown-item" type="submit">Cerrar sesión</button>
+                            </form>
+                        </li>
+                    </ul>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-outline-primary">Iniciar sesión</a>
+                @endif
+            </div>
         </div>
 
 
