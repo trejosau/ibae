@@ -301,7 +301,8 @@ class ProductosController extends Controller
     public function agregarAlCarrito(Request $request, $id)
     {
         $producto = Productos::find($id);
-        $esEstudiante = Auth::user()->persona->estudiante ? 1 : 0;
+        $esEstudiante = Auth::check() && Auth::user()->persona->estudiante ? 1 : 0;
+
         $cantidad = (int)$request->cantidad;
 
         if (!$producto || $cantidad <= 0 || $cantidad > $producto->stock) {
