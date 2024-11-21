@@ -13,6 +13,7 @@ return new class extends Migration
             $table->decimal('total', 10);
             $table->enum('estado', ['entregado', 'listo para entrega', 'preparando para entrega']);
             $table->string('clave_entrega', 100);
+            $table->timestamp('fecha-hora_pedido');
             $table->unsignedBigInteger('id_comprador');
             $table->boolean('es_estudiante');
             $table->unsignedBigInteger('id_estudiante')->nullable();
@@ -21,7 +22,6 @@ return new class extends Migration
             $table->string('stripe_payment_id')->nullable(); // ID de pago de Stripe
             $table->enum('estado_pago', ['pendiente', 'completado', 'fallido'])->default('pendiente'); // Estado del pago
             $table->timestamp('fecha_pago')->nullable(); // Fecha en la que se completó el pago
-            $table->json('detalles_pago')->nullable(); // Campo JSON para guardar detalles adicionales de Stripe
             $table->foreign('id_comprador')->references('id')->on('compradores')->onDelete('cascade');
             $table->foreign('id_estudiante')->references('matricula')->on('estudiantes')->onDelete('cascade');
         });

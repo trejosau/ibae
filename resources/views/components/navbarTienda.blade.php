@@ -55,7 +55,7 @@
 }
 
 .form-inline button:hover {
-    background-color: #f4d1db; 
+    background-color: #f4d1db;
     color: #333;
     transform: scale(1.05);
 }
@@ -486,7 +486,7 @@
     padding: 10px 20px; /* Tamaño del botón */
     border: 2px solid #333; /* Borde para darle definición */
     border-radius: 5px; /* Esquinas redondeadas */
-    font-size: 16px; /* Tamaño del texto */ 
+    font-size: 16px; /* Tamaño del texto */
     cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
     transition: all 0.3s ease; /* Transición suave para todos los cambios */
 }
@@ -511,7 +511,12 @@
 
         <!-- Logo -->
         <a class="navbar-brand" href="{{ route('home') }}">
+<<<<<<< HEAD
             <img src="{{ asset('images/logo.png') }}" alt="Logo" style="height: 40px;">
+=======
+            <img class="logo img-fluid" src="{{ asset('images/logo.png') }}" alt="Logo">
+
+>>>>>>> f0e73ac6d1bf0be4c6eb73db617cf32ecc5a8087
         </a>
 
         <!-- Barra de búsqueda -->
@@ -546,6 +551,81 @@
                 <a href="{{ route('login') }}" class="btn btn-outline-primary">Iniciar sesión</a>
             @endif
         </div>
+<<<<<<< HEAD
+=======
+
+
+
+
+
+
+   <!-- Icono del carrito -->
+<div class="nav-icons">
+    <a href="#" id="cart-icon">
+        <span id="cart-icon-total">$0.00</span> <i class="fas fa-shopping-cart"></i>
+    </a>
+</div>
+
+<!-- Sidebar para el carrito -->
+<div id="cart-sidebar" class="cart-sidebar">
+    <div class="cart-header">
+        <h3>Mi Carrito</h3>
+        <button id="close-sidebar" class="close-btn">X</button>
+    </div>
+    <div class="cart-content"></div>
+    <div class="cart-footer">
+        <!-- Subtotal Display en el Sidebar -->
+        <div class="cart-subtotal">
+            <p id="cart-total-sidebar" class="subtotal-text">Total: $0.00</p>
+        </div>
+
+        <a href="{{ route('checkout') }}" class="btn btn-primary checkout-btn">Finalizar compra</a>
+    </div>
+
+
+</div>
+            <!-- Avatar -->
+            <div class="dropdown padding-left">
+                @if(auth()->check())
+                    <a
+                        data-mdb-dropdown-init
+                        class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                        href="#"
+                        id="navbarDropdownMenuAvatar"
+                        role="button"
+                        aria-expanded="false"
+                    >
+                        <img
+                            src="{{ auth()->user()->profile_photo_url }}"
+                            class="rounded-circle"
+                            height="64"
+                            width="64"
+                            alt="{{ auth()->user()->username }}"
+                            loading="lazy"
+                        />
+                    </a>
+                    <ul
+                        class="dropdown-menu dropdown-menu-end"
+                        aria-labelledby="navbarDropdownMenuAvatar"
+                    >
+                        <li>
+                            <a class="dropdown-item" href="{{ route('profile.edit') }}">Mi perfil</a>
+                        </li>
+                        <li class="dropdown-divider"></li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button class="dropdown-item" type="submit">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                @else
+                    <a href="{{ route('login') }}" class="btn login-btn">
+                        Iniciar Sesion
+                    </a>
+                @endif
+            </div>
+>>>>>>> f0e73ac6d1bf0be4c6eb73db617cf32ecc5a8087
     </div>
 </nav>
 
@@ -611,14 +691,14 @@
     document.addEventListener('DOMContentLoaded', function () {
         // Actualizar el subtotal al cargar la página
         actualizarTotalCarrito();
-    
+
         // Abrir el carrito al hacer clic en el ícono
         document.getElementById('cart-icon').addEventListener('click', function(event) {
             event.preventDefault();
             document.getElementById('cart-sidebar').classList.add('active');
             cargarContenidoCarrito();
         });
-    
+
         // Cerrar el sidebar del carrito al hacer clic en el botón "X"
         document.getElementById('close-sidebar').addEventListener('click', function() {
             document.getElementById('cart-sidebar').classList.remove('active');
@@ -642,9 +722,9 @@
                     cartContent.innerHTML += `
 <div class="cart-item">
     <div class="product-image-container">
-        <img 
-            src="${product.main_photo || '/ruta/a/imagen-placeholder.jpg'}" 
-            alt="${product.nombre}" 
+        <img
+            src="${product.main_photo || '/ruta/a/imagen-placeholder.jpg'}"
+            alt="${product.nombre}"
             class="img-fluid rounded shadow mb-4"
             onerror="this.src='/ruta/a/imagen-placeholder.jpg'; this.alt='Imagen no disponible';"
         >
@@ -738,7 +818,7 @@ function removeFromCart(productId) {
     .catch(error => console.error('Error al eliminar el producto del carrito:', error));
 }
 
-    
+
 function mostrarCarritoVacio(cartContent) {
     cartContent.innerHTML = `
         <div class="empty-cart">
@@ -748,18 +828,18 @@ function mostrarCarritoVacio(cartContent) {
     `;
     document.getElementById('cart-icon-total').innerText = '$0.00';
     document.getElementById('cart-total-sidebar').innerText = 'Total: $0.00';
-    
+
     // Oculta el contenedor del subtotal y botón de compra
     document.querySelector('.cart-footer').style.display = 'none';
 }
 
-    
-    
+
+
     function mostrarMensajeEliminacion(mensaje) {
     const mensajeElemento = document.createElement('div');
     mensajeElemento.textContent = mensaje;
     mensajeElemento.className = 'mensaje-ajax';
-    
+
     document.body.appendChild(mensajeElemento);
 
     // Mostrar el mensaje
@@ -796,4 +876,3 @@ function removeFromCart(productId) {
 
 
     </script>
-    

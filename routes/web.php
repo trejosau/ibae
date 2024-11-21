@@ -82,13 +82,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/inicio', [DashboardController::class, 'inicio'])->name('dashboard.inicio');
         Route::get('/dashboard/ventas', [DashboardController::class, 'ventas'])->name('dashboard.ventas');
         Route::get('/dashboard/pedidos', [DashboardController::class, 'pedidos'])->name('dashboard.pedidos');
-        Route::post('/ventas/agregar-producto', [VentaController::class, 'agregarProducto'])->name('ventas.agregarProducto');
-        Route::get('/ventas/total', [VentaController::class, 'obtenerTotal'])->name('ventas.total');
-        Route::post('/ventas/quitar-producto', [VentaController::class, 'quitarProducto'])->name('ventas.quitarProducto');
-        Route::post('/ventas/realizar', [VentaController::class, 'store'])->name('ventas.store');
-        Route::delete('/ventas/eliminar/{id}', [VentaController::class, 'eliminar'])->name('ventas.destroy');
-        Route::get('/ventas/limpiarCarrito', [VentaController::class, 'limpiarCarrito'])->name('limpiarCarrito');
-        Route::get('/ventas/buscarMatricula', [VentaController::class, 'buscarMatriculas'])->name('buscar.matriculas');
         Route::post('/pedidos/marcar-listo/{id}', [PedidoController::class, 'marcarListo'])->name('pedido.marcarListo');
         Route::post('/pedidos/marcar-entregado/{id}', [PedidoController::class, 'marcarEntregado'])->name('pedido.marcarEntregado');
         Route::get('/dashboard/compras', [DashboardController::class, 'compras'])->name('dashboard.compras');
@@ -196,7 +189,7 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
             Route::post('/plataforma/bajaProfesor/{id}', [PlataformaController::class, 'bajaProfesor'])->name('plataforma.bajaProfesor');
             Route::post('/plataforma/asignar-rol', [PlataformaController::class, 'asignarRol'])->name('plataforma.asignarRol');
 
-            
+
         });
 });
 
