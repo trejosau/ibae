@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Servicios;
 use Illuminate\Http\Request;
 
 class SalonController extends Controller
@@ -11,7 +12,8 @@ class SalonController extends Controller
         return view('salon.index');
     }
     public function agendar(){
-        return view('salon.agendar');
+        $servicios = Servicios::all();
+        return view('salon.agendar' , compact('servicios'));
     }
     public function confirmar(){
         return view('salon.confirmarCita');
