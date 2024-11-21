@@ -511,9 +511,7 @@
 
         <!-- Logo -->
         <a class="navbar-brand" href="{{ route('home') }}">
-            <img src="{{ asset('images/logo.png') }}" alt="Logo" style="height: 40px;">
             <img class="logo img-fluid" src="{{ asset('images/logo.png') }}" alt="Logo">
-
         </a>
 
         <!-- Barra de búsqueda -->
@@ -555,12 +553,7 @@
 
 
 
-   <!-- Icono del carrito -->
-<div class="nav-icons">
-    <a href="#" id="cart-icon">
-        <span id="cart-icon-total">$0.00</span> <i class="fas fa-shopping-cart"></i>
-    </a>
-</div>
+
 
 <!-- Sidebar para el carrito -->
 <div id="cart-sidebar" class="cart-sidebar">
@@ -580,47 +573,7 @@
 
 
 </div>
-            <!-- Avatar -->
-            <div class="dropdown padding-left">
-                @if(auth()->check())
-                    <a
-                        data-mdb-dropdown-init
-                        class="dropdown-toggle d-flex align-items-center hidden-arrow"
-                        href="#"
-                        id="navbarDropdownMenuAvatar"
-                        role="button"
-                        aria-expanded="false"
-                    >
-                        <img
-                            src="{{ auth()->user()->profile_photo_url }}"
-                            class="rounded-circle"
-                            height="64"
-                            width="64"
-                            alt="{{ auth()->user()->username }}"
-                            loading="lazy"
-                        />
-                    </a>
-                    <ul
-                        class="dropdown-menu dropdown-menu-end"
-                        aria-labelledby="navbarDropdownMenuAvatar"
-                    >
-                        <li>
-                            <a class="dropdown-item" href="{{ route('profile.edit') }}">Mi perfil</a>
-                        </li>
-                        <li class="dropdown-divider"></li>
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button class="dropdown-item" type="submit">Logout</button>
-                            </form>
-                        </li>
-                    </ul>
-                @else
-                    <a href="{{ route('login') }}" class="btn login-btn">
-                        Iniciar Sesion
-                    </a>
-                @endif
-            </div>
+
     </div>
 </nav>
 
