@@ -792,51 +792,55 @@ class PlataformaController extends Controller
     public function pagos() {
         return view('plataforma.index');
     }
-
     public function misCursosEspacio()
     {
         // Obtener el usuario autenticado
         $username = auth()->user()->username;
-
+    
         // Obtener la persona asociada al usuario
         $persona = DB::table('personas')
             ->join('users', 'personas.usuario', '=', 'users.id')
             ->where('users.username', $username)
-            ->select('personas.id')
+            ->select('personas.id') // Seleccionar el campo 'id' de la tabla personas
             ->first();
-
-        if (!$persona) {
+    
+        if (!$persona || !isset($persona->id)) {
             return redirect()->back()->with('error', 'Usuario no encontrado.');
         }
-
+    
         // Obtener el estudiante basado en el id_persona de la tabla personas
         $estudiante = DB::table('estudiantes')
-            ->where('id_persona', $persona->id)
+            ->where('id_persona', $persona->id) // Aquí se usa $persona->id
             ->first();
-
+    
         if (!$estudiante) {
             return redirect()->back()->with('error', 'Estudiante no encontrado.');
         }
-
+    
+        // Consultar los cursos del estudiante
         $cursos = DB::table('estudiante_curso')
-            ->join('curso_apertura', 'estudiante_curso.id_curso_apertura', '=', 'curso_apertura.id')
-            ->join('cursos', 'curso_apertura.id_curso', '=', 'cursos.id')
-            ->join('certificados', 'cursos.id_certificacion', '=', 'certificados.id')
-            ->where('estudiante_curso.id_estudiante', $estudiante->matricula)
-            ->select(
-                'cursos.nombre as nombre_curso',
-                'cursos.descripcion as descripcion_curso',
-                'cursos.duracion_semanas',
-                'certificados.nombre as nombre_certificado',
-                'curso_apertura.fecha_inicio'
-            )
-            ->get();
-
-
-
+        ->join('curso_apertura', 'estudiante_curso.id_curso_apertura', '=', 'curso_apertura.id')
+        ->join('cursos', 'curso_apertura.id_curso', '=', 'cursos.id')
+        ->join('certificados', 'cursos.id_certificacion', '=', 'certificados.id')
+        ->where('estudiante_curso.id_estudiante', $estudiante->matricula)
+        ->select(
+            'cursos.id', // Incluye este campo para que esté disponible en $curso->id
+            'cursos.nombre as nombre_curso',
+            'cursos.descripcion as descripcion_curso',
+            'cursos.duracion_semanas',
+            'certificados.nombre as nombre_certificado',
+            'curso_apertura.fecha_inicio',
+            'curso_apertura.dia_clase',
+            'curso_apertura.hora_clase'
+        )
+        ->get();
+    
+    
+    
         // Pasar los cursos y el estudiante a la vista
         return view('plataforma.index', compact('cursos', 'estudiante'));
     }
+    
 
 
     public function misPagosEspacio()
