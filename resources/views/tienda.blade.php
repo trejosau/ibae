@@ -206,7 +206,7 @@
 
 <div class="contenedor-imagen container-fluid ps-0 pe-0">
     <div class="row g-0">
-        <div class="col-lg-8 col-12 px-1"> <!-- Usamos padding en lugar de margen -->
+        <div class="col-lg-8 col-12 px-1">
             <img src="{{asset('images/BANNER1.jpg')}}" alt="Banner 1" class="img-fluid banner border-top-right border-bottom-right">
         </div>
 
@@ -226,7 +226,7 @@
     </div>
 </div>
 
-<div class="tittle p-5 fs-4"><h1>ECHA UN VISTAZO A NUESTRAS CATEGORIAS</h1></div>
+<div class="text-center p-5 fs-4"><h1 class="titulo-grande ">ECHA UN VISTAZO A NUESTRAS CATEGORIAS</h1></div>
 
 <div class="contenedor pb-4">
     @foreach ($categorias as $categoria)
@@ -246,7 +246,7 @@
 
 
 <div class="col-md-12">
-    <h2 class="mt-4 text-center titulo-grande pt-5 pb-3">Artículos Más Vendidos</h2>
+    <h2 class="mt-4 text-center titulo-grande pt-5 pb-3">✨ Productos Más Vendidos ✨</h2>
     <div class="productos-container">
         <div class="productos-wrapper" id="wrapper1">
             @forelse ($productosMasVendidos as $producto)
@@ -256,7 +256,13 @@
                     <img src="{{ $producto->main_photo }}" class="card-img-top img-fluid" alt="{{ $producto->nombre }}">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title fw-bold text-dark">{{ $producto->nombre }}</h5>
-                        <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
+                        @if (auth()->check() && auth()->user()->Persona?->Estudiante)
+                            <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_lista, 2) }}</p>
+                            <small class="text-muted">Descuento: -${{ $producto->precio_venta - $producto->precio_lista }}</small>
+                        @else
+                            <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
+                        @endif
+
                     </div>
                 </a>
 
@@ -287,7 +293,7 @@
 
 
 <div class="col-md-12">
-    <h2 class="mt-4 text-center titulo-grande pt-5 pb-3">Productos Más Recientes</h2>
+    <h2 class="mt-4 text-center titulo-grande pt-5 pb-3">✨ Productos Más Recientes ✨</h2>
     <div class="productos-container">
         <div class="productos-wrapper" id="wrapper2">
             @forelse ($productosMasRecientes as $producto)
@@ -297,7 +303,12 @@
                     <img src="{{ $producto->main_photo }}" class="card-img-top img-fluid " alt="{{ $producto->nombre }}">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title fw-bold text-dark" style="font-size: 15px">{{ $producto->nombre }}</h5>
-                        <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
+                        @if (auth()->check() && auth()->user()->Persona?->Estudiante)
+                            <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_lista, 2) }}</p>
+                            <small class="text-muted">Descuento: -${{ $producto->precio_venta - $producto->precio_lista }}</small>
+                        @else
+                            <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
+                        @endif
                     </div>
                 </a>
 
@@ -318,10 +329,12 @@
                 </div>
             @endforelse
         </div>
-        <button class="btn btn-warning carousel-control-prev" id="prevBtn2"><i class="bi bi-arrow-left"></i></button>
-        <button class="btn btn-warning carousel-control-next" id="nextBtn2"><i class="bi bi-arrow-right"></i></button>
+        <button class="btn carousel-control-prev" id="prevBtn2"><i class="bi bi-arrow-left"></i></button>
+        <button class="btn carousel-control-next" id="nextBtn2"><i class="bi bi-arrow-right"></i></button>
     </div>
 </div>
+
+
 
 
 <script>

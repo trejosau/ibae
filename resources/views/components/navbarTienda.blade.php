@@ -55,7 +55,7 @@
 }
 
 .form-inline button:hover {
-    background-color: #f4d1db; 
+    background-color: #f4d1db;
     color: #333;
     transform: scale(1.05);
 }
@@ -80,105 +80,130 @@
         color: #f1c6d4; /* Rosa clarito */
     }
 
-    /* Navegación */
-  /* Diseño de la navegación */
+/* Navegación */
 .navegacion {
     position: fixed;
     top: 60px;
     left: 0;
     right: 0;
     z-index: 999;
-    text-align: center;
-    padding: 20px 0;
     display: flex;
-    justify-content: center;
-    gap: 30px;
+    align-items: center;
+    padding: 10px 0;
     font-family: 'Arial', sans-serif;
     font-size: 16px;
     background-color: #fff;
     color: #333;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Añadido para darle un poco de sombra */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-/* Estilo para los enlaces */
-.navegacion a {
-    color: black;
-    text-decoration: none;
-    font-weight: bold;
-    padding: 10px;
-    position: relative;
-    transition: color 0.3s ease;
+/* Contenedor de los elementos de navegación */
+.navegacion-items-container {
+    display: flex;
+    gap: 30px;
+    padding: 10px 0;
+    align-items: center;
+    overflow: hidden;
 }
 
-.navegacion a:hover {
-    color: #f1c6d4; /* Rosa clarito */
-}
-
-/* Estilo para el mega menú */
 .navegacion-item {
-    position: relative;
-}
-
-/* Mostrar mega-menu al pasar el mouse */
-.navegacion-item:hover .mega-menu {
-    display: block;
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Estilo del mega-menu oculto inicialmente */
-.mega-menu {
-    display: none;
-    opacity: 0;
-    visibility: hidden;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    background-color: white;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Sombra para el mega menú */
-    padding: 20px 0;
-    transition: opacity 0.3s ease, visibility 0s 0.3s;
-}
-
-/* Mejorar la presentación de los enlaces del mega-menu */
-.mega-menu a {
-    color: #333;
-    text-decoration: none;
-    font-size: 14px;
-    padding: 6px 20px;
-    display: block;
+    flex-shrink: 0;
+    position: relative; /* Asegura que el dropdown se posicione correctamente */
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.mega-menu a:hover {
+/* Estilos para el dropdown */
+.navegacion-item .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%; /* Aparece justo debajo del item */
+    left: 0;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 1001;
+    border-radius: 8px;
+    min-width: 300px;
+    max-height: 400px; /* Limitar la altura para evitar que el dropdown salga de la pantalla */
+    overflow-y: auto; /* Agregar scroll si es necesario */
+}
+
+/* Mostrar el dropdown al hacer hover o clic (si se ajusta con JS para clic) */
+.navegacion-item:hover .dropdown-menu {
+    display: block;
+}
+
+/* Botones de navegación */
+.navegacion-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1000;
+    border-radius: 50%;
+}
+
+.navegacion-btn.left {
+    left: 10px;
+}
+
+.navegacion-btn.right {
+    right: 10px;
+}
+
+.navegacion-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Estilos del Dropdown */
+.dropdown-menu a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.dropdown-menu a:hover {
     background-color: #f1f1f1;
 }
 
-/* Organización en columnas dentro del mega menú */
+/* Contenedor del dropdown */
+.dropdown:hover > .dropdown-menu {
+    display: block;
+}
+
+/* Ajustes para que los items no se superpongan */
 .mega-menu .row {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
 }
 
-/* Ajuste para las columnas del mega menú */
 .mega-menu .col-md-3 {
-    width: 23%; /* Ajuste para que las columnas no se vean demasiado anchas */
+    width: 200px;
 }
 
-.carousel .card {
-    transition: transform 0.3s ease;
-}
 
-.carousel .card:hover {
-    transform: scale(1.05);
-}
 
-.carousel-inner .row {
-    justify-content: center;
-}
+
+
+
+
+
+
+
 
 
 
@@ -461,7 +486,7 @@
     padding: 10px 20px; /* Tamaño del botón */
     border: 2px solid #333; /* Borde para darle definición */
     border-radius: 5px; /* Esquinas redondeadas */
-    font-size: 16px; /* Tamaño del texto */ 
+    font-size: 16px; /* Tamaño del texto */
     cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
     transition: all 0.3s ease; /* Transición suave para todos los cambios */
 }
@@ -476,24 +501,59 @@
 
 </style>
 
-<nav class="navbar navbar-expand-lg p-0">
-    <div class="container p-0">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 10px;">
+    <div class="container-fluid">
+        <!-- Botón sidebar (icono) -->
+        <button class="btn btn-outline-primary me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" style="display: flex; align-items: center;">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Logo -->
         <a class="navbar-brand" href="{{ route('home') }}">
-            <img class="logo" src="{{ asset('images/logo.png') }}" alt="Logo" class="img-fluid">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo" style="height: 40px;">
+            <img class="logo img-fluid" src="{{ asset('images/logo.png') }}" alt="Logo">
+
         </a>
 
+        <!-- Barra de búsqueda -->
+        <form action="{{ route('buscar') }}" method="GET" style="flex-grow: 1; margin-left: 20px; display: flex; align-items: center;">
+            <input type="text" name="query" placeholder="Buscar productos..." required style="flex-grow: 1; padding: 5px; border: 1px solid #ccc; border-radius: 4px;">
+            <button type="submit" class="btn btn-primary" style="margin-left: 10px;">Buscar</button>
+        </form>
 
-        <div class="form-inline">
-            <form action="{{ route('buscar') }}" method="GET" class="d-flex align-items-center w-100">
-                <input type="text" name="query" class="search-input" placeholder="Buscar productos..." required>
-                <button type="submit" class="btn btn-primary ml-2">Buscar</button>
-            </form>
+        <!-- Icono del carrito -->
+        <a href="#" id="cart-icon" style="margin-left: 20px; text-decoration: none; color: inherit; display: flex; align-items: center;">
+            <span id="cart-icon-total" style="margin-right: 5px;">$0.00</span>
+            <i class="fas fa-shopping-cart"></i>
+        </a>
+
+        <!-- Avatar o sesión -->
+        <div class="dropdown ms-3" style="display: flex; align-items: center;">
+            @if(auth()->check())
+                <a href="#" id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: flex; align-items: center;">
+                    <img src="{{ auth()->user()->profile_photo_url }}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%;">
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Mi perfil</a></li>
+                    <li class="dropdown-divider"></li>
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button class="dropdown-item" type="submit">Cerrar sesión</button>
+                        </form>
+                    </li>
+                </ul>
+            @else
+                <a href="{{ route('login') }}" class="btn btn-outline-primary">Iniciar sesión</a>
+            @endif
         </div>
-        
-        
-        
-        
-        
+
+
+
+
+
+
 
    <!-- Icono del carrito -->
 <div class="nav-icons">
@@ -519,7 +579,7 @@
     </div>
 
 
-</div>     
+</div>
             <!-- Avatar -->
             <div class="dropdown padding-left">
                 @if(auth()->check())
@@ -564,95 +624,76 @@
     </div>
 </nav>
 
-<nav class="navegacion py-3 pt-4">
-    <div class="container-fluid">
-        <div class="row">
+<!-- Sidebar -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel" style="width: 300px; background-color: #f8f9fa;">
+    <div class="offcanvas-header" style="padding: 15px; border-bottom: 1px solid #e0e0e0;">
+        <h5 id="sidebarMenuLabel" style="margin: 0; font-size: 1.25rem; font-weight: bold; color: #333;">Categorías</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body" style="padding: 15px;">
+        <!-- Lista de Categorías -->
+        <ul style="list-style: none; padding: 0; margin: 0;">
             @foreach ($categorias as $categoria)
-                <div class="col-md-2 col-sm-4 col-6 text-center mb-2">
-                    <div class="navegacion-item">
-                        <a href="#" class="text-decoration-none fw-bold">
-                            {{ $categoria->nombre }}
-                        </a>
-                        <!-- Mega Menu -->
-                        <div class="mega-menu bg-white shadow rounded p-3 mt-2 position-absolute">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    @foreach ($categoria->subcategorias->chunk(4) as $chunk)
-                                        <div class="col-md-3">
-                                            <h6 class="fw-bold text-primary">{{ $categoria->nombre }}</h6>
-                                            @foreach ($chunk as $subcategoria)
-                                                <a href="#" class="d-block text-dark text-decoration-none mb-2">
-                                                    {{ $subcategoria->nombre }}
-                                                </a>
-                                            @endforeach
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</nav>
+                <li style="margin-bottom: 10px;">
+                    <!-- Categoría como toggle -->
+                    <a class="d-flex justify-content-between align-items-center"
+                       data-bs-toggle="collapse"
+                       href="#collapse-{{ $categoria->id }}"
+                       role="button"
+                       aria-expanded="false"
+                       aria-controls="collapse-{{ $categoria->id }}"
+                       style="text-decoration: none; font-weight: bold; color: #333; padding: 10px 15px; border-radius: 5px; transition: background-color 0.3s; cursor: pointer;"
+                       onmouseover="this.style.backgroundColor='#e0e0e0';"
+                       onmouseout="this.style.backgroundColor='transparent';">
+                        {{ $categoria->nombre }}
+                        <span>&#9662;</span> <!-- Flecha -->
+                    </a>
 
-<div id="carouselCategorias" class="carousel slide mt-4" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        @foreach ($categorias->chunk(6) as $index => $chunk)
-            <div class="carousel-item @if ($index === 0) active @endif">
-                <div class="d-flex justify-content-center gap-3">
-                    @foreach ($chunk as $categoria)
-                        <div class="col-md-2">
-                            <a href="#" class="text-decoration-none text-dark">
-                                <div class="card border-0 shadow-sm">
-                                    <div class="card-body py-3 text-center">
-                                        <h6 class="card-title fw-bold">{{ $categoria->nombre }}</h6>
-                                    </div>
-                                </div>
-                            </a>
+                    <!-- Subcategorías -->
+                    @if ($categoria->subcategorias->isNotEmpty())
+                        <div class="collapse" id="collapse-{{ $categoria->id }}" style="margin-top: 5px;">
+                            <ul style="list-style: none; padding-left: 20px; margin: 0;">
+                                @foreach ($categoria->subcategorias as $subcategoria)
+                                    <li style="margin-bottom: 5px;">
+                                        <a href="#"
+                                           style="display: block; text-decoration: none; color: #555; padding: 8px 12px; border-radius: 4px; transition: background-color 0.3s; cursor: pointer;"
+                                           onmouseover="this.style.backgroundColor='#e0f7fa';"
+                                           onmouseout="this.style.backgroundColor='transparent';">
+                                            {{ $subcategoria->nombre }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
-                    @endforeach
-                </div>
-            </div>
-        @endforeach
+                    @endif
+                </li>
+            @endforeach
+        </ul>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselCategorias" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselCategorias" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
 </div>
+
+
+
+
 
 
 <script>
 
-document.addEventListener('DOMContentLoaded', function () {
-        const carouselElement = document.querySelector('#carouselCategorias');
-        if (carouselElement) {
-            const carousel = new bootstrap.Carousel(carouselElement, {
-                interval: 3000, // Cambiar slide cada 3 segundos
-                ride: 'carousel',
-                wrap: true
-            });
-        }
-    });
+
+
 
 
     document.addEventListener('DOMContentLoaded', function () {
         // Actualizar el subtotal al cargar la página
         actualizarTotalCarrito();
-    
+
         // Abrir el carrito al hacer clic en el ícono
         document.getElementById('cart-icon').addEventListener('click', function(event) {
             event.preventDefault();
             document.getElementById('cart-sidebar').classList.add('active');
             cargarContenidoCarrito();
         });
-    
+
         // Cerrar el sidebar del carrito al hacer clic en el botón "X"
         document.getElementById('close-sidebar').addEventListener('click', function() {
             document.getElementById('cart-sidebar').classList.remove('active');
@@ -676,9 +717,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     cartContent.innerHTML += `
 <div class="cart-item">
     <div class="product-image-container">
-        <img 
-            src="${product.main_photo || '/ruta/a/imagen-placeholder.jpg'}" 
-            alt="${product.nombre}" 
+        <img
+            src="${product.main_photo || '/ruta/a/imagen-placeholder.jpg'}"
+            alt="${product.nombre}"
             class="img-fluid rounded shadow mb-4"
             onerror="this.src='/ruta/a/imagen-placeholder.jpg'; this.alt='Imagen no disponible';"
         >
@@ -772,7 +813,7 @@ function removeFromCart(productId) {
     .catch(error => console.error('Error al eliminar el producto del carrito:', error));
 }
 
-    
+
 function mostrarCarritoVacio(cartContent) {
     cartContent.innerHTML = `
         <div class="empty-cart">
@@ -782,18 +823,18 @@ function mostrarCarritoVacio(cartContent) {
     `;
     document.getElementById('cart-icon-total').innerText = '$0.00';
     document.getElementById('cart-total-sidebar').innerText = 'Total: $0.00';
-    
+
     // Oculta el contenedor del subtotal y botón de compra
     document.querySelector('.cart-footer').style.display = 'none';
 }
 
-    
-    
+
+
     function mostrarMensajeEliminacion(mensaje) {
     const mensajeElemento = document.createElement('div');
     mensajeElemento.textContent = mensaje;
     mensajeElemento.className = 'mensaje-ajax';
-    
+
     document.body.appendChild(mensajeElemento);
 
     // Mostrar el mensaje
@@ -830,4 +871,3 @@ function removeFromCart(productId) {
 
 
     </script>
-    

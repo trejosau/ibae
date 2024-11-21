@@ -108,36 +108,7 @@
                                         <p><strong>Razón Social:</strong> {{ $pedido->comprador->razon_social }}</p>
                                         @endif
                                 </div>
-
-                                <div class="col-6" style="background-color: #f0f8ff; padding: 15px; border-radius: 8px;">
-                                    <!-- Stripe Payment Info -->
-                                    <h6 class="mt-4" style="color: #6c757d;">Detalles de Pago:</h6>
-                                    <div class="row mb-3">
-                                        <div class="col-12" style="color: #5a6268;">
-                                            <p><strong>ID de Pago:</strong> {{ $pedido->stripe_payment_id ?? 'No disponible' }}</p>
-                                        </div>
-                                        <div class="col-12" style="color: #5a6268;">
-                                            <p><strong>Estado de Pago:</strong> {{ ucfirst($pedido->estado_pago) }}</p>
-                                        </div>
-                                        <div class="col-12" style="color: #5a6268;">
-                                            @if ($pedido->estado_pago == 'completado')
-                                                <p><strong>Fecha de Pago:</strong> {{ $pedido->fecha_pago ? $pedido->fecha_pago->format('d/m/Y H:i') : 'No disponible' }}</p>
-                                            @else
-                                                <p><strong>Fecha de Pago:</strong> No realizado</p>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <h6>Detalles Adicionales:</h6>
-                                        <pre style="background-color: #f8f9fa; padding: 10px; border-radius: 6px; font-size: 14px; color: #495057;">{{ json_encode($pedido->detalles_pago, JSON_PRETTY_PRINT) }}</pre>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Estudiante Details -->
-                            <div class="row mb-3">
-                                <div class="col-12" style="background-color: #e8f4f8; padding: 15px; border-radius: 8px;">
+                                <div class="col-6" style="background-color: #ddf3ed; padding: 15px; border-radius: 8px;">
                                     <h6>Estudiante:</h6>
                                     @if ($pedido->estudiante)
                                         <div class="row">
@@ -150,7 +121,13 @@
                                         <p style="color: #5a6268;">No hay estudiante asociado a este pedido.</p>
                                     @endif
                                 </div>
+
                             </div>
+
+                            <!-- Estudiante Details -->
+
+
+
 
                             <!-- Pedido Details with Scroll -->
                             <h6 class="mb-3" style="color: #6c757d;">Detalles del Pedido:</h6>

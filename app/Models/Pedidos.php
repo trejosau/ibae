@@ -13,11 +13,12 @@ class Pedidos extends Model
 
     protected $fillable = [
         'total',
-        'fecha_pedido',
+        'fecha-hora_pedido',
         'estado',
         'clave_entrega',
         'id_comprador',
         'es_estudiante',
+        'id_estudiante',
         'estado_pago',
     ];
     public function detalles()

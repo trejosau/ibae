@@ -231,7 +231,6 @@
                         <form method="POST" action="{{ route('profile.update') }}">
                             @method('PUT')
                             <button class="btn btn-primary profile-button" type="submit">Guardar Perfil</button>
-                    </div>
 
                     @csrf
 
@@ -338,7 +337,7 @@
                 @endif
 
 
-            </div>
+
         </div>
         <div class="col-md-4">
             <div class="p-3 py-5">

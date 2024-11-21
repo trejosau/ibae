@@ -14,15 +14,13 @@ class CreateAuditoriasTable extends Migration
     public function up()
     {
         Schema::create('auditorias', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('afectado_user_id')->constrained('users');
-            $table->enum('accion', ['create', 'update', 'delete']);
-            $table->string('table_name')->nullable();
-            $table->text('motivo')->nullable();
-            $table->text('detalles')->nullable();
-            $table->timestamp('fecha');
-            $table->timestamps();
+            $table->id('id');
+            $table->timestamp('fecha')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->enum('operacion', ['INSERT', 'UPDATE', 'DELETE']);
+            $table->string('tabla_afectada', 100);
+            $table->unsignedBigInteger('registro_id');
+            $table->string('usuario_actor', 50);
+            $table->string('usuario_afectado', 50)->nullable();
         });
     }
 

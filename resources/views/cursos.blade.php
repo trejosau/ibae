@@ -199,6 +199,10 @@
     <p class="lead reveal">Nuestros cursos están diseñados para brindarte las herramientas necesarias para triunfar en el mundo de la belleza.</p>
 </div>
 
+
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     /* Efecto de revelado en scroll */
