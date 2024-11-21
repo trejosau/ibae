@@ -118,6 +118,14 @@
     transform: scale(1.05); /* Aumenta el tamaño en hover */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra en hover */
 }
+.card-title {
+    height: 2.5rem; /* Fija la altura del título */
+    overflow: hidden; /* Oculta el contenido que sobrepasa la altura */
+    text-overflow: ellipsis; /* Agrega puntos suspensivos al texto largo */
+    white-space: nowrap; 
+    font-size: 17px;/* Evita que el texto haga salto de línea */
+    margin-bottom: 0.5rem; /* Asegura espacio entre elementos */
+}
 
 .precio {
     color: #ff5722; /* Color vibrante para el precio */
@@ -139,7 +147,7 @@
         }
         
         .padding {
-            padding-top: 90px;
+            padding-top: 120px;
         }
         
         /* Títulos */
@@ -273,7 +281,7 @@
                         </div>
                     @endif
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title fw-bold text-dark fs-4">{{ $productoRelacionado->nombre }}</h5>
+                        <h5 class="card-title fw-bold text-dark">{{ $productoRelacionado->nombre }}</h5>
                         <p class="card-text text-danger fw-bold precio mb-4">Precio: ${{ number_format($productoRelacionado->precio_venta, 2) }}</p>
                     </div>
                 </a>
@@ -299,7 +307,12 @@
     </div>
 </div>
 
+
+
+
 @include('components.footer')
+
+
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {

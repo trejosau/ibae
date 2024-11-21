@@ -226,7 +226,7 @@
     </div>
 </div>
 
-<div class="tittle p-5 fs-4"><h1>ECHA UN VISTAZO A NUESTRAS CATEGORIAS</h1></div>
+<div class="text-center p-5 fs-4"><h1 class="titulo-grande ">ECHA UN VISTAZO A NUESTRAS CATEGORIAS</h1></div>
 
 <div class="contenedor pb-4">
     @foreach ($categorias as $categoria)
@@ -246,7 +246,7 @@
 
 
 <div class="col-md-12">
-    <h2 class="mt-4 text-center titulo-grande pt-5 pb-3">Artículos Más Vendidos</h2>
+    <h2 class="mt-4 text-center titulo-grande pt-5 pb-3">✨ Productos Más Vendidos ✨</h2>
     <div class="productos-container">
         <div class="productos-wrapper" id="wrapper1">
             @forelse ($productosMasVendidos as $producto)
@@ -287,7 +287,7 @@
 
 
 <div class="col-md-12">
-    <h2 class="mt-4 text-center titulo-grande pt-5 pb-3">Productos Más Recientes</h2>
+    <h2 class="mt-4 text-center titulo-grande pt-5 pb-3">✨ Productos Más Recientes ✨</h2>
     <div class="productos-container">
         <div class="productos-wrapper" id="wrapper2">
             @forelse ($productosMasRecientes as $producto)
@@ -318,10 +318,12 @@
                 </div>
             @endforelse
         </div>
-        <button class="btn btn-warning carousel-control-prev" id="prevBtn2"><i class="bi bi-arrow-left"></i></button>
-        <button class="btn btn-warning carousel-control-next" id="nextBtn2"><i class="bi bi-arrow-right"></i></button>
+        <button class="btn carousel-control-prev" id="prevBtn2"><i class="bi bi-arrow-left"></i></button>
+        <button class="btn carousel-control-next" id="nextBtn2"><i class="bi bi-arrow-right"></i></button>
     </div>
 </div>
+
+
 
 
 <script>
