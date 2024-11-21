@@ -1,4 +1,27 @@
 <div class="container" style="max-width: 1200px; padding: 20px;">
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert" style="z-index: 2000; position: relative;">
+            <div class="alert-icon">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="alert-text">
+                {{ session('success') }}
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="z-index: 2000; position: relative;">
+            <div class="alert-icon">
+                <i class="bi bi-x-circle-fill"></i>
+            </div>
+            <div class="alert-text">
+                {{ session('error') }}
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     @if ($step == 1)
     <div class="row">
         <div class="col-md-8" style="padding-right: 20px;">
@@ -20,6 +43,8 @@
                         <i class="fa fa-check-circle" aria-hidden="true" style="margin-right: 5px;"></i> Added
                     </p>
                 </div>
+
+
             @endforeach
         </div>
 
@@ -96,38 +121,29 @@
                         <!-- Campo para seleccionar la fecha -->
                         <div class="col-md-6 mb-3">
                             <label for="pickDay">Seleccionar Fecha</label>
-                            <input type="date" id="pickDay" class="form-control" min="{{ date('Y-m-d') }}" wire:model.live="fechaElegida">
+                            <input type="date" wire:model="fechaElegida" wire:change="obtenerHorariosLibres">
                         </div>
 
 
                         <!-- Campo para seleccionar la hora -->
                         <div class="col-md-6 mb-3">
-                            <label for="pickTime">Seleccionar una hora disponible para el dia {{ $fechaElegida }}</label>
-                            <select id="pickTime" class="form-control">
-                                <option value="">Seleccione</option>
-                                <option value="08:00">08:00 AM</option>
-                                <option value="09:00">09:00 AM</option>
-                                <option value="10:00">10:00 AM</option>
-                                <option value="11:00">11:00 AM</option>
-                                <option value="12:00">12:00 PM</option>
-                                <option value="13:00">01:00 PM</option>
-                                <option value="14:00">02:00 PM</option>
-                                <option value="15:00">03:00 PM</option>
-                                <option value="16:00">04:00 PM</option>
-                                <option value="17:00">05:00 PM</option>
-                                <option value="18:00">06:00 PM</option>
-                                <option value="19:00">07:00 PM</option>
-                                <option value="20:00">08:00 PM</option>
-                                <option value="21:00">09:00 PM</option>
-                                <option value="22:00">10:00 PM</option>
+                            <label for="pickTime">Seleccionar una hora disponible para el día {{ $fechaElegida }}</label>
+                            <select id="pickTime" class="form-control" wire:model="horaElegida">
+                                <option value="">Seleccione la hora</option>
+                                @foreach ($horariosLibres as $hora)
+                                    <option value="{{ \Carbon\Carbon::parse($hora)->format('H:i') }}">
+                                        {{ \Carbon\Carbon::parse($hora)->format('H:i A') }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
+
                     </div>
                 </div>
 
                 <!-- Botón flotante de confirmar -->
                 <div style="position: fixed; bottom: 20px; right: 20px; z-index: 999;">
-                    <button wire:click="confirmSelection" class="btn btn-success" style="padding: 15px 30px; font-size: 1.2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <button wire:click="confirmarCita" class="btn btn-success" style="padding: 15px 30px; font-size: 1.2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
                         Confirmar
                     </button>
                 </div>
