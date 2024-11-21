@@ -548,8 +548,7 @@
                 <a href="{{ route('login') }}" class="btn btn-outline-primary">Iniciar sesión</a>
             @endif
         </div>
-<<<<<<< HEAD
-=======
+
 
 
 
@@ -622,7 +621,6 @@
                     </a>
                 @endif
             </div>
->>>>>>> f0e73ac6d1bf0be4c6eb73db617cf32ecc5a8087
     </div>
 </nav>
 
