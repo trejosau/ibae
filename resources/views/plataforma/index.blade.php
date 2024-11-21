@@ -15,6 +15,8 @@
     font-size: 20px;
     color
 }
+
+
   
 .botoncin-ca {
     background-color: #081444; /* Color de fondo azul */
@@ -58,6 +60,12 @@
 .card-body {
     background-color: #f9f9f9;
     border-radius: 10px; /* Color de fondo más suave para el contenido de la tarjeta */
+    box-shadow: 0 px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-bodyy {
+    background-color: #f9f9f9;
+/* Color de fondo más suave para el contenido de la tarjeta */
     box-shadow: 0 px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -379,6 +387,33 @@
 
 
 </body>
+
+
+<script>
+    function ajustarAlturaCategorias() {
+            const categoryCards = document.querySelectorAll('.card-bodyy');
+
+            if (categoryCards.length === 0) return;
+
+            let maxAltura = 0;
+
+            categoryCards.forEach(card => {
+                const alturaActual = card.offsetHeight;
+                if (alturaActual > maxAltura) {
+                    maxAltura = alturaActual;
+                }
+            });
+
+            categoryCards.forEach(card => {
+                card.style.height = maxAltura + 'px';
+                card.style.display = 'flex';
+                card.style.justifyContent = 'center';
+                card.style.alignItems = 'center';
+                card.style.textAlign = 'center';
+         });
+        
+        }
+    </script>
 <script>
     const themeToggle = document.getElementById('theme-toggle');
     themeToggle.addEventListener('change', function() {
@@ -423,6 +458,4 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-
 </html>

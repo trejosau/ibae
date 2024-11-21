@@ -5,7 +5,7 @@
             type="text"
             class="form-control"
             placeholder="Buscar estudiante (por nombre o matrícula)..."
-            wire:model.live.debounce.300ms="query"
+            wire:model.live="query"
             style="border-radius: 0.375rem; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"
         />
     </div>
@@ -137,6 +137,31 @@
         @endif
     </ul>
 </div>
-
-
 </div>
+
+<script>
+    function ajustarAlturaCategorias() {
+        const categoryCards = document.querySelectorAll('.card-body');
+
+        if (categoryCards.length === 0) return;
+
+        let maxAltura = 0;
+
+        categoryCards.forEach(card => {
+            const alturaActual = card.offsetHeight;
+            if (alturaActual > maxAltura) {
+                maxAltura = alturaActual;
+            }
+        });
+
+        categoryCards.forEach(card => {
+            card.style.height = maxAltura + 'px';
+        });
+    }
+
+    // Reajusta cuando la página esté cargada
+    document.addEventListener('DOMContentLoaded', ajustarAlturaCategorias);
+
+    // Reajusta al redimensionar la ventana
+    window.addEventListener('resize', ajustarAlturaCategorias);
+</script>
