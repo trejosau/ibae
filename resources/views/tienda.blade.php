@@ -247,12 +247,43 @@
 <div class="contenedor-imagen container-fluid ps-0 pe-0">
     <div class="row g-0" style="margin-top: 92px;">
         <div class="col-lg-8 col-12 px-1">
-            <img src="{{asset('images/BANNER1.jpg')}}" alt="Banner 1" class="img-fluid banner border-top-right border-bottom-right">
+            <!-- Carrusel -->
+            <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+                <!-- Indicadores opcionales -->
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                
+                <!-- Contenido del carrusel -->
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{asset('images/BANNER1.jpg')}}" alt="Banner 1" class="img-fluid banner border-top-right border-bottom-right">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{asset('images/BANNER2.jpg')}}" alt="Banner 2" class="img-fluid banner border-top-right border-bottom-right">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{asset('images/BANNER3.jpg')}}" alt="Banner 3" class="img-fluid banner border-top-right border-bottom-right">
+                    </div>
+                </div>
+                
+                <!-- Controles de navegación -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
+            </div>
         </div>
 
         <!-- Segunda fila: Columna de 4 en pantallas grandes, 2 columnas de 6 en pantallas pequeñas -->
         <div class="col-lg-4 col-12">
-            <div class="row g-0 "> <!-- Sin margen entre los banners secundarios -->
+            <div class="row g-0">
                 <!-- Primer banner de la segunda fila -->
                 <div class="col-6 col-lg-12 pb-1">
                     <img src="{{asset('images/BANNER2.jpg')}}" alt="Banner 2" class="img-fluid border-top-left">
@@ -265,6 +296,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Div contenedor -->
 <div class="catalog-container text-center p-4">

@@ -9,7 +9,7 @@
             <!-- Barra de búsqueda centrada -->
             <div class="col-md-8">
                 <div class="d-flex justify-content-center">
-                    <div class="search-bar-container shadow-lg rounded-pill">
+                    <div class="search-bar-container  rounded-pill">
                         <input id="busqueda" 
                                wire:model.live="busqueda" 
                                type="text" 

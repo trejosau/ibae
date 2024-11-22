@@ -79,7 +79,7 @@
 }
 
 
-.search-bar-container {
+        .search-bar-container {
         display: flex;
         width: 100%;
         background-color: #fff;
@@ -105,13 +105,27 @@
         box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
     }
 
-    .search-bar::placeholder {
-        color: #888;
-    }
-
     .search-bar-container:hover {
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
     }
+
+    .back-link {
+        color: #333;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .back-link:hover {
+        color: #555; /* Color más claro al pasar el mouse */
+        text-decoration: underline;
+        transform: translateX(-5px); /* Movimiento sutil hacia la izquierda */
+    }
+
+
 
 </style>
     @include('components.navbarTienda')
