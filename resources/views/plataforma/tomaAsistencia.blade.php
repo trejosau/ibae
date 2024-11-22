@@ -159,6 +159,9 @@
 </head>
 <body>
 <div class="container">
+    <a href="{{ route('plataforma.historial-cursos') }}" class="btn btn-primary btn-sm mb-3 btn-guardar" >
+        <i class="fa fa-arrow-left" style="margin-right: 10px"></i> Regresar 
+    </a>
 
     <!-- Mensajes de éxito o error -->
     @if(session('success'))

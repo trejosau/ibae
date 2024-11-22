@@ -204,61 +204,86 @@ class PlataformaController extends Controller
 
         return redirect()->route('plataforma.mis-cursos')->with('success', 'Estado del curso actualizado con éxito.');
     }
-
     public function historialCursos()
-    {
-        // Obtener la lista de estudiantes y sus cursos con estado
-        $estudiantes = Estudiante::with(['persona', 'cursosApertura'])->get();
+{
+    // Obtener el usuario autenticado
+    $user = auth()->user();
 
-        // Agrupar cursos por estudiante
-        $resultado = [];
-        foreach ($estudiantes as $estudiante) {
-            $matricula = $estudiante->matricula;
-            if (!isset($resultado[$matricula])) {
-                $resultado[$matricula] = [
-                    'matricula' => $matricula,
-                    'nombre' => $estudiante->persona->nombre,
-                    'ap_paterno' => $estudiante->persona->ap_paterno,
-                    'ap_materno' => $estudiante->persona->ap_materno,
-                    'cursos' => []
-                ];
-            }
+    // Obtener todos los estudiantes con sus cursos
+    $estudiantes = Estudiante::with(['persona', 'cursosApertura'])->get();
 
-            // Agregar cursos al estudiante
-            foreach ($estudiante->cursosApertura as $curso) {
-                $estado = $curso->pivot->estado;
-
-                $resultado[$matricula]['cursos'][] = [
-                    'id_curso_apertura' => $curso->id,
-                    'nombre_curso' => $curso->nombre,
-                    'fecha_inicio' => $curso->fecha_inicio,
-                    'monto_colegiatura' => $curso->monto_colegiatura,
-                    'dia_clase' => $curso->dia_clase,
-                    'hora_clase' => $curso->hora_clase,
-                    'estado' => $estado
-                ];
-            }
+    // Agrupar los cursos por estudiante
+    $resultado = [];
+    foreach ($estudiantes as $estudiante) {
+        $matricula = $estudiante->matricula;
+        if (!isset($resultado[$matricula])) {
+            $resultado[$matricula] = [
+                'matricula' => $matricula,
+                'nombre' => $estudiante->persona->nombre,
+                'ap_paterno' => $estudiante->persona->ap_paterno,
+                'ap_materno' => $estudiante->persona->ap_materno,
+                'cursos' => []
+            ];
         }
 
-        // Obtener todos los estudiantes y cursos
-        $todosEstudiantes = Estudiante::all();
-        $todosCursos = Cursos::where('estado', 'activo')->get();
-        $todosCursosApertura = CursoApertura::with(['moduloCursos.modulo.temas']) // Carga los módulos y sus temas
-        ->get();
-        $modulosConTemas = Modulos::with('temas:id,nombre')->has('temas')->get(['id', 'nombre']);
+        // Agregar cursos al estudiante
+        foreach ($estudiante->cursosApertura as $curso) {
+            $estado = $curso->pivot->estado;
 
-        $profesores = Profesor::with('persona')->get();
-
-        // Pasar los datos a la vista
-        return view('plataforma.index', [
-            'resultado' => array_values($resultado),
-            'estudiantes' => $todosEstudiantes,
-            'cursos' => $todosCursos,
-            'cursosApertura' => $todosCursosApertura,
-            'modulosConTemas' => $modulosConTemas,
-            'profesores' => $profesores,
-        ]);
+            $resultado[$matricula]['cursos'][] = [
+                'id_curso_apertura' => $curso->id,
+                'nombre_curso' => $curso->nombre,
+                'fecha_inicio' => $curso->fecha_inicio,
+                'monto_colegiatura' => $curso->monto_colegiatura,
+                'dia_clase' => $curso->dia_clase,
+                'hora_clase' => $curso->hora_clase,
+                'estado' => $estado
+            ];
+        }
     }
+
+    // Verificar si el usuario autenticado es un profesor
+    if ($user->hasRole('profesor')) {
+        // Intentar obtener el profesor relacionado con el usuario
+        $profesor = Profesor::whereHas('persona', function($query) use ($user) {
+            $query->where('usuario', $user->id); // Asegúrate de que 'usuario' es la columna correcta en 'personas'
+        })->first();
+
+        if ($profesor) {
+            // Si se encuentra el profesor, obtener los cursos asociados a él
+            $cursosApertura = CursoApertura::whereHas('moduloCursos', function ($query) use ($profesor) {
+                $query->where('id_profesor', $profesor->id); // Asociamos el curso con el profesor
+            })->with(['moduloCursos.modulo.temas', 'curso'])->get();
+        } else {
+            // Si no se encuentra al profesor, retornar una colección vacía
+            $cursosApertura = collect();
+        }
+    } else {
+        // Si no es un profesor, obtener todos los cursos aperturados
+        $cursosApertura = CursoApertura::with(['moduloCursos.modulo.temas', 'curso'])->get();
+    }
+
+    // Obtener todos los cursos activos
+    $todosCursos = Cursos::where('estado', 'activo')->get();
+
+    // Obtener los módulos con sus temas
+    $modulosConTemas = Modulos::with('temas:id,nombre')->has('temas')->get(['id', 'nombre']);
+
+    // Obtener todos los profesores
+    $profesores = Profesor::with('persona')->get();
+
+    // Pasar los datos a la vista
+    return view('plataforma.index', [
+        'resultado' => array_values($resultado),
+        'estudiantes' => Estudiante::all(),
+        'cursos' => $todosCursos,
+        'cursosApertura' => $cursosApertura,
+        'modulosConTemas' => $modulosConTemas,
+        'profesores' => $profesores,
+    ]);
+}
+
+    
 
 
     public function storeAlumnoCurso(Request $request)

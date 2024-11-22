@@ -67,7 +67,7 @@
         @endif
 
 
-        @if(auth()->user()->hasAnyRole(['profesor', 'admin']))
+        @if(auth()->user()->hasAnyRole([ 'admin']))
         <!-- Sección para Estudiantes/Profesores -->
         <li class="sidebar-item">
             <a style="text-decoration: none; color: inherit;"href="#estudiantesProfesoresDropdown" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
@@ -107,7 +107,7 @@
 
 
 
-        @if(auth()->user()->hasAnyRole(['es', 'admin']))        
+        @if(auth()->user()->hasAnyRole(['estudiante']))
         <li class="sidebar-item">
             <a href="#estudianteDropdown" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                data-bs-target="#estudianteDropdown" aria-expanded="false" aria-controls="estudianteDropdown" style="text-decoration: none; color: inherit;">

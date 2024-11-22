@@ -27,8 +27,6 @@
             </a>
         @endif
     </div>
-
-
     <div class="row mt-4">
         @foreach ($cursosApertura as $apertura)
             @if(auth()->user()->hasRole('admin') || $apertura->estado == 'en curso')
@@ -44,14 +42,14 @@
                                 <strong>Fecha de Inicio:</strong> {{ $apertura->fecha_inicio }}
                             </p>
                             <p class="card-text mb-2">
-                    <span class="badge
-                        @if($apertura->estado == 'finalizado') bg-success
-                        @elseif($apertura->estado == 'en curso') bg-warning
-                        @else bg-secondary @endif" style="font-size: 0.85rem; color: #fff;">
-                        {{ ucfirst($apertura->estado) }}
-                    </span>
+                                <span class="badge
+                                    @if($apertura->estado == 'finalizado') bg-success
+                                    @elseif($apertura->estado == 'en curso') bg-warning
+                                    @else bg-secondary @endif" style="font-size: 0.85rem; color: #fff;">
+                                    {{ ucfirst($apertura->estado) }}
+                                </span>
                             </p>
-                            @if($apertura->estado == 'programado')
+                            @if($apertura->estado == 'programado' && auth()->user()->hasRole('admin'))
                                 <button class="btn btn-danger btn-sm" style="position: absolute; top: 10px; right: 10px;" data-bs-toggle="modal" data-bs-target="#inscribirAlumnosModal-{{ $apertura->id }}">
                                     Inscribir
                                 </button>
@@ -61,7 +59,6 @@
                                 </a>
                             @endif
                         </div>
-                        <!-- Nuevo botón para colapsar -->
                         <div class="card-footer" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#dropdown-{{ $apertura->id }}">
                             <small class="text-muted">Ver detalles del curso</small>
                         </div>
@@ -72,13 +69,13 @@
                                         <h6 style="margin: 0; font-size: 1.2rem; color: #333;">Semana {{ $moduloCurso->orden }}</h6>
                                         <hr style="border: 2px solid #C2185B; margin: 5px 0;">
                                         <p class="mt-1" style="margin: 0; font-size: 1rem; color: #C2185B;">
-                                <span class="badge" style="background-color: #FFABAB; color: #333; border-radius: 4px; border: 1px solid #C2185B;">
-                                    Módulo: {{ $moduloCurso->modulo->nombre }}
-                                </span>
+                                            <span class="badge" style="background-color: #FFABAB; color: #333; border-radius: 4px; border: 1px solid #C2185B;">
+                                                Módulo: {{ $moduloCurso->modulo->nombre }}
+                                            </span>
                                         </p>
                                         @foreach ($moduloCurso->modulo->temas as $tema)
                                             <p class="mt-1" style="margin: 0; margin-left: 10px; font-size: 0.9rem; color: #555; border-left: 2px solid #C2185B; padding-left: 10px;">
-                                                Tema: {{ $tema->nombre }} >
+                                                Tema: {{ $tema->nombre }}
                                             </p>
                                         @endforeach
                                     </div>
@@ -90,8 +87,8 @@
             @endif
         @endforeach
     </div>
-
-
+    
+    
 
     <!-- Modals -->
     @foreach ($cursosApertura as $apertura)
