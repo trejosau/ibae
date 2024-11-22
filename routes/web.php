@@ -12,7 +12,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SalonController;
 use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\UsuarioController;
-use App\Http\Controllers\VentaController;
 use App\Models\Productos;
 use App\Models\User;
 use Illuminate\Http\Request;

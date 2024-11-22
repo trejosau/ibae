@@ -17,7 +17,8 @@
                         <thead class="table-primary">
                         <tr>
                             <th>Proveedor</th>
-                            <th>Fecha</th>
+                            <th>Fecha_compra</th>
+                            <th>Fecha_entrega</th>
                             <th>Total</th>
                             <th>Estado</th>
                             <th>Acciones</th>
@@ -28,6 +29,7 @@
                             <tr>
                                 <td>{{ $compra->proveedor->nombre_empresa }}</td>
                                 <td>{{ $compra->fecha_compra }}</td>
+                                <td>{{ $compra->fecha_entrega ?? 'Pendiente' }}</td>
                                 <td>${{ number_format($compra->total, 2) }}</td>
                                 <td>
                                     @if($compra->estado == 'entregado')
@@ -35,20 +37,20 @@
                                     @elseif($compra->estado == 'pendiente de entrega')
                                         <span class="badge bg-warning text-dark">Pendiente de Entrega</span>
                                         @elseif($compra->estado == 'pendiente de detalle')
-                                            <span class="badge bg-warning text-dark">Pendiente de Detalle</span>
+                                            <span class="badge bg-black text-white">Pendiente de Detalle</span>
                                     @elseif($compra->estado == 'cancelado')
                                         <span class="badge bg-danger text-white">Cancelado</span>
                                     @endif
                                 </td>
                                 <td>
                                     @if($compra->estado == 'pendiente de entrega')
-                                        <button class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-detalle-productos-{{ $compra->id }}">Ver Detalle</button>
+                                        <button class="btn btn-outline-warning btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-detalle-productos-{{ $compra->id }}">Ver Detalle</button>
                                     @elseif($compra->estado == 'pendiente de detalle')
                                         <a class="btn btn-outline-primary btn-sm w-100" href="{{ route('detallar.producto', ['id' => $compra->id]) }}">Detallar</a>
                                     @elseif($compra->estado == 'cancelado')
-                                        <button class="btn btn-outline-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-motivo-cancelacion-{{ $compra->id }}">Ver Motivo</button>
+                                        <button class="btn btn-outline-danger btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-motivo-cancelacion-{{ $compra->id }}">Ver Motivo</button>
                                     @elseif($compra->estado == 'entregado')
-                                        <button class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-detalle-productos-{{ $compra->id }}">Ver Detalle</button>
+                                        <button class="btn btn-outline-success btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-detalle-productos-{{ $compra->id }}">Ver Detalle</button>
                                     @endif
                                 </td>
 

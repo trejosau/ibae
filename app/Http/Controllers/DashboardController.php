@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Administrador;
 use App\Models\Categorias;
+use App\Models\DetalleCompra;
 use App\Models\Subcategoria;
 use App\Models\Categorias_de_Servicios;
 use App\Models\Citas;
@@ -170,17 +171,41 @@ class DashboardController extends Controller
 
     public function compraDetallada($id)
     {
+        // Inicializamos la variable para el total
+        $total = 0;
 
+        // Obtener la compra junto con los detalles de los productos
         $compra = Compras::find($id);
-        $compra->estado = 'pendiente de entrega';
-        $compra->save();
+
+        // Verificar si la compra existe
+        if ($compra) {
+            // Obtener los detalles de la compra
+            $detalleCompras = DetalleCompra::where('id_compra', $id)->get();
+
+            // Calcular el total sumando el precio * cantidad de cada producto en la compra
+            foreach ($detalleCompras as $detalle) {
+                $producto = Productos::find($detalle->id_producto);
+                if ($producto) {
+                    $total += $producto->precio_proveedor * $detalle->cantidad;
+                }
+            }
+
+            // Actualizar el estado y el total de la compra
+            $compra->estado = 'pendiente de entrega';
+            $compra->total = $total;
+            $compra->save();
+        }
+
+        // Redirigir al dashboard de compras
         return redirect()->route('dashboard.compras');
     }
+
 
     public function compraEntregada($id)
     {
         $compra = Compras::find($id);
         $compra->estado = 'entregado';
+        $compra->fecha_entrega = now();
         $compra->save();
         return redirect()->route('dashboard.compras')->with('success', 'Compra actualizada el stock se actualizara automaticamente.');
     }
