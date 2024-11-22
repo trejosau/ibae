@@ -17,14 +17,18 @@
         </div>
     @endif
 
-    @if(auth()->user()->hasRole('admin'))
-    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#aperturarCursoModal">
-        Aperturar Curso
-    </button>
-    <a href="{{ route('plataforma.iniciarCursos') }}" class="btn btn-primary mb-3">
-        Iniciar Cursos
-    </a>
-    @endif
+    <div class="text-center mb-4">
+        @if(auth()->user()->hasRole('admin'))
+            <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#aperturarCursoModal">
+                Aperturar Curso
+            </button>
+            <a href="{{ route('plataforma.iniciarCursos') }}" class="btn btn-primary mb-3">
+                Iniciar Cursos
+            </a>
+        @endif
+    </div>
+
+
     <div class="row mt-4">
         @foreach ($cursosApertura as $apertura)
             @if(auth()->user()->hasRole('admin') || $apertura->estado == 'en curso')

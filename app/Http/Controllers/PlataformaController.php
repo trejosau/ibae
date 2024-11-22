@@ -50,7 +50,7 @@ class PlataformaController extends Controller
             ], 200);
         }
 
-        return response()->json([
+         response()->json([
             'message' => 'Cursos iniciados con éxito.',
             'cursos' => $cursosIniciados,
         ], 200);
@@ -836,17 +836,27 @@ class PlataformaController extends Controller
             )
             ->get();
     
-        // Agregar módulos y temas para cada curso
+        // Agregar módulos, temas y profesor para cada curso
         foreach ($cursos as $curso) {
             // Obtener módulos relacionados con el curso
             $curso->modulos = DB::table('modulos')
-                ->join('modulo_curso', 'modulos.id', '=', 'modulo_curso.id_modulo')
-                ->where('modulo_curso.id_curso_apertura', $curso->id_curso_apertura)
-                ->select('modulos.id', 'modulos.nombre as nombre_modulo', 'modulo_curso.orden')
-                ->orderBy('modulo_curso.orden') // Ordenar por el campo orden
-                ->get();
+            ->join('modulo_curso', 'modulos.id', '=', 'modulo_curso.id_modulo')
+            ->leftJoin('profesores', 'modulo_curso.id_profesor', '=', 'profesores.id') // Relación con profesores
+            ->leftJoin('personas', 'profesores.id_persona', '=', 'personas.id') // Relación con personas para obtener los datos del profesor
+            ->where('modulo_curso.id_curso_apertura', $curso->id_curso_apertura)
+            ->select(
+                'modulos.id',
+                'modulos.nombre as nombre_modulo',
+                'modulo_curso.orden',
+                'personas.nombre as nombre_profesor', // Nombre del profesor desde personas
+                'personas.ap_paterno as ap_paterno_profesor', // Apellido paterno
+                'personas.ap_materno as ap_materno_profesor' // Apellido materno
+            )
+            ->orderBy('modulo_curso.orden')
+            ->get();
+        
     
-            // Obtener temas para cada módulo (relación con la tabla intermedia 'modulo_temas')
+            // Obtener temas para cada módulo
             foreach ($curso->modulos as $modulo) {
                 $modulo->temas = DB::table('temas')
                     ->join('modulo_temas', 'temas.id', '=', 'modulo_temas.id_tema')
@@ -859,6 +869,7 @@ class PlataformaController extends Controller
         // Pasar los cursos y el estudiante a la vista
         return view('plataforma.index', compact('cursos', 'estudiante'));
     }
+    
     
 
     
