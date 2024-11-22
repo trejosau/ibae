@@ -20,17 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(Inscripciones::class);
         $this->call(Admin::class);
         $this->call([
-            UsersTableSeeder::class,
-            PersonasTableSeeder::class,
-            ProfesoresTableSeeder::class,
-            ModulosCursosTableSeeder::class,
-            ModulosTemasTableSeeder::class,
-            CursoAperturaTableSeeder::class,
-            EstudiantesTableSeeder::class,
-            EstudianteCursosTableSeeder::class,
-            CertificadosTableSeeder::class,
-            ColegiaturasTableSeeder::class,
-            ModelHasRolesTableSeeder::class,    
+            UsersSeeder::class,
         ]);
     }
 }

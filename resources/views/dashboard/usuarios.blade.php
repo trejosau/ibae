@@ -255,6 +255,11 @@
                     </div>
 
                     <div class="card-body">
+                        <!-- Profile Image -->
+                        <div class="text-center mb-3">
+                            <img src="{{ $usuario->profile_photo_url }}" alt="Profile Image" class="img-fluid rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                        </div>
+
                         <h5 class="card-title">{{ $usuario->username }} <span class="badge bg-primary">{{ $usuario->email }}</span></h5>
 
                         @if($persona = $usuario->persona)
@@ -276,6 +281,7 @@
                     </div>
                 </div>
             </div>
+
 
 
 
