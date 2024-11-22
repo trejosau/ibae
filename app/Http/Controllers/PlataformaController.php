@@ -801,7 +801,7 @@ class PlataformaController extends Controller
         $persona = DB::table('personas')
             ->join('users', 'personas.usuario', '=', 'users.id')
             ->where('users.username', $username)
-            ->select('personas.id') // Seleccionar el campo 'id' de la tabla personas
+            ->select('personas.id') 
             ->first();
     
         if (!$persona || !isset($persona->id)) {
@@ -810,7 +810,7 @@ class PlataformaController extends Controller
     
         // Obtener el estudiante basado en el id_persona de la tabla personas
         $estudiante = DB::table('estudiantes')
-            ->where('id_persona', $persona->id) // Aquí se usa $persona->id
+            ->where('id_persona', $persona->id)
             ->first();
     
         if (!$estudiante) {
@@ -819,27 +819,48 @@ class PlataformaController extends Controller
     
         // Consultar los cursos del estudiante
         $cursos = DB::table('estudiante_curso')
-        ->join('curso_apertura', 'estudiante_curso.id_curso_apertura', '=', 'curso_apertura.id')
-        ->join('cursos', 'curso_apertura.id_curso', '=', 'cursos.id')
-        ->join('certificados', 'cursos.id_certificacion', '=', 'certificados.id')
-        ->where('estudiante_curso.id_estudiante', $estudiante->matricula)
-        ->select(
-            'cursos.id', // Incluye este campo para que esté disponible en $curso->id
-            'cursos.nombre as nombre_curso',
-            'cursos.descripcion as descripcion_curso',
-            'cursos.duracion_semanas',
-            'certificados.nombre as nombre_certificado',
-            'curso_apertura.fecha_inicio',
-            'curso_apertura.dia_clase',
-            'curso_apertura.hora_clase'
-        )
-        ->get();
+            ->join('curso_apertura', 'estudiante_curso.id_curso_apertura', '=', 'curso_apertura.id')
+            ->join('cursos', 'curso_apertura.id_curso', '=', 'cursos.id')
+            ->join('certificados', 'cursos.id_certificacion', '=', 'certificados.id')
+            ->where('estudiante_curso.id_estudiante', $estudiante->matricula)
+            ->select(
+                'cursos.id',
+                'cursos.nombre as nombre_curso',
+                'cursos.descripcion as descripcion_curso',
+                'cursos.duracion_semanas',
+                'certificados.nombre as nombre_certificado',
+                'curso_apertura.id as id_curso_apertura', // Para relacionar con modulo_curso
+                'curso_apertura.fecha_inicio',
+                'curso_apertura.dia_clase',
+                'curso_apertura.hora_clase'
+            )
+            ->get();
     
+        // Agregar módulos y temas para cada curso
+        foreach ($cursos as $curso) {
+            // Obtener módulos relacionados con el curso
+            $curso->modulos = DB::table('modulos')
+                ->join('modulo_curso', 'modulos.id', '=', 'modulo_curso.id_modulo')
+                ->where('modulo_curso.id_curso_apertura', $curso->id_curso_apertura)
+                ->select('modulos.id', 'modulos.nombre as nombre_modulo', 'modulo_curso.orden')
+                ->orderBy('modulo_curso.orden') // Ordenar por el campo orden
+                ->get();
     
+            // Obtener temas para cada módulo (relación con la tabla intermedia 'modulo_temas')
+            foreach ($curso->modulos as $modulo) {
+                $modulo->temas = DB::table('temas')
+                    ->join('modulo_temas', 'temas.id', '=', 'modulo_temas.id_tema')
+                    ->where('modulo_temas.id_modulo', $modulo->id) // Relacionar con el módulo
+                    ->select('temas.id', 'temas.nombre as nombre_tema')
+                    ->get();
+            }
+        }
     
         // Pasar los cursos y el estudiante a la vista
         return view('plataforma.index', compact('cursos', 'estudiante'));
     }
+    
+
     
 
 
