@@ -220,13 +220,16 @@ class ProductosController extends Controller
     public function catalogo()
     {
         $productos = Productos::all(); // Obtiene todos los productos
-        return view('catalogo', compact('productos')); // Devuelve la vista con todos los productos
+        $categorias = Categorias::all(); // Obtiene todas las categorías
+        return view('catalogo', compact('productos', 'categorias')); // Pasa productos y categorías a la vista
     }
+
 
 
     public function filtrar(Request $request)
     {
         $query = Productos::query();
+        $categorias = Categorias::all();
 
         // Filtrar por categoría
         if ($request->filled('id_categoria')) {
@@ -245,7 +248,7 @@ class ProductosController extends Controller
         $productos = $query->get();
 
         // Asegúrate de redirigir a la vista correcta
-        return view('catalogo', compact('productos'));
+        return view('catalogo', compact('productos', 'categorias'));
     }
 
 
@@ -301,7 +304,8 @@ class ProductosController extends Controller
     public function agregarAlCarrito(Request $request, $id)
     {
         $producto = Productos::find($id);
-        $esEstudiante = Auth::user()->persona->estudiante ? 1 : 0;
+        $esEstudiante = Auth::check() && Auth::user()->persona->estudiante ? 1 : 0;
+
         $cantidad = (int)$request->cantidad;
 
         if (!$producto || $cantidad <= 0 || $cantidad > $producto->stock) {

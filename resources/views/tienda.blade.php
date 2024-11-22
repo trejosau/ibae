@@ -124,7 +124,7 @@
 }
 
 .btn-agg:hover {
-    background-color: #ff4146; /* Color de fondo en hover */
+    background-color: #f0c4d0; /* Color de fondo en hover */
 }
 
 /* Ajuste adicional para el contenedor de productos */
@@ -205,7 +205,7 @@
 
 
 <div class="contenedor-imagen container-fluid ps-0 pe-0">
-    <div class="row g-0">
+    <div class="row g-0" style="margin-top: 92px;">
         <div class="col-lg-8 col-12 px-1">
             <img src="{{asset('images/BANNER1.jpg')}}" alt="Banner 1" class="img-fluid banner border-top-right border-bottom-right">
         </div>
@@ -334,8 +334,9 @@
     </div>
 </div>
 
-
-
+<div>
+@livewire('catalogotienda')
+</div>
 
 <script>
     function initializeCarousel(wrapperId, prevBtnId, nextBtnId) {

@@ -1,225 +1,57 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <style>
     /* Navbar */
-    .navbar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        background-color: white;
-        padding: 10px 20px;
-    }
 
-    .navbar-brand:hover {
-        color: #f1c6d4; /* Rosa clarito */
-        transition: color 0.3s ease;
-    }
-
-    .form-inline {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    padding-left:200px;  /* Centramos el formulario en el contenedor */
+.logo {
+    width: auto;
+    height: 60px;
 }
-
-.form-inline form {
-    margin-left: 20px; /* Agregamos espacio a la izquierda del formulario */
-    width: 100%;
-    display: flex;
-    align-items: center;
+.navbar {
+    position: fixed;
+    top: 0;
+     left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: white;
+    padding: 10px 20px;
 }
-
-.form-inline input {
-    width: 70%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    outline: none;
-    transition: box-shadow 0.3s ease;
-}
-
-.form-inline input:focus {
-    box-shadow: 0 0 8px rgba(255, 182, 193, 0.5); /* Rosa clarito */
-}
-
-.form-inline button {
-    margin-left: 10px;
-    padding: 10px 15px;
-    background-color: #333; /* Fondo oscuro para el botón */
-    border: none;
-    border-radius: 20px;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.form-inline button:hover {
-    background-color: #f4d1db;
-    color: #333;
-    transform: scale(1.05);
-}
-
 
 
     /* Iconos de navegación */
-    .nav-icons {
-        display: flex;
-        align-items: center;
-        margin-left: 20px;
-    }
-
-    .nav-icons a {
-        color: #333;
-        margin-left: 15px;
-        position: relative;
-        transition: color 0.3s ease;
-    }
-
-    .nav-icons a:hover {
-        color: #f1c6d4; /* Rosa clarito */
-    }
-
-/* Navegación */
-.navegacion {
-    position: fixed;
-    top: 60px;
-    left: 0;
-    right: 0;
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    padding: 10px 0;
-    font-family: 'Arial', sans-serif;
-    font-size: 16px;
-    background-color: #fff;
-    color: #333;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
-
-/* Contenedor de los elementos de navegación */
-.navegacion-items-container {
-    display: flex;
-    gap: 30px;
-    padding: 10px 0;
-    align-items: center;
-    overflow: hidden;
-}
-
-.navegacion-item {
-    flex-shrink: 0;
-    position: relative; /* Asegura que el dropdown se posicione correctamente */
-    text-align: center;
-    padding: 10px 20px;
-    font-size: 18px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-/* Estilos para el dropdown */
-.navegacion-item .dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%; /* Aparece justo debajo del item */
-    left: 0;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    z-index: 1001;
-    border-radius: 8px;
-    min-width: 300px;
-    max-height: 400px; /* Limitar la altura para evitar que el dropdown salga de la pantalla */
-    overflow-y: auto; /* Agregar scroll si es necesario */
-}
-
-/* Mostrar el dropdown al hacer hover o clic (si se ajusta con JS para clic) */
-.navegacion-item:hover .dropdown-menu {
-    display: block;
-}
-
-/* Botones de navegación */
-.navegacion-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.6);
+.nav-icons {
+    background-color: #333;
     color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    z-index: 1000;
-    border-radius: 50%;
-}
-
-.navegacion-btn.left {
-    left: 10px;
-}
-
-.navegacion-btn.right {
-    right: 10px;
-}
-
-.navegacion-btn:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-/* Estilos del Dropdown */
-.dropdown-menu a {
-    color: #333;
-    text-decoration: none;
-    display: block;
-    padding: 8px 0;
-    font-size: 14px;
-}
-
-.dropdown-menu a:hover {
-    background-color: #f1f1f1;
-}
-
-/* Contenedor del dropdown */
-.dropdown:hover > .dropdown-menu {
-    display: block;
-}
-
-/* Ajustes para que los items no se superpongan */
-.mega-menu .row {
     display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
+    align-items: center;
+    margin-left: 20px;
 }
 
-.mega-menu .col-md-3 {
-    width: 200px;
+.nav-icons:hover {
+    background-color: #f1c6d4;
+    color: #333;
+}
+
+/* Carrito de compras */
+
+.btn-cart {
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.btn-cart:hover {
+    color: #f1c6d4;
+}
+
+
+.btn-cart:hover i, /* El carrito */
+.btn-cart:hover #cart-icon-total { /* El total */
+    color: #f1c6d4;
 }
 
 
 
-
-
-
-
-
-
-
-
-
-
-    .clearfix::after {
-        content: "";
-        display: table;
-        clear: both;
-    }
-
-    .logo {
-        width: auto;
-        height: 60px;
-    }
-
-    /* Carrito de compras */
-    .cart-sidebar {
+.cart-sidebar {
     width: 400px;
     padding: 20px;
     background-color: #fff;
@@ -326,49 +158,18 @@
     margin-top: 5px;
 }
 
-/* Quantity Controls */
-.quantity-controls {
-    display: flex;
-    align-items: center;
-    margin-top: 5px;
-}
-
-.quantity-controls .btn-quantity {
-    background-color: #f0f0f0;
-    border: none;
-    border-radius: 6px;
-    width: 30px;
-    height: 30px;
-    font-size: 18px;
-    color: #333;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.quantity-controls .btn-quantity:hover {
-    background-color: #ddd;
-}
-
-.quantity-controls input[type="number"] {
-    width: 50px;
-    text-align: center;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin: 0 5px;
-}
-
 /* Remove Button */
 .remove-btn {
     background-color: transparent;
     border: none;
-    color: #dc3545;
+    color: #333;
     cursor: pointer;
     font-size: 1.5rem;
     transition: color 0.3s;
 }
 
 .remove-btn:hover {
-    color: #9a2323;
+    color: #ff0000;
 }
 
 /* Empty Cart Message */
@@ -423,14 +224,10 @@
 }
 
 .checkout-btn:hover {
-    background-color: #e63946;
+    background-color: #f1c6d4;
 }
 
-.view-cart-btn {
-    text-decoration: none;
-    color: #e63946;
-    font-weight: bold;
-}
+
 
 /* Sidebar */
 .cart-sidebar.active .navegacion {
@@ -502,49 +299,59 @@
 </style>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 10px;">
+<nav class="navbar navbar-expand-lg " style="padding: 10px;">
     <div class="container-fluid">
-        <!-- Botón sidebar (icono) -->
-        <button class="btn btn-outline-primary me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" style="display: flex; align-items: center;">
-            <i class="fas fa-bars"></i>
-        </button>
 
-        <!-- Logo -->
-        <a class="navbar-brand" href="{{ route('home') }}">
-            <img class="logo img-fluid" src="{{ asset('images/logo.png') }}" alt="Logo">
-        </a>
+        <div style="display: flex; align-items: center;">
+            <!-- Botón sidebar (icono) -->
+            <button class="btn btn-outline-primary me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" style="display: flex; align-items: center;">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Logo -->
+            <a class="navbar-brand" href="{{ route('home') }}">
+                <img class="logo img-fluid" src="{{ asset('images/logo.png') }}" alt="Logo">
+            </a>
+        </div>
+
+
 
         <!-- Barra de búsqueda -->
-        <form action="{{ route('buscar') }}" method="GET" style="flex-grow: 1; margin-left: 20px; display: flex; align-items: center;">
-            <input type="text" name="query" placeholder="Buscar productos..." required style="flex-grow: 1; padding: 5px; border: 1px solid #ccc; border-radius: 4px;">
-            <button type="submit" class="btn btn-primary" style="margin-left: 10px;">Buscar</button>
+        <form action="{{ route('buscar') }}" method="GET"  style=" display: flex; align-items: center;">
+            <input type="text" name="query" placeholder="Buscar productos..." required style="flex-grow: 1; padding: 9px; width: 500px; border: 1px solid #ccc; border-radius: 4px;">
+            <button  type="submit" class="btn nav-icons" style="margin-left: 10px;">Buscar</button>
         </form>
 
-        <!-- Icono del carrito -->
-        <a href="#" id="cart-icon" style="margin-left: 20px; text-decoration: none; color: inherit; display: flex; align-items: center;">
-            <span id="cart-icon-total" style="margin-right: 5px;">$0.00</span>
-            <i class="fas fa-shopping-cart"></i>
-        </a>
+        <div style="display: flex; align-items: center; margin-right: 24px">
+            <!-- Icono del carrito -->
+            <a class="btn-cart" href="#" id="cart-icon" style="margin-left: 20px; text-decoration: none; color: inherit; display: flex; align-items: center;">
+                <span id="cart-icon-total" style="margin-right: 5px;">$0.00</span>
+                <i class="fas fa-shopping-cart"></i>
+            </a>
+            
+            
+            
 
-        <!-- Avatar o sesión -->
-        <div class="dropdown ms-3" style="display: flex; align-items: center;">
-            @if(auth()->check())
-                <a href="#" id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: flex; align-items: center;">
-                    <img src="{{ auth()->user()->profile_photo_url }}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%;">
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Mi perfil</a></li>
-                    <li class="dropdown-divider"></li>
-                    <li>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button class="dropdown-item" type="submit">Cerrar sesión</button>
-                        </form>
-                    </li>
-                </ul>
-            @else
-                <a href="{{ route('login') }}" class="btn btn-outline-primary">Iniciar sesión</a>
-            @endif
+            <!-- Avatar o sesión -->
+            <div class="dropdown ms-3" style="display: flex; align-items: center;">
+                @if(auth()->check())
+                    <a href="#" id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: flex; align-items: center;">
+                        <img src="{{ auth()->user()->profile_photo_url }}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%;">
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Mi perfil</a></li>
+                        <li class="dropdown-divider"></li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button class="dropdown-item" type="submit">Cerrar sesión</button>
+                            </form>
+                        </li>
+                    </ul>
+                @else
+                    <a href="{{ route('login') }}" class="btn nav-icons">Iniciar sesión</a>
+                @endif
+            </div>
         </div>
 
 
@@ -577,8 +384,9 @@
     </div>
 </nav>
 
+
 <!-- Sidebar -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel" style="width: 300px; background-color: #f8f9fa;">
+<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel" style="width: 300px; color:#333; background-color: #f8f9fa;">
     <div class="offcanvas-header" style="padding: 15px; border-bottom: 1px solid #e0e0e0;">
         <h5 id="sidebarMenuLabel" style="margin: 0; font-size: 1.25rem; font-weight: bold; color: #333;">Categorías</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
