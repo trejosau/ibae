@@ -64,7 +64,15 @@
                         </span>
                     </p>
                     <div class="mt-auto">
-                        <button class="btn btn-primary w-100">Añadir al carrito</button>
+                        <form id="agregar-carrito-form">
+                            @csrf
+                            <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
+                            <button type="button" class="btn btn-agg btn-lg fw-bold mt-3"
+                                    aria-label="Agregar {{ $producto->nombre }} al carrito"
+                                    onclick="agregarAlCarrito({{ $producto->id }})">
+                                <i class="fas fa-shopping-cart"></i> Agregar al carrito
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -79,3 +87,53 @@
         {{ $productos->links('pagination::bootstrap-4') }}
     </div>
 </div>
+
+
+<script>
+    
+    function agregarAlCarrito(productoId) {
+            const cantidad = document.getElementById('cantidad-input').value;
+            const token = document.querySelector('input[name="_token"]').value;
+
+            fetch(`/producto/${productoId}/agregar-al-carrito`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify({ cantidad: cantidad })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    actualizarTotalCarrito();
+                    cargarContenidoCarrito();
+                    mostrarMensaje('Producto agregado al carrito', 'exito');
+                } else {
+                    mostrarMensaje('Hubo un problema al agregar el producto al carrito', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                mostrarMensaje('Error al procesar la solicitud', 'error');
+            });
+        }
+
+        function mostrarMensaje(mensaje, tipo) {
+            const mensajeDiv = document.createElement('div');
+            mensajeDiv.className = `mensaje-ajax ${tipo}`;
+            mensajeDiv.textContent = mensaje;
+
+            document.body.appendChild(mensajeDiv);
+
+            // Activa la animación después de un breve retraso
+            setTimeout(() => {
+                mensajeDiv.classList.add('show');
+            }, 10);
+
+            // Elimina el mensaje después de 3 segundos
+            setTimeout(() => {
+                mensajeDiv.remove();
+            }, 3000);
+        }
+</script>
