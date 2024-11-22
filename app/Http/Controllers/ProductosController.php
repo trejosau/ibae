@@ -220,8 +220,10 @@ class ProductosController extends Controller
     public function catalogo()
     {
         $productos = Productos::all(); // Obtiene todos los productos
-        return view('catalogo', compact('productos')); // Devuelve la vista con todos los productos
+        $categorias = Categorias::all(); // Obtiene todas las categorías
+        return view('catalogo', compact('productos', 'categorias')); // Pasa productos y categorías a la vista
     }
+    
 
 
     public function filtrar(Request $request)

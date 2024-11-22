@@ -124,7 +124,7 @@
 }
 
 .btn-agg:hover {
-    background-color: #ff4146; /* Color de fondo en hover */
+    background-color: #f0c4d0; /* Color de fondo en hover */
 }
 
 /* Ajuste adicional para el contenedor de productos */
@@ -334,8 +334,9 @@
     </div>
 </div>
 
-
-
+<div>
+@livewire('catalogotienda')
+</div>
 
 <script>
     function initializeCarousel(wrapperId, prevBtnId, nextBtnId) {
