@@ -124,12 +124,12 @@
     .wrapper {
         display: flex;
     }
-
+    
     .main {
         min-height: 100vh;
         width: 100%;
         overflow: hidden;
-        background-color: var(--body-bg);
+        background-color: #fafbfe;
     }
 
     #sidebar {
@@ -139,13 +139,10 @@
         min-height: 100vh;
         z-index: 1000;
         transition: all .25s ease-in-out;
-        background-color: #081444;
+        background-color: #ffffff;
         display: flex;
         flex-direction: column;
-        background-color: var(--sidebar-bg);
-        position: fixed;
     }
-
 
     #sidebar.expand {
         width: 260px;
