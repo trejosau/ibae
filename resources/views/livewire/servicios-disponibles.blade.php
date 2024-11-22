@@ -43,7 +43,14 @@
                         <i class="fa fa-check-circle" aria-hidden="true" style="margin-right: 5px;"></i> Added
                     </p>
                     @if ($servicio->Categoria->nombre === 'Color')
-                        <span class="badge bg-primary" style="font-size: 0.8rem; margin-left: 10px;">Color</span>
+                        <span class="badge bg-primary" style="font-size: 0.8rem; margin-left: 10px;">
+                            Este servicio necesita detalles del cabello al elegirlo, en el siguiente paso te los pediremos.
+                        </span>
+                    @endif
+                    @if ($servicio->Categoria->nombre === 'Uñas')
+                        <span class="badge bg-primary" style="font-size: 0.8rem; margin-left: 10px;">
+                            Este servicio necesita detalles del diseño de las uñas al elegirlo, en el siguiente paso te los pediremos.
+                        </span>
                     @endif
                 </div>
 
@@ -99,41 +106,39 @@
     </div>
     @endif
         @if ($step == 2)
-            <div class="col-md-8" style="padding-right: 20px;">
-                <!-- Botón "Volver" reducido -->
-                <button wire:click="previousStep" class="btn btn-primary" style="width: auto; padding: 5px 15px; font-size: 0.9rem; margin-bottom: 20px;">
-                    Volver
-                </button>
+            <div class="container">
+                <div class="row">
+                    <!-- Columna principal -->
+                    <div class="col-md-8">
+                        <!-- Botón "Volver" reducido -->
+                        <button wire:click="previousStep" class="btn btn-primary mb-3" style="width: auto; padding: 5px 15px; font-size: 0.9rem;">Volver</button>
 
-                <!-- Título -->
-                <h2 class="be-vietnam-pro-semibold" style="margin-bottom: 20px; font-size: 1.5rem; font-weight: 600;">Elige un estilista y Horario</h2>
-                <h3 class="be-vietnam-pro-semibold" style="margin-bottom: 20px; font-size: 1.2rem; font-weight: 600;">Duración total: {{ $duracionTotal }} minutos</h3>
+                        <!-- Títulos -->
+                        <h2 class="be-vietnam-pro-semibold" style="font-size: 1.5rem; font-weight: 600;">Elige un estilista y Horario</h2>
+                        <h3 class="be-vietnam-pro-semibold mb-3" style="font-size: 1.2rem; font-weight: 600;">Duración total: {{ $duracionTotal }} minutos</h3>
 
-                <!-- Select para elegir una opción -->
-                <div class="mb-3">
-                    <label for="estilista" class="form-label">Elige un estilista</label>
-                    <select wire:model.live="estilistaSeleccionada" id="estilista" class="form-control" style="width: 100%; padding: 10px; font-size: 1rem;">
-                        <option value="" selected>Selecciona una opción</option>
-                        @foreach($estilistas as $estilista)
-                            <option value="{{ $estilista->id }}">{{ $estilista->Persona->nombre }}</option>
-                        @endforeach
-                    </select>
+                        <!-- Selección de estilista -->
+                        <div class="form-group mb-3">
+                            <label for="estilista" class="form-label">Elige un estilista</label>
+                            <select wire:model.live="estilistaSeleccionada" id="estilista" class="form-control">
+                                <option value="" selected>Selecciona una opción</option>
+                                @foreach($estilistas as $estilista)
+                                    <option value="{{ $estilista->id }}">{{ $estilista->Persona->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-            @if ($estilistaSeleccionada)
-                <div class="container">
+
+                @if ($estilistaSeleccionada)
                     <div class="row">
-                        <!-- Campo para seleccionar la fecha -->
+                        <!-- Fecha y Hora -->
                         <div class="col-md-6 mb-3">
                             <label for="pickDay">Seleccionar Fecha</label>
-                            <input type="date" wire:model="fechaElegida" wire:change="obtenerHorariosLibres">
+                            <input type="date" class="form-control" wire:model="fechaElegida" wire:change="obtenerHorariosLibres">
                         </div>
-
-
-                        <!-- Campo para seleccionar la hora -->
                         <div class="col-md-6 mb-3">
-                            <label for="pickTime">Seleccionar una hora disponible para el día {{ $fechaElegida }}</label>
+                            <label for="pickTime">Seleccionar Hora</label>
                             <select id="pickTime" class="form-control" wire:model="horaElegida">
                                 <option value="">Seleccione la hora</option>
                                 @foreach ($horariosLibres as $hora)
@@ -144,56 +149,103 @@
                             </select>
                         </div>
 
-                        <div class="text-center" style="margin-top: 20px;">
-                            <select name="largo" id="largo" class="form-select" style="margin-bottom: 10px;">
-                                <option value="" disabled selected>Selecciona el largo</option>
-                                <option value="corto">Corto</option>
-                                <option value="medio">Medio</option>
-                                <option value="largo">Largo</option>
-                            </select>
+                        <!-- Servicios de Color -->
+                        @if ($hayServiciosColor)
+                            <div class="col-12">
+                                <h4 class="text-center">Detalles del Cabello</h4>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <select name="largo" id="largo" class="form-select mb-3">
+                                            <option value="" disabled selected>Selecciona el largo</option>
+                                            <option value="corto">Corto</option>
+                                            <option value="medio">Medio</option>
+                                            <option value="largo">Largo</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="estado" id="estado" class="form-select mb-3">
+                                            <option value="" disabled selected>Selecciona el estado</option>
+                                            <option value="nuevo">Nuevo</option>
+                                            <option value="usado">Usado</option>
+                                            <option value="dañado">Dañado</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="volumen" id="volumen" class="form-select mb-3">
+                                            <option value="" disabled selected>Selecciona el volumen</option>
+                                            <option value="bajo">Bajo</option>
+                                            <option value="medio">Medio</option>
+                                            <option value="alto">Alto</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
 
-                            <select name="estado" id="estado" class="form-select" style="margin-bottom: 10px;">
-                                <option value="" disabled selected>Selecciona el estado</option>
-                                <option value="nuevo">Nuevo</option>
-                                <option value="usado">Usado</option>
-                                <option value="dañado">Dañado</option>
-                            </select>
+                        <!-- Servicios de Uñas -->
+                        @if ($hayServiciosUnas)
+                            <div class="col-12">
+                                <h4 class="text-center">Detalles de las Uñas</h4>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <select name="largoUnas" id="largoUnas" class="form-select mb-3">
+                                            <option value="" disabled selected>Selecciona el largo</option>
+                                            @for ($i = 1; $i <= 8; $i++)
+                                                <option value="{{ $i }}">#{{ $i }}</option>
+                                            @endfor
+                                        </select>
+                                    </div>
 
-                            <select name="volumen" id="volumen" class="form-select" style="margin-bottom: 10px;">
-                                <option value="" disabled selected>Selecciona el volumen</option>
-                                <option value="bajo">Bajo</option>
-                                <option value="medio">Medio</option>
-                                <option value="alto">Alto</option>
-                            </select>
-                        </div>
+                                    @foreach ($inputs as $index => $input)
+                                        <div class="col-md-3">
+                                            <label for="{{ $input['id'] }}">Cantidad de uñas con {{ $input['label'] }}</label>
+                                            <input
+                                                type="number"
+                                                id="{{ $input['id'] }}"
+                                                wire:model.live="inputs.{{ $index }}.value"
+                                                class="form-control"
+                                                min="0"
+                                                max="{{ $max - $total + $input['value'] }}"
+                                            >
+                                        </div>
+                                    @endforeach
+                                </div>
 
+                                <div class="alert alert-info mt-3">
+                                    Total de uñas asignadas: {{ $total }}/{{ $max }}
+                                </div>
+                            </div>
+                        @endif
                     </div>
-                </div>
+                @endif
 
-                <!-- Botón flotante de confirmar -->
-                <div style="position: fixed; bottom: 20px; right: 20px; z-index: 999;">
-                    <button wire:click="confirmarCita" class="btn btn-success" style="padding: 15px 30px; font-size: 1.2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <!-- Servicios seleccionados -->
+                @if ($selectedServices)
+                    <div class="row">
+                        @foreach($selectedServices as $servicio)
+                            <div class="col-md-6">
+                                <div class="service-card p-3 mb-3 bg-light border rounded">
+                                    <h5 class="service-name font-weight-bold mb-1">{{ $servicio->nombre }}</h5>
+                                    <p class="service-description mb-2 text-muted">{{ $servicio->descripcion }}</p>
+                                    <div class="service-details">
+                                        <span class="service-price font-weight-bold">${{ $servicio->precio }}</span> &middot;
+                                        <span class="service-time text-muted">{{ $servicio->duracion_maxima }} minutos</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+
+                <!-- Botón flotante Confirmar -->
+                <div class="text-right mt-3">
+                    <button wire:click="confirmarCita" class="btn btn-success" style="padding: 10px 20px; font-size: 1rem; border-radius: 8px;">
                         Confirmar
                     </button>
                 </div>
-            @endif
-            <!-- Mostrar fecha y hora solo si se seleccionó un estilista -->
-
-                <!-- Servicios seleccionados -->
-                @foreach($selectedServices as $servicio)
-                    <div class="col-md-8" style="padding-right: 20px;">
-                        <div class="service-card" style="padding: 20px; border-top: 1px solid #b3b3b3; margin: 0; border-radius: 8px; background-color: #fff;">
-                            <h5 class="service-name" style="font-size: 1.2rem; font-weight: bold; margin-bottom: 5px;">{{ $servicio->nombre }}</h5>
-                            <p class="service-description" style="font-size: 0.95rem; color: #666; margin-bottom: 10px;">{{ $servicio->descripcion }}</p>
-                            <div class="service-details" style="font-size: 0.9rem; color: #333;">
-                                <span class="service-price" style="font-weight: bold;">${{ $servicio->precio }}</span> &middot;
-                                <span class="service-time" style="color: #777;">{{ $servicio->duracion_maxima }} minutos</span>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-
+            </div>
         @endif
+
 
 </div>
 
