@@ -42,6 +42,9 @@
                     <p class="added-status d-none" style="font-size: 0.85rem; color: #28a745; margin-top: 5px; display: flex; align-items: center;">
                         <i class="fa fa-check-circle" aria-hidden="true" style="margin-right: 5px;"></i> Added
                     </p>
+                    @if ($servicio->Categoria->nombre === 'Color')
+                        <span class="badge bg-primary" style="font-size: 0.8rem; margin-left: 10px;">Color</span>
+                    @endif
                 </div>
 
 
@@ -88,6 +91,8 @@
                         Continuar
                     </button>
                 </div>
+
+
             </div>
 
         </div>
@@ -115,6 +120,7 @@
                     </select>
                 </div>
             </div>
+            <div class="row">
             @if ($estilistaSeleccionada)
                 <div class="container">
                     <div class="row">
@@ -135,6 +141,29 @@
                                         {{ \Carbon\Carbon::parse($hora)->format('H:i A') }}
                                     </option>
                                 @endforeach
+                            </select>
+                        </div>
+
+                        <div class="text-center" style="margin-top: 20px;">
+                            <select name="largo" id="largo" class="form-select" style="margin-bottom: 10px;">
+                                <option value="" disabled selected>Selecciona el largo</option>
+                                <option value="corto">Corto</option>
+                                <option value="medio">Medio</option>
+                                <option value="largo">Largo</option>
+                            </select>
+
+                            <select name="estado" id="estado" class="form-select" style="margin-bottom: 10px;">
+                                <option value="" disabled selected>Selecciona el estado</option>
+                                <option value="nuevo">Nuevo</option>
+                                <option value="usado">Usado</option>
+                                <option value="dañado">Dañado</option>
+                            </select>
+
+                            <select name="volumen" id="volumen" class="form-select" style="margin-bottom: 10px;">
+                                <option value="" disabled selected>Selecciona el volumen</option>
+                                <option value="bajo">Bajo</option>
+                                <option value="medio">Medio</option>
+                                <option value="alto">Alto</option>
                             </select>
                         </div>
 
