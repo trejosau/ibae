@@ -1,21 +1,3 @@
-<style>
-    .back-link {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    text-decoration: none;
-    display: inline-block;
-    margin-bottom: 15px;
-}
-
-.back-link:hover {
-    color: #333;
-    text-decoration: underline;
-}
-
-</style>
-
-
 <div class="container py-5">
     <!-- Enlace Volver a la tienda -->
     <div class="mb-3">
@@ -28,23 +10,17 @@
             <!-- Barra de búsqueda -->
             <div class="mb-4">
                 <label for="busqueda" class="form-label">Buscar productos</label>
-                <div class="input-group">
-                    <input id="busqueda" 
-                           wire:model="busqueda" 
-                           type="text" 
-                           class="form-control" 
-                           placeholder="Buscar por nombre o descripción"
-                           onkeydown="if(event.key === 'Enter'){ @this.call('actualizarProductos') }">  <!-- Evento para Enter -->
-                    <button wire:click="actualizarProductos" class="btn btn-primary" type="button">
-                        Buscar
-                    </button>
-                </div>
+                <input id="busqueda" 
+                       wire:model.live="busqueda" 
+                       type="text" 
+                       class="form-control" 
+                       placeholder="Buscar por nombre o descripción">
             </div>
 
             <!-- Categorías -->
             <div class="mb-4">
                 <label for="categoriaFiltro" class="form-label">Categorías</label>
-                <select id="categoriaFiltro" wire:model="categoriaSeleccionada" wire:change="actualizarProductos" class="form-select shadow">
+                <select id="categoriaFiltro" wire:model.live="categoriaSeleccionada" class="form-select shadow">
                     <option value="">Todas las categorías</option>
                     @foreach($categorias as $categoria)
                         <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
@@ -55,16 +31,16 @@
             <!-- Precio -->
             <div class="mb-4">
                 <label for="precioMin" class="form-label">Precio mínimo</label>
-                <input id="precioMin" wire:model="precioMin" wire:change="actualizarProductos" type="number" class="form-control mb-2" placeholder="Mínimo" min="0">
+                <input id="precioMin" wire:model.live.debounce="precioMin" type="number" class="form-control mb-2" placeholder="Mínimo" min="0">
                 
                 <label for="precioMax" class="form-label">Precio máximo</label>
-                <input id="precioMax" wire:model="precioMax" wire:change="actualizarProductos" type="number" class="form-control" placeholder="Máximo" min="0">
+                <input id="precioMax" wire:model.live.debounce="precioMax" type="number" class="form-control" placeholder="Máximo" min="0">
             </div>
 
             <!-- Disponibilidad -->
             <div class="mb-4">
                 <label for="disponibilidad" class="form-label">Disponibilidad</label>
-                <select id="disponibilidad" wire:model="disponibilidad" wire:change="actualizarProductos" class="form-select">
+                <select id="disponibilidad" wire:model="disponibilidad" class="form-select">
                     <option value="">Todas</option>
                     <option value="1">En stock</option>
                     <option value="0">Agotado</option>
@@ -74,7 +50,7 @@
             <!-- Ordenar -->
             <div>
                 <label for="ordenarPor" class="form-label">Ordenar por</label>
-                <select id="ordenarPor" wire:model="ordenarPor" wire:change="actualizarProductos" class="form-select">
+                <select id="ordenarPor" wire:model="ordenarPor" class="form-select">
                     <option value="">Selecciona</option>
                     <option value="mas_nuevo">Más nuevo</option>
                     <option value="mas_vendido">Más vendido</option>
@@ -103,15 +79,11 @@
                                     </span>
                                 </p>
                                 <div class="mt-auto">
-                                    <form id="agregar-carrito-form">
-                                        @csrf
-                                        <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
-                                        <button type="button" class="btn btn-primary btn-lg fw-bold mt-3"
-                                                aria-label="Agregar {{ $producto->nombre }} al carrito"
-                                                onclick="agregarAlCarrito({{ $producto->id }})">
-                                            <i class="fas fa-shopping-cart"></i> Agregar al carrito
-                                        </button>
-                                    </form>
+                                    <button type="button" class="btn btn-primary btn-lg fw-bold mt-3"
+                                            aria-label="Agregar {{ $producto->nombre }} al carrito"
+                                            wire:click="agregarAlCarrito({{ $producto->id }})">
+                                        <i class="fas fa-shopping-cart"></i> Agregar al carrito
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -130,61 +102,3 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
-<script>
-    
-    function agregarAlCarrito(productoId) {
-            const cantidad = document.getElementById('cantidad-input').value;
-            const token = document.querySelector('input[name="_token"]').value;
-
-            fetch(`/producto/${productoId}/agregar-al-carrito`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': token
-                },
-                body: JSON.stringify({ cantidad: cantidad })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    actualizarTotalCarrito();
-                    cargarContenidoCarrito();
-                    mostrarMensaje('Producto agregado al carrito', 'exito');
-                } else {
-                    mostrarMensaje('Hubo un problema al agregar el producto al carrito', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                mostrarMensaje('Error al procesar la solicitud', 'error');
-            });
-        }
-
-        function mostrarMensaje(mensaje, tipo) {
-            const mensajeDiv = document.createElement('div');
-            mensajeDiv.className = `mensaje-ajax ${tipo}`;
-            mensajeDiv.textContent = mensaje;
-
-            document.body.appendChild(mensajeDiv);
-
-            // Activa la animación después de un breve retraso
-            setTimeout(() => {
-                mensajeDiv.classList.add('show');
-            }, 10);
-
-            // Elimina el mensaje después de 3 segundos
-            setTimeout(() => {
-                mensajeDiv.remove();
-            }, 3000);
-        }
-
-
-        onkeydown="if(event.key === 'Enter'){ @this.call('actualizarProductos') }"
-
-</script>

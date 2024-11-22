@@ -17,71 +17,79 @@ class CatalogoTienda extends Component
     public $precioMax = null;
     public $disponibilidad = null;
     public $ordenarPor = null;
-    public $busqueda = null; // Propiedad para búsqueda
+    public $busqueda = null;
 
     public function mount()
     {
         $this->categorias = Categorias::all();
-        $this->actualizarProductos();
     }
 
+    public function actualizarProductos()
+    {
+        $query = Productos::query();
 
-public function actualizarProductos()
-{
-    $query = Productos::query();
-
-    // Filtro por búsqueda (si está activo)
-    if ($this->busqueda) {
-        $query->where('nombre', 'like', '%' . $this->busqueda . '%')
-              ->orWhere('descripcion', 'like', '%' . $this->busqueda . '%');
-    }
-
-    // Otros filtros (categoría, precio, disponibilidad, etc.)
-    if ($this->categoriaSeleccionada) {
-        $query->where('id_categoria', $this->categoriaSeleccionada);
-    }
-
-    if ($this->precioMin) {
-        $query->where('precio_venta', '>=', $this->precioMin);
-    }
-    if ($this->precioMax) {
-        $query->where('precio_venta', '<=', $this->precioMax);
-    }
-
-    if ($this->disponibilidad !== null) {
-        if ($this->disponibilidad == 1) {
-            $query->where('stock', '>', 0);  // Productos con stock disponible
-        } elseif ($this->disponibilidad == 0) {
-            $query->where('stock', '=', 0);  // Productos agotados (sin stock)
+        // Aplicar filtros según la categoría seleccionada
+        if ($this->categoriaSeleccionada) {
+            $query->where('id_categoria', $this->categoriaSeleccionada);
         }
-    }
 
-    if ($this->ordenarPor) {
-        switch ($this->ordenarPor) {
-            case 'mas_nuevo':
-                $query->orderBy('fecha_agregado', 'desc');
-                break;
-            case 'mas_vendido':
-                $query->orderBy('cantidad', 'desc');
-                break;
-            case 'precio_mas_alto':
-                $query->orderBy('precio_venta', 'desc');
-                break;
-            case 'precio_mas_bajo':
-                $query->orderBy('precio_venta', 'asc');
-                break;
+        // Aplicar filtro de búsqueda dentro de la categoría seleccionada
+        if ($this->busqueda) {
+            $query->where(function ($q) {
+                $q->where('nombre', 'like', '%' . $this->busqueda . '%')
+                  ->orWhere('descripcion', 'like', '%' . $this->busqueda . '%');
+            });
         }
+
+        // Aplicar filtros por rango de precios
+        if ($this->precioMin) {
+            $query->where('precio_venta', '>=', $this->precioMin);
+        }
+
+        if ($this->precioMax) {
+            $query->where('precio_venta', '<=', $this->precioMax);
+        }
+
+        // Aplicar filtro de disponibilidad
+        if (!is_null($this->disponibilidad)) {
+            $query->where('stock', $this->disponibilidad ? '>' : '=', 0);
+        }
+
+        // Ordenar los productos
+        if ($this->ordenarPor) {
+            switch ($this->ordenarPor) {
+                case 'mas_nuevo':
+                    $query->orderBy('fecha_agregado', 'desc');
+                    break;
+                case 'mas_vendido':
+                    $query->orderBy('cantidad', 'desc');
+                    break;
+                case 'precio_mas_alto':
+                    $query->orderBy('precio_venta', 'desc');
+                    break;
+                case 'precio_mas_bajo':
+                    $query->orderBy('precio_venta', 'asc');
+                    break;
+            }
+        }
+
+        return $query->paginate(16);
     }
 
-    $this->productos = $query->paginate(16);
-}
-
+    public function agregarAlCarrito($productoId)
+    {
+        // Lógica para agregar al carrito
+        session()->flash('message', 'Producto agregado al carrito.');
+    }
 
     public function render()
     {
-        $categorias = $this->categorias;
-        $productos = $this->productos ?? Productos::paginate(16);
+        // Llamar a la función de actualización y pasar los productos a la vista
+        $productos = $this->actualizarProductos();
 
-        return view('livewire.catalogo-tienda', compact('productos', 'categorias'));
+        return view('livewire.catalogo-tienda', [
+            'productos' => $productos,
+            'categorias' => $this->categorias
+        ]);
     }
 }
