@@ -334,9 +334,7 @@
     </div>
 </div>
 
-<div>
-@livewire('catalogotienda')
-</div>
+
 
 <script>
     function initializeCarousel(wrapperId, prevBtnId, nextBtnId) {

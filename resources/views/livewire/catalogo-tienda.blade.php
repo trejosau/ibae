@@ -9,41 +9,131 @@
         </select>
     </div>
 
-    <!-- Listado de productos -->
-    <div class="row g-4">
-        @foreach($productos as $producto)
-            <div class="col-lg-3 col-md-4 col-sm-6 d-flex">
-                <div class="card h-100 w-100 shadow border-0" style="background-color: #f9f9f9; border-radius: 10px;">
-                    <!-- Foto del producto -->
-                    <div class="ratio ratio-1x1" style="border-top-left-radius: 10px; border-top-right-radius: 10px; overflow: hidden;">
-                        <img src="{{ $producto->main_photo }}" alt="{{ $producto->nombre }}" class="card-img-top" style="object-fit: cover;">
-                    </div>
+    <!-- Filtros adicionales -->
+    <div class="row mb-4">
+        <!-- Filtro por precio -->
+        <div class="col-md-4">
+            <input wire:model="precioMin" wire:change="actualizarProductos" type="number" class="form-control" placeholder="Precio mínimo" min="0">
+        </div>
+        <div class="col-md-4">
+            <input wire:model="precioMax" wire:change="actualizarProductos" type="number" class="form-control" placeholder="Precio máximo" min="0">
+        </div>
+        <!-- Filtro por disponibilidad -->
+        <div class="col-md-4">
+            <select wire:model="disponibilidad" wire:change="actualizarProductos" class="form-select">
+                <option value="">Disponibilidad</option>
+                <option value="1">En stock</option>
+                <option value="0">Agotado</option>
+            </select>
+        </div>
+    </div>
 
-                    <!-- Detalles del producto -->
-                    <div class="card-body d-flex flex-column p-3">
-                        <h5 class="card-title text-truncate text-dark" style="font-weight: 600;">{{ $producto->nombre }}</h5>
-                        <p class="card-text text-muted text-truncate mb-2" style="font-size: 0.9rem;">
-                            {{ Str::limit($producto->descripcion, 80) }}
-                        </p>
-                        <p class="fw-bold mb-1 text-primary" style="font-size: 1.1rem;">${{ number_format($producto->precio_venta, 2) }}</p>
-                        <p class="mb-3" style="font-size: 0.9rem;">En stock:
-                            <span class="badge {{ $producto->stock > 0 ? 'bg-success' : 'bg-danger' }}">
-                                {{ $producto->stock }}
-                            </span>
-                        </p>
-                        <div class="mt-auto">
-                            <button class="btn btn-primary btn-sm w-100 shadow-sm" style="border-radius: 20px;">
-                                Agregar al carrito
+  <!-- Filtro de ordenar -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <select wire:model="ordenarPor" wire:change="actualizarProductos" class="form-select">
+            <option value="">Ordenar por</option>
+            <option value="mas_nuevo">Más nuevo</option>
+            <option value="mas_vendido">Más vendido</option>
+            <option value="precio_mas_alto">Precio más alto</option>
+            <option value="precio_mas_bajo">Precio más bajo</option>
+        </select>
+    </div>
+</div>
+
+<!-- Listado de productos -->
+<div class="row g-4">
+    @foreach($productos as $producto)
+        <div class="col-lg-3 col-md-4 col-sm-6 d-flex">
+            <div class="card h-100 w-100 shadow border-0" style="background-color: #f9f9f9; border-radius: 10px;">
+                <!-- Foto del producto -->
+                <div class="ratio ratio-1x1" style="border-top-left-radius: 10px; border-top-right-radius: 10px; overflow: hidden;">
+                    <img src="{{ $producto->main_photo }}" alt="{{ $producto->nombre }}" class="card-img-top" style="object-fit: cover;">
+                </div>
+
+                <!-- Detalles del producto -->
+                <div class="card-body d-flex flex-column p-3">
+                    <h5 class="card-title text-truncate text-dark" style="font-weight: 600;">{{ $producto->nombre }}</h5>
+                    <p class="card-text text-muted text-truncate mb-2" style="font-size: 0.9rem;">
+                        {{ Str::limit($producto->descripcion, 80) }}
+                    </p>
+                    <p class="fw-bold mb-1 text-primary" style="font-size: 1.1rem;">${{ number_format($producto->precio_venta, 2) }}</p>
+                    <p class="mb-3" style="font-size: 0.9rem;">En stock:
+                        <span class="badge {{ $producto->stock > 0 ? 'bg-success' : 'bg-danger' }}">
+                            {{ $producto->stock }}
+                        </span>
+                    </p>
+                    <div class="mt-auto">
+                        <form id="agregar-carrito-form">
+                            @csrf
+                            <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
+                            <button type="button" class="btn btn-agg btn-lg fw-bold mt-3"
+                                    aria-label="Agregar {{ $producto->nombre }} al carrito"
+                                    onclick="agregarAlCarrito({{ $producto->id }})">
+                                <i class="fas fa-shopping-cart"></i> Agregar al carrito
                             </button>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        @endforeach
-    </div>
+        </div>
+    @endforeach
+</div>
+
+
 
     <!-- Paginación -->
     <div class="d-flex justify-content-center mt-5">
         {{ $productos->links('pagination::bootstrap-4') }}
     </div>
 </div>
+
+
+<script>
+    
+    function agregarAlCarrito(productoId) {
+            const cantidad = document.getElementById('cantidad-input').value;
+            const token = document.querySelector('input[name="_token"]').value;
+
+            fetch(`/producto/${productoId}/agregar-al-carrito`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify({ cantidad: cantidad })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    actualizarTotalCarrito();
+                    cargarContenidoCarrito();
+                    mostrarMensaje('Producto agregado al carrito', 'exito');
+                } else {
+                    mostrarMensaje('Hubo un problema al agregar el producto al carrito', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                mostrarMensaje('Error al procesar la solicitud', 'error');
+            });
+        }
+
+        function mostrarMensaje(mensaje, tipo) {
+            const mensajeDiv = document.createElement('div');
+            mensajeDiv.className = `mensaje-ajax ${tipo}`;
+            mensajeDiv.textContent = mensaje;
+
+            document.body.appendChild(mensajeDiv);
+
+            // Activa la animación después de un breve retraso
+            setTimeout(() => {
+                mensajeDiv.classList.add('show');
+            }, 10);
+
+            // Elimina el mensaje después de 3 segundos
+            setTimeout(() => {
+                mensajeDiv.remove();
+            }, 3000);
+        }
+</script>

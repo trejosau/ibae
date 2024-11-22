@@ -158,7 +158,6 @@
         <div>
             <a href="/">Inicio</a>
             <a href="{{ route('tienda.mostrar') }}">Tienda</a>
-            <a href="/pedidos" class="active">Mis Pedidos</a>
         </div>
     </div>
 </nav>
@@ -204,7 +203,7 @@
 
 <!-- Footer -->
 <footer>
-    © 2024 Tienda Moderna. Todos los derechos reservados.
+    © 2024 IBA&E
 </footer>
 </body>
 </html>

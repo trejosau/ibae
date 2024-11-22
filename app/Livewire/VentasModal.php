@@ -41,9 +41,8 @@ class VentasModal extends Component
         $this->proveedores = Proveedores::orderBy('nombre_empresa', 'asc')->get();
 
         // Cargar lista inicial de productos
-        $this->productos = Productos::where('estado', 'activo')
-            ->orderBy('nombre', 'asc')
-            ->get();
+        $this->productos = Productos::orderBy('nombre', 'asc')->get();
+
     }
 
     public function updatedCategoriaSeleccionada()
@@ -235,24 +234,23 @@ class VentasModal extends Component
 
     public function confirmarVenta()
     {
-
         // Validar si hay productos agregados
         if (empty($this->productosAgregados)) {
             session()->flash('error', 'No hay productos para confirmar la venta.');
-            return redirect()->back();
+            return redirect()->route('dashboard.ventas');
         }
 
         // Validar si es estudiante y verificar matrícula
         if ($this->esEstudiante) {
             if (empty($this->matricula)) {
                 session()->flash('error', 'Ocurrió un error con la matrícula: no la ingresaste.');
-                return redirect()->back();
+                return redirect()->route('dashboard.ventas');
             }
 
             $estudiante = Estudiante::where('matricula', $this->matricula)->first();
             if (!$estudiante) {
                 session()->flash('error', 'Ocurrió un error: la matrícula no existe en el sistema.');
-                return redirect()->back();
+                return redirect()->route('dashboard.ventas');
             }
         }
 
@@ -265,7 +263,7 @@ class VentasModal extends Component
             $usuario = Auth::user();
             if (!$usuario || !$usuario->Persona || !$usuario->Persona->Administrador) {
                 session()->flash('error', 'El usuario actual no tiene un administrador asociado.');
-                return;
+                return redirect()->route('dashboard.ventas');
             }
 
             $id_admin = $usuario->Persona->Administrador->id;
@@ -282,20 +280,47 @@ class VentasModal extends Component
 
             // Crear los detalles de la venta y actualizar el stock
             foreach ($this->productosAgregados as $producto) {
+                // Conversión a enteros para evitar problemas con cadenas
+                $cantidad = (int) $producto['cantidad'];
+
+                // Calcular precio y descuento aplicados
                 $precioAplicado = $this->esEstudiante ? $producto['precio_lista'] : $producto['precio_venta'];
                 $descuento = $this->esEstudiante ? $producto['precio_venta'] - $producto['precio_lista'] : 0;
 
+                // Crear el detalle de venta
                 DetalleVenta::create([
                     'id_venta' => $venta->id,
                     'id_producto' => $producto['id'],
-                    'cantidad' => $producto['cantidad'],
+                    'cantidad' => $cantidad,
                     'precio_aplicado' => $precioAplicado,
                     'descuento' => $descuento,
                 ]);
 
-                // decrementar el stock del producto
+                // Obtener el producto desde la base de datos con bloqueo para evitar condiciones de carrera
+                $productoDb = Productos::where('id', $producto['id'])->lockForUpdate()->first();
 
-                Productos::where('id', $producto['id'])->decrement('stock', $producto['cantidad']); // Decrementar el stock del producto
+                // Validar si hay suficiente stock
+                if ($productoDb->stock < $cantidad) {
+                    dump('ERROR: Stock insuficiente', [
+                        'id_producto' => $productoDb->id,
+                        'stock_disponible' => $productoDb->stock,
+                        'cantidad_solicitada' => $cantidad,
+                    ]);
+                    continue; // Salta este producto si no hay suficiente stock
+                }
+
+                // Calcular el nuevo stock
+                $nuevoStock = $productoDb->stock - $cantidad;
+
+                // Determinar el nuevo estado del producto
+                $nuevoEstado = $nuevoStock > 0 ? 'activo' : 'agotado';
+
+                // Actualizar el producto en la base de datos
+                $productoDb->update([
+                    'stock' => $nuevoStock,
+                    'estado' => $nuevoEstado,
+                ]);
+
             }
 
             // Limpiar el estado del componente
@@ -305,14 +330,12 @@ class VentasModal extends Component
             session()->flash('success', 'Venta confirmada exitosamente.');
             return redirect()->route('dashboard.ventas');
         } catch (\Exception $e) {
-            // Registrar el error en los logs
-            \Log::error('Error al confirmar la venta: ' . $e->getMessage());
-
             // Mostrar mensaje de error al usuario
             session()->flash('error', 'Ocurrió un error al confirmar la venta: ' . $e->getMessage());
-            return redirect()->back();
+            return redirect()->route('dashboard.ventas');
         }
     }
+
 
 
 

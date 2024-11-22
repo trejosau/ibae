@@ -4,18 +4,7 @@
     <!-- Filtros -->
 
 
-    <!-- Gráfica de Citas -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card border-info h-100 mb-4">
-                <div class="card-body">
-                    <h5 class="card-title text-center">
-                        <i class="fas fa-calendar-alt fa-2x text-info"></i> Gráfica de Citas
-                    </h5>
-                </div>
-            </div>
-        </div>
-    </div>
+   
     <div class="row mb-4">
         <div class="col-6">
             <div class="input-group">

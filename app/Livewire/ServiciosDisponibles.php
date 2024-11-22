@@ -12,7 +12,8 @@ use App\Models\Servicios;
 
 class ServiciosDisponibles extends Component
 {
-
+    public $hayServiciosColor = false; // Inicialmente no hay servicios de Color
+    public $hayServiciosUnas = false; // Inicialmente no hay servicios de Uñas
     public $servicios;
     public $estilistaSeleccionada;
     public $fechaElegida;
@@ -23,6 +24,48 @@ class ServiciosDisponibles extends Component
     public $selectedServices = [];
     public $duracionTotal = 0;
 
+    public $inputs = [
+        ['id' => 'cantidad_piedras', 'label' => 'Piedras', 'value' => 0],
+        ['id' => 'cantidad_cristales', 'label' => 'Cristales', 'value' => 0],
+        ['id' => 'cantidad_stickers', 'label' => 'Stickers', 'value' => 0],
+        ['id' => 'cantidad_efecto_foil', 'label' => 'Foil', 'value' => 0],
+        ['id' => 'cantidad_efecto_espejo', 'label' => 'Espejo', 'value' => 0],
+        ['id' => 'cantidad_efecto_azucar', 'label' => 'Azúcar', 'value' => 0],
+        ['id' => 'cantidad_efecto_mano_alzada', 'label' => 'Mano Alzada', 'value' => 0],
+        ['id' => 'cantidad_efecto_3d', 'label' => '3D', 'value' => 0],
+    ];
+
+    public $total = 0;
+    public $max = 10;
+
+    // Este método se ejecuta cada vez que un input se actualiza.
+    public function updated($field)
+    {
+        // Sumamos todos los valores de los inputs
+        $this->total = array_sum(array_column($this->inputs, 'value'));
+
+        // Si el total excede el máximo, ajustamos los valores
+        if ($this->total > $this->max) {
+            $this->adjustValues();
+        }
+    }
+
+    private function adjustValues()
+    {
+        // Restablecemos el total
+        $this->total = 0;
+
+        // Ajustamos los valores de los inputs
+        foreach ($this->inputs as $key => $input) {
+            // Si agregar este valor excede el máximo, ajustamos este campo
+            if ($this->total + $input['value'] > $this->max) {
+                // Ajustamos el valor del campo para que no se exceda
+                $this->inputs[$key]['value'] = $this->max - $this->total;
+            }
+            // Sumamos el nuevo valor
+            $this->total += $this->inputs[$key]['value'];
+        }
+    }
     public function obtenerHorariosLibres()
     {
         // Verificar que los parámetros necesarios estén definidos
@@ -90,39 +133,44 @@ class ServiciosDisponibles extends Component
     }
 
 
+
+
     public function selectService($serviceId)
     {
-        // Obtener el servicio seleccionado
         $servicio = Servicios::find($serviceId);
 
-        if (!$servicio) {
-            return;
-        }
+        if (!$servicio) return;
 
-        // Verificar si el servicio ya está en la lista de seleccionados
-        $existeServicio = collect($this->selectedServices)->contains(fn($s) => $s->id === $serviceId);
+        // Buscar si ya está seleccionado
+        $index = array_search($serviceId, array_column($this->selectedServices, 'id'));
 
-        // Si no está, verificar el límite y agregarlo
-        if (!$existeServicio) {
-            $nuevaDuracionTotal = $this->duracionTotal + $servicio->duracion_maxima;
+        if ($index === false) {
+            // Si no está seleccionado, intentar agregar
+            if ($this->duracionTotal + $servicio->duracion_maxima > 480) return;
 
-            if ($nuevaDuracionTotal > 480) {
-                // Si la duración total excede 480 minutos, no agregar el servicio
-                return;
+            $this->selectedServices[] = $servicio;
+            $this->duracionTotal += $servicio->duracion_maxima;
+
+            // Verificar categorías específicas
+            if ($servicio->Categoria->nombre === 'Color') {
+                $this->hayServiciosColor = true;
             }
-
-            $this->selectedServices[] = $servicio; // Agregar el objeto completo
-            $this->duracionTotal = $nuevaDuracionTotal;
+            if ($servicio->Categoria->nombre === 'Uñas') {
+                $this->hayServiciosUnas = true;
+            }
         } else {
-            // Si el servicio ya está seleccionado, quitarlo y actualizar la duración total
-            $this->selectedServices = array_filter(
-                $this->selectedServices,
-                fn($s) => $s->id !== $serviceId
-            );
+            // Si ya está seleccionado, eliminarlo
+            unset($this->selectedServices[$index]);
             $this->duracionTotal -= $servicio->duracion_maxima;
+
+            // Verificar si hay más servicios de "Color" y "Uñas" seleccionados
+            $this->hayServiciosColor = collect($this->selectedServices)
+                ->contains(fn($s) => $s->Categoria->nombre === 'Color');
+
+            $this->hayServiciosUnas = collect($this->selectedServices)
+                ->contains(fn($s) => $s->Categoria->nombre === 'Uñas');
         }
     }
-
     public function nextStep()
     {
         $this->step++;

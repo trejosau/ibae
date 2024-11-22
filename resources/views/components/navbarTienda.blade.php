@@ -328,9 +328,9 @@
                 <span id="cart-icon-total" style="margin-right: 5px;">$0.00</span>
                 <i class="fas fa-shopping-cart"></i>
             </a>
-            
-            
-            
+
+
+
 
             <!-- Avatar o sesión -->
             <div class="dropdown ms-3" style="display: flex; align-items: center;">
@@ -347,6 +347,7 @@
                                 <button class="dropdown-item" type="submit">Cerrar sesión</button>
                             </form>
                         </li>
+                        <li><a class="dropdown-item" href="/pedidos">Mis pedidos</a></li>
                     </ul>
                 @else
                     <a href="{{ route('login') }}" class="btn nav-icons">Iniciar sesión</a>

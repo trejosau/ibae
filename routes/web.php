@@ -12,7 +12,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SalonController;
 use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\UsuarioController;
-use App\Http\Controllers\VentaController;
 use App\Models\Productos;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -81,6 +80,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboardd');
         Route::get('/dashboard/inicio', [DashboardController::class, 'inicio'])->name('dashboard.inicio');
         Route::get('/dashboard/ventas', [DashboardController::class, 'ventas'])->name('dashboard.ventas');
+        Route::get('/dashboard/ventas/{id]', [DashboardController::class, 'ventaDestroy'])->name('ventas.destroy');
         Route::get('/dashboard/pedidos', [DashboardController::class, 'pedidos'])->name('dashboard.pedidos');
         Route::post('/pedidos/marcar-listo/{id}', [PedidoController::class, 'marcarListo'])->name('pedido.marcarListo');
         Route::post('/pedidos/marcar-entregado/{id}', [PedidoController::class, 'marcarEntregado'])->name('pedido.marcarEntregado');
