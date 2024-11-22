@@ -17,7 +17,7 @@ class CatalogoTienda extends Component
     public $precioMax = null;
     public $disponibilidad = null;
     public $ordenarPor = null;
-    public $busqueda = null;
+    public $busqueda = null; // Propiedad para búsqueda
 
     public function mount()
     {
@@ -28,20 +28,15 @@ class CatalogoTienda extends Component
     {
         $query = Productos::query();
 
-        // Aplicar filtros según la categoría seleccionada
+        if ($this->busqueda) {
+            $query->where('nombre', 'like', '%' . $this->busqueda . '%')
+                ->orWhere('descripcion', 'like', '%' . $this->busqueda . '%');
+        }
+
         if ($this->categoriaSeleccionada) {
             $query->where('id_categoria', $this->categoriaSeleccionada);
         }
 
-        // Aplicar filtro de búsqueda dentro de la categoría seleccionada
-        if ($this->busqueda) {
-            $query->where(function ($q) {
-                $q->where('nombre', 'like', '%' . $this->busqueda . '%')
-                  ->orWhere('descripcion', 'like', '%' . $this->busqueda . '%');
-            });
-        }
-
-        // Aplicar filtros por rango de precios
         if ($this->precioMin) {
             $query->where('precio_venta', '>=', $this->precioMin);
         }
@@ -50,12 +45,10 @@ class CatalogoTienda extends Component
             $query->where('precio_venta', '<=', $this->precioMax);
         }
 
-        // Aplicar filtro de disponibilidad
         if (!is_null($this->disponibilidad)) {
             $query->where('stock', $this->disponibilidad ? '>' : '=', 0);
         }
 
-        // Ordenar los productos
         if ($this->ordenarPor) {
             switch ($this->ordenarPor) {
                 case 'mas_nuevo':
@@ -78,18 +71,13 @@ class CatalogoTienda extends Component
 
     public function agregarAlCarrito($productoId)
     {
-        // Lógica para agregar al carrito
+        // Implementa la lógica para agregar al carrito.
         session()->flash('message', 'Producto agregado al carrito.');
     }
 
     public function render()
     {
-        // Llamar a la función de actualización y pasar los productos a la vista
         $productos = $this->actualizarProductos();
-
-        return view('livewire.catalogo-tienda', [
-            'productos' => $productos,
-            'categorias' => $this->categorias
-        ]);
+        return view('livewire.catalogo-tienda', ['productos' => $productos, 'categorias' => $this->categorias]);
     }
 }

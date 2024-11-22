@@ -40,7 +40,7 @@
             <!-- Disponibilidad -->
             <div class="mb-4">
                 <label for="disponibilidad" class="form-label">Disponibilidad</label>
-                <select id="disponibilidad" wire:model="disponibilidad" class="form-select">
+                <select id="disponibilidad" wire:model.live="disponibilidad" class="form-select">
                     <option value="">Todas</option>
                     <option value="1">En stock</option>
                     <option value="0">Agotado</option>
@@ -50,7 +50,7 @@
             <!-- Ordenar -->
             <div>
                 <label for="ordenarPor" class="form-label">Ordenar por</label>
-                <select id="ordenarPor" wire:model="ordenarPor" class="form-select">
+                <select id="ordenarPor" wire:model.live="ordenarPor" class="form-select">
                     <option value="">Selecciona</option>
                     <option value="mas_nuevo">Más nuevo</option>
                     <option value="mas_vendido">Más vendido</option>
@@ -79,15 +79,15 @@
                                     </span>
                                 </p>
                                 <div class="mt-auto">
-                                    <form id="agregar-carrito-form">
-                                        @csrf
-                                        <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
-                                        <button type="button" class="btn btn-agg btn-lg fw-bold mt-3"
-                                                aria-label="Agregar {{ $producto->nombre }} al carrito"
-                                                onclick="agregarAlCarrito({{ $producto->id }})">
-                                            <i class="fas fa-shopping-cart"></i> Agregar al carrito
-                                        </button>
-                                    </form>
+                <form id="agregar-carrito-form">
+                    @csrf
+                    <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
+                    <button type="button" class="btn btn-agg btn-lg fw-bold mt-3"
+                            aria-label="Agregar {{ $producto->nombre }} al carrito"
+                            onclick="agregarAlCarrito({{ $producto->id }})">
+                        <i class="fas fa-shopping-cart"></i> Agregar al carrito
+                    </button>
+                </form>
                                 </div>
                             </div>
                         </div>
@@ -107,8 +107,10 @@
     </div>
 </div>
 
+
 <script>
-    function agregarAlCarrito(productoId) {
+
+function agregarAlCarrito(productoId) {
             const cantidad = document.getElementById('cantidad-input').value;
             const token = document.querySelector('input[name="_token"]').value;
 
