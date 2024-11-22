@@ -16,6 +16,7 @@ use App\Models\Productos;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use App\Livewire\CatalogoTienda;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redirect;
@@ -198,8 +199,8 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
 
     Route::get('/catalogo', [ProductosController::class, 'catalogo'])->name('catalogo');
 
-    // Filtrar productos desde el formulario
-    Route::post('/catalogo', [ProductosController::class, 'filtrar'])->name('productos.filtrar');
+    Route::get('/catalogo/{id_categoria?}', CatalogoTienda::class)->name('productos.categoria');
+
 
     // Filtrar productos por categoría desde URL
     Route::get('/catalogo/categoria/{id_categoria?}', [ProductosController::class, 'filtrar'])->name('productos.categoria');

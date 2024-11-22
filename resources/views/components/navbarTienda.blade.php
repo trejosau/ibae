@@ -316,11 +316,6 @@
 
 
 
-        <!-- Barra de búsqueda -->
-        <form action="{{ route('buscar') }}" method="GET"  style=" display: flex; align-items: center;">
-            <input type="text" name="query" placeholder="Buscar productos..." required style="flex-grow: 1; padding: 9px; width: 500px; border: 1px solid #ccc; border-radius: 4px;">
-            <button  type="submit" class="btn nav-icons" style="margin-left: 10px;">Buscar</button>
-        </form>
 
         <div style="display: flex; align-items: center; margin-right: 24px">
             <!-- Icono del carrito -->

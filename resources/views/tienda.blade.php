@@ -226,21 +226,74 @@
     </div>
 </div>
 
+<!-- Div contenedor -->
+<div class="catalog-container text-center p-4">
+    <h3 class="catalog-title">Visita nuestro catálogo</h3>
+    <a href="/catalogo" class="btn catalog-link">Explorar catálogo</a>
+  </div>
+  
+  <!-- Estilos CSS -->
+  <style>
+    .catalog-container {
+      background-color: #f8f9fa;
+      border-radius: 12px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  
+    .catalog-title {
+      font-size: 2rem;
+      color: #333;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+    }
+  
+    .catalog-link {
+      display: inline-block;
+      font-size: 1.25rem;
+      background-color: #333;
+      color: #fff;
+      padding: 12px 25px;
+      text-decoration: none;
+      border-radius: 50px;
+      transition: background-color 0.3s, transform 0.3s ease;
+    }
+  
+    .catalog-link:hover {
+      background-color: #f8c8d8; /* Rosa claro */
+      color: #333; /* Texto negro */
+      transform: translateY(-5px); /* Efecto de elevación */
+    }
+  
+    /* Efecto de sombra al pasar el mouse */
+    .catalog-link:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+  
+
 <div class="text-center p-5 fs-4"><h1 class="titulo-grande ">ECHA UN VISTAZO A NUESTRAS CATEGORIAS</h1></div>
 
 <div class="contenedor pb-4">
     @foreach ($categorias as $categoria)
-        <div class="categoria-card">
-            <div class="tittle">
-                <a href="{{ route('productos.categoria', ['id_categoria' => $categoria->id]) }}">
-                    <img src="{{ $categoria->photo }}" alt="{{ $categoria->nombre }}" class="imagen-circular" loading="lazy">
-                </a>
-            </div>
-            <div class="tittle">
-                <h2 class="categoria-nombre">{{ $categoria->nombre }}</h2>
-            </div>
+    <div class="categoria-card">
+        <div class="tittle">
+            <a href="{{ route('catalogo', ['categoriaSeleccionada' => $categoria->id]) }}">
+                <img src="{{ $categoria->photo }}" alt="{{ $categoria->nombre }}" class="imagen-circular" loading="lazy">
+            </a>
+            
         </div>
+        <div class="tittle">
+            <h2 class="categoria-nombre">{{ $categoria->nombre }}</h2>
+        </div>
+    </div>
     @endforeach
+    
+
 </div>
 
 
