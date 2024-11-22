@@ -188,6 +188,46 @@
     transition: background-color 0.3s ease;
 }
 
+
+.catalog-container {
+      background-color: #f8f9fa;
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  
+    .catalog-title {
+      font-size: 2rem;
+      color: #333;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+    }
+  
+    .catalog-link {
+      display: inline-block;
+      font-size: 1.25rem;
+      background-color: #333;
+      color: #fff;
+      padding: 12px 25px;
+      text-decoration: none;
+      border-radius: 50px;
+      transition: background-color 0.3s, transform 0.3s ease;
+    }
+  
+    .catalog-link:hover {
+      background-color: #f8c8d8; /* Rosa claro */
+      color: #333; /* Texto negro */
+      transform: translateY(-5px); /* Efecto de elevación */
+    }
+  
+    /* Efecto de sombra al pasar el mouse */
+    .catalog-link:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
 /* Ajusta la distancia de los botones del borde */
 
 
@@ -231,48 +271,6 @@
     <h3 class="catalog-title">Visita nuestro catálogo</h3>
     <a href="/catalogo" class="btn catalog-link">Explorar catálogo</a>
   </div>
-  
-  <!-- Estilos CSS -->
-  <style>
-    .catalog-container {
-      background-color: #f8f9fa;
-      border-radius: 12px;
-      padding: 30px;
-      max-width: 400px;
-      margin: 0 auto;
-    }
-  
-    .catalog-title {
-      font-size: 2rem;
-      color: #333;
-      font-weight: bold;
-      margin-bottom: 1.5rem;
-      text-transform: uppercase;
-    }
-  
-    .catalog-link {
-      display: inline-block;
-      font-size: 1.25rem;
-      background-color: #333;
-      color: #fff;
-      padding: 12px 25px;
-      text-decoration: none;
-      border-radius: 50px;
-      transition: background-color 0.3s, transform 0.3s ease;
-    }
-  
-    .catalog-link:hover {
-      background-color: #f8c8d8; /* Rosa claro */
-      color: #333; /* Texto negro */
-      transform: translateY(-5px); /* Efecto de elevación */
-    }
-  
-    /* Efecto de sombra al pasar el mouse */
-    .catalog-link:active {
-      transform: translateY(0);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-  </style>
   
 
 <div class="text-center p-5 fs-4"><h1 class="titulo-grande ">ECHA UN VISTAZO A NUESTRAS CATEGORIAS</h1></div>

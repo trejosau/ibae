@@ -218,6 +218,9 @@
 
 <!-- Contenedor principal -->
 <div class="container my-5 padding">
+    <div class="mb-3">
+        <a href="/tienda" class="back-link">← Volver a la tienda</a>
+    </div>
     <div class="row">
         <div class="col-md-6">
             <!-- Imagen principal del producto -->

@@ -29,8 +29,7 @@ class CatalogoTienda extends Component
         $query = Productos::query();
 
         if ($this->busqueda) {
-            $query->where('nombre', 'like', '%' . $this->busqueda . '%')
-                ->orWhere('descripcion', 'like', '%' . $this->busqueda . '%');
+            $query->where('nombre', 'like', '%' . $this->busqueda . '%');
         }
 
         if ($this->categoriaSeleccionada) {
