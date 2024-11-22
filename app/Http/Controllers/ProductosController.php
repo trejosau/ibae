@@ -223,12 +223,13 @@ class ProductosController extends Controller
         $categorias = Categorias::all(); // Obtiene todas las categorías
         return view('catalogo', compact('productos', 'categorias')); // Pasa productos y categorías a la vista
     }
-    
+
 
 
     public function filtrar(Request $request)
     {
         $query = Productos::query();
+        $categorias = Categorias::all();
 
         // Filtrar por categoría
         if ($request->filled('id_categoria')) {
@@ -247,7 +248,7 @@ class ProductosController extends Controller
         $productos = $query->get();
 
         // Asegúrate de redirigir a la vista correcta
-        return view('catalogo', compact('productos'));
+        return view('catalogo', compact('productos', 'categorias'));
     }
 
 

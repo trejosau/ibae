@@ -11,9 +11,9 @@
 
 <body>
     @include('components.navbarTienda')
-    <div>
-        @livewire('catalogotienda')
-    </div>
+    <main class="main" style="margin-top: 92px;">
+        @livewire('catalogo-tienda')
+    </main>
     @include('components.footer')
     @livewireScripts
 </body>
