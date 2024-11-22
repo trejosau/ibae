@@ -13,21 +13,43 @@ class CatalogoTienda extends Component
 
     public $categorias;
     public $categoriaSeleccionada = null;
+    public $precioMin = null;
+    public $precioMax = null;
+    public $disponibilidad = null;
 
     public function mount()
     {
         $this->categorias = Categorias::all();
     }
+
     public function actualizarProductos()
     {
-        $this->resetPage(); // Reinicia la paginación al cambiar de categoría
+        $query = Productos::query();
 
-        // Filtra productos según la categoría seleccionada
+        // Filtro por categoría
         if ($this->categoriaSeleccionada) {
-            $this->productos = Productos::where('id_categoria', $this->categoriaSeleccionada)->paginate(10);
-        } else {
-            $this->productos = Productos::paginate(10);
+            $query->where('id_categoria', $this->categoriaSeleccionada);
         }
+
+        // Filtro por precio
+        if ($this->precioMin) {
+            $query->where('precio_venta', '>=', $this->precioMin);
+        }
+        if ($this->precioMax) {
+            $query->where('precio_venta', '<=', $this->precioMax);
+        }
+
+        // Filtro por disponibilidad (stock)
+        if ($this->disponibilidad !== null) {
+            if ($this->disponibilidad == 1) {
+                $query->where('stock', '>', 0);  // Productos con stock disponible
+            } elseif ($this->disponibilidad == 0) {
+                $query->where('stock', '=', 0);  // Productos agotados (sin stock)
+            }
+        }
+
+        // Paginar los productos
+        $this->productos = $query->paginate(16);
     }
 
     public function render()
@@ -37,6 +59,4 @@ class CatalogoTienda extends Component
 
         return view('livewire.catalogo-tienda', compact('productos', 'categorias'));
     }
-
 }
-

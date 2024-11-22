@@ -9,6 +9,25 @@
         </select>
     </div>
 
+    <!-- Filtros adicionales -->
+    <div class="row mb-4">
+        <!-- Filtro por precio -->
+        <div class="col-md-4">
+            <input wire:model="precioMin" wire:change="actualizarProductos" type="number" class="form-control" placeholder="Precio mínimo" min="0">
+        </div>
+        <div class="col-md-4">
+            <input wire:model="precioMax" wire:change="actualizarProductos" type="number" class="form-control" placeholder="Precio máximo" min="0">
+        </div>
+        <!-- Filtro por disponibilidad -->
+        <div class="col-md-4">
+            <select wire:model="disponibilidad" wire:change="actualizarProductos" class="form-select">
+                <option value="">Disponibilidad</option>
+                <option value="1">En stock</option>
+                <option value="0">Agotado</option>
+            </select>
+        </div>
+    </div>
+
     <!-- Listado de productos -->
     <div class="row g-4">
         @foreach($productos as $producto)
@@ -28,7 +47,7 @@
                         <p class="fw-bold mb-1 text-primary" style="font-size: 1.1rem;">${{ number_format($producto->precio_venta, 2) }}</p>
                         <p class="mb-3" style="font-size: 0.9rem;">En stock:
                             <span class="badge {{ $producto->stock > 0 ? 'bg-success' : 'bg-danger' }}">
-                                {{ $producto->stock }}
+                                {{ $producto->stock ?? 'Sin stock' }}
                             </span>
                         </p>
                         <div class="mt-auto">
