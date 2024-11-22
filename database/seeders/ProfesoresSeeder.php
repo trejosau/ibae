@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ProfesoresTableSeeder extends Seeder
+class ProfesoresSeeder extends Seeder
 {
     /**
      * Run the database seeds.

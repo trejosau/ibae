@@ -1,13 +1,6 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">Historial de Pagos</h2>
 
-    <!-- Detalles del Estudiante -->
-    <div class="mb-4">
-        <h4>Información del Estudiante</h4>
-        <p><strong>Matrícula:</strong> {{ $estudiante->matricula ?? 'N/A' }}</p>
-        <p><strong>Nombre:</strong> {{ $estudiante->persona->nombre ?? 'N/A' }}</p>
-    </div>
-
     <!-- Tabla de Pagos -->
     <table class="table table-striped table-responsive">
         <thead>

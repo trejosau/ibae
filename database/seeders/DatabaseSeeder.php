@@ -16,21 +16,20 @@ class DatabaseSeeder extends Seeder
         $this->call(RolesSeeder::class);
         $this->call(ProveedoresSeeder::class);
         $this->call(CategoriaSubcategoriaSeeder::class);
-        $this->call(ProductosSeeder::class);
         $this->call(Inscripciones::class);
         $this->call(Admin::class);
         $this->call([
-            UsersTableSeeder::class,
-            PersonasTableSeeder::class,
-            ProfesoresTableSeeder::class,
-            ModulosCursosTableSeeder::class,
-            ModulosTemasTableSeeder::class,
-            CursoAperturaTableSeeder::class,
+            UsersSeeder::class,
+            PersonasSeeder::class,
+            ProfesoresSeeder::class,
+            ModulosCursosSeeder::class,
+            ModulosTemasSeeder::class,
+            CursoAperturaSeeder::class,
             EstudiantesTableSeeder::class,
             EstudianteCursosTableSeeder::class,
-            CertificadosTableSeeder::class,
-            ColegiaturasTableSeeder::class,
-            ModelHasRolesTableSeeder::class,    
+            CertificadosSeeder::class,
+            ColegiaturasSeeder::class,
+            ModelHasRolesSeeder::class,    
         ]);
     }
 }

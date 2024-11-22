@@ -1,7 +1,7 @@
 <div class="container my-4">
     <h2 class="text-center mb-4">Gestión de Módulos y Temas</h2>
     <div class="text-center mb-4">
-        <a href="{{ route('ligarTemasModulo') }}" class="btn botoncin-ca mb-3" style="padding: 12px 24px; font-size: 1rem;">
+        <a href="{{ route('ligarTemasModulo') }}" class="btn botoncin-ca mb-3" style="padding: 12px 24px; font-size: 1rem; background-color: #6A4E77; color: #FFF; border-radius: 8px;">
             Plan de estudios
         </a>
     </div>
@@ -16,13 +16,17 @@
         </select>
     </form>
 
+   
     <div class="row">
         <!-- Módulos -->
         <div class="col-md-6">
-            <h3 class="titulito mb-4">Lista de Módulos</h3>
-            <button type="button" class="btn botoncin-ca mb-3 " data-bs-toggle="modal" data-bs-target="#modalAgregarModulo">
-                Agregar Módulo
-            </button>
+            <h3 class="titulito mb-4 text-center">Lista de Módulos</h3>
+            <div class="text-center mb-3">
+                <button type="button" class="btn botoncin-ca" data-bs-toggle="modal" data-bs-target="#modalAgregarModulo" style="padding: 10px 20px; background-color: #6A4E77; color: white; border: none; border-radius: 8px;" >
+                    Agregar Módulo
+                </button>
+            </div>
+            
             <div class="module-list">
                 @foreach ($modulos as $categoria => $moduloCollection)
                     @foreach ($moduloCollection as $modulo)
@@ -31,7 +35,7 @@
                                 <h5 class="card-title" style="color: #6A4E77;">{{ $modulo->nombre }}</h5>
                                 <p class="card-text" style="color: #8C7A71;"><strong>Categoría:</strong> {{ $modulo->categoria }}</p>
                                 <p class="card-text" style="color: #8C7A71;"><strong>Duración:</strong> {{ $modulo->duracion }} Horas</p>
-                                <div class="d-flex justify-content-end gap-2">
+                                <div class="d-flex  ">
                                     <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarModulo-{{ $modulo->id }}" style="background-color: #C9A3BE; color: white; border: none;">Modificar</button>
                                     <form action="{{ route('plataforma.eliminarModulo', $modulo->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este módulo?');">
                                         @csrf
@@ -46,12 +50,15 @@
             </div>
         </div>
 
+
         <!-- Temas -->
         <div class="col-md-6">
-            <h3 class="titulito mb-4">Lista de Temas</h3>
-            <button type="button" class="btn botoncin-ca mb-3" data-bs-toggle="modal" data-bs-target="#modalAgregarTema">
-                Agregar Tema
-            </button>
+            <h3 class="titulito mb-4 text-center">Lista de Temas</h3>
+            <div class="text-center mb-3">
+                <button type="button" class="btn botoncin-ca " data-bs-toggle="modal" data-bs-target="#modalAgregarTema" style="padding: 10px 20px; background-color: #6A4E77; color: white; border: none; border-radius: 8px;">
+                    Agregar Tema
+                </button>
+            </div>
             <div class="topic-list">
                 @foreach($temas as $tema)
                     <div class="card shadow-sm mb-3" style="border: none; background-color: #F9F7FB; border-radius: 10px;">
@@ -214,3 +221,34 @@
     </div>
 </div>
 @endforeach
+
+
+
+
+
+<script>
+    function ajustarAlturaCategorias() {
+        const categoryCards = document.querySelectorAll('.card-body');
+
+        if (categoryCards.length === 0) return;
+
+        let maxAltura = 0;
+
+        categoryCards.forEach(card => {
+            const alturaActual = card.offsetHeight;
+            if (alturaActual > maxAltura) {
+                maxAltura = alturaActual;
+            }
+        });
+
+        categoryCards.forEach(card => {
+            card.style.height = maxAltura + 'px';
+        });
+    }
+
+    // Reajusta cuando la página esté cargada
+    document.addEventListener('DOMContentLoaded', ajustarAlturaCategorias);
+
+    // Reajusta al redimensionar la ventana
+    window.addEventListener('resize', ajustarAlturaCategorias);
+</script>

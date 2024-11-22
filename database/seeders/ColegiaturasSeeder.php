@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-class ColegiaturasTableSeeder extends Seeder
+class ColegiaturasSeeder extends Seeder
 {
     /**
      * Run the database seeds.

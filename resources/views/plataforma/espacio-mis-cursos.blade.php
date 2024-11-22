@@ -30,9 +30,6 @@
                                data-bs-toggle="modal" data-bs-target="#modalModulos{{ $curso->id }}">
                                 <i class="fas fa-book" style="font-size: 1.5rem; color: #83A6CE; margin-top: 10px;"></i>
                             </a>
-                            <a href="" class="text-decoration-none" title="Exámenes">
-                                <i class="fas fa-pencil-alt" style="font-size: 1.5rem; color: #83A6CE; margin-top: 10px;"></i>
-                            </a>
                         </div>
                     </div>
 
