@@ -31,6 +31,7 @@ class DashboardController extends Controller
     {
         return redirect()->route('dashboard.inicio');
     }
+
     public function inicio(Request $request)
     {
 
@@ -139,6 +140,13 @@ class DashboardController extends Controller
 
         // Devolver la vista con los datos
         return view('dashboard.index', compact('productos', 'ventas', 'administradores'));
+    }
+
+    public function ventaDestroy($id)
+    {
+        $venta = Ventas::find($id);
+        $venta->delete();
+        return redirect()->route('dashboard.ventas')->with('success', 'Venta eliminada exitosamente.');
     }
 
     public function pedidos(Request $request)

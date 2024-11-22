@@ -1,6 +1,6 @@
 <div class="d-flex" style="height: 100%;">
     <!-- Sidebar -->
-    <div style="width: 300px; background-color: #f8f9fa; padding: 1rem; overflow-y: none; border-right: 1px solid #dee2e6;">
+    <div style="width: 300px; background-color: #f8f9fa; padding: 1rem; overflow-y: hidden; border-right: 1px solid #dee2e6;">
         <h5 class="mb-3">Resumen de Venta</h5>
         <div>
             <label for="comprador">Comprador:</label>
@@ -203,7 +203,14 @@
         <div class="row row-cols-1 row-cols-md-4 g-4">
             @foreach ($productos as $producto)
                 <div class="col">
-                    <div class="card h-100 shadow-sm">
+                    <div class="card h-100 shadow-sm position-relative">
+                        <!-- Red transparent overlay if out of stock -->
+                        @if($producto->estado === 'agotado')
+                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-danger bg-opacity-50 d-flex justify-content-center align-items-center">
+                                <span class="text-white fs-4">Agotado</span>
+                            </div>
+                        @endif
+
                         <img src="{{ $producto->main_photo }}" class="card-img-top" alt="{{ $producto->nombre }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ $producto->nombre }}</h5>
@@ -212,6 +219,7 @@
                             <p class="card-text text-muted">Precio Venta: ${{ number_format($producto->precio_venta, 2) }}</p>
 
                             <p class="card-text text-muted">Stock: {{ $producto->stock }}</p>
+                            @if($producto->estado === 'activo')
                             <div class="d-flex justify-content-between align-items-center">
                                 <input
                                     type="number"
@@ -228,6 +236,7 @@
                                     Agregar
                                 </button>
                             </div>
+                                @endif
                         </div>
                     </div>
                 </div>

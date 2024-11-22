@@ -1,3 +1,33 @@
+<style>
+    .agotado-banner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 0, 0, 0.7); /* Fondo rojo con transparencia */
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        transform: rotate(-45deg);
+        transform-origin: 100% 0;
+        text-align: center;
+        line-height: 100%;
+        padding-top: 40%;
+    }
+
+    .card-container {
+        position: relative;
+        display: inline-block;
+        margin: 10px;
+    }
+
+    .card-body {
+        position: relative;
+        z-index: 1;
+    }
+</style>
+
 @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert" style="z-index: 2000; position: relative;">
         {{ session('success') }}
