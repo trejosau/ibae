@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(Admin::class);
         $this->call([
             UsersSeeder::class,
+<<<<<<< HEAD
             PersonasSeeder::class,
             ProfesoresSeeder::class,
             ModulosCursosSeeder::class,
@@ -30,6 +31,8 @@ class DatabaseSeeder extends Seeder
             CertificadosSeeder::class,
             ColegiaturasSeeder::class,
             ModelHasRolesSeeder::class,    
+=======
+>>>>>>> 7eee1629749f51227a3744eb96429c3cd32f61aa
         ]);
     }
 }

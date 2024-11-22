@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Administrador;
+use App\Models\Auditoria;
 use App\Models\Categorias;
 use App\Models\DetalleCompra;
 use App\Models\Subcategoria;
@@ -419,7 +420,8 @@ class DashboardController extends Controller
 
     public function auditoria(Request $request)
     {
-        return view('dashboard.index');
+        $auditorias = Auditoria::where('operacion', '!=', 'INSERT')->orderBy('fecha', 'desc')->paginate(10);
+        return view('dashboard.index' , compact('auditorias'));
     }
 
     public function profile(Request $request)
