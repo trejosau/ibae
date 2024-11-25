@@ -9,7 +9,7 @@
             <!-- Barra de búsqueda centrada -->
             <div class="col-md-8">
                 <div class="d-flex justify-content-center">
-                    <div class="search-bar-container  rounded-pill">
+                    <div class="search-bar-container rounded-pill">
                         <input id="busqueda" 
                                wire:model.live="busqueda" 
                                type="text" 
@@ -29,6 +29,17 @@
                         <option value="">Todas las categorías</option>
                         @foreach($categorias as $categoria)
                             <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+        
+                <!-- Filtro de subcategorías -->
+                <div class="mb-4" x-data>
+                    <label for="subcategoriaFiltro" class="form-label">Subcategorías</label>
+                    <select id="subcategoriaFiltro" wire:model.live="subcategoriaSeleccionada" class="form-select shadow">
+                        <option value="">Todas las subcategorías</option>
+                        @foreach($subcategorias as $subcategoria)
+                            <option value="{{ $subcategoria->id }}">{{ $subcategoria->nombre }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -103,9 +114,11 @@
                             </div>
                         </div>
                     @empty
+                        <!-- Mensaje mejorado para filtros vacíos -->
                         <div class="col-12">
                             <div class="alert alert-warning text-center">
-                                No se encontraron productos para los filtros seleccionados.
+                                No se encontraron productos para los filtros seleccionados. <br>
+                                Intenta con diferentes opciones.
                             </div>
                         </div>
                     @endforelse

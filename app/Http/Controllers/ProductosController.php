@@ -226,31 +226,7 @@ class ProductosController extends Controller
 
 
 
-    public function filtrar(Request $request)
-    {
-        $query = Productos::query();
-        $categorias = Categorias::all();
-
-        // Filtrar por categoría
-        if ($request->filled('id_categoria')) {
-            $query->where('id_categoria', $request->id_categoria);
-        }
-
-        // Filtrar por rango de precios
-        if ($request->filled('precio_min')) {
-            $query->where('precio_venta', '>=', $request->precio_min);
-        }
-
-        if ($request->filled('precio_max')) {
-            $query->where('precio_venta', '<=', $request->precio_max);
-        }
-
-        $productos = $query->get();
-
-        // Asegúrate de redirigir a la vista correcta
-        return view('catalogo', compact('productos', 'categorias'));
-    }
-
+   
 
 
     public function mostrarDetalle($id)
@@ -391,15 +367,6 @@ public function eliminarDelCarrito($id)
 
 
 
-public function buscar(Request $request)
-    {
-        $query = $request->input('query');
-        $productos = Productos::where('nombre', 'LIKE', '%' . $query . '%')
-            ->orWhere('descripcion', 'LIKE', '%' . $query . '%')
-            ->paginate(16);
-
-        return view('catalogo', compact('productos', 'query'));
-    }
 
 
 public function checkout()
