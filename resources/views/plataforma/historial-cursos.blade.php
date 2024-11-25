@@ -25,8 +25,10 @@
             </a>
         @endif
     </div>
+    
     <div class="row mt-4">
         @foreach ($cursosApertura as $apertura)
+            <!-- Mostrar solo a administradores o cursos activos para profesores -->
             @if(auth()->user()->hasRole('admin') || $apertura->estado == 'en curso')
                 <div class="col-12 mb-4">
                     <div class="card shadow-sm curso-card" style="font-size: 0.9rem; border: 1px solid #D32F2F; overflow: hidden; position: relative;">
@@ -47,16 +49,22 @@
                                     {{ ucfirst($apertura->estado) }}
                                 </span>
                             </p>
-                            @if($apertura->estado == 'programado' && auth()->user()->hasRole('admin'))
+                            
+                            <!-- Botones según el rol y el estado -->
+                            @if(auth()->user()->hasRole('admin') && $apertura->estado == 'programado')
+                                <!-- Botón para inscribir (solo para admins) -->
                                 <button class="btn btn-danger btn-sm" style="position: absolute; top: 10px; right: 10px;" data-bs-toggle="modal" data-bs-target="#inscribirAlumnosModal-{{ $apertura->id }}">
                                     Inscribir
                                 </button>
-                            @elseif($apertura->estado == 'en curso')
+                            @elseif(auth()->user()->hasRole('profesor') && $apertura->estado == 'en curso')
+                                <!-- Botón para asistencia/colegiaturas (solo para profesores en cursos activos) -->
                                 <a href="{{ route('plataforma.registrarAsistencia', $apertura->id) }}" class="btn btn-info btn-sm registrar-btn" style="position: absolute; top: 10px; right: 10px; z-index: 15;" target="_blank">
                                     Asistencia/Colegiaturas
                                 </a>
                             @endif
                         </div>
+                        
+                        <!-- Detalles del curso (visible para todos los roles) -->
                         <div class="card-footer" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#dropdown-{{ $apertura->id }}">
                             <small class="text-muted">Ver detalles del curso</small>
                         </div>
@@ -86,8 +94,6 @@
         @endforeach
     </div>
     
-    
-
     <!-- Modals -->
     @foreach ($cursosApertura as $apertura)
         @if ($apertura->estado == 'programado')

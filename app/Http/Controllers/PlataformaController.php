@@ -204,6 +204,8 @@ class PlataformaController extends Controller
 
         return redirect()->route('plataforma.mis-cursos')->with('success', 'Estado del curso actualizado con éxito.');
     }
+
+    
     public function historialCursos()
 {
     // Obtener el usuario autenticado
@@ -262,7 +264,7 @@ class PlataformaController extends Controller
         // Si no es un profesor, obtener todos los cursos aperturados
         $cursosApertura = CursoApertura::with(['moduloCursos.modulo.temas', 'curso'])->get();
     }
-
+ 
     // Obtener todos los cursos activos
     $todosCursos = Cursos::where('estado', 'activo')->get();
 

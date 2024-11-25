@@ -20,6 +20,7 @@ class UsersSeeder extends Seeder
      * @return void
      */
     public function run()
+    
     {
         $nombres = [
             'Carlos', 'María', 'Luis', 'Ana', 'Roberto', 'José', 'Sofía', 'Juan', 'Luis Ángel', 'Karla',
@@ -116,18 +117,45 @@ class UsersSeeder extends Seeder
             'La Esquina del Look',
         ];
 
+        $cursos = [
+            'Estilismo',
+            'Barbería',
+            'Maquillaje',
+            'Uñas',
+            'Coloración de Cabello'
+        ];
 
+        $descripciones = [
+            'Curso básico para aprender las bases del estilismo.',
+            'Curso avanzado enfocado en técnicas modernas de barbería.',
+            'Aprende técnicas de aplicación y diseño de uñas.',
+            'Curso de maquillaje para eventos sociales y profesionales.',
+            'Curso especializado en técnicas avanzadas de coloración.'
+        ];
+
+        for ($i = 1; $i <= 5; $i++) {
+            $inscripcion = DB::table('inscripciones')->insertGetId([
+                'nombre' => $cursos[array_rand($cursos)],  // Selección aleatoria del nombre
+                'precio' => rand(3000, 7000) + rand(0, 99) / 100,  // Precio aleatorio entre 3000 y 7000
+                'descripcion' => $descripciones[array_rand($descripciones)],  // Descripción aleatoria
+                'material_incluido' => rand(0, 1),  // Aleatorio entre 0 y 1 para material incluido
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            $inscripciones[] = $inscripcion; // Almacenar el ID de la inscripción creada
+        }
 
         $photo = 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/profiles/default_profile.jpg';
+        
+        $estudiantesMatriculas = []; // Array para almacenar matrículas
 
         for ($i = 1; $i <= 20; $i++) {
             $username = $usernames[array_rand($usernames)];
             $existeUsuario = DB::table('users')->where('username', $username)->count();
-            if ($existeUsuario > 0)
-            {
+            if ($existeUsuario > 0) {
                 $username = $username . rand(1, 9999);
             }
-             $usuarioCreado = User::create([
+            $usuarioCreado = User::create([
                 'username' => $username,
                 'email' =>  $username . '@example.com',
                 'password' => bcrypt('1234'),
@@ -135,7 +163,7 @@ class UsersSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-
+        
             $nombre = $nombres[array_rand($nombres)];
             $ap_paterno = $ap_paternos[array_rand($ap_paternos)];
             $ap_materno = $ap_maternos[array_rand($ap_maternos)];
@@ -150,14 +178,18 @@ class UsersSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-
+        
             $prefix = date('y') . date('m');
-            $matricula = $prefix . $usuarioCreado->id;
+            $matricula = $prefix . $usuarioCreado->id; // Matricula única
             $gradoEstudio = $grados[array_rand($grados)];
+        
+            // Asignar inscripción aleatoria
+            $inscripcionAleatoria = $inscripciones[array_rand($inscripciones)];
+        
             $estudianteCreado = Estudiante::create([
-               'matricula' => $matricula,
+                'matricula' => $matricula,
                 'id_persona' => $personaCreada->id,
-                'id_inscripcion' => rand(1, 6),
+                'id_inscripcion' => $inscripcionAleatoria,
                 'fecha_inscripcion' => now(),
                 'grado_estudio' => $gradoEstudio,
                 'zipcode' => $zipcode,
@@ -169,7 +201,11 @@ class UsersSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+        
+            // Agregar la matrícula al array global
+            $estudiantesMatriculas[] = $estudianteCreado->matricula;
         }
+        
 
         for ($i = 1; $i <= 20; $i++) {
             $username = $usernames[array_rand($usernames)];

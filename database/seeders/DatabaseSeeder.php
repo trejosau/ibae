@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use PhpParser\Node\Expr\AssignOp\Mod;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,23 +18,9 @@ class DatabaseSeeder extends Seeder
         $this->call(RolesSeeder::class);
         $this->call(ProveedoresSeeder::class);
         $this->call(CategoriaSubcategoriaSeeder::class);
-        $this->call(Inscripciones::class);
+        $this->call(UsersSeeder::class);
+        $this->call(AcademiaSeeder::class);
         $this->call(Admin::class);
-        $this->call([
-            UsersSeeder::class,
-<<<<<<< HEAD
-            PersonasSeeder::class,
-            ProfesoresSeeder::class,
-            ModulosCursosSeeder::class,
-            ModulosTemasSeeder::class,
-            CursoAperturaSeeder::class,
-            EstudiantesTableSeeder::class,
-            EstudianteCursosTableSeeder::class,
-            CertificadosSeeder::class,
-            ColegiaturasSeeder::class,
-            ModelHasRolesSeeder::class,    
-=======
->>>>>>> 7eee1629749f51227a3744eb96429c3cd32f61aa
-        ]);
+
     }
 }
