@@ -20,7 +20,7 @@ class UsersSeeder extends Seeder
      * @return void
      */
     public function run()
-    
+
     {
         $nombres = [
             'Carlos', 'María', 'Luis', 'Ana', 'Roberto', 'José', 'Sofía', 'Juan', 'Luis Ángel', 'Karla',
@@ -146,7 +146,7 @@ class UsersSeeder extends Seeder
         }
 
         $photo = 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/profiles/default_profile.jpg';
-        
+
         $estudiantesMatriculas = []; // Array para almacenar matrículas
 
         for ($i = 1; $i <= 20; $i++) {
@@ -163,7 +163,7 @@ class UsersSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-        
+
             $nombre = $nombres[array_rand($nombres)];
             $ap_paterno = $ap_paternos[array_rand($ap_paternos)];
             $ap_materno = $ap_maternos[array_rand($ap_maternos)];
@@ -178,14 +178,14 @@ class UsersSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-        
+
             $prefix = date('y') . date('m');
             $matricula = $prefix . $usuarioCreado->id; // Matricula única
             $gradoEstudio = $grados[array_rand($grados)];
-        
+
             // Asignar inscripción aleatoria
             $inscripcionAleatoria = $inscripciones[array_rand($inscripciones)];
-        
+
             $estudianteCreado = Estudiante::create([
                 'matricula' => $matricula,
                 'id_persona' => $personaCreada->id,
@@ -201,11 +201,11 @@ class UsersSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-        
+
             // Agregar la matrícula al array global
             $estudiantesMatriculas[] = $estudianteCreado->matricula;
         }
-        
+
 
         for ($i = 1; $i <= 20; $i++) {
             $username = $usernames[array_rand($usernames)];
@@ -243,8 +243,8 @@ class UsersSeeder extends Seeder
             Profesor::create([
                 'especialidad' => $randomSpecialidad,
                 'fecha_contratacion' => now(),
-                'RFC' => rand(100, 999),
-                'CURP' => strval(rand(100, 999)),
+                'RFC' => rand(100, 999999999),
+                'CURP' => strval(rand(100, 99999999)),
                 'estado' => 'activo',
                 'id_persona' => $personaCreada->id,
                 'zipcode' => $zipcode,
