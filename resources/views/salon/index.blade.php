@@ -11,11 +11,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/css/lightbox.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
+        
         body {
             margin: 0;
             background-color: #ccf3dc;
             overflow-x: hidden;
         }
+        .btn.nav-icons {
+        background-color: #cd678b; /* Color de fondo */
+        color: white; /* Color del texto */
+        padding: 10px 20px; /* Espaciado alrededor del texto */
+        border-radius: 5px; /* Bordes redondeados */
+        text-decoration: none; /* Eliminar subrayado */
+        font-size: 16px; /* Tamaño de la fuente */
+        font-weight: bold; /* Negrita */
+        transition: background-color 0.3s, transform 0.2s; /* Transición suave */
+    }
+
+    .btn.nav-icons:hover {
+        background-color: #a75b74; /* Color de fondo al pasar el ratón */
+        transform: scale(1.05); /* Efecto de agrandamiento */
+    }
+
+    .btn.nav-icons:active {
+        background-color: #934e66; /* Color de fondo al hacer clic */
+    }
 
         .header {
             background-color: transparent;
