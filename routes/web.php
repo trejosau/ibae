@@ -212,7 +212,11 @@ Route::post('/producto/{id}/agregar-al-carrito', [ProductosController::class, 'a
 Route::delete('/carrito/{id}', [ProductosController::class, 'eliminarDelCarrito'])->name('carrito.eliminar');
 Route::get('/categorias', [ProductosController::class, 'obtenerCategorias']);
 Route::get('/catalogo', [ProductosController::class, 'catalogo'])->name('catalogo');
-Route::get('/catalogo-tienda', CatalogoTienda::class)->name('catalogo-tienda');
+Route::get('/catalogo-tienda/{categoria}', CatalogoTienda::class)->name('catalogo-tienda');
+
+
+
+
 
 Route::get('/producto/{id}', [ProductosController::class, 'mostrarDetalle'])->name('producto.detalle');
 Route::get('/tienda', [ProductosController::class, 'mostrar'])->name('tienda.mostrar');

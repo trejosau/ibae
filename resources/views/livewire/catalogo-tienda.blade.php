@@ -1,5 +1,6 @@
 <div>
     <div class="container py-5">
+        
         <!-- Enlace Volver a la tienda -->
         <div class="mb-3">
             <a href="/tienda" class="back-link">← Volver a la tienda</a>

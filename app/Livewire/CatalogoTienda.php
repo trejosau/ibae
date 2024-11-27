@@ -22,12 +22,16 @@ class CatalogoTienda extends Component
     public $disponibilidad = null;
     public $ordenarPor = null;
     public $busqueda = null;
+    
 
-    public function mount()
+    public function mount($categoria = null)
     {
-        // Cargar todas las categorías al inicio
-        $this->categorias = Categorias::all();
+        // Si se pasa una categoría, obtenla
+        if ($categoria) {
+            $this->categoriaSeleccionada = Categorias::find($categoria);
+        }
     }
+    
 
     public function updatedCategoriaSeleccionada()
     {
