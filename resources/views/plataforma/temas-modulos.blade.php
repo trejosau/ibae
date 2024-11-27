@@ -63,6 +63,10 @@
             </ul>
         </div>
     @endif
+
+    <a href="{{ route('plataforma.lista-modulos') }}" class="btn btn-primary btn-sm mb-3 btn-guardar" >
+        <i class="fa fa-arrow-left" style="margin-right: 10px"></i> Regresar 
+    </a>
     <!-- Botón para abrir el modal -->
     <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#asignarTemasModal">
         Asignar temas a módulos
@@ -229,7 +233,5 @@
         </div>
     </div>
 </div>
-
-
 </body>
 </html>
