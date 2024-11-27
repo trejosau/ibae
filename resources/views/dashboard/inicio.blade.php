@@ -1,5 +1,8 @@
 <div class="container">
     <h2 class="text-center mb-4">Resumen General</h2>
+    <div class="col-12">
+        <div id="chart"style="width: 100%; max-width: 600px; height: 400px;"></div>
+    </div>
     <!-- Accesos Directos -->
     <div class="row mb-4 d-flex justify-content-center">
         <div class="col-3">

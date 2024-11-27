@@ -301,29 +301,32 @@
 <!-- Div contenedor -->
 <div class="catalog-container text-center p-4">
     <h3 class="catalog-title">Visita nuestro catálogo</h3>
-    <a href="/catalogo" class="btn catalog-link">Explorar catálogo</a>
+    <a href="{{route('catalogo')}}" class="btn catalog-link">Explorar catálogo</a>
   </div>
   
 
-<div class="text-center p-5 fs-4"><h1 class="titulo-grande ">ECHA UN VISTAZO A NUESTRAS CATEGORIAS</h1></div>
+  <div class="text-center p-5 fs-4">
+    <h1 class="titulo-grande">ECHA UN VISTAZO A NUESTRAS CATEGORÍAS</h1>
+</div>
 
 <div class="contenedor pb-4">
     @foreach ($categorias as $categoria)
-    <div class="categoria-card">
-        <div class="tittle">
-            <a href="{{ route('catalogo', ['categoriaSeleccionada' => $categoria->id]) }}">
-                <img src="{{ $categoria->photo }}" alt="{{ $categoria->nombre }}" class="imagen-circular" loading="lazy">
-            </a>
-            
-        </div>
-        <div class="tittle">
-            <h2 class="categoria-nombre">{{ $categoria->nombre }}</h2>
-        </div>
-    </div>
-    @endforeach
-    
+        <div class="categoria-card">
+            <div class="tittle">
+                <!-- Redirige a la misma vista, pasando el ID de la categoría -->
+                <a href="{{ route('catalogo-tienda', ['categoria' => $categoria->id]) }}">
+                    {{ $categoria->nombre }}
+                </a>
 
+            </div>
+            <div class="tittle">
+                <h2 class="categoria-nombre">{{ $categoria->nombre }}</h2>
+            </div>
+        </div>
+    @endforeach
 </div>
+
+
 
 
 

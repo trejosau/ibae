@@ -40,18 +40,13 @@
             <img src="{{asset('images/logo-salon.jpg')}}" alt="Rosy Saucedo Salon" class="img-fluid w-100 h-100 object-fit-cover">
         </div>
         <div class="d-flex">
-            <a href="#" class="btn btn-outline-primary me-2 d-flex align-items-center">
+            <a href="/salon" class="btn btn-outline-primary me-2 d-flex align-items-center">
                 <i class="fa fa-chevron-circle-left me-2"></i>
                 Volver
             </a>
         </div>
 
-        <div>
-            <a href="#" class="btn btn-outline-primary mr-2">Iniciar sesión</a>
-            <a href="https://www.facebook.com" target="_blank" class="facebook-icon">
-                <i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i>
-            </a>
-        </div>
+
     </div>
 </header>
 

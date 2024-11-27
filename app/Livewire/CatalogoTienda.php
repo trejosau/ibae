@@ -4,6 +4,8 @@ namespace App\Livewire;
 
 use App\Models\Categorias;
 use App\Models\Productos;
+use App\Models\ProductoSubcategoria;
+use App\Models\Subcategoria;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,16 +14,41 @@ class CatalogoTienda extends Component
     use WithPagination;
 
     public $categorias;
+    public $subcategorias = [];
     public $categoriaSeleccionada = null;
+    public $subcategoriaSeleccionada = null;
     public $precioMin = null;
     public $precioMax = null;
     public $disponibilidad = null;
     public $ordenarPor = null;
-    public $busqueda = null; // Propiedad para búsqueda
+    public $busqueda = null;
+    
 
-    public function mount()
+    public function mount($categoria = null)
     {
-        $this->categorias = Categorias::all();
+        // Si se pasa una categoría, obtenla
+        if ($categoria) {
+            $this->categoriaSeleccionada = Categorias::find($categoria);
+        }
+    }
+    
+
+    public function updatedCategoriaSeleccionada()
+    {
+        // Actualizar subcategorías y limpiar selección de subcategoría al cambiar la categoría
+        $this->subcategorias = Subcategoria::where('categoria_id', $this->categoriaSeleccionada)->get();
+        $this->subcategoriaSeleccionada = null; // Limpiar selección de subcategoría
+    }
+
+    public function updatedSubcategoriaSeleccionada()
+    {
+        // Validar si la subcategoría pertenece a la categoría seleccionada
+        if ($this->subcategoriaSeleccionada) {
+            $subcategoria = Subcategoria::find($this->subcategoriaSeleccionada);
+            if (!$subcategoria || $subcategoria->categoria_id != $this->categoriaSeleccionada) {
+                $this->subcategoriaSeleccionada = null; // Limpiar si no pertenece
+            }
+        }
     }
 
     public function actualizarProductos()
@@ -34,6 +61,13 @@ class CatalogoTienda extends Component
 
         if ($this->categoriaSeleccionada) {
             $query->where('id_categoria', $this->categoriaSeleccionada);
+        }
+
+        if ($this->subcategoriaSeleccionada) {
+            // Filtrar productos relacionados con la subcategoría seleccionada
+            $query->whereHas('productoSubcategorias', function ($q) {
+                $q->where('id_subcategoria', $this->subcategoriaSeleccionada);
+            });
         }
 
         if ($this->precioMin) {
@@ -68,15 +102,13 @@ class CatalogoTienda extends Component
         return $query->paginate(16);
     }
 
-    public function agregarAlCarrito($productoId)
-    {
-        // Implementa la lógica para agregar al carrito.
-        session()->flash('message', 'Producto agregado al carrito.');
-    }
-
     public function render()
     {
         $productos = $this->actualizarProductos();
-        return view('livewire.catalogo-tienda', ['productos' => $productos, 'categorias' => $this->categorias]);
+        return view('livewire.catalogo-tienda', [
+            'productos' => $productos,
+            'categorias' => $this->categorias,
+            'subcategorias' => $this->subcategorias,
+        ]);
     }
 }

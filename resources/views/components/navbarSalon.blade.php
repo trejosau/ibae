@@ -26,10 +26,28 @@
                         <a class="nav-link" href="#">Agenda</a>
                     </li>
                 </ul>
-                <div class="icons">
-                    <a href="#" class="notification-icon nav-link"><i class="fas fa-bell"></i></a>
-                    <a href="#" class="facebook-icon nav-link"><i class="fab fa-facebook-f"></i></a>
+                <div class="dropdown ms-3" style="display: flex; align-items: center;">
+                    @if(auth()->check())
+                        <a href="#" id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: flex; align-items: center;">
+                            <img src="{{ auth()->user()->profile_photo_url }}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%;">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Mi perfil</a></li>
+                            <li class="dropdown-divider"></li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button class="dropdown-item" type="submit">Cerrar sesión</button>
+                                </form>
+                            </li>
+                            <li><a class="dropdown-item" href="/pedidos">Mis Citas</a></li>
+                        </ul>
+                    @else
+                        <a href="{{ route('login') }}" class="btn nav-icons">Iniciar sesión</a>
+                    @endif
                 </div>
+            </div>
+    
             </div>
         </div>
     </nav>
