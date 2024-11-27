@@ -305,27 +305,6 @@
   </div>
   
 
-  <div class="text-center p-5 fs-4">
-    <h1 class="titulo-grande">ECHA UN VISTAZO A NUESTRAS CATEGORÍAS</h1>
-</div>
-
-<div class="contenedor pb-4">
-    @foreach ($categorias as $categoria)
-        <div class="categoria-card">
-            <div class="tittle">
-                <!-- Redirige a la misma vista, pasando el ID de la categoría -->
-                <a href="{{ route('catalogo-tienda', ['categoria' => $categoria->id]) }}">
-                    {{ $categoria->nombre }}
-                </a>
-
-            </div>
-            <div class="tittle">
-                <h2 class="categoria-nombre">{{ $categoria->nombre }}</h2>
-            </div>
-        </div>
-    @endforeach
-</div>
-
 
 
 
