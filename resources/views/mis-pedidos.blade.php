@@ -151,16 +151,7 @@
     </style>
 </head>
 <body>
-<!-- Navbar -->
-<nav class="navbar">
-    <div class="container">
-        <a href="/" class="navbar-brand">IBA&E</a>
-        <div>
-            <a href="/">Inicio</a>
-            <a href="{{ route('tienda.mostrar') }}">Tienda</a>
-        </div>
-    </div>
-</nav>
+    @include('components.navbarTienda')
 
 <!-- Contenido principal -->
 <div class="container">
@@ -201,9 +192,7 @@
     @endforelse
 </div>
 
-<!-- Footer -->
-<footer>
-    © 2024 IBA&E
-</footer>
+
+@include('components.footer')
 </body>
 </html>

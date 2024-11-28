@@ -134,24 +134,6 @@
          @endif
             <!-- Sección exclusiva para Estudiantes -->
         </ul>
-
-        <!-- Footer del sidebar -->
-        <li class="sidebar-footer">
-            <div class="theme-switch">
-                <label class="switch">
-                    <input type="checkbox" id="theme-toggle">
-                    <span class="slider"></span>
-                </label>
-                <span class="theme-label">Dark Mode</span>
-            </div>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <a class="sidebar-link" type="submit">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span>Logout</span>
-                </a>
-            </form>
-        </li>
     </aside>
 </div>
 

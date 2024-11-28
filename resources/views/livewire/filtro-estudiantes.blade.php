@@ -92,8 +92,8 @@
         @endforelse
     </div>
 
-    <!-- Controles de paginación -->
-<div class="d-flex justify-content-center mt-4">
+  <!-- Paginación con diseño personalizado -->
+  <div class="d-flex justify-content-center mt-4">
     <ul class="pagination" style="background-color: #f5f5f5; border-radius: 10px; padding: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
         @if ($estudiantes->onFirstPage())
             <li class="page-item disabled" style="margin: 0 5px;">
@@ -101,10 +101,10 @@
             </li>
         @else
             <li class="page-item" style="margin: 0 5px;">
-                <a class="page-link" href="{{ $estudiantes->previousPageUrl() }}" rel="prev"
-                   style="background-color: #83A6CE; color: #FFFFFF; border: none; border-radius: 5px; transition: all 0.3s;"
-                   onmouseover="this.style.backgroundColor='#26415E';"
-                   onmouseout="this.style.backgroundColor='#83A6CE';">&laquo;</a>
+                <button wire:click="previousPage" class="page-link"
+                    style="background-color: #83A6CE; color: #FFFFFF; border: none; border-radius: 5px; transition: all 0.3s;"
+                    onmouseover="this.style.backgroundColor='#26415E';"
+                    onmouseout="this.style.backgroundColor='#83A6CE';">&laquo;</button>
             </li>
         @endif
 
@@ -115,20 +115,20 @@
                 </li>
             @else
                 <li class="page-item" style="margin: 0 5px;">
-                    <a class="page-link" href="{{ $url }}"
-                       style="background-color: #83A6CE; color: #FFFFFF; border: none; border-radius: 5px; transition: all 0.3s;"
-                       onmouseover="this.style.backgroundColor='#26415E';"
-                       onmouseout="this.style.backgroundColor='#83A6CE';">{{ $page }}</a>
+                    <button wire:click="gotoPage({{ $page }})" class="page-link"
+                        style="background-color: #83A6CE; color: #FFFFFF; border: none; border-radius: 5px; transition: all 0.3s;"
+                        onmouseover="this.style.backgroundColor='#26415E';"
+                        onmouseout="this.style.backgroundColor='#83A6CE';">{{ $page }}</button>
                 </li>
             @endif
         @endforeach
 
         @if ($estudiantes->hasMorePages())
             <li class="page-item" style="margin: 0 5px;">
-                <a class="page-link" href="{{ $estudiantes->nextPageUrl() }}" rel="next"
-                   style="background-color: #83A6CE; color: #FFFFFF; border: none; border-radius: 5px; transition: all 0.3s;"
-                   onmouseover="this.style.backgroundColor='#26415E';"
-                   onmouseout="this.style.backgroundColor='#83A6CE';">&raquo;</a>
+                <button wire:click="nextPage" class="page-link"
+                    style="background-color: #83A6CE; color: #FFFFFF; border: none; border-radius: 5px; transition: all 0.3s;"
+                    onmouseover="this.style.backgroundColor='#26415E';"
+                    onmouseout="this.style.backgroundColor='#83A6CE';">&raquo;</button>
             </li>
         @else
             <li class="page-item disabled" style="margin: 0 5px;">
@@ -137,6 +137,7 @@
         @endif
     </ul>
 </div>
+    
 </div>
 
 <script>

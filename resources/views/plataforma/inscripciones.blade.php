@@ -17,11 +17,12 @@
                     <p class="card-text" style="color: #8C7A71;"><strong>Descripción:</strong> {{ $inscripcion->descripcion }}</p>
                     <div class="d-flex justify-content-end gap-2">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarInscripcion-{{ $inscripcion->id }}" style="background-color: #C9A3BE; color: white; border: none;">Modificar</button>
-                        <form method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta inscripción?');">
+                        <form method="POST" action="{{ route('inscripciones.destroy', $inscripcion->id) }}" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta inscripción?');"> 
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm" style="background-color: #D2968E; border: none;">Eliminar</button>
                         </form>
+                        
                     </div>
                 </div>
             </div>
@@ -71,8 +72,6 @@
     </div>
 </div>
 
-
-<!-- Modal para Editar Inscripción -->
 <!-- Modal para Editar Inscripción -->
 @foreach ($inscripciones as $inscripcion)
 <div class="modal fade" id="modalEditarInscripcion-{{ $inscripcion->id }}" tabindex="-1" aria-labelledby="modalEditarInscripcionLabel-{{ $inscripcion->id }}" aria-hidden="true">

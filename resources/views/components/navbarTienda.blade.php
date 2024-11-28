@@ -1,7 +1,33 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <style>
-    /* Navbar */
+        /* Paleta de colores */
+        :root {
+            --color-fondo: #F8F9FA; /* Gris claro para fondo principal */
+            --color-primario: #0D1E4C; /* Azul oscuro */
+            --color-secundario: #83A6CE; /* Azul claro */
+            --color-acento: #C48CB3; /* Rosa oscuro */
+            --color-texto: #26415E; /* Azul medio */
+            --color-footer: #0B1B32; /* Azul noche */
+        }
+        .navbar {
+            background: linear-gradient(90deg, var(--color-primario), var(--color-acento));
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 15px;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
 .logo {
     width: auto;
     height: 60px;
@@ -311,7 +337,6 @@
 
         <div style="display: flex; align-items: center; margin-right: 24px">
             <!-- Enlace al catálogo -->
-            <a href="/catalogo" class="btn " style="margin-left: 20px; text-decoration: none; color: inherit;">Catálogo</a>
 
             <!-- Enlace a mis pedidos -->
             @if(auth()->check())

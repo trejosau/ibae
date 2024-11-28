@@ -122,6 +122,32 @@ class PlataformaController extends Controller
         // Pasar los módulos y los temas a la vista
         return view('plataforma.temas-modulos', compact('modulos', 'todosLosTemas', 'temasPorCategoria', 'modulosSinTemas'));
     }
+    public function eliminarTemaDeModulo(Request $request)
+{
+    $validado = $request->validate([
+        'modulo_id' => 'required|exists:modulos,id',
+        'tema_id' => 'required|exists:temas,id',
+    ]);
+
+    // Eliminar la relación en la tabla pivot `modulo_temas`
+    $eliminado = DB::table('modulo_temas')
+        ->where('id_modulo', $validado['modulo_id'])
+        ->where('id_tema', $validado['tema_id'])
+        ->delete();
+
+    if ($eliminado) {
+        return response()->json([
+            'exito' => true,
+            'mensaje' => 'El tema se eliminó del módulo exitosamente.',
+        ]);
+    }
+
+    return response()->json([
+        'exito' => false,
+        'mensaje' => 'No se pudo eliminar el tema del módulo.',
+    ], 500);
+}
+
 
 
     public function misCursos()
@@ -165,7 +191,7 @@ class PlataformaController extends Controller
             'id_certificacion' => $request->id_certificacion, // Guarda el ID del certificado
         ]);
 
-        return redirect()->route('plataforma.mis-cursos')->with('success', 'Curso creado con éxito.');
+        return redirect()->route('plataforma.mis-cursos');
     }
 
     public function storeCertificado(Request $request)
@@ -183,7 +209,7 @@ class PlataformaController extends Controller
 
         Certificados::create($request->all());
 
-        return response()->json(['success' => 'Certificado creado con éxito.']);
+        return redirect()->route('plataforma.mis-cursos');
     }
 
 
@@ -202,97 +228,98 @@ class PlataformaController extends Controller
     }
 
 
-  public function historialCursos(Request $request)
-{
-    $user = auth()->user();
-    $esAdmin = $user->hasRole('admin');
-    $esProfesor = $user->hasRole('profesor');
-
-    $estadoFiltro = $request->input('estado');
-    $cursosApertura = collect(); // Valor por defecto
-
-    // Cursos por rol
-    if ($esAdmin) {
-        $cursosApertura = CursoApertura::with(['moduloCursos.modulo.temas', 'curso']);
-    } elseif ($esProfesor) {
-        $profesor = Profesor::whereHas('persona', function ($query) use ($user) {
-            $query->where('usuario', $user->id);
-        })->first();
-
-        if ($profesor) {
-            $cursosApertura = CursoApertura::whereHas('moduloCursos', function ($query) use ($profesor) {
-                $query->where('id_profesor', $profesor->id);
-            })->with(['moduloCursos.modulo.temas', 'curso']);
+    public function historialCursos(Request $request)
+    {
+        $user = auth()->user();
+        $esAdmin = $user->hasRole('admin');
+        $esProfesor = $user->hasRole('profesor');
+    
+        $estadoFiltro = $request->input('estado');
+        $cursosApertura = collect(); // Valor por defecto
+    
+        // Cursos por rol
+        if ($esAdmin) {
+            $cursosApertura = CursoApertura::with(['moduloCursos.modulo.temas', 'curso']);
+        } elseif ($esProfesor) {
+            $profesor = Profesor::whereHas('persona', function ($query) use ($user) {
+                $query->where('usuario', $user->id);
+            })->first();
+    
+            if ($profesor) {
+                $cursosApertura = CursoApertura::whereHas('moduloCursos', function ($query) use ($profesor) {
+                    $query->where('id_profesor', $profesor->id);
+                })->with(['moduloCursos.modulo.temas', 'curso']);
+            }
         }
-    }
-
-    // Aplicar filtro de estado si se proporciona
-    if (!empty($estadoFiltro) && $cursosApertura instanceof \Illuminate\Database\Eloquent\Builder) {
-        $cursosApertura->where('estado', $estadoFiltro);
-    }
-
-    // Paginación de cursos apertura con filtro
-    $cursosAperturaPaginados = $cursosApertura instanceof \Illuminate\Database\Eloquent\Builder
-        ? $cursosApertura->paginate(3)->appends(['estado' => $estadoFiltro])
-        : collect();
-
-    // Otros datos necesarios
-    $todosCursos = Cursos::where('estado', 'activo')->paginate(10);
-    $modulosConTemas = Modulos::with('temas:id,nombre')->has('temas')->paginate(10);
-    $profesores = Profesor::with('persona')->paginate(10);
-    $estudiantes = Estudiante::with(['persona', 'cursosApertura'])->paginate(10);
-
-    // Preparar el resultado agrupando los cursos por estudiante
-    $resultado = [];
-    foreach ($estudiantes as $estudiante) {
-        $matricula = $estudiante->matricula;
-        if (!isset($resultado[$matricula])) {
-            $resultado[$matricula] = [
-                'matricula' => $matricula,
-                'nombre' => $estudiante->persona->nombre,
-                'ap_paterno' => $estudiante->persona->ap_paterno,
-                'ap_materno' => $estudiante->persona->ap_materno,
-                'cursos' => []
-            ];
+    
+        // Aplicar filtro de estado si se proporciona
+        if (!empty($estadoFiltro) && $cursosApertura instanceof \Illuminate\Database\Eloquent\Builder) {
+            $cursosApertura->where('estado', $estadoFiltro);
         }
-
-        foreach ($estudiante->cursosApertura as $curso) {
-            if (!empty($curso->hora_clase)) {
-                $horaClaseRaw = trim($curso->hora_clase);
-                try {
-                    $horaClase = Carbon::createFromFormat('H:i:s', $horaClaseRaw);
-                    $horaFin = $horaClase->copy()->addHours(2);
-
-                    if ($horaClase->hour < 8 || $horaFin->hour >= 22 || ($horaClase->hour == 21 && $horaClase->minute > 0)) {
+    
+        // Paginación de cursos apertura con filtro
+        $cursosAperturaPaginados = $cursosApertura instanceof \Illuminate\Database\Eloquent\Builder
+            ? $cursosApertura->paginate(2)->appends(['estado' => $estadoFiltro])
+            : collect();
+    
+        // Otros datos necesarios con paginación
+        $todosCursos = Cursos::where('estado', 'activo')->paginate(10);
+        $modulosConTemas = Modulos::with('temas:id,nombre')->has('temas')->get(['id', 'nombre']); // Sin paginar porque se usa para selects
+        $profesores = Profesor::with('persona')->paginate(10);
+        $estudiantes = Estudiante::with(['persona', 'cursosApertura'])->paginate(10);
+    
+        // Preparar el resultado agrupando los cursos por estudiante
+        $resultado = [];
+        foreach ($estudiantes as $estudiante) {
+            $matricula = $estudiante->matricula;
+            if (!isset($resultado[$matricula])) {
+                $resultado[$matricula] = [
+                    'matricula' => $matricula,
+                    'nombre' => $estudiante->persona->nombre,
+                    'ap_paterno' => $estudiante->persona->ap_paterno,
+                    'ap_materno' => $estudiante->persona->ap_materno,
+                    'cursos' => []
+                ];
+            }
+    
+            foreach ($estudiante->cursosApertura as $curso) {
+                if (!empty($curso->hora_clase)) {
+                    $horaClaseRaw = trim($curso->hora_clase);
+                    try {
+                        $horaClase = Carbon::createFromFormat('H:i:s', $horaClaseRaw);
+                        $horaFin = $horaClase->copy()->addHours(2);
+    
+                        if ($horaClase->hour < 8 || $horaFin->hour >= 22 || ($horaClase->hour == 21 && $horaClase->minute > 0)) {
+                            continue;
+                        }
+    
+                        $estado = $curso->pivot->estado;
+                        $resultado[$matricula]['cursos'][] = [
+                            'id_curso_apertura' => $curso->id,
+                            'nombre_curso' => $curso->nombre,
+                            'fecha_inicio' => $curso->fecha_inicio,
+                            'monto_colegiatura' => $curso->monto_colegiatura,
+                            'dia_clase' => $curso->dia_clase,
+                            'hora_clase' => $curso->hora_clase,
+                            'estado' => $estado
+                        ];
+                    } catch (Exception $e) {
                         continue;
                     }
-
-                    $estado = $curso->pivot->estado;
-                    $resultado[$matricula]['cursos'][] = [
-                        'id_curso_apertura' => $curso->id,
-                        'nombre_curso' => $curso->nombre,
-                        'fecha_inicio' => $curso->fecha_inicio,
-                        'monto_colegiatura' => $curso->monto_colegiatura,
-                        'dia_clase' => $curso->dia_clase,
-                        'hora_clase' => $curso->hora_clase,
-                        'estado' => $estado
-                    ];
-                } catch (Exception $e) {
-                    continue;
                 }
             }
         }
+    
+        return view('plataforma.index', [
+            'resultado' => array_values($resultado),
+            'estudiantes' => $estudiantes, // Paginado
+            'cursos' => $todosCursos, // Paginado
+            'cursosApertura' => $cursosAperturaPaginados, // Paginado con filtro
+            'modulosConTemas' => $modulosConTemas, // Sin paginar para selects
+            'profesores' => $profesores, // Paginado
+        ]);
     }
-
-    return view('plataforma.index', [
-        'resultado' => array_values($resultado),
-        'estudiantes' => $estudiantes, // Esto ya está paginado
-        'cursos' => $todosCursos, // Paginado
-        'cursosApertura' => $cursosAperturaPaginados, // Paginado con filtro
-        'modulosConTemas' => $modulosConTemas, // Paginado
-        'profesores' => $profesores, // Paginado
-    ]);
-}
+    
 
 
     
@@ -474,13 +501,6 @@ class PlataformaController extends Controller
         return view('plataforma.index', compact('modulos', 'temas'));
     }
     
-    
-
-    
-
-
-
-
 
     public function crearModulo(Request $request)
     {
@@ -768,6 +788,32 @@ class PlataformaController extends Controller
         // Redirigir a la lista de inscripciones o a otra vista con un mensaje de éxito
         return redirect()->route('plataforma.inscripciones')->with('success', 'Inscripción actualizada correctamente.');
     }
+
+    public function destroy($id)
+{
+    // Busca la inscripción por ID
+    $inscripcion = Inscripcion::findOrFail($id);
+
+    // Elimina la inscripción
+    $inscripcion->delete();
+
+    // Redirige con un mensaje de éxito
+    return redirect()->route('inscripciones.index')->with('success', 'Inscripción eliminada correctamente.');
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function profesores() {
         // Obtener los profesores con la relación 'persona' y 'usuario'

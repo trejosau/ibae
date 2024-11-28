@@ -93,6 +93,7 @@ class CatalogoTienda extends Component
 
     public function render()
     {
+        dd($this->productos)
         return view('livewire.catalogo-tienda', [
             'productos' => $this->actualizarProductos(),
             'categorias' => $this->categorias,

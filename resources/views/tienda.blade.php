@@ -9,243 +9,167 @@
 <body>
 
 
-<style>
-    .titulo-grande {
-        font-size: 30px; /* Tamaño de la fuente más grande */
-        font-weight: bold; /* Asegura que el texto sea más visible */
-    }
-/* Configuración base del contenedor */
-.contenedor {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* Cinco columnas en pantallas grandes */
-    gap: 20px; /* Espacio entre las columnas */
-    justify-items: center; /* Centrar los elementos en cada celda */
-    padding: 0 20px; /* Espaciado horizontal */
-}
-
-/* Estilo de las tarjetas individuales */
-.categoria-card {
-    text-align: center; /* Centrar texto e imágenes */
-    width: 100%;
-}
-
-/* Estilo de las imágenes circulares */
-.imagen-circular {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-/* Efecto en hover para las imágenes */
-.imagen-circular:hover {
-    transform: scale(1.1);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-}
-
-/* Estilo para los nombres de las categorías */
-.categoria-nombre {
-    font-size: 1.2rem;
-    margin-top: 10px;
-    color: #333;
-    transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.categoria-nombre:hover {
-    color: #ff5a5f;
-    transform: translateY(-5px);
-}
-
-/* Responsividad para pantallas medianas (tablets) */
-@media (max-width: 992px) {
-    .contenedor {
-        grid-template-columns: repeat(3, 1fr); /* Tres columnas */
-    }
-
-    .imagen-circular {
-        width: 120px; /* Tamaño ajustado */
-        height: 120px;
-    }
-}
-
-/* Responsividad para pantallas pequeñas (móviles) */
-@media (max-width: 576px) {
-    .contenedor {
-        grid-template-columns: repeat(2, 1fr); /* Dos columnas */
-        gap: 15px;
-    }
-
-    .imagen-circular {
-        width: 100px;
-        height: 100px;
-    }
-
-    .categoria-nombre {
-        font-size: 1rem; /* Texto más pequeño */
-    }
-}
-
-/* Para pantallas muy pequeñas */
-@media (max-width: 360px) {
-    .contenedor {
-        grid-template-columns: 1fr; /* Una sola columna */
-    }
-
-    .categoria-nombre {
-        font-size: 0.9rem; /* Texto aún más pequeño */
-    }
-}
-
-
-
-
+    <style>
+        /* Paleta de colores */
+        :root {
+            --color-fondo: #F8F9FA; /* Gris claro para fondo principal */
+            --color-primario: #0D1E4C; /* Azul oscuro */
+            --color-secundario: #83A6CE; /* Azul claro */
+            --color-acento: #C48CB3; /* Rosa oscuro */
+            --color-texto: #26415E; /* Azul medio */
+            --color-footer: #0B1B32; /* Azul noche */
+        }
+        
+        /* Tipografía */
+        .titulo-grande {
+            font-size: 30px;
+            font-weight: bold;
+            color: var(--color-primario); /* Azul oscuro */
+        }
+        
+        /* Precio */
+        .precio {
+            color: var(--color-acento); /* Rosa oscuro */
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Botón "Agregar al carrito" */
+        .btn-agg {
+            background-color: var(--color-primario); /* Azul oscuro */
+            color: var(--color-fondo); /* Blanco */
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: auto;
+        }
+        
+        .btn-agg:hover {
+            background-color: var(--color-acento); /* Rosa oscuro */
+        }
+        
         /* Contenedor de productos */
-  /* Contenedor de productos */
-
-.precio {
-    color: #ff5722;
-    font-size: 1.2rem;
-    margin-bottom: 1rem; /* Espacio debajo del precio */
-}
-
-/* Estilo para el botón "Agregar al carrito" */
-.btn-agg {
-    background-color: #333; /* Color de fondo */
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-    width: 100%; /* Botón ancho */
-    margin-top: auto; /* Empuja el botón a la parte inferior del contenedor */
-}
-
-.btn-agg:hover {
-    background-color: #f0c4d0; /* Color de fondo en hover */
-}
-
-/* Ajuste adicional para el contenedor de productos */
-.productos-container {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    padding: 20px 0;
-}
-
-.productos-wrapper {
-    display: flex;
-    transition: transform 0.5s ease;
-}
-
-.card-title {
-    height: 2.5rem; /* Fija la altura del título */
-    overflow: hidden; /* Oculta el contenido que sobrepasa la altura */
-    text-overflow: ellipsis; /* Agrega puntos suspensivos al texto largo */
-    white-space: nowrap; /* Evita que el texto haga salto de línea */
-    font-size: 1rem; /* Ajusta el tamaño de la fuente */
-    margin-bottom: 0.5rem; /* Asegura espacio entre elementos */
-}
-
-
-.producto-card {
-    min-width: 220px;
-    margin: 0 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%; /* Asegura que el contenido esté alineado correctamente */
-}
-
-.card {
-    text-decoration: none; /* Evita subrayado en el enlace */
-    transition: transform 0.3s, box-shadow 0.3s; /* Transiciones para el hover */
-}
-
-.card:hover {
-    transform: scale(1.05); /* Aumenta el tamaño en hover */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra en hover */
-}
-
-
-/* Ajuste de la posición de los controles de navegación del carrusel */
-.carousel-control-prev,
-.carousel-control-next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10; /* Asegura que los botones estén encima del contenido */
-    background-color: #333; /* Color amarillo brillante para los botones */
-    color: white;
-    border: none;
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    border-radius: 50%;
-    transition: background-color 0.3s ease;
-}
-
-
-.catalog-container {
-      background-color: #f8f9fa;
-      border-radius: 12px;
-      padding: 30px;
-      max-width: 400px;
-      margin: 0 auto;
-    }
-
-    .catalog-title {
-      font-size: 2rem;
-      color: #333;
-      font-weight: bold;
-      margin-bottom: 1.5rem;
-      text-transform: uppercase;
-    }
-
-    .catalog-link {
-      display: inline-block;
-      font-size: 1.25rem;
-      background-color: #333;
-      color: #fff;
-      padding: 12px 25px;
-      text-decoration: none;
-      border-radius: 50px;
-      transition: background-color 0.3s, transform 0.3s ease;
-    }
-
-    .catalog-link:hover {
-      background-color: #f8c8d8; /* Rosa claro */
-      color: #333; /* Texto negro */
-      transform: translateY(-5px); /* Efecto de elevación */
-    }
-
-    /* Efecto de sombra al pasar el mouse */
-    .catalog-link:active {
-      transform: translateY(0);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-/* Ajusta la distancia de los botones del borde */
-
-
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-    background-color: #f1c6d4; /* Color más oscuro al pasar el mouse sobre los botones */
-}
-
-
-
-</style>
+        .productos-container {
+            background-color: var(--color-fondo);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding: 20px 0;
+        }
+        
+        .productos-wrapper {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        
+        /* Tarjetas de productos */
+        .card-title {
+            color: var(--color-texto); /* Azul medio */
+            height: 2.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .producto-card {
+            background-color: var(--color-fondo); /* Fondo claro */
+            min-width: 220px;
+            margin: 0 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+        
+        .card {
+            background-color: rgba(255, 255, 255, 0.7); /* Fondo blanco semitransparente */
+            text-decoration: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 8px;
+            padding: 10px;
+            backdrop-filter: blur(5px); /* Efecto de desenfoque detrás */
+        }
+        
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Botones del carrusel */
+        .carousel-control-prev,
+        .carousel-control-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            background-color: var(--color-primario);
+            color: var(--color-fondo);
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+        
+        .carousel-control-prev:hover,
+        .carousel-control-next:hover {
+            background-color: var(--color-acento); /* Rosa oscuro */
+        }
+        
+        /* Contenedor del catálogo */
+        .catalog-container {
+            background-color: var(--color-fondo);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .catalog-title {
+            font-size: 2rem;
+            color: var(--color-primario); /* Azul oscuro */
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+        
+        .catalog-link {
+            display: inline-block;
+            font-size: 1.25rem;
+            background-color: var(--color-primario);
+            color: var(--color-fondo);
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: background-color 0.3s, transform 0.3s ease;
+        }
+        
+        .catalog-link:hover {
+            background-color: var(--color-acento); /* Rosa oscuro */
+            color: var(--color-texto); /* Azul medio */
+            transform: translateY(-5px);
+        }
+        
+        .catalog-link:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        </style>
+        
 
 @include('components.navbarTienda')
 
 
 
 <div class="contenedor-imagen container-fluid ps-0 pe-0">
-    <div class="row g-0" style="margin-top: 92px;">
+    <div class="row g-0" style="margin-top: 100px;">
         <div class="col-lg-8 col-12 px-1">
             <!-- Carrusel -->
             <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -303,33 +227,6 @@
     <h3 class="catalog-title">Visita nuestro catálogo</h3>
     <a href="{{route('catalogo')}}" class="btn catalog-link">Explorar catálogo</a>
   </div>
-
-
-<<<<<<< HEAD
-  <div class="text-center p-5 fs-4">
-    <h1 class="titulo-grande">ECHA UN VISTAZO A NUESTRAS CATEGORÍAS</h1>
-</div>
-
-<div class="contenedor pb-4">
-    @foreach ($categorias as $categoria)
-        <div class="categoria-card">
-            <div class="tittle">
-                <!-- Redirige a la misma vista, pasando el ID de la categoría -->
-                <a href="{{ route('catalogo', ['categoria' => $categoria->id]) }}">
-                    {{ $categoria->nombre }}
-                </a>
-
-            </div>
-            <div class="tittle">
-                <h2 class="categoria-nombre">{{ $categoria->nombre }}</h2>
-            </div>
-        </div>
-    @endforeach
-</div>
-
-=======
->>>>>>> 09f89cc8131dcdbd03dede5be43b50834a54b569
-
 
 
 
