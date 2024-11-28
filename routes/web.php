@@ -162,30 +162,28 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
 
         Route::middleware(['role:admin'])->group(function () {
             Route::get('/plataforma/cursos/mis-cursos', [PlataformaController::class, 'misCursos'])->name('plataforma.mis-cursos');
+            Route::post('/plataforma/cursos/crear-curso', [PlataformaController::class, 'store'])->name('cursos.store');
             Route::post('/plataforma/cursos/guardar-curso-apertura', [PlataformaController::class, 'storeCursoApertura'])->name('plataforma.storeCursoApertura');
             Route::post('/inscribir-alumno', [PlataformaController::class, 'storeAlumnoCurso'])->name('inscribirAlumno');
             Route::get('/quitar-alumno', [PlataformaController::class, 'quitarAlumnoCurso'])->name('darDeBaja');
-            Route::post('/cursos', [PlataformaController::class, 'store'])->name('cursos.store');
             Route::post('/cursos/cambiar-estado', [PlataformaController::class, 'cambiarEstado'])->name('cursos.cambiarEstado');
             Route::delete('/cursos/{id}', [PlataformaController::class, 'cursoDestroy'])->name('plataforma.cursoDestroy');
             Route::get('/plataforma/cursos/iniciar-cursos', [PlataformaController::class, 'iniciarCursosHoy'])->name('plataforma.iniciarCursos');
 
-
             // Rutas de Módulos
             Route::get('/plataforma/modulos/lista', [PlataformaController::class, 'listaModulos'])->name('plataforma.lista-modulos');
-            Route::post('/plataforma/modulos/store', [PlataformaController::class, 'moduloStore'])->name('plataforma.moduloStore');
+            Route::get('/modulo/modificar/{id}', [PlataformaController::class, 'actualizarModulo'])->name('plataforma.actualizarModulo');
+            Route::post('/modulos', [PlataformaController::class, 'crearModulo'])->name('plataforma.crearModulo');
+            Route::delete('/modulo/eliminar/{id}', [PlataformaController::class, 'eliminarModulo'])->name('plataforma.eliminarModulo');
             Route::put('/plataforma/modulos/{id}', [PlataformaController::class, 'moduloUpdate'])->name('plataforma.moduloUpdate');
-            Route::delete('/plataforma/modulos/{id}', [PlataformaController::class, 'moduloDestroy'])->name('plataforma.moduloDestroy');
-            Route::get('/plataforma/modulos/temas', [PlataformaController::class, 'temasModulos'])->name('plataforma.temas-modulos');
+
+            // Rutas de Asignación de Módulos a Temas
             Route::get('/temas-modulos', [PlataformaController::class, 'ligarModulosATemas'])->name('ligarTemasModulo');
             Route::post('/plataforma/asignar-temas', [PlataformaController::class, 'asignarTemas'])->name('asignar.temas');
-            Route::post('/modulos', [PlataformaController::class, 'crearModulo'])->name('plataforma.crearModulo');
-            Route::get('/modulo/modificar/{id}', [PlataformaController::class, 'modificarModulo'])->name('plataforma.modificarModulo');
-            Route::delete('/modulo/eliminar/{id}', [PlataformaController::class, 'eliminarModulo'])->name('plataforma.eliminarModulo');
-
+            Route::post('/eliminar-tema', [PlataformaController::class, 'eliminarTemaDeModulo'])->name('eliminar.tema');
 
             // Rutas para temas
-            Route::get('/tema/modificar/{id}', [PlataformaController::class, 'modificarTema'])->name('plataforma.modificarTema');
+            Route::put('/tema/modificar/{id}', [PlataformaController::class, 'actualizarTema'])->name('plataforma.actualizarTema');
             Route::delete('/tema/eliminar/{id}', [PlataformaController::class, 'eliminarTema'])->name('plataforma.eliminarTema');
             Route::post('/temas', [PlataformaController::class, 'crearTema'])->name('plataforma.crearTema');
 
@@ -203,8 +201,15 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
             Route::post('/registrar-estudiante', [PlataformaController::class, 'registrarEstudiante'])->name('plataforma.registrarEstudiante');
             Route::post('/estudiante/{matricula}/baja', [PlataformaController::class, 'darDeBaja'])->name('plataforma.baja');
             Route::post('/estudiante/{matricula}/alta', [PlataformaController::class, 'darDeAlta'])->name('plataforma.alta');
+
+
             Route::post('/inscripciones', [PlataformaController::class, 'storeInscripcion'])->name('plataforma.storeInscripcion');
             Route::put('/inscripciones/{id}', [PlataformaController::class, 'update'])->name('plataforma.updateInscripcion');
+            Route::delete('/inscripciones/{id}', [PlataformaController::class, 'destroy'])->name('inscripciones.destroy');
+
+
+
+
             Route::post('/plataforma/bajaProfesor/{id}', [PlataformaController::class, 'bajaProfesor'])->name('plataforma.bajaProfesor');
             Route::post('/plataforma/asignar-rol', [PlataformaController::class, 'asignarRol'])->name('plataforma.asignarRol');
 

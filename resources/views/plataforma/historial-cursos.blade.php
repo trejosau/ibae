@@ -162,6 +162,55 @@
     </nav>
 @endif
 
+<script>
+    function validarHora() {
+    const horaClase = document.getElementById('horaClase').value;
+    const errorHoraClase = document.getElementById('errorHoraClase');
+
+    const [hora, minutos] = horaClase.split(':').map(Number);
+    const horaFin = hora + 2; // Calculamos la hora de término para clases de 2 horas
+
+    // Validamos que la hora esté dentro del rango
+    if (hora < 8 || horaFin > 22 || (hora === 21 && minutos > 0)) {
+        errorHoraClase.style.display = 'block';
+        document.getElementById('horaClase').setCustomValidity('Invalid');
+    } else {
+        errorHoraClase.style.display = 'none';
+        document.getElementById('horaClase').setCustomValidity('');
+    }
+}
+
+</script>
+
+
+<script>
+    // Obtener la fecha actual
+    const hoy = new Date();
+    const año = hoy.getFullYear();
+    const mes = (hoy.getMonth() + 1).toString().padStart(2, '0'); // Mes actual, con formato de dos dígitos
+    const día = hoy.getDate().toString().padStart(2, '0'); // Día actual, con formato de dos dígitos
+
+    // Establecer el atributo 'min' del campo de fecha
+    document.getElementById('fechaInicio').setAttribute('min', `${año}-${mes}-${día}`);
+
+    // Mostrar el día de la semana cuando se selecciona una fecha
+    document.getElementById('fechaInicio').addEventListener('change', function() {
+        const partesFecha = this.value.split('-');
+        const año = parseInt(partesFecha[0], 10);
+        const mes = parseInt(partesFecha[1], 10) - 1; // Meses en JavaScript van de 0 a 11
+        const día = parseInt(partesFecha[2], 10);
+
+        const fechaSeleccionada = new Date(año, mes, día);
+
+        const diasSemana = [
+            'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'
+        ];
+        const diaSemana = diasSemana[fechaSeleccionada.getDay()];
+
+        document.getElementById('diaSemana').textContent = diaSemana ? `Día seleccionado: ${diaSemana}` : '';
+    });
+</script>
+
 
 
     
@@ -206,10 +255,7 @@
                                                         }
                                                     }
                                                 }
-
-
                                             @endphp
-
                                             @if($estado === 'cursando')
                                                 <form action="{{ route('darDeBaja') }}" method="POST">
                                                     @csrf
@@ -237,31 +283,8 @@
                     </div>
                 </div>
             </div>
-            <script>
-                function searchMatricula(aperturaId) {
-                    const input = document.getElementById('searchInput-' + aperturaId);
-                    const filter = input.value.trim();
-                    const table = document.getElementById('studentsTable-' + aperturaId);
-                    const trs = table.getElementsByTagName('tr');
-
-                    // Validar si el input es un número
-                    const isNumber = /^[0-9]*$/.test(filter);
-
-                    for (let i = 1; i < trs.length; i++) {
-                        const tds = trs[i].getElementsByTagName('td');
-                        const matricula = tds[0].textContent || tds[0].innerText;
-
-                        if (isNumber && matricula.includes(filter)) {
-                            trs[i].style.display = '';
-                        } else {
-                            trs[i].style.display = 'none';
-                        }
-                    }
-                }
-            </script>
        @endif
     @endforeach
-
 
     <div class="modal fade" id="aperturarCursoModal" tabindex="-1" aria-labelledby="aperturarCursoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -271,15 +294,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="aperturarCursoForm" method="POST" action="{{ route('plataforma.storeCursoApertura') }}">
-                    @csrf <!-- Token CSRF para protección -->
+                    @csrf
                     <div class="modal-body">
                         <!-- Selección de Curso -->
                         <div class="mb-3">
                             <label for="cursoSelect" class="form-label">Selecciona el Curso</label>
-                            <select class="form-select" id="cursoSelect" name="id_curso" required
-                                    style="background-color: #fdfdfe; border-color: #d3d3e3; color: #5a5a6e;">
+                            <select class="form-select" id="cursoSelect" name="id_curso" required>
                                 <option value="" disabled selected>Seleccione un curso</option>
-
                                 @foreach($cursos as $curso)
                                     <option value="{{ $curso->id }}" data-duracion="{{ $curso->duracion_semanas }}">
                                         {{ $curso->nombre }} ({{ $curso->duracion_semanas }} semanas)
@@ -287,7 +308,7 @@
                                 @endforeach
                             </select>
                         </div>
-
+    
                         <!-- Select para Profesores -->
                         <div class="mb-3">
                             <label for="id_profesor" class="form-label">Profesor</label>
@@ -300,91 +321,36 @@
                                 @endforeach
                             </select>
                         </div>
-
+    
                         <!-- Campo para la Fecha de Inicio -->
                         <div class="mb-3">
                             <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
-                            <input type="date" class="form-control" id="fechaInicio" name="fecha_inicio" required>
-                            <small id="diaSemana" class="text-muted"></small> <!-- Elemento para mostrar el día de la semana -->
+                            <input 
+                                type="date" 
+                                class="form-control" 
+                                id="fechaInicio" 
+                                name="fecha_inicio" 
+                                min="" 
+                                required>
+                            <div class="invalid-feedback" id="fechaError" style="display: none;">La fecha debe ser a futuro.</div>
                         </div>
-
-                      <!-- Campo para la Hora de Clase -->
-<div class="mb-3">
-    <label for="horaClase" class="form-label">Hora de Clase</label>
-    <input 
-        type="time" 
-        class="form-control" 
-        id="horaClase" 
-        name="hora_clase" 
-        min="08:00" 
-        max="22:00" 
-        required
-        onchange="validarHora()" 
-    >
-    <div class="invalid-feedback" id="errorHoraClase" style="display: none;">
-        La hora de inicio debe estar entre 8:00 AM y 10:00 PM, y no puede exceder el horario límite de 2 horas.
-    </div>
-</div>
-<script>
-    function validarHora() {
-    const horaClase = document.getElementById('horaClase').value;
-    const errorHoraClase = document.getElementById('errorHoraClase');
-
-    const [hora, minutos] = horaClase.split(':').map(Number);
-    const horaFin = hora + 2; // Calculamos la hora de término para clases de 2 horas
-
-    // Validamos que la hora esté dentro del rango
-    if (hora < 8 || horaFin > 22 || (hora === 21 && minutos > 0)) {
-        errorHoraClase.style.display = 'block';
-        document.getElementById('horaClase').setCustomValidity('Invalid');
-    } else {
-        errorHoraClase.style.display = 'none';
-        document.getElementById('horaClase').setCustomValidity('');
-    }
-}
-
-</script>
-
-
-                        <script>
-                            // Obtener la fecha actual
-                            const hoy = new Date();
-                            const año = hoy.getFullYear();
-                            const mes = (hoy.getMonth() + 1).toString().padStart(2, '0'); // Mes actual, con formato de dos dígitos
-                            const día = hoy.getDate().toString().padStart(2, '0'); // Día actual, con formato de dos dígitos
-
-                            // Establecer el atributo 'min' del campo de fecha
-                            document.getElementById('fechaInicio').setAttribute('min', `${año}-${mes}-${día}`);
-
-                            // Mostrar el día de la semana cuando se selecciona una fecha
-                            document.getElementById('fechaInicio').addEventListener('change', function() {
-                                const partesFecha = this.value.split('-');
-                                const año = parseInt(partesFecha[0], 10);
-                                const mes = parseInt(partesFecha[1], 10) - 1; // Meses en JavaScript van de 0 a 11
-                                const día = parseInt(partesFecha[2], 10);
-
-                                const fechaSeleccionada = new Date(año, mes, día);
-
-                                const diasSemana = [
-                                    'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'
-                                ];
-                                const diaSemana = diasSemana[fechaSeleccionada.getDay()];
-
-                                document.getElementById('diaSemana').textContent = diaSemana ? `Día seleccionado: ${diaSemana}` : '';
-                            });
-                        </script>
-
+                        
+    
+                        <!-- Campo para la Hora de Clase -->
+                        <div class="mb-3">
+                            <label for="horaClase" class="form-label">Hora de Clase</label>
+                            <input type="time" class="form-control" id="horaClase" name="hora_clase" min="08:00" max="22:00" required>
+                            <div class="invalid-feedback" id="errorHoraClase" style="display: none;">La hora de inicio debe estar entre 8:00 AM y 10:00 PM, y no puede exceder el horario límite de 2 horas.</div>
+                        </div>
+    
                         <!-- Campo para el Monto de Colegiatura -->
                         <div class="mb-3">
                             <label for="montoColegiatura" class="form-label">Monto de Colegiatura</label>
-                            <input type="number" class="form-control" id="montoColegiatura" name="monto_colegiatura"
-                                   placeholder="Ingrese el monto de colegiatura" required>
+                            <input type="number" class="form-control" id="montoColegiatura" name="monto_colegiatura" placeholder="Ingrese el monto de colegiatura" required>
                         </div>
-
+    
                         <!-- Contenedor de semanas -->
-                        <div id="semanasContainer">
-                            <!-- Semanas generadas dinámicamente -->
-                        </div>
+                        <div id="semanasContainer"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -394,6 +360,59 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function validarHora() {
+        const horaClase = document.getElementById('horaClase').value;
+        const errorHoraClase = document.getElementById('errorHoraClase');
+    
+        const [hora, minutos] = horaClase.split(':').map(Number);
+        const horaFin = hora + 2; // Calculamos la hora de término para clases de 2 horas
+    
+        // Validamos que la hora esté dentro del rango
+        if (hora < 8 || horaFin > 22 || (hora === 21 && minutos > 0)) {
+            errorHoraClase.style.display = 'block';
+            document.getElementById('horaClase').setCustomValidity('Invalid');
+        } else {
+            errorHoraClase.style.display = 'none';
+            document.getElementById('horaClase').setCustomValidity('');
+        }
+    }
+    
+    </script>
+    
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+    const fechaInicio = document.getElementById('fechaInicio');
+    const fechaError = document.getElementById('fechaError');
+
+    // Establecer el atributo 'min' con la fecha de hoy
+    const hoy = new Date();
+    const año = hoy.getFullYear();
+    const mes = (hoy.getMonth() + 1).toString().padStart(2, '0'); // Mes en formato 2 dígitos
+    const dia = hoy.getDate().toString().padStart(2, '0'); // Día en formato 2 dígitos
+    const fechaMinima = `${año}-${mes}-${dia}`;
+    fechaInicio.setAttribute('min', fechaMinima);
+
+    // Validar fecha en tiempo real
+    fechaInicio.addEventListener('input', function () {
+        const fechaSeleccionada = new Date(fechaInicio.value);
+        const hoy = new Date(); // Fecha actual para comparación
+
+        // Comparar fechas
+        if (fechaSeleccionada <= hoy) {
+            fechaError.style.display = 'block'; // Mostrar error
+            fechaInicio.setCustomValidity('La fecha debe ser a futuro');
+        } else {
+            fechaError.style.display = 'none'; // Ocultar error
+            fechaInicio.setCustomValidity(''); // Limpiar error
+        }
+    });
+});
+
+    </script>
+    
 
     <script>
         document.getElementById('cursoSelect').addEventListener('change', function() {
@@ -479,6 +498,29 @@
             console.log(`Duración del curso seleccionado: ${duracionSemanas} semanas`);
         });
     </script>
+
+<script>
+    function searchMatricula(aperturaId) {
+        const input = document.getElementById('searchInput-' + aperturaId);
+        const filter = input.value.trim();
+        const table = document.getElementById('studentsTable-' + aperturaId);
+        const trs = table.getElementsByTagName('tr');
+
+        // Validar si el input es un número
+        const isNumber = /^[0-9]*$/.test(filter);
+
+        for (let i = 1; i < trs.length; i++) {
+            const tds = trs[i].getElementsByTagName('td');
+            const matricula = tds[0].textContent || tds[0].innerText;
+
+            if (isNumber && matricula.includes(filter)) {
+                trs[i].style.display = '';
+            } else {
+                trs[i].style.display = 'none';
+            }
+        }
+    }
+</script>
 
 
 </div>

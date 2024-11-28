@@ -105,21 +105,30 @@
             </div>
             <div class="topic-list">
                 @foreach($temas as $tema)
-                    <div class="card shadow-sm mb-3" style="border: none; background-color: #F9F7FB; border-radius: 10px;">
-                        <div class="card-body">
-                            <h5 class="card-title" style="color: #6A4E77;">{{ $tema->nombre }}</h5>
-                            <p class="card-text" style="color: #8C7A71;"><strong>Descripción:</strong> {{ $tema->descripcion }}</p>
-                            <div class="d-flex justify-content-end gap-2">
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarTema{{ $tema->id }}" style="background-color: #C9A3BE; color: white; border: none;">Modificar</button>
-                                <form action="{{ route('plataforma.eliminarTema', $tema->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este tema?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" style="background-color: #D2968E; border: none;">Eliminar</button>
-                                </form>
-                            </div>
+                <div class="card shadow-sm mb-3" style="border: none; background-color: #F9F7FB; border-radius: 10px;">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color: #6A4E77;">{{ $tema->nombre }}</h5>
+                        <p class="card-text" style="color: #8C7A71;">
+                            <strong>Descripción:</strong> {{ $tema->descripcion }}
+                        </p>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-sm" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modalEditarTema{{ $tema->id }}" 
+                                    style="background-color: #C9A3BE; color: white; border: none;">
+                                Modificar
+                            </button>
+                            <form action="{{ route('plataforma.eliminarTema', $tema->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este tema?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" style="background-color: #D2968E; border: none;">Eliminar</button>
+                            </form>
                         </div>
                     </div>
+                </div>
                 @endforeach
+                
+                
 
 
                 @if ($temas->hasPages())
@@ -262,7 +271,7 @@
                 <h5 class="modal-title" id="modalEditarModuloLabel">Editar Módulo</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('plataforma.modificarModulo', $modulo->id) }}" method="POST">
+            <form action="{{ route('plataforma.actualizarModulo', $modulo->id) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="modal-body">
@@ -280,6 +289,47 @@
                     <div class="mb-3">
                         <label for="moduleDuration" class="form-label">Duración (Horas)</label>
                         <input type="number" name="duracion" class="form-control" id="moduleDuration" value="{{ $modulo->duracion }}" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
+@foreach($temas as $tema)
+<div class="modal fade" id="modalEditarTema{{ $tema->id }}" tabindex="-1" aria-labelledby="modalEditarTemaLabel{{ $tema->id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarTemaLabel{{ $tema->id }}">Editar Tema</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('plataforma.actualizarTema', $tema->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="temaNombre-{{ $tema->id }}" class="form-label">Nombre del Tema</label>
+                        <input 
+                            type="text" 
+                            name="nombre" 
+                            class="form-control" 
+                            id="temaNombre-{{ $tema->id }}" 
+                            value="{{ $tema->nombre }}" 
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="temaDescripcion-{{ $tema->id }}" class="form-label">Descripción</label>
+                        <textarea 
+                            name="descripcion" 
+                            class="form-control" 
+                            id="temaDescripcion-{{ $tema->id }}" 
+                            rows="3" 
+                            required>{{ $tema->descripcion }}</textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
