@@ -51,11 +51,12 @@ class GraficasController extends Controller
             ->orderBy('Mes')
             ->get()->keyBy('Mes');
 
-        $pedidosPorMes = Pedidos::selectRaw('MONTH(fecha_pedido) AS Mes, SUM(total) AS Total_Pedidos')
-            ->whereYear('fecha_pedido', now()->year)
+        $pedidosPorMes = Pedidos::selectRaw('MONTH(`fecha-hora_pedido`) AS Mes, SUM(total) AS Total_Pedidos')
+            ->whereYear('fecha-hora_pedido', 2024)
             ->groupBy('Mes')
-            ->orderBy('Mes')
-            ->get()->keyBy('Mes');
+            ->orderBy('Mes', 'asc')
+            ->get();
+
 
         return $this->formatearResultadosVentas($ventasPorMes, $pedidosPorMes);
     }

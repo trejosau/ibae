@@ -1,6 +1,6 @@
 <div>
     <div class="container py-5">
-        
+
         <!-- Enlace Volver a la tienda -->
         <div class="mb-3">
             <a href="/tienda" class="back-link">← Volver a la tienda</a>
@@ -11,9 +11,9 @@
             <div class="col-md-8">
                 <div class="d-flex justify-content-center">
                     <div class="search-bar-container rounded-pill">
-                        <input id="busqueda" 
-                               wire:model.live="busqueda" 
-                               type="text" 
+                        <input id="busqueda"
+                               wire:model.live="busqueda"
+                               type="text"
                                class="form-control search-bar"
                                placeholder="Buscar productos...">
                     </div>
@@ -33,7 +33,7 @@
                         @endforeach
                     </select>
                 </div>
-        
+
                 <!-- Filtro de subcategorías -->
                 <div class="mb-4" x-data>
                     <label for="subcategoriaFiltro" class="form-label">Subcategorías</label>
@@ -48,7 +48,7 @@
                 <div class="mb-4">
                     <label for="precioMin" class="form-label">Precio mínimo</label>
                     <input id="precioMin" wire:model.live.debounce="precioMin" type="number" class="form-control mb-2" placeholder="Mínimo" min="0">
-                    
+
                     <label for="precioMax" class="form-label">Precio máximo</label>
                     <input id="precioMax" wire:model.live.debounce="precioMax" type="number" class="form-control" placeholder="Máximo" min="0">
                 </div>

@@ -116,13 +116,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/notificaciones/marcar-leida/{id}', [NotificacionesController::class, 'marcarLeida'])->name('notificaciones.marcarLeida');
 
         // Rutas para las gráficas
-        Route::get('/graficas/colegiaturas', [GraficasController::class, 'obtenerTotalPorMesAcademia'])->name('graficas.colegiaturas');
-        Route::get('/graficas/salon', [GraficasController::class, 'obtenerTotalSalon'])->name('graficas.salon');
-        Route::get('/graficas/tienda', [GraficasController::class, 'obtenerTotalVentas'])->name('graficas.tienda');
-        Route::get('/graficas/data', [GraficasController::class, 'obtenerData'])->name('graficas.data');
 
     });
 });
+
+Route::get('/graficas/colegiaturas', [GraficasController::class, 'obtenerTotalPorMesAcademia'])->name('graficas.colegiaturas');
+Route::get('/graficas/salon', [GraficasController::class, 'obtenerTotalSalon'])->name('graficas.salon');
+Route::get('/graficas/tienda', [GraficasController::class, 'obtenerTotalVentas'])->name('graficas.tienda');
+Route::get('/graficas/data', [GraficasController::class, 'obtenerData'])->name('graficas.data');
+
 
 
 Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
@@ -211,8 +213,8 @@ Route::get('/productos', [ProductosController::class, 'index'])->name('productos
 Route::post('/producto/{id}/agregar-al-carrito', [ProductosController::class, 'agregarAlCarrito'])->name('producto.agregar');
 Route::delete('/carrito/{id}', [ProductosController::class, 'eliminarDelCarrito'])->name('carrito.eliminar');
 Route::get('/categorias', [ProductosController::class, 'obtenerCategorias']);
-Route::get('/catalogo', [ProductosController::class, 'catalogo'])->name('catalogo');
-Route::get('/catalogo-tienda/{categoria}', CatalogoTienda::class)->name('catalogo-tienda');
+Route::get('/catalogo/{categoria?}', CatalogoTienda::class)->name('catalogo');
+
 
 
 

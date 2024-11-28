@@ -217,16 +217,10 @@ class ProductosController extends Controller
 
 
 
-    public function catalogo()
-    {
-        $productos = Productos::all(); // Obtiene todos los productos
-        $categorias = Categorias::all(); // Obtiene todas las categorías
-        return view('catalogo', compact('productos', 'categorias')); // Pasa productos y categorías a la vista
-    }
 
 
 
-   
+
 
 
     public function mostrarDetalle($id)
@@ -617,12 +611,7 @@ public function __construct()
 }
 
 
-public function obtenerCategorias()
-{
-    // Obtener categorías con sus subcategorías
-    $categorias = Categorias::with('subcategorias')->get();
-    return view('tuVista', compact('categorias'));
-}
+
 
 
 }

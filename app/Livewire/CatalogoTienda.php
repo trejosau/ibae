@@ -13,8 +13,9 @@ class CatalogoTienda extends Component
 {
     use WithPagination;
 
+    public $productos;
     public $categorias;
-    public $subcategorias = [];
+    public $subcategorias;
     public $categoriaSeleccionada = null;
     public $subcategoriaSeleccionada = null;
     public $precioMin = null;
@@ -22,16 +23,22 @@ class CatalogoTienda extends Component
     public $disponibilidad = null;
     public $ordenarPor = null;
     public $busqueda = null;
-    
+
 
     public function mount($categoria = null)
     {
+        $this->productos = Productos::all();
+        $this->categorias = Categorias::with('subcategorias')->get();
+        if ($this->categorias) {
+            $this->subcategorias = Subcategoria::where('categoria_id', $this->categorias->first()->id)->get();
+        }
+
         // Si se pasa una categoría, obtenla
         if ($categoria) {
             $this->categoriaSeleccionada = Categorias::find($categoria);
         }
     }
-    
+
 
     public function updatedCategoriaSeleccionada()
     {
@@ -104,6 +111,7 @@ class CatalogoTienda extends Component
 
     public function render()
     {
+        dd($this->categorias, $this->subcategorias, $this->productos);
         $productos = $this->actualizarProductos();
         return view('livewire.catalogo-tienda', [
             'productos' => $productos,

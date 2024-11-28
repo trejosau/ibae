@@ -1,8 +1,6 @@
 <div class="container">
     <h2 class="text-center mb-4">Resumen General</h2>
-    <div class="col-12">
-        <div id="chart"style="width: 100%; max-width: 600px; height: 400px;"></div>
-    </div>
+
     <!-- Accesos Directos -->
     <div class="row mb-4 d-flex justify-content-center">
         <div class="col-3">
@@ -38,6 +36,7 @@
             </div>
         </div>
     </div>
+
     <!-- Ingresos Totales -->
     <div class="row mb-4">
         <div class="col-12">
@@ -140,7 +139,12 @@
             </div>
         </div>
 
-
+        <div class="row mb-4">
+            <div class="col-12">
+                <!-- Gráfico de ingresos -->
+                <div id="chart" style="width: 100%;"></div>
+            </div>
+        </div>
 
     </div>
 

@@ -196,7 +196,7 @@
       max-width: 400px;
       margin: 0 auto;
     }
-  
+
     .catalog-title {
       font-size: 2rem;
       color: #333;
@@ -204,7 +204,7 @@
       margin-bottom: 1.5rem;
       text-transform: uppercase;
     }
-  
+
     .catalog-link {
       display: inline-block;
       font-size: 1.25rem;
@@ -215,13 +215,13 @@
       border-radius: 50px;
       transition: background-color 0.3s, transform 0.3s ease;
     }
-  
+
     .catalog-link:hover {
       background-color: #f8c8d8; /* Rosa claro */
       color: #333; /* Texto negro */
       transform: translateY(-5px); /* Efecto de elevación */
     }
-  
+
     /* Efecto de sombra al pasar el mouse */
     .catalog-link:active {
       transform: translateY(0);
@@ -255,7 +255,7 @@
                     <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
                     <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
                 </div>
-                
+
                 <!-- Contenido del carrusel -->
                 <div class="carousel-inner">
                     <div class="carousel-item active">
@@ -268,7 +268,7 @@
                         <img src="{{asset('images/BANNER3.jpg')}}" alt="Banner 3" class="img-fluid banner border-top-right border-bottom-right">
                     </div>
                 </div>
-                
+
                 <!-- Controles de navegación -->
                 <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -303,7 +303,7 @@
     <h3 class="catalog-title">Visita nuestro catálogo</h3>
     <a href="{{route('catalogo')}}" class="btn catalog-link">Explorar catálogo</a>
   </div>
-  
+
 
   <div class="text-center p-5 fs-4">
     <h1 class="titulo-grande">ECHA UN VISTAZO A NUESTRAS CATEGORÍAS</h1>
@@ -314,7 +314,7 @@
         <div class="categoria-card">
             <div class="tittle">
                 <!-- Redirige a la misma vista, pasando el ID de la categoría -->
-                <a href="{{ route('catalogo-tienda', ['categoria' => $categoria->id]) }}">
+                <a href="{{ route('catalogo', ['categoria' => $categoria->id]) }}">
                     {{ $categoria->nombre }}
                 </a>
 
