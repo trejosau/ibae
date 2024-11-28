@@ -1,7 +1,33 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <style>
-    /* Navbar */
+        /* Paleta de colores */
+        :root {
+            --color-fondo: #F8F9FA; /* Gris claro para fondo principal */
+            --color-primario: #0D1E4C; /* Azul oscuro */
+            --color-secundario: #83A6CE; /* Azul claro */
+            --color-acento: #C48CB3; /* Rosa oscuro */
+            --color-texto: #26415E; /* Azul medio */
+            --color-footer: #0B1B32; /* Azul noche */
+        }
+        .navbar {
+            background: linear-gradient(90deg, var(--color-primario), var(--color-acento));
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 15px;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
 .logo {
     width: auto;
     height: 60px;
@@ -299,33 +325,30 @@
 </style>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg " style="padding: 10px;">
+<nav class="navbar navbar-expand-lg" style="padding: 10px;">
     <div class="container-fluid">
 
         <div style="display: flex; align-items: center;">
-            <!-- Botón sidebar (icono) -->
-            <button class="btn btn-outline-primary me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" style="display: flex; align-items: center;">
-                <i class="fas fa-bars"></i>
-            </button>
-
             <!-- Logo -->
             <a class="navbar-brand" href="{{ route('home') }}">
                 <img class="logo img-fluid" src="{{ asset('images/logo.png') }}" alt="Logo">
             </a>
         </div>
 
-
-
-
         <div style="display: flex; align-items: center; margin-right: 24px">
+            <!-- Enlace al catálogo -->
+            <a href="/catalogo" class="btn " style="margin-left: 20px; text-decoration: none; color: inherit;">Catálogo</a>
+
+            <!-- Enlace a mis pedidos -->
+            @if(auth()->check())
+                <a href="/pedidos" class="btn " style="margin-left: 20px; text-decoration: none; color: inherit;">Mis Pedidos</a>
+            @endif
+
             <!-- Icono del carrito -->
             <a class="btn-cart" href="#" id="cart-icon" style="margin-left: 20px; text-decoration: none; color: inherit; display: flex; align-items: center;">
                 <span id="cart-icon-total" style="margin-right: 5px;">$0.00</span>
                 <i class="fas fa-shopping-cart"></i>
             </a>
-
-
-
 
             <!-- Avatar o sesión -->
             <div class="dropdown ms-3" style="display: flex; align-items: center;">
@@ -342,7 +365,6 @@
                                 <button class="dropdown-item" type="submit">Cerrar sesión</button>
                             </form>
                         </li>
-                        <li><a class="dropdown-item" href="/pedidos">Mis pedidos</a></li>
                     </ul>
                 @else
                     <a href="{{ route('login') }}" class="btn nav-icons">Iniciar sesión</a>
@@ -350,84 +372,25 @@
             </div>
         </div>
 
-
-
-
-
-
-
-
-
-<!-- Sidebar para el carrito -->
-<div id="cart-sidebar" class="cart-sidebar">
-    <div class="cart-header">
-        <h3>Mi Carrito</h3>
-        <button id="close-sidebar" class="close-btn">X</button>
-    </div>
-    <div class="cart-content"></div>
-    <div class="cart-footer">
-        <!-- Subtotal Display en el Sidebar -->
-        <div class="cart-subtotal">
-            <p id="cart-total-sidebar" class="subtotal-text">Total: $0.00</p>
+        <!-- Sidebar para el carrito -->
+        <div id="cart-sidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3>Mi Carrito</h3>
+                <button id="close-sidebar" class="close-btn">X</button>
+            </div>
+            <div class="cart-content"></div>
+            <div class="cart-footer">
+                <!-- Subtotal Display en el Sidebar -->
+                <div class="cart-subtotal">
+                    <p id="cart-total-sidebar" class="subtotal-text">Total: $0.00</p>
+                </div>
+                <a href="{{ route('checkout') }}" class="btn btn-primary checkout-btn">Finalizar compra</a>
+            </div>
         </div>
-
-        <a href="{{ route('checkout') }}" class="btn btn-primary checkout-btn">Finalizar compra</a>
-    </div>
-
-
-</div>
 
     </div>
 </nav>
 
-
-<!-- Sidebar -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel" style="width: 300px; color:#333; background-color: #f8f9fa;">
-    <div class="offcanvas-header" style="padding: 15px; border-bottom: 1px solid #e0e0e0;">
-        <h5 id="sidebarMenuLabel" style="margin: 0; font-size: 1.25rem; font-weight: bold; color: #333;">Categorías</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body" style="padding: 15px;">
-        <!-- Lista de Categorías -->
-        <ul style="list-style: none; padding: 0; margin: 0;">
-            @foreach ($categorias as $categoria)
-                <li style="margin-bottom: 10px;">
-                    <!-- Categoría como toggle -->
-                    <a class="d-flex justify-content-between align-items-center"
-                       data-bs-toggle="collapse"
-                       href="#collapse-{{ $categoria->id }}"
-                       role="button"
-                       aria-expanded="false"
-                       aria-controls="collapse-{{ $categoria->id }}"
-                       style="text-decoration: none; font-weight: bold; color: #333; padding: 10px 15px; border-radius: 5px; transition: background-color 0.3s; cursor: pointer;"
-                       onmouseover="this.style.backgroundColor='#e0e0e0';"
-                       onmouseout="this.style.backgroundColor='transparent';">
-                        {{ $categoria->nombre }}
-                        <span>&#9662;</span> <!-- Flecha -->
-                    </a>
-
-                    <!-- Subcategorías -->
-                    @if ($categoria->subcategorias->isNotEmpty())
-                        <div class="collapse" id="collapse-{{ $categoria->id }}" style="margin-top: 5px;">
-                            <ul style="list-style: none; padding-left: 20px; margin: 0;">
-                                @foreach ($categoria->subcategorias as $subcategoria)
-                                    <li style="margin-bottom: 5px;">
-                                        <a href="#"
-                                           style="display: block; text-decoration: none; color: #555; padding: 8px 12px; border-radius: 4px; transition: background-color 0.3s; cursor: pointer;"
-                                           onmouseover="this.style.backgroundColor='#e0f7fa';"
-                                           onmouseout="this.style.backgroundColor='transparent';">
-                                            {{ $subcategoria->nombre }}
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                </li>
-            @endforeach
-        </ul>
-    </div>
-</div>
 
 
 
