@@ -27,8 +27,6 @@ use Illuminate\Support\Facades\DB;
 
 
 
-
-
 class PlataformaController extends Controller
 {
     public function iniciarCursosHoy()
@@ -50,10 +48,7 @@ class PlataformaController extends Controller
             ], 200);
         }
 
-         response()->json([
-            'message' => 'Cursos iniciados con éxito.',
-            'cursos' => $cursosIniciados,
-        ], 200);
+        redirect()->back()->with('success', 'Cursos iniciados correctamente.');
     }
 
 
@@ -131,12 +126,13 @@ class PlataformaController extends Controller
 
     public function misCursos()
     {
-        $cursos = Cursos::with('certificado')->get();
+        $cursos = Cursos::with('certificado')->paginate(5); // Paginación con 5 resultados por página
         $certificados = Certificados::all();
         $instituciones = ['SEP', 'Otra']; // Enum de instituciones
-
+    
         return view('plataforma.index', compact('cursos', 'certificados', 'instituciones'));
     }
+    
 
     public function cursoDestroy(Request $request)
     {
@@ -156,9 +152,9 @@ class PlataformaController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string',
+            'descripcion' => 'required|string|max:200', // Limita a 200 caracteres
             'duracion_semanas' => 'required|integer|min:1',
-            'id_certificacion' => 'nullable|exists:certificados,id', // Asegúrate de que el ID del certificado exista
+            'id_certificacion' => 'nullable|exists:certificados,id',
         ]);
 
         // Crea un nuevo curso
@@ -176,7 +172,7 @@ class PlataformaController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string',
+            'descripcion' => 'required|string|max:200',
             'horas' => 'required|integer|min:1|max:120',
             'institucion' => 'required|string|in:SEP,Otra',
         ]);
@@ -205,16 +201,48 @@ class PlataformaController extends Controller
         return redirect()->route('plataforma.mis-cursos')->with('success', 'Estado del curso actualizado con éxito.');
     }
 
-    
-    public function historialCursos()
+
+  public function historialCursos(Request $request)
 {
-    // Obtener el usuario autenticado
     $user = auth()->user();
+    $esAdmin = $user->hasRole('admin');
+    $esProfesor = $user->hasRole('profesor');
 
-    // Obtener todos los estudiantes con sus cursos
-    $estudiantes = Estudiante::with(['persona', 'cursosApertura'])->get();
+    $estadoFiltro = $request->input('estado');
+    $cursosApertura = collect(); // Valor por defecto
 
-    // Agrupar los cursos por estudiante
+    // Cursos por rol
+    if ($esAdmin) {
+        $cursosApertura = CursoApertura::with(['moduloCursos.modulo.temas', 'curso']);
+    } elseif ($esProfesor) {
+        $profesor = Profesor::whereHas('persona', function ($query) use ($user) {
+            $query->where('usuario', $user->id);
+        })->first();
+
+        if ($profesor) {
+            $cursosApertura = CursoApertura::whereHas('moduloCursos', function ($query) use ($profesor) {
+                $query->where('id_profesor', $profesor->id);
+            })->with(['moduloCursos.modulo.temas', 'curso']);
+        }
+    }
+
+    // Aplicar filtro de estado si se proporciona
+    if (!empty($estadoFiltro) && $cursosApertura instanceof \Illuminate\Database\Eloquent\Builder) {
+        $cursosApertura->where('estado', $estadoFiltro);
+    }
+
+    // Paginación de cursos apertura con filtro
+    $cursosAperturaPaginados = $cursosApertura instanceof \Illuminate\Database\Eloquent\Builder
+        ? $cursosApertura->paginate(3)->appends(['estado' => $estadoFiltro])
+        : collect();
+
+    // Otros datos necesarios
+    $todosCursos = Cursos::where('estado', 'activo')->paginate(10);
+    $modulosConTemas = Modulos::with('temas:id,nombre')->has('temas')->paginate(10);
+    $profesores = Profesor::with('persona')->paginate(10);
+    $estudiantes = Estudiante::with(['persona', 'cursosApertura'])->paginate(10);
+
+    // Preparar el resultado agrupando los cursos por estudiante
     $resultado = [];
     foreach ($estudiantes as $estudiante) {
         $matricula = $estudiante->matricula;
@@ -228,62 +256,46 @@ class PlataformaController extends Controller
             ];
         }
 
-        // Agregar cursos al estudiante
         foreach ($estudiante->cursosApertura as $curso) {
-            $estado = $curso->pivot->estado;
+            if (!empty($curso->hora_clase)) {
+                $horaClaseRaw = trim($curso->hora_clase);
+                try {
+                    $horaClase = Carbon::createFromFormat('H:i:s', $horaClaseRaw);
+                    $horaFin = $horaClase->copy()->addHours(2);
 
-            $resultado[$matricula]['cursos'][] = [
-                'id_curso_apertura' => $curso->id,
-                'nombre_curso' => $curso->nombre,
-                'fecha_inicio' => $curso->fecha_inicio,
-                'monto_colegiatura' => $curso->monto_colegiatura,
-                'dia_clase' => $curso->dia_clase,
-                'hora_clase' => $curso->hora_clase,
-                'estado' => $estado
-            ];
+                    if ($horaClase->hour < 8 || $horaFin->hour >= 22 || ($horaClase->hour == 21 && $horaClase->minute > 0)) {
+                        continue;
+                    }
+
+                    $estado = $curso->pivot->estado;
+                    $resultado[$matricula]['cursos'][] = [
+                        'id_curso_apertura' => $curso->id,
+                        'nombre_curso' => $curso->nombre,
+                        'fecha_inicio' => $curso->fecha_inicio,
+                        'monto_colegiatura' => $curso->monto_colegiatura,
+                        'dia_clase' => $curso->dia_clase,
+                        'hora_clase' => $curso->hora_clase,
+                        'estado' => $estado
+                    ];
+                } catch (Exception $e) {
+                    continue;
+                }
+            }
         }
     }
 
-    // Verificar si el usuario autenticado es un profesor
-    if ($user->hasRole('profesor')) {
-        // Intentar obtener el profesor relacionado con el usuario
-        $profesor = Profesor::whereHas('persona', function($query) use ($user) {
-            $query->where('usuario', $user->id); // Asegúrate de que 'usuario' es la columna correcta en 'personas'
-        })->first();
-
-        if ($profesor) {
-            // Si se encuentra el profesor, obtener los cursos asociados a él
-            $cursosApertura = CursoApertura::whereHas('moduloCursos', function ($query) use ($profesor) {
-                $query->where('id_profesor', $profesor->id); // Asociamos el curso con el profesor
-            })->with(['moduloCursos.modulo.temas', 'curso'])->get();
-        } else {
-            // Si no se encuentra al profesor, retornar una colección vacía
-            $cursosApertura = collect();
-        }
-    } else {
-        // Si no es un profesor, obtener todos los cursos aperturados
-        $cursosApertura = CursoApertura::with(['moduloCursos.modulo.temas', 'curso'])->get();
-    }
- 
-    // Obtener todos los cursos activos
-    $todosCursos = Cursos::where('estado', 'activo')->get();
-
-    // Obtener los módulos con sus temas
-    $modulosConTemas = Modulos::with('temas:id,nombre')->has('temas')->get(['id', 'nombre']);
-
-    // Obtener todos los profesores
-    $profesores = Profesor::with('persona')->get();
-
-    // Pasar los datos a la vista
     return view('plataforma.index', [
         'resultado' => array_values($resultado),
-        'estudiantes' => Estudiante::all(),
-        'cursos' => $todosCursos,
-        'cursosApertura' => $cursosApertura,
-        'modulosConTemas' => $modulosConTemas,
-        'profesores' => $profesores,
+        'estudiantes' => $estudiantes, // Esto ya está paginado
+        'cursos' => $todosCursos, // Paginado
+        'cursosApertura' => $cursosAperturaPaginados, // Paginado con filtro
+        'modulosConTemas' => $modulosConTemas, // Paginado
+        'profesores' => $profesores, // Paginado
     ]);
 }
+
+
+    
 
     
 
@@ -444,22 +456,27 @@ class PlataformaController extends Controller
         ]);
     }
 
+    
     public function listaModulos(Request $request)
     {
-        // Recuperar la categoría seleccionada desde el request
-        $categoria = $request->input('categoria', ''); // Si no hay categoría, se devuelve un valor vacío (lo que no aplicará filtro)
-
-        // Filtrar los módulos según la categoría seleccionada
+        // Obtén las páginas actuales para módulos y temas de los parámetros de la solicitud
+        $modulosPage = $request->input('modulos_page', 1);
+        $temasPage = $request->input('temas_page', 1);
+    
+        $categoria = $request->input('categoria', ''); // Filtrar por categoría si está presente
+    
         $modulos = Modulos::when($categoria, function ($query, $categoria) {
             return $query->where('categoria', $categoria);
-        })->get()->groupBy('categoria'); // Agrupar los módulos por categoría
-
-        // Obtener todos los temas (sin filtro)
-        $temas = Temas::all();
-
-        // Retornar la vista con los módulos y temas filtrados o completos
+        })->paginate(2, ['*'], 'modulos_page')->withQueryString();
+    
+        $temas = Temas::paginate(2, ['*'], 'temas_page')->withQueryString();
+    
         return view('plataforma.index', compact('modulos', 'temas'));
     }
+    
+    
+
+    
 
 
 

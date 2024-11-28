@@ -23,10 +23,14 @@ class CatalogoTienda extends Component
     public $disponibilidad = null;
     public $ordenarPor = null;
     public $busqueda = null;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 09f89cc8131dcdbd03dede5be43b50834a54b569
 
-    public function mount($categoria = null)
+    public function mount()
     {
+<<<<<<< HEAD
         $this->productos = Productos::all();
         $this->categorias = Categorias::with('subcategorias')->get();
         if ($this->categorias) {
@@ -39,6 +43,11 @@ class CatalogoTienda extends Component
         }
     }
 
+=======
+        // Cargar todas las categorías al inicio
+        $this->categorias = Categorias::all();
+    }
+>>>>>>> 09f89cc8131dcdbd03dede5be43b50834a54b569
 
     public function updatedCategoriaSeleccionada()
     {
@@ -106,7 +115,7 @@ class CatalogoTienda extends Component
             }
         }
 
-        return $query->paginate(16);
+        return $query->paginate(21);
     }
 
     public function render()

@@ -377,7 +377,7 @@
 <body>
 <div class="wrapper" >
     @include('components.sidebarPlataforma')
-    <div class="main p-3" style="background-color: #E5C9D7;">
+    <div class="main p-3" style="background-color: #ffffff;">
         @include(Route::currentRouteName())
     </div>
 </div>

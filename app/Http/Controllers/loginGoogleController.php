@@ -50,12 +50,25 @@ class loginGoogleController extends Controller
                     'created_at' => now(),
                 ]);
 
-                $user->assignRole('cliente');
-
+                $user->assignRole('cliente'); // Asigna el rol predeterminado a nuevos usuarios
             }
 
             Auth::login($user, true);
 
+            // Redirigir basado en el rol del usuario
+            if ($user->hasRole('admin')) {
+                return redirect('/plataforma/cursos/mis-cursos');
+            }
+
+            if ($user->hasRole('profesor')) {
+                return redirect('/plataforma/cursos/historial-cursos');
+            }
+
+            if ($user->hasRole('estudiante')) {
+                return redirect('/plataforma/espacio/perfil');
+            }
+
+            // Redirección predeterminada si no se cumple ningún rol
             return redirect()->route('home');
         } catch (\Exception $e) {
             return redirect('/login')->with('error', 'Algo salió mal al iniciar sesión con Google.');

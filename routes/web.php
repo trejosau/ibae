@@ -130,8 +130,26 @@ Route::get('/graficas/data', [GraficasController::class, 'obtenerData'])->name('
 Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
     {
         Route::get('/plataforma/', function () {
-            return Redirect::route('plataforma.mis-cursos');
+            $user = Auth::user();
+        
+            if ($user->hasRole('admin')) {
+                return Redirect::to('/plataforma/espacio/mis-cursos');
+            }
+        
+            if ($user->hasRole('profesor')) {
+                return Redirect::to('/plataforma/cursos/historial-cursos');
+            }
+        
+            if ($user->hasRole('estudiante')) {
+                return Redirect::to('/plataforma/espacio/perfil');
+            }
+        
+            // Redirección predeterminada si no tiene rol específico
+            return Redirect::to('/home');
         })->name('plataforma');
+
+
+
         Route::middleware(['role:estudiante'])->group(function () {
             Route::get('/plataforma/espacio/mis-cursos', [PlataformaController::class, 'misCursosEspacio'])->name('plataforma.espacio-mis-cursos');
             Route::get('/plataforma/espacio/mis-pagos', [PlataformaController::class, 'misPagosEspacio'])->name('plataforma.espacio-mis-pagos');

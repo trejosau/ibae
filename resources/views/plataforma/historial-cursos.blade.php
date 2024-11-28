@@ -25,11 +25,29 @@
             </a>
         @endif
     </div>
+
+
+   <div class="row mt-4">
+    <div class="col-12 mb-3">
+        <form method="GET" action="{{ route('plataforma.historial-cursos') }}">
+            <label for="estado" class="form-label">Filtrar por estado</label>
+            <select name="estado" id="estado" class="form-select" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                <option value="programado" {{ request('estado') == 'programado' ? 'selected' : '' }}>Programado</option>
+                <option value="en curso" {{ request('estado') == 'en curso' ? 'selected' : '' }}>En Curso</option>
+                <option value="finalizado" {{ request('estado') == 'finalizado' ? 'selected' : '' }}>Finalizado</option>
+            </select>
+        </form>
+    </div>
+</div>
     
+
+
     <div class="row mt-4">
         @foreach ($cursosApertura as $apertura)
-            <!-- Mostrar solo a administradores o cursos activos para profesores -->
-            @if(auth()->user()->hasRole('admin') || $apertura->estado == 'en curso')
+            <!-- Mostrar cursos según el rol -->
+            @if(auth()->user()->hasRole('admin') || 
+                (auth()->user()->hasRole('profesor') && $apertura->estado == 'en curso'))
                 <div class="col-12 mb-4">
                     <div class="card shadow-sm curso-card" style="font-size: 0.9rem; border: 1px solid #D32F2F; overflow: hidden; position: relative;">
                         <div class="card-body" style="padding: 15px;">
@@ -52,12 +70,10 @@
                             
                             <!-- Botones según el rol y el estado -->
                             @if(auth()->user()->hasRole('admin') && $apertura->estado == 'programado')
-                                <!-- Botón para inscribir (solo para admins) -->
                                 <button class="btn btn-danger btn-sm" style="position: absolute; top: 10px; right: 10px;" data-bs-toggle="modal" data-bs-target="#inscribirAlumnosModal-{{ $apertura->id }}">
                                     Inscribir
                                 </button>
                             @elseif(auth()->user()->hasRole('profesor') && $apertura->estado == 'en curso')
-                                <!-- Botón para asistencia/colegiaturas (solo para profesores en cursos activos) -->
                                 <a href="{{ route('plataforma.registrarAsistencia', $apertura->id) }}" class="btn btn-info btn-sm registrar-btn" style="position: absolute; top: 10px; right: 10px; z-index: 15;" target="_blank">
                                     Asistencia/Colegiaturas
                                 </a>
@@ -93,6 +109,61 @@
             @endif
         @endforeach
     </div>
+
+    @if ($cursosApertura->hasPages())
+    <nav aria-label="Page navigation" style="margin-top: 20px;">
+        <ul style="display: flex; justify-content: center; list-style: none; padding: 0;">
+            {{-- Botón de página anterior --}}
+            @if ($cursosApertura->onFirstPage())
+                <li style="margin: 0 5px;">
+                    <span style="display: inline-block; padding: 10px 15px; color: #ccc; background-color: #f5f5f5; border: 1px solid #ddd; border-radius: 5px;">&laquo;</span>
+                </li>
+            @else
+                <li style="margin: 0 5px;">
+                    <a href="{{ $cursosApertura->previousPageUrl() }}" rel="prev" 
+                       style="display: inline-block; padding: 10px 15px; color: #007bff; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; text-decoration: none;">
+                        &laquo;
+                    </a>
+                </li>
+            @endif
+
+            {{-- Números de página --}}
+            @foreach ($cursosApertura->links()->elements[0] as $page => $url)
+                @if ($page == $cursosApertura->currentPage())
+                    <li style="margin: 0 5px;">
+                        <span style="display: inline-block; padding: 10px 15px; color: #fff; background-color: #007bff; border: 1px solid #007bff; border-radius: 5px;">
+                            {{ $page }}
+                        </span>
+                    </li>
+                @else
+                    <li style="margin: 0 5px;">
+                        <a href="{{ $url }}" 
+                           style="display: inline-block; padding: 10px 15px; color: #007bff; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; text-decoration: none;">
+                            {{ $page }}
+                        </a>
+                    </li>
+                @endif
+            @endforeach
+
+            {{-- Botón de página siguiente --}}
+            @if ($cursosApertura->hasMorePages())
+                <li style="margin: 0 5px;">
+                    <a href="{{ $cursosApertura->nextPageUrl() }}" rel="next" 
+                       style="display: inline-block; padding: 10px 15px; color: #007bff; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; text-decoration: none;">
+                        &raquo;
+                    </a>
+                </li>
+            @else
+                <li style="margin: 0 5px;">
+                    <span style="display: inline-block; padding: 10px 15px; color: #ccc; background-color: #f5f5f5; border: 1px solid #ddd; border-radius: 5px;">&raquo;</span>
+                </li>
+            @endif
+        </ul>
+    </nav>
+@endif
+
+
+
     
     <!-- Modals -->
     @foreach ($cursosApertura as $apertura)
@@ -188,12 +259,7 @@
                     }
                 }
             </script>
-
-
-
        @endif
-
-
     @endforeach
 
 
@@ -242,11 +308,43 @@
                             <small id="diaSemana" class="text-muted"></small> <!-- Elemento para mostrar el día de la semana -->
                         </div>
 
-                        <!-- Campo para la Hora de Clase -->
-                        <div class="mb-3">
-                            <label for="horaClase" class="form-label">Hora de Clase</label>
-                            <input type="time" class="form-control" id="horaClase" name="hora_clase" >
-                        </div>
+                      <!-- Campo para la Hora de Clase -->
+<div class="mb-3">
+    <label for="horaClase" class="form-label">Hora de Clase</label>
+    <input 
+        type="time" 
+        class="form-control" 
+        id="horaClase" 
+        name="hora_clase" 
+        min="08:00" 
+        max="22:00" 
+        required
+        onchange="validarHora()" 
+    >
+    <div class="invalid-feedback" id="errorHoraClase" style="display: none;">
+        La hora de inicio debe estar entre 8:00 AM y 10:00 PM, y no puede exceder el horario límite de 2 horas.
+    </div>
+</div>
+<script>
+    function validarHora() {
+    const horaClase = document.getElementById('horaClase').value;
+    const errorHoraClase = document.getElementById('errorHoraClase');
+
+    const [hora, minutos] = horaClase.split(':').map(Number);
+    const horaFin = hora + 2; // Calculamos la hora de término para clases de 2 horas
+
+    // Validamos que la hora esté dentro del rango
+    if (hora < 8 || horaFin > 22 || (hora === 21 && minutos > 0)) {
+        errorHoraClase.style.display = 'block';
+        document.getElementById('horaClase').setCustomValidity('Invalid');
+    } else {
+        errorHoraClase.style.display = 'none';
+        document.getElementById('horaClase').setCustomValidity('');
+    }
+}
+
+</script>
+
 
                         <script>
                             // Obtener la fecha actual

@@ -45,13 +45,19 @@
                     <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                 </a>
                 <ul id="cursosDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item"><a style="text-decoration: none; color: inherit;" href="{{ route('plataforma.mis-cursos') }}" class="sidebar-link">Ver Cursos</a></li>
-                    <li class="sidebar-item"><a style="text-decoration: none; color: inherit;" href="{{route('plataforma.historial-cursos')}}" class="sidebar-link">Historial de Cursos</a></li>
+                    @if(auth()->user()->hasRole('admin'))
+                        <li class="sidebar-item">
+                            <a style="text-decoration: none; color: inherit;" href="{{ route('plataforma.mis-cursos') }}" class="sidebar-link">Ver Cursos</a>
+                        </li>
+                    @endif
+                    <li class="sidebar-item">
+                        <a style="text-decoration: none; color: inherit;" href="{{ route('plataforma.historial-cursos') }}" class="sidebar-link">Historial de Cursos</a>
+                    </li>
                 </ul>
             </li>
         @endif
 
-        @if(auth()->user()->hasAnyRole(['profesor', 'admin']))
+        @if(auth()->user()->hasAnyRole(['admin']))
         <!-- Sección para Módulos -->
         <li class="sidebar-item">
             <a style="text-decoration: none; color: inherit;" href="#modulosDropdown" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
@@ -62,6 +68,7 @@
             </a>
             <ul id="modulosDropdown" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                 <li class="sidebar-item"><a  style="text-decoration: none; color: inherit;" href="{{route('plataforma.lista-modulos')}}" class="sidebar-link">Modulos y Temas</a></li>
+                <li class="sidebar-item"><a  style="text-decoration: none; color: inherit;" href="{{route('ligarTemasModulo')}}" class="sidebar-link">Asignar Temas</a></li>
                </ul>
         </li>
         @endif

@@ -305,6 +305,7 @@
   </div>
 
 
+<<<<<<< HEAD
   <div class="text-center p-5 fs-4">
     <h1 class="titulo-grande">ECHA UN VISTAZO A NUESTRAS CATEGORÍAS</h1>
 </div>
@@ -326,6 +327,8 @@
     @endforeach
 </div>
 
+=======
+>>>>>>> 09f89cc8131dcdbd03dede5be43b50834a54b569
 
 
 
