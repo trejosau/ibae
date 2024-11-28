@@ -237,7 +237,7 @@ Route::get('/productos', [ProductosController::class, 'index'])->name('productos
 Route::post('/producto/{id}/agregar-al-carrito', [ProductosController::class, 'agregarAlCarrito'])->name('producto.agregar');
 Route::delete('/carrito/{id}', [ProductosController::class, 'eliminarDelCarrito'])->name('carrito.eliminar');
 Route::get('/categorias', [ProductosController::class, 'obtenerCategorias']);
-Route::get('/catalogo/{categoria?}', CatalogoTienda::class)->name('catalogo');
+Route::get('/catalogo/', [ProductosController::class, 'catalogo'])->name('catalogo');
 
 
 

@@ -203,7 +203,8 @@
     @endif
     <div class="container rounded bg-white mt-5 mb-5">
         <div class="row">
-            <div class="col-md-3 border-right">
+            <!-- Columna: Información de Perfil -->
+            <div class="col-md-4 border-right">
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                     <div class="profile-image-container position-relative d-inline-block mt-5">
                         <img class="rounded-circle profile-img" width="150px" src="{{ $user->profile_photo_url }}" alt="Profile Image">
@@ -211,178 +212,135 @@
                             <i class="fa fa-pencil fa-3x"></i>
                         </a>
                     </div>
-
                     <span class="font-weight-bold">{{ $user->username }}</span>
                     <span class="text-black-50">{{ $user->email }}</span>
+                    </div>
+            </div>
+
+            <!-- Columna: Información Personal -->
+            <div class="col-md-4 border-right">
+                <div class="p-3 py-5">
+                    <h4 class="mb-4">Información Personal</h4>
+
+                    <!-- Botones de acción -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        @if ($user->provider === 'default')
+                            <button class="btn btn-primary profile-button" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Cambiar Contraseña</button>
+                        @endif
+                    </div>
+
+                    <!-- Formulario de Actualización -->
+                    <form method="POST" action="{{ route('profile.update') }}">
+                        @csrf
+                        @method('PUT')
+                        <div class="mb-3">
+                            <label class="labels">Username</label>
+                            <input type="text" class="form-control" name="username" placeholder="username" value="{{ $user->username }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="labels">Teléfono</label>
+                            <input type="text" class="form-control" name="telefono" placeholder="Teléfono" value="{{ old('telefono', optional($user->persona)->telefono) }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="labels">Razón Social</label>
+                            <input type="text" class="form-control" name="razon_social" placeholder="Razón Social" value="{{ optional($user->persona)->razon_social }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="labels">Nombre</label>
+                            <input type="text" class="form-control" name="nombre" placeholder="Nombre"
+                                   value="{{ old('nombre', optional($user->Persona)->nombre) }}" enabled>
+                        </div>
+                        <div class="mb-3">
+                            <label class="labels">Apellido Paterno</label>
+                            <input type="text" class="form-control" name="ap_paterno" placeholder="Apellido Paterno"
+                                   value="{{ old('ap_paterno', optional($user->Persona)->ap_paterno) }}" enabled>
+                        </div>
+                        <div class="mb-3">
+                            <label class="labels">Apellido Materno</label>
+                            <input type="text" class="form-control" name="ap_materno" placeholder="Apellido Materno"
+                                   value="{{ old('ap_materno', optional($user->Persona)->ap_materno) }}" enabled>
+                        </div>
+                        <button class="btn btn-primary profile-button" type="submit">Guardar Perfil</button>
+
+                    </form>
                 </div>
             </div>
-            <div class="col-md-5 border-right">
+
+            <!-- Columna: Información Adicional -->
+            <div class="col-md-4">
                 <div class="p-3 py-5">
+                    <!-- Dirección -->
 
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="text-right">Informacion personal</h4>
-                        @if ($user->provider === 'default')
-                            <button class="btn btn-primary profile-button" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-                                Cambiar Contraseña
-                            </button>
-                        @endif
-
-
-                        <form method="POST" action="{{ route('profile.update') }}">
-                            @method('PUT')
-                            <button class="btn btn-primary profile-button" type="submit">Guardar Perfil</button>
-
-                    @csrf
-
-                    <div class="row mt-2">
-                        <div class="col-md-12">
-                            <label class="labels">Username</label>
-                            <input type="text" class="form-control" name="username" placeholder="username" value="{{  $user->username }}">
-                        </div>
-                    </div>
-
-                    <div class="row mt-2">
-                        <div class="col-md-12">
-                            <label class="labels">Nombre</label>
-                            <input type="text" class="form-control" name="nombre" placeholder="Nombre" value="{{ old('nombre', optional($user->persona)->nombre) }}" disabled>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-6">
-                            <label class="labels">Apellido Materno</label>
-                            <input type="text" class="form-control" name="ap_materno" value="{{ old('ap_materno', optional($user->persona)->ap_materno) }}" placeholder="Apellido Materno" disabled>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="labels">Apellido Paterno</label>
-                            <input type="text" class="form-control" name="ap_paterno" value="{{ old('ap_paterno', optional($user->persona)->ap_paterno) }}" placeholder="Apellido Paterno" disabled>
-                        </div>
-                    </div>
-
-                    <div class="col-md-12">
-                        <label class="labels">Teléfono</label>
-                        <input type="text" class="form-control" name="telefono" placeholder="Teléfono" value="{{ old('telefono', optional($user->persona)->telefono) }}">
-                    </div>
-                    <div class="col-md-12">
-                        <label class="labels">Razón Social</label>
-                        <input type="text" class="form-control" name="razon_social" placeholder="Salon de belleza trc" value="{{ optional($user->persona)->razon_social }}">
-                    </div>
-
-                    <div class="col-md-12 mt-2">
-                        <label class="labels">Email</label>
-                        <div class="input-group">
-                            <input type="email" class="form-control" name="email" placeholder="Ingrese email" value="{{ $user->email }}" {{ $user->email_verified_at ? 'readonly' : '' }}>
-
-                            <!-- Condición para verificar el estado del correo -->
-                            @if ($user->email_verified_at)
-                                <!-- Si el correo está verificado -->
-                                <button class="btn btn-success" disabled>
-                                    <i class="fa fa-check-circle"></i> Verificado
-                                </button>
-                            @else
-                                <!-- Si el correo no está verificado -->
-                                <form action="" method="POST" class="d-inline-block">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fa fa-envelope"></i> Verificar Email
-                                    </button>
-                                </form>
-                            @endif
-                        </div>
-                    </div>
-                    </form>
-
-
-                </div>
-                <hr>
-
-                @php
-                    $direccion = null;
-                    if(optional($user->persona)->estudiante && !optional($user->persona)->profesor) {  // Solo estudiante
-                        $direccion = $user->persona->estudiante;
-                    } elseif(optional($user->persona)->profesor && !optional($user->persona)->estudiante) {  // Solo profesor
-                        $direccion = $user->persona->profesor;
-                    } elseif(optional($user->persona)->estudiante && optional($user->persona)->profesor) {// Ambos, preferir estudiante
-                        $direccion = $user->persona->estudiante;
-                    }
-                @endphp
+                    @php
+                        $direccion = null;
+                        if(optional($user->persona)->estudiante && !optional($user->persona)->profesor) {  // Solo estudiante
+                            $direccion = $user->persona->estudiante;
+                        } elseif(optional($user->persona)->profesor && !optional($user->persona)->estudiante) {  // Solo profesor
+                            $direccion = $user->persona->profesor;
+                        } elseif(optional($user->persona)->estudiante && optional($user->persona)->profesor) {// Ambos, preferir estudiante
+                            $direccion = $user->persona->estudiante;
+                        }
+                    @endphp
 
                 @if($direccion)
-                    <h6 class="text-center mb-3">Dirección</h6>
-                    <div class="row mt-3">
-                        <div class="col-md-12">
-                            <label class="labels">Código Postal</label>
-                            <input type="text" class="form-control" placeholder="Código Postal" value="{{ $direccion->zipcode }}" disabled>
+                        <h6 class="text-center mb-3">Dirección</h6>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label class="labels">Código Postal</label>
+                                <input type="text" class="form-control" value="{{ $direccion->zipcode }}" disabled>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="labels">Ciudad</label>
+                                <input type="text" class="form-control" value="{{ $direccion->ciudad }}" disabled>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="labels">Colonia</label>
+                                <input type="text" class="form-control" value="{{ $direccion->colonia }}" disabled>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="labels">Calle</label>
+                                <input type="text" class="form-control" value="{{ $direccion->calle }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="labels">Número Exterior</label>
+                                <input type="text" class="form-control" value="{{ $direccion->num_ext }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="labels">Número Interior</label>
+                                <input type="text" class="form-control" value="{{ $direccion->num_int }}" disabled>
+                            </div>
                         </div>
-                        <div class="col-md-12">
-                            <label class="labels">Ciudad</label>
-                            <input type="text" class="form-control" placeholder="Ciudad" value="{{ $direccion->ciudad }}" disabled>
+                    @endif
+
+                    <!-- Información de Estudiante -->
+                    @if(optional($user->persona)->estudiante)
+                        <h6 class="text-center mb-3">Información de Estudiante</h6>
+                        <div class="mb-3">
+                            <label class="labels">Matrícula</label>
+                            <input type="text" class="form-control" value="{{ optional($user->persona->estudiante)->matricula }}" disabled>
                         </div>
-                        <div class="col-md-12">
-                            <label class="labels">Colonia</label>
-                            <input type="text" class="form-control" placeholder="Colonia" value="{{ $direccion->colonia }}" disabled>
+                        <div class="mb-3">
+                            <label class="labels">Fecha de Inscripción</label>
+                            <input type="text" class="form-control" value="{{ optional($user->persona->estudiante)->fecha_inscripcion }}" disabled>
                         </div>
-                        <div class="col-md-12">
-                            <label class="labels">Calle</label>
-                            <input type="text" class="form-control" placeholder="Calle" value="{{ $direccion->calle }}" disabled>
+                    @endif
+
+                    <!-- Información de Profesor -->
+                    @if(optional($user->persona)->profesor)
+                        <h6 class="text-center mb-3">Información de Profesor</h6>
+                        <div class="mb-3">
+                            <label class="labels">Especialidad</label>
+                            <input type="text" class="form-control" value="{{ optional($user->persona->profesor)->especialidad }}" disabled>
                         </div>
-                        <div class="col-md-6">
-                            <label class="labels">Número Exterior</label>
-                            <input type="text" class="form-control" placeholder="Número Exterior" value="{{ $direccion->num_ext }}" disabled>
+                        <div class="mb-3">
+                            <label class="labels">Fecha de Contratación</label>
+                            <input type="text" class="form-control" value="{{ optional($user->persona->profesor)->fecha_contratacion }}" disabled>
                         </div>
-                        <div class="col-md-6">
-                            <label class="labels">Número Interior</label>
-                            <input type="text" class="form-control" placeholder="Número Interior" value="{{ $direccion->num_int }}" disabled>
-                        </div>
-                    </div>
-                @endif
-
-
-
-        </div>
-        <div class="col-md-4">
-            <div class="p-3 py-5">
-
-                {{-- Sección para estudiantes --}}
-                @if(optional($user->persona)->estudiante)
-                    <h6 class="text-center mb-3">Información de estudiante</h6>
-                    <div class="form-group">
-                        <label class="labels">Matrícula</label>
-                        <input type="text" class="form-control" value="{{ optional($user->persona->estudiante)->matricula }}" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label class="labels">Fecha de Inscripción</label>
-                        <input type="text" class="form-control" value="{{ optional($user->persona->estudiante)->fecha_inscripcion }}" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label class="labels">Precio de Inscripción</label>
-                        <input type="text" class="form-control" value="{{ optional(optional($user->persona->estudiante)->inscripcion)->precio }}" disabled>
-                    </div>
-                @endif
-
-                <hr>
-
-
-                @if(optional($user->persona)->profesor)
-                    <h6 class="text-center mb-3">Información de profesor</h6>
-                    <div class="form-group">
-                        <label class="labels">Especialidad</label>
-                        <input type="text" class="form-control" value="{{ optional($user->persona->profesor)->especialidad }}" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label class="labels">Fecha de Contratación</label>
-                        <input type="text" class="form-control" value="{{ optional($user->persona->profesor)->fecha_contratacion }}" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label class="labels">RFC</label>
-                        <input type="text" class="form-control" value="{{ optional($user->persona->profesor)->RFC }}" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label class="labels">CURP</label>
-                        <input type="text" class="form-control" value="{{ optional($user->persona->profesor)->CURP }}" disabled>
-                    </div>
-                @endif
+                    @endif
+                </div>
             </div>
         </div>
     </div>
+
     </div>
 @endsection

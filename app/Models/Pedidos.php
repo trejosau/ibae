@@ -20,6 +20,8 @@ class Pedidos extends Model
         'es_estudiante',
         'id_estudiante',
         'estado_pago',
+        'fecha_pago',
+        'stripe_payment_id',
     ];
     public function detalles()
     {

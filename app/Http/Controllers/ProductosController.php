@@ -21,6 +21,14 @@ use Stripe\Stripe;
 class ProductosController extends Controller
 {
 
+    public function catalogo()
+    {
+        $productos = Productos::all(); // Obtiene todos los productos
+        $categorias = Categorias::with('subcategorias')->get(); // Obtiene todas las categorías
+        return view('catalogo', compact('productos', 'categorias')); // Pasa productos y categorías a la vista
+    }
+
+
     public function mostrarPedidos()
     {
         $comprador = Auth::user()->persona->comprador;

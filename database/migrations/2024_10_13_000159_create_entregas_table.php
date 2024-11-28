@@ -15,7 +15,7 @@ return new class extends Migration
             $table->dateTime('fecha_hora_entregado')->nullable();
             $table->dateTime('fecha_hora_listo_entregar')->nullable();
             $table->enum('estado', ['listo entregar', 'entregado']);
-            $table->string('nombre_recolector');
+            $table->string('nombre_recolector')->nullable();
 
             $table->foreign('id_pedido')->references('id')->on('pedidos')->onDelete('cascade');
             $table->foreign('id_admin')->references('id')->on('administradores')->onDelete('cascade');

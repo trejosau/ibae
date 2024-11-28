@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Categorias;
 use App\Models\Productos;
+use App\Models\ProductoSubcategoria;
 use App\Models\Subcategoria;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -12,9 +13,8 @@ class CatalogoTienda extends Component
 {
     use WithPagination;
 
-    public $productos;
     public $categorias;
-    public $subcategorias;
+    public $subcategorias = [];
     public $categoriaSeleccionada = null;
     public $subcategoriaSeleccionada = null;
     public $precioMin = null;
@@ -25,20 +25,26 @@ class CatalogoTienda extends Component
 
     public function mount()
     {
-        // Cargar todas las categorías y sus subcategorías
-        $this->categorias = Categorias::with('subcategorias')->get();
-
-        // Establecer subcategorías iniciales si hay una categoría seleccionada
-        if ($this->categorias->isNotEmpty()) {
-            $this->subcategorias = Subcategoria::where('categoria_id', $this->categorias->first()->id)->get();
-        }
+        // Cargar todas las categorías al inicio
+        $this->categorias = Categorias::all();
     }
 
     public function updatedCategoriaSeleccionada()
     {
-        // Actualizar subcategorías al cambiar categoría
+        // Actualizar subcategorías y limpiar selección de subcategoría al cambiar la categoría
         $this->subcategorias = Subcategoria::where('categoria_id', $this->categoriaSeleccionada)->get();
         $this->subcategoriaSeleccionada = null; // Limpiar selección de subcategoría
+    }
+
+    public function updatedSubcategoriaSeleccionada()
+    {
+        // Validar si la subcategoría pertenece a la categoría seleccionada
+        if ($this->subcategoriaSeleccionada) {
+            $subcategoria = Subcategoria::find($this->subcategoriaSeleccionada);
+            if (!$subcategoria || $subcategoria->categoria_id != $this->categoriaSeleccionada) {
+                $this->subcategoriaSeleccionada = null; // Limpiar si no pertenece
+            }
+        }
     }
 
     public function actualizarProductos()
@@ -54,6 +60,7 @@ class CatalogoTienda extends Component
         }
 
         if ($this->subcategoriaSeleccionada) {
+            // Filtrar productos relacionados con la subcategoría seleccionada
             $query->whereHas('productoSubcategorias', function ($q) {
                 $q->where('id_subcategoria', $this->subcategoriaSeleccionada);
             });
@@ -93,9 +100,10 @@ class CatalogoTienda extends Component
 
     public function render()
     {
-        dd($this->productos)
+        $productos = $this->actualizarProductos();
+
         return view('livewire.catalogo-tienda', [
-            'productos' => $this->actualizarProductos(),
+            'productos' => $productos,
             'categorias' => $this->categorias,
             'subcategorias' => $this->subcategorias,
         ]);
