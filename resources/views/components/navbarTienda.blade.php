@@ -337,7 +337,6 @@
 
         <div style="display: flex; align-items: center; margin-right: 24px">
             <!-- Enlace al catálogo -->
-            <a href="/catalogo" class="btn " style="margin-left: 20px; text-decoration: none; color: inherit;">Catálogo</a>
 
             <!-- Enlace a mis pedidos -->
             @if(auth()->check())

@@ -129,10 +129,13 @@
 
 </style>
     @include('components.navbarTienda')
+
     <main class="main" style="margin-top: 92px;">
         @livewire('catalogo-tienda')
     </main>
+
     @include('components.footer')
+    
     @livewireScripts
 </body>
 
