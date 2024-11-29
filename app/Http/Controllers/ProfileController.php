@@ -38,15 +38,18 @@ class ProfileController extends Controller
 
         $comprador = Comprador::where('id_persona', $persona->id)->first();
         // Validación de los campos
+
+
+
         $validatedData = $request->validate([
             'nombre' => 'nullable|string|max:255',
             'ap_materno' => 'nullable|string|max:255',
             'ap_paterno' => 'nullable|string|max:255',
             'telefono' => 'nullable|string|max:15',
             'razon_social' => 'nullable|string|max:255',
-            'email' => 'required|email|max:255',
             'username' => 'required|string|max:255',
         ]);
+
 
         $username = $validatedData['username'];
 
@@ -59,7 +62,6 @@ class ProfileController extends Controller
 
             $comprador->razon_social = $validatedData['razon_social'];
 
-        $email = $validatedData['email'];
 
 
 
@@ -68,9 +70,7 @@ class ProfileController extends Controller
             $user->username = $username;
         }
 
-        if ($user->email !== $email && !User::where('email', $email)->exists()) {
-            $user->email = $email;
-        }
+
 
 
         $persona->save();
@@ -113,8 +113,9 @@ class ProfileController extends Controller
             'crop_y' => 'required|numeric',
             'crop_width' => 'required|numeric',
             'crop_height' => 'required|numeric',
-            'main_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'main_photo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
+
 
         $manager = new ImageManager(new Driver());
         $image = $manager->read($request->file('main_photo')->getContent());

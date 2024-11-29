@@ -139,13 +139,16 @@
             </div>
         </div>
 
-        <div class="row mb-4">
-            <div class="col-12">
-                <!-- Gráfico de ingresos -->
-                <div id="chart" style="width: 100%;"></div>
+        <div class="col-md-12 mt-4">
+            <div class="card border-success h-100 mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">
+                        <i class="fas fa-school fa-2x text-success"></i> Grafica de ingresos
+                    </h5>
+                    <div id="chart" style="width: 100%;"></div>
+                </div>
             </div>
         </div>
-
     </div>
 
 </div>

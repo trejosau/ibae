@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 
 use App\Livewire\CatalogoTienda;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redirect;
 
@@ -131,19 +132,19 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
     {
         Route::get('/plataforma/', function () {
             $user = Auth::user();
-        
+
             if ($user->hasRole('admin')) {
                 return Redirect::to('/plataforma/espacio/mis-cursos');
             }
-        
+
             if ($user->hasRole('profesor')) {
                 return Redirect::to('/plataforma/cursos/historial-cursos');
             }
-        
+
             if ($user->hasRole('estudiante')) {
                 return Redirect::to('/plataforma/espacio/perfil');
             }
-        
+
             // Redirección predeterminada si no tiene rol específico
             return Redirect::to('/home');
         })->name('plataforma');
@@ -238,7 +239,7 @@ Route::get('/productos', [ProductosController::class, 'index'])->name('productos
 Route::post('/producto/{id}/agregar-al-carrito', [ProductosController::class, 'agregarAlCarrito'])->name('producto.agregar');
 Route::delete('/carrito/{id}', [ProductosController::class, 'eliminarDelCarrito'])->name('carrito.eliminar');
 Route::get('/categorias', [ProductosController::class, 'obtenerCategorias']);
-Route::get('/catalogo/{categoria?}', CatalogoTienda::class)->name('catalogo');
+Route::get('/catalogo/', [ProductosController::class, 'catalogo'])->name('catalogo');
 
 
 

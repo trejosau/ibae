@@ -92,8 +92,8 @@
                         </li>
                     </ul>
                 @else
-                    <a href="{{ route('login') }}" class="btn btn-primary login-button me-3">
-                        Login
+                    <a href="{{ route('login') }}" class="btn  login-button me-3">
+                        Iniciar sesión
                     </a>
                 @endif
             </div>

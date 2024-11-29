@@ -337,13 +337,19 @@
 
         <div style="display: flex; align-items: center; margin-right: 24px">
             <!-- Enlace al catálogo -->
-            <a href="/catalogo" class="btn " style="margin-left: 20px; text-decoration: none; color: inherit;">Catálogo</a>
 
             <!-- Enlace a mis pedidos -->
-            @if(auth()->check())
-                <a href="/pedidos" class="btn " style="margin-left: 20px; text-decoration: none; color: inherit;">Mis Pedidos</a>
+            @if (Route::currentRouteName() != 'tienda.mis-pedidos')  <!-- Cambié la comparación para que sea diferente -->
+                @if(auth()->check())
+                    <a href="/pedidos" class="btn" style="margin-left: 20px; text-decoration: none; color: inherit;">Mis Pedidos</a>
+                @endif
             @endif
 
+            @if (Route::currentRouteName() == 'tienda.mis-pedidos')
+                @if(auth()->check())
+                    <a href="/catalogo" class="btn " style="margin-left: 20px; text-decoration: none; color: inherit;">Ir a catalgo</a>
+                @endif
+            @endif
             <!-- Icono del carrito -->
             <a class="btn-cart" href="#" id="cart-icon" style="margin-left: 20px; text-decoration: none; color: inherit; display: flex; align-items: center;">
                 <span id="cart-icon-total" style="margin-right: 5px;">$0.00</span>
