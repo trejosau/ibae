@@ -189,6 +189,8 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
             Route::put('/tema/modificar/{id}', [PlataformaController::class, 'actualizarTema'])->name('plataforma.actualizarTema');
             Route::delete('/tema/eliminar/{id}', [PlataformaController::class, 'eliminarTema'])->name('plataforma.eliminarTema');
             Route::post('/temas', [PlataformaController::class, 'crearTema'])->name('plataforma.crearTema');
+            Route::put('/modulos/{modulo}/actualizar-temas', [PlataformaController::class, 'actualizarTemas'])->name('modulos.actualizarTemas');
+
 
             // Rutas de Personal
             Route::get('/plataforma/personal/estudiantes', [PlataformaController::class, 'estudiantes'])->name('plataforma.estudiantes');

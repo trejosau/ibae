@@ -34,6 +34,7 @@ class AcademiaSeeder extends Seeder
                 'duracion_semanas' => rand(4, 20),
                 'estado' => rand(0, 1) ? 'activo' : 'inactivo',
                 'id_certificacion' => rand(1, 5),
+                'duracion_horas' => rand(40, 200),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];

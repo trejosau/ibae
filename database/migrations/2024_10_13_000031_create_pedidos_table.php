@@ -13,7 +13,7 @@ return new class extends Migration
             $table->decimal('total', 10);
             $table->enum('estado', ['entregado', 'listo para entrega', 'preparando para entrega']);
             $table->string('clave_entrega', 100);
-            $table->timestamp('fecha-hora_pedido')->nullable();
+            $table->timestamp('fecha_hora_pedido')->nullable();
             $table->unsignedBigInteger('id_comprador');
             $table->boolean('es_estudiante');
             $table->unsignedBigInteger('id_estudiante')->nullable();

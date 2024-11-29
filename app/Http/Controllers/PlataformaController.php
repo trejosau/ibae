@@ -97,6 +97,9 @@ class PlataformaController extends Controller
         return redirect()->back()->with('messages', $messages);
     }
 
+
+
+
     public function ligarModulosATemas()
     {
         // Obtener todos los módulos con sus temas y agruparlos por categoría
@@ -122,6 +125,7 @@ class PlataformaController extends Controller
         // Pasar los módulos y los temas a la vista
         return view('plataforma.temas-modulos', compact('modulos', 'todosLosTemas', 'temasPorCategoria', 'modulosSinTemas'));
     }
+    
     public function eliminarTemaDeModulo(Request $request)
 {
     $validado = $request->validate([
@@ -147,6 +151,23 @@ class PlataformaController extends Controller
         'mensaje' => 'No se pudo eliminar el tema del módulo.',
     ], 500);
 }
+
+public function actualizarTemas(Request $request, $moduloId)
+{
+    $modulo = Modulos::findOrFail($moduloId);
+
+    // Validar que solo haya temas seleccionados únicos
+    $temaIds = array_filter($request->input('tema_ids', []));
+    if (count($temaIds) !== count(array_unique($temaIds))) {
+        return redirect()->back()->with('messages', ['No puedes asignar el mismo tema más de una vez.']);
+    }
+
+    // Sincronizar temas con el módulo
+    $modulo->temas()->sync($temaIds);
+
+    return redirect()->back()->with('messages', ['Temas actualizados correctamente.']);
+}
+
 
 
 
@@ -800,19 +821,6 @@ class PlataformaController extends Controller
     // Redirige con un mensaje de éxito
     return redirect()->route('inscripciones.index')->with('success', 'Inscripción eliminada correctamente.');
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public function profesores() {

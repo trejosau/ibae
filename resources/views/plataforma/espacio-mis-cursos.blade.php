@@ -19,7 +19,7 @@
                     <!-- Contenido del curso -->
                     <div class="flex-grow-1 d-flex flex-column justify-content-center">
                         <h5 class="m-0" style="font-size: 1rem; font-weight: bold;">{{ $curso->nombre_curso }}</h5>
-                        <div class="d-flex mt-2 justify-content-between" style="gap: 15px;">
+                        <div class="d-flex mt-2 justify-content-around">
                             <!-- Íconos con redirección -->
                             <a href="#" class="text-decoration-none" title="Calendario" 
                                data-bs-toggle="modal" data-bs-target="#modalCalendario{{ $curso->id }}">

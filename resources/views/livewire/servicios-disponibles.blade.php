@@ -42,16 +42,7 @@
                     <p class="added-status d-none" style="font-size: 0.85rem; color: #28a745; margin-top: 5px; display: flex; align-items: center;">
                         <i class="fa fa-check-circle" aria-hidden="true" style="margin-right: 5px;"></i> Added
                     </p>
-                    @if ($servicio->Categoria->nombre === 'Color')
-                        <span class="badge bg-primary" style="font-size: 0.8rem; margin-left: 10px;">
-                            Este servicio necesita detalles del cabello al elegirlo, en el siguiente paso te los pediremos.
-                        </span>
-                    @endif
-                    @if ($servicio->Categoria->nombre === 'Uñas')
-                        <span class="badge bg-primary" style="font-size: 0.8rem; margin-left: 10px;">
-                            Este servicio necesita detalles del diseño de las uñas al elegirlo, en el siguiente paso te los pediremos.
-                        </span>
-                    @endif
+
                 </div>
 
 
@@ -135,8 +126,15 @@
                         <!-- Fecha y Hora -->
                         <div class="col-md-6 mb-3">
                             <label for="pickDay">Seleccionar Fecha</label>
-                            <input type="date" class="form-control" wire:model="fechaElegida" wire:change="obtenerHorariosLibres">
+                            <input 
+                                type="date" 
+                                class="form-control" 
+                                wire:model="fechaElegida" 
+                                wire:change="obtenerHorariosLibres" 
+                                min="{{ $fechaMinima }}" 
+                                max="{{ $fechaMaxima }}">
                         </div>
+                        
                         <div class="col-md-6 mb-3">
                             <label for="pickTime">Seleccionar Hora</label>
                             <select id="pickTime" class="form-control" wire:model="horaElegida">
@@ -149,74 +147,7 @@
                             </select>
                         </div>
 
-                        <!-- Servicios de Color -->
-                        @if ($hayServiciosColor)
-                            <div class="col-12">
-                                <h4 class="text-center">Detalles del Cabello</h4>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <select name="largo" id="largo" class="form-select mb-3">
-                                            <option value="" disabled selected>Selecciona el largo</option>
-                                            <option value="corto">Corto</option>
-                                            <option value="medio">Medio</option>
-                                            <option value="largo">Largo</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <select name="estado" id="estado" class="form-select mb-3">
-                                            <option value="" disabled selected>Selecciona el estado</option>
-                                            <option value="nuevo">Nuevo</option>
-                                            <option value="usado">Usado</option>
-                                            <option value="dañado">Dañado</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <select name="volumen" id="volumen" class="form-select mb-3">
-                                            <option value="" disabled selected>Selecciona el volumen</option>
-                                            <option value="bajo">Bajo</option>
-                                            <option value="medio">Medio</option>
-                                            <option value="alto">Alto</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
 
-                        <!-- Servicios de Uñas -->
-                        @if ($hayServiciosUnas)
-                            <div class="col-12">
-                                <h4 class="text-center">Detalles de las Uñas</h4>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <select name="largoUnas" id="largoUnas" class="form-select mb-3">
-                                            <option value="" disabled selected>Selecciona el largo</option>
-                                            @for ($i = 1; $i <= 8; $i++)
-                                                <option value="{{ $i }}">#{{ $i }}</option>
-                                            @endfor
-                                        </select>
-                                    </div>
-
-                                    @foreach ($inputs as $index => $input)
-                                        <div class="col-md-3">
-                                            <label for="{{ $input['id'] }}">Cantidad de uñas con {{ $input['label'] }}</label>
-                                            <input
-                                                type="number"
-                                                id="{{ $input['id'] }}"
-                                                wire:model.live="inputs.{{ $index }}.value"
-                                                class="form-control"
-                                                min="0"
-                                                max="{{ $max - $total + $input['value'] }}"
-                                            >
-                                        </div>
-                                    @endforeach
-                                </div>
-
-                                <div class="alert alert-info mt-3">
-                                    Total de uñas asignadas: {{ $total }}/{{ $max }}
-                                </div>
-                            </div>
-                        @endif
-                    </div>
                 @endif
 
                 <!-- Servicios seleccionados -->
@@ -238,11 +169,10 @@
                 @endif
 
                 <!-- Botón flotante Confirmar -->
-                <div class="text-right mt-3">
-                    <button wire:click="confirmarCita" class="btn btn-success" style="padding: 10px 20px; font-size: 1rem; border-radius: 8px;">
-                        Confirmar
-                    </button>
-                </div>
+                <button wire:click="confirmarCita" class="btn btn-success" style="padding: 10px 20px; font-size: 1rem; border-radius: 8px;">
+                    Confirmar
+                </button>
+                
             </div>
         @endif
 
