@@ -11,6 +11,8 @@ use DateInterval;
 use DateTime;
 use Livewire\Component;
 use App\Models\Servicios;
+use Illuminate\Support\Facades\DB;
+
 
 class ServiciosDisponibles extends Component
 {
@@ -69,71 +71,82 @@ class ServiciosDisponibles extends Component
             $this->total += $this->inputs[$key]['value'];
         }
     }
+
+
+
+
+
     public function obtenerHorariosLibres()
     {
         // Verificar que los parámetros necesarios estén definidos
         if (!$this->fechaElegida || !$this->estilistaSeleccionada || $this->duracionTotal <= 0) {
-            $this->horariosLibres = [];  // Si falta información, no se muestran horarios
+            $this->horariosLibres = [];
             return;
         }
-
-        // Convertir duración total de minutos a horas (bloques de tiempo)
-        $duracionEnHoras = $this->duracionTotal / 60;
-
+    
+        // Convertir duración total de minutos a formato horas
+        $duracionEnMinutos = $this->duracionTotal;
+    
         // Definir horarios laborales (ajustar según sea necesario)
-        $inicioHorario = new DateTime($this->fechaElegida . ' 08:00:00'); // Hora de inicio de trabajo (9:00 AM)
-        $finHorario = new DateTime($this->fechaElegida . ' 20:00:00');    // Hora de fin de trabajo (6:00 PM)
-        $intervalo = new DateInterval('PT1H'); // Intervalo de tiempo de 1 hora
-
+        $inicioHorario = new DateTime($this->fechaElegida . ' 08:00:00');
+        $finHorario = new DateTime($this->fechaElegida . ' 20:00:00');
+        $intervalo = new DateInterval('PT30M'); // Intervalo de tiempo de 30 minutos
+    
         // Generar todos los bloques horarios posibles
         $horarios = [];
         for ($hora = $inicioHorario; $hora < $finHorario; $hora->add($intervalo)) {
-            $horarios[] = $hora->format('Y-m-d H:i:s');  // Formato de fecha y hora 'Y-m-d H:i:s'
+            $horarios[] = $hora->format('Y-m-d H:i:s');
         }
-
+    
         // Obtener los horarios ocupados del estilista en la fecha seleccionada
-        $horariosOcupados = \DB::table('citas')
+        $horariosOcupados = DB::table('citas')
             ->where('id_estilista', $this->estilistaSeleccionada)
-            ->whereDate('fecha_hora_inicio_cita', $this->fechaElegida) // Filtrar por la fecha
-            ->whereIn('estado_cita', ['programada', 'reprogramada', 'completada']) // Filtrar solo citas que están programadas, reprogramadas o completadas
+            ->whereDate('fecha_hora_inicio_cita', $this->fechaElegida)
+            ->whereIn('estado_cita', ['programada', 'reprogramada', 'completada'])
             ->select('fecha_hora_inicio_cita', 'fecha_hora_fin_cita')
             ->get();
-
-        // Array donde almacenaremos los horarios disponibles
+    
+        // Convertir horarios ocupados a un formato manipulable
+        $horariosOcupados = $horariosOcupados->map(function ($cita) {
+            return [
+                'inicio' => new DateTime($cita->fecha_hora_inicio_cita),
+                'fin' => new DateTime($cita->fecha_hora_fin_cita),
+            ];
+        });
+    
+        // Array para almacenar los horarios disponibles
         $horariosDisponibles = [];
-
-        // Verificar los bloques de tiempo y comprobar si están ocupados
+    
+        // Evaluar los bloques horarios contra los horarios ocupados
         foreach ($horarios as $inicioBloque) {
-            $inicio = new DateTime($inicioBloque); // Convertir a objeto DateTime
-            $fin = (clone $inicio)->modify("+{$this->duracionTotal} minutes"); // Calcular el fin del bloque según la duración total
-
-            // Verificar que el bloque de tiempo no se pase del horario laboral
+            $inicio = new DateTime($inicioBloque);
+            $fin = (clone $inicio)->modify("+{$duracionEnMinutos} minutes");
+    
+            // Verificar que el bloque no se salga del horario laboral
             if ($fin > $finHorario) {
-                break;  // Si el fin del bloque es mayor que el fin del horario, salimos del bucle
+                break;
             }
-
-            // Comprobar si el bloque está ocupado (si hay un solapamiento con alguna cita)
+    
+            // Verificar si el bloque está ocupado
             $estaOcupado = false;
             foreach ($horariosOcupados as $cita) {
-                $inicioCita = new DateTime($cita->fecha_hora_inicio_cita);  // Convertir las fechas de la cita a objetos DateTime
-                $finCita = new DateTime($cita->fecha_hora_fin_cita);
-
-                // Si el bloque de tiempo se solapa con la cita, marcar como ocupado
-                if ($inicio < $finCita && $fin > $inicioCita) {
+                if ($inicio < $cita['fin'] && $fin > $cita['inicio']) {
                     $estaOcupado = true;
-                    break;  // Si encontramos una cita ocupada, dejamos de comprobar
+                    break;
                 }
             }
-
-            // Si no está ocupado, agregarlo a los horarios disponibles
+    
+            // Si no está ocupado, agregar a los horarios disponibles
             if (!$estaOcupado) {
-                $horariosDisponibles[] = $inicio->format('Y-m-d H:i:s'); // Agregar el horario disponible al array
+                $horariosDisponibles[] = $inicio->format('H:i');
             }
         }
-
-        // Asignar los horarios disponibles a la propiedad del componente
+    
+        // Actualizar la propiedad de horarios libres
         $this->horariosLibres = $horariosDisponibles;
     }
+    
+
 
 
 
@@ -198,6 +211,16 @@ class ServiciosDisponibles extends Component
         return $total;
     }
 
+    public function resetDatosCita()
+{
+    $this->fechaElegida = null;   // Restablecer la fecha elegida
+    $this->horaElegida = null;    // Restablecer la hora elegida
+    $this->estilistaSeleccionada = null; // Restablecer el estilista seleccionado
+    $this->selectedServices = []; // Limpiar los servicios seleccionados
+    $this->duracionTotal = 0;     // Restablecer la duración total
+    $this->horariosLibres = [];   // Limpiar los horarios libres
+}
+
 
     public function confirmarCita()
 {
@@ -243,7 +266,7 @@ class ServiciosDisponibles extends Component
             'estado_pago' => 'anticipo',
             'estado_cita' => 'programada',
         ]);
-
+    
         // Registrar los detalles de la cita
         foreach ($this->selectedServices as $servicio) {
             DetalleCita::create([
@@ -251,11 +274,15 @@ class ServiciosDisponibles extends Component
                 'id_servicio' => $servicio->id,
             ]);
         }
-
+    
+        // Resetear los datos de la cita
+        $this->resetDatosCita();
+    
         session()->flash('success', 'Cita confirmada exitosamente con sus detalles.');
     } catch (\Exception $e) {
         session()->flash('error', 'Ocurrió un error al confirmar la cita: ' . $e->getMessage());
     }
+    
 }
 
     
