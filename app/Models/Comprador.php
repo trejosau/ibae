@@ -19,4 +19,8 @@ class Comprador extends Model
     {
         return $this->belongsTo(Persona::class, 'id_persona', 'id');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');  // Relación con la columna `user_id`
+    }
 }

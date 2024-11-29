@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Citas;
 use App\Models\Estilista;
+use App\Models\Comprador;
 use Carbon\Carbon;
 use DateInterval;
 use DateTime;
@@ -12,8 +13,7 @@ use App\Models\Servicios;
 
 class ServiciosDisponibles extends Component
 {
-    public $hayServiciosColor = false; // Inicialmente no hay servicios de Color
-    public $hayServiciosUnas = false; // Inicialmente no hay servicios de Uñas
+
     public $servicios;
     public $estilistaSeleccionada;
     public $fechaElegida;
@@ -23,6 +23,8 @@ class ServiciosDisponibles extends Component
     public $step = 1;
     public $selectedServices = [];
     public $duracionTotal = 0;
+    public $fechaMinima;
+    public $fechaMaxima;
 
     public $inputs = [
         ['id' => 'cantidad_piedras', 'label' => 'Piedras', 'value' => 0],
@@ -138,43 +140,36 @@ class ServiciosDisponibles extends Component
     public function selectService($serviceId)
     {
         $servicio = Servicios::find($serviceId);
-
+    
         if (!$servicio) return;
-
+    
         // Buscar si ya está seleccionado
         $index = array_search($serviceId, array_column($this->selectedServices, 'id'));
-
+    
         if ($index === false) {
             // Si no está seleccionado, intentar agregar
             if ($this->duracionTotal + $servicio->duracion_maxima > 480) return;
-
+    
             $this->selectedServices[] = $servicio;
             $this->duracionTotal += $servicio->duracion_maxima;
-
-            // Verificar categorías específicas
-            if ($servicio->Categoria->nombre === 'Color') {
-                $this->hayServiciosColor = true;
-            }
-            if ($servicio->Categoria->nombre === 'Uñas') {
-                $this->hayServiciosUnas = true;
-            }
         } else {
             // Si ya está seleccionado, eliminarlo
             unset($this->selectedServices[$index]);
             $this->duracionTotal -= $servicio->duracion_maxima;
-
-            // Verificar si hay más servicios de "Color" y "Uñas" seleccionados
-            $this->hayServiciosColor = collect($this->selectedServices)
-                ->contains(fn($s) => $s->Categoria->nombre === 'Color');
-
-            $this->hayServiciosUnas = collect($this->selectedServices)
-                ->contains(fn($s) => $s->Categoria->nombre === 'Uñas');
         }
     }
+    
     public function nextStep()
     {
+        // Verificar si el coste total es mayor a 0
+        if ($this->calcularTotal($this->selectedServices) === 0) {
+            session()->flash('error', 'Debes seleccionar al menos un servicio antes de continuar.');
+            return;
+        }
+    
         $this->step++;
     }
+    
     public function previousStep()
     {
         $this->step--;
@@ -186,6 +181,10 @@ class ServiciosDisponibles extends Component
     {
         $this->servicios = Servicios::all();
         $this->estilistas = Estilista::all();
+
+            // Establecer fecha mínima (hoy) y máxima (hoy + 7 días)
+    $this->fechaMinima = now()->format('Y-m-d');
+    $this->fechaMaxima = now()->addDays(7)->format('Y-m-d');
 
     }
 
@@ -206,22 +205,36 @@ class ServiciosDisponibles extends Component
             session()->flash('error', 'Faltan datos para confirmar la cita.');
             return;
         }
+    
         // Calcular la duración total de la cita basada en los servicios seleccionados
         $duracionTotal = 0;
         foreach ($this->selectedServices as $servicio) {
             $duracionTotal += $servicio->duracion_maxima;
         }
+    
         // Calcular los valores de la cita (esto podría basarse en los servicios seleccionados)
         $total = $this->calcularTotal($this->selectedServices);
         $anticipo = $total * 0.30;  // Ejemplo de anticipo del 30%
         $pagoRestante = $total - $anticipo;
         $fechaHoraCompleta = Carbon::parse($this->fechaElegida . ' ' . $this->horaElegida);
         $fechaHoraFin = $fechaHoraCompleta->copy()->addMinutes($duracionTotal);
+    
+        // Obtener el ID del comprador (usuario autenticado)
+        $idComprador = auth()->id();
+    
+        // Verificar si el comprador existe en la tabla 'compradores' usando el ID del usuario
+        $comprador = Comprador::where('id_usuario', $idComprador)->first();
+    
+        if (!$comprador) {
+            session()->flash('error', 'El usuario autenticado no tiene un registro en compradores.');
+            return;
+        }
+    
         // Crear una nueva cita
         try {
             $cita = Citas::create([
                 'id_estilista' => $this->estilistaSeleccionada,
-                'id_comprador' => auth()->id(),  // Usando el ID del usuario autenticado
+                'id_comprador' => $comprador->id,  // Usando el ID del comprador obtenido
                 'fecha_hora_creacion' => now(),
                 'fecha_hora_inicio_cita' => $fechaHoraCompleta->format('Y-m-d H:i:s'),
                 'fecha_hora_fin_cita' => $fechaHoraFin->format('Y-m-d H:i:s'),
@@ -231,11 +244,15 @@ class ServiciosDisponibles extends Component
                 'estado_pago' => 'anticipo',
                 'estado_cita' => 'programada',
             ]);
+    
             session()->flash('success', 'Cita confirmada exitosamente.');
         } catch (\Exception $e) {
             session()->flash('error', 'Ocurrió un error al confirmar la cita: ' . $e->getMessage());
         }
     }
+    
+    
+    
     public function render()
     {
         return view('livewire.servicios-disponibles', [
