@@ -206,6 +206,15 @@ class ServiciosDisponibles extends Component
             return;
         }
     
+        // Obtener el comprador asociado al usuario autenticado
+        $comprador = auth()->user()->persona?->comprador;
+    
+        // Verificar si el comprador existe
+        if (!$comprador) {
+            session()->flash('error', 'No se encontró un comprador asociado a su cuenta.');
+            return;
+        }
+    
         // Calcular la duración total de la cita basada en los servicios seleccionados
         $duracionTotal = 0;
         foreach ($this->selectedServices as $servicio) {
@@ -219,22 +228,11 @@ class ServiciosDisponibles extends Component
         $fechaHoraCompleta = Carbon::parse($this->fechaElegida . ' ' . $this->horaElegida);
         $fechaHoraFin = $fechaHoraCompleta->copy()->addMinutes($duracionTotal);
     
-        // Obtener el ID del comprador (usuario autenticado)
-        $idComprador = auth()->id();
-    
-        // Verificar si el comprador existe en la tabla 'compradores' usando el ID del usuario
-        $comprador = Comprador::where('id_usuario', $idComprador)->first();
-    
-        if (!$comprador) {
-            session()->flash('error', 'El usuario autenticado no tiene un registro en compradores.');
-            return;
-        }
-    
         // Crear una nueva cita
         try {
             $cita = Citas::create([
                 'id_estilista' => $this->estilistaSeleccionada,
-                'id_comprador' => $comprador->id,  // Usando el ID del comprador obtenido
+                'id_comprador' => $comprador->id,  
                 'fecha_hora_creacion' => now(),
                 'fecha_hora_inicio_cita' => $fechaHoraCompleta->format('Y-m-d H:i:s'),
                 'fecha_hora_fin_cita' => $fechaHoraFin->format('Y-m-d H:i:s'),
@@ -244,12 +242,13 @@ class ServiciosDisponibles extends Component
                 'estado_pago' => 'anticipo',
                 'estado_cita' => 'programada',
             ]);
-    
+
             session()->flash('success', 'Cita confirmada exitosamente.');
         } catch (\Exception $e) {
             session()->flash('error', 'Ocurrió un error al confirmar la cita: ' . $e->getMessage());
         }
     }
+    
     
     
     
