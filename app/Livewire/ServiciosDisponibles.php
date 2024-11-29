@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Citas;
 use App\Models\Estilista;
+use App\Models\DetalleCita;
 use App\Models\Comprador;
 use Carbon\Carbon;
 use DateInterval;
@@ -199,57 +200,64 @@ class ServiciosDisponibles extends Component
 
 
     public function confirmarCita()
-    {
-        // Verificar si los datos necesarios están disponibles
-        if (!$this->fechaElegida || !$this->estilistaSeleccionada || !$this->selectedServices) {
-            session()->flash('error', 'Faltan datos para confirmar la cita.');
-            return;
-        }
-    
-        // Obtener el comprador asociado al usuario autenticado
-        $comprador = auth()->user()->persona?->comprador;
-    
-        // Verificar si el comprador existe
-        if (!$comprador) {
-            session()->flash('error', 'No se encontró un comprador asociado a su cuenta.');
-            return;
-        }
-    
-        // Calcular la duración total de la cita basada en los servicios seleccionados
-        $duracionTotal = 0;
-        foreach ($this->selectedServices as $servicio) {
-            $duracionTotal += $servicio->duracion_maxima;
-        }
-    
-        // Calcular los valores de la cita (esto podría basarse en los servicios seleccionados)
-        $total = $this->calcularTotal($this->selectedServices);
-        $anticipo = $total * 0.30;  // Ejemplo de anticipo del 30%
-        $pagoRestante = $total - $anticipo;
-        $fechaHoraCompleta = Carbon::parse($this->fechaElegida . ' ' . $this->horaElegida);
-        $fechaHoraFin = $fechaHoraCompleta->copy()->addMinutes($duracionTotal);
-    
-        // Crear una nueva cita
-        try {
-            $cita = Citas::create([
-                'id_estilista' => $this->estilistaSeleccionada,
-                'id_comprador' => $comprador->id,  
-                'fecha_hora_creacion' => now(),
-                'fecha_hora_inicio_cita' => $fechaHoraCompleta->format('Y-m-d H:i:s'),
-                'fecha_hora_fin_cita' => $fechaHoraFin->format('Y-m-d H:i:s'),
-                'total' => $total,
-                'anticipo' => $anticipo,
-                'pago_restante' => $pagoRestante,
-                'estado_pago' => 'anticipo',
-                'estado_cita' => 'programada',
-            ]);
-
-            session()->flash('success', 'Cita confirmada exitosamente.');
-        } catch (\Exception $e) {
-            session()->flash('error', 'Ocurrió un error al confirmar la cita: ' . $e->getMessage());
-        }
+{
+    // Verificar si los datos necesarios están disponibles
+    if (!$this->fechaElegida || !$this->estilistaSeleccionada || !$this->selectedServices) {
+        session()->flash('error', 'Faltan datos para confirmar la cita.');
+        return;
     }
-    
-    
+
+    // Obtener el comprador asociado al usuario autenticado
+    $comprador = auth()->user()->persona?->comprador;
+
+    // Verificar si el comprador existe
+    if (!$comprador) {
+        session()->flash('error', 'No se encontró un comprador asociado a su cuenta.');
+        return;
+    }
+
+    // Calcular la duración total de la cita basada en los servicios seleccionados
+    $duracionTotal = 0;
+    foreach ($this->selectedServices as $servicio) {
+        $duracionTotal += $servicio->duracion_maxima;
+    }
+
+    // Calcular los valores de la cita
+    $total = $this->calcularTotal($this->selectedServices);
+    $anticipo = $total * 0.30; // Ejemplo de anticipo del 30%
+    $pagoRestante = $total - $anticipo;
+    $fechaHoraCompleta = Carbon::parse($this->fechaElegida . ' ' . $this->horaElegida);
+    $fechaHoraFin = $fechaHoraCompleta->copy()->addMinutes($duracionTotal);
+
+    try {
+        // Crear una nueva cita
+        $cita = Citas::create([
+            'id_estilista' => $this->estilistaSeleccionada,
+            'id_comprador' => $comprador->id,
+            'fecha_hora_creacion' => now(),
+            'fecha_hora_inicio_cita' => $fechaHoraCompleta->format('Y-m-d H:i:s'),
+            'fecha_hora_fin_cita' => $fechaHoraFin->format('Y-m-d H:i:s'),
+            'total' => $total,
+            'anticipo' => $anticipo,
+            'pago_restante' => $pagoRestante,
+            'estado_pago' => 'anticipo',
+            'estado_cita' => 'programada',
+        ]);
+
+        // Registrar los detalles de la cita
+        foreach ($this->selectedServices as $servicio) {
+            DetalleCita::create([
+                'id_cita' => $cita->id,
+                'id_servicio' => $servicio->id,
+            ]);
+        }
+
+        session()->flash('success', 'Cita confirmada exitosamente con sus detalles.');
+    } catch (\Exception $e) {
+        session()->flash('error', 'Ocurrió un error al confirmar la cita: ' . $e->getMessage());
+    }
+}
+
     
     
     public function render()
