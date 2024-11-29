@@ -17,6 +17,7 @@ class Cursos extends Model
         'duracion_semanas',
         'estado',
         'id_certificacion',
+        'duracion_horas',
     ];
 
     public function certificado()
