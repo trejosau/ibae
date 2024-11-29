@@ -8,45 +8,45 @@
     <style>
         /* --- NAVBAR STYLES --- */
         .navbar {
-            background-color: #081444;
+            background-color: var(--color-primario);
             transition: background-color 0.3s, box-shadow 0.3s;
             padding: 10px 0;
             box-shadow: none;
         }
-
+    
         @media (min-width: 768px) {
             .navbar {
                 min-height: 99px;
                 max-height: 99px;
             }
         }
-
+    
         .fixed {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            background-color: #081444;
+            background-color: var(--color-primario);
         }
-
+    
         .navbar-nav {
             display: flex;
             align-items: center;
         }
-
+    
         .nav-item a {
             padding: 5px 1rem;
-            margin: 0 -.25rem;
+            margin: 0 -0.25rem;
             font-size: 27px;
             border: none;
             text-decoration: none;
             border-bottom: 2px solid transparent;
             background-image: linear-gradient(
                 to right,
-                #e089b2,
-                #e089b2 50%,
-                #ffffff 50%
+                var(--color-acento),
+                var(--color-acento) 50%,
+                var(--color-fondo) 50%
             );
             background-size: 200% 100%;
             background-position: -100%;
@@ -56,26 +56,25 @@
             -webkit-text-fill-color: transparent;
             transition: all 0.2s ease-in-out;
         }
-
+    
         .nav-item a:hover {
             background-position: 0;
-            border-bottom: 3px solid #e089b2;
+            border-bottom: 3px solid var(--color-acento);
         }
-
-
+    
         .nav-item .icono {
-            color: #ffffff;
+            color: var(--color-texto);
             margin-right: 20px;
         }
-
+    
         .login-button {
-            background-color: #ff69b4;
+            background-color: var(--color-secundario);
             transition: background-color 0.3s;
             color: white;
             border: none;
-
         }
     </style>
+    
 </head>
 <body>
 @stack('styles')
