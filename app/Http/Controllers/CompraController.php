@@ -18,6 +18,8 @@ class CompraController extends Controller
             'fecha' => 'required|date',
         ]);
 
+
+
         // Ejecutar el procedimiento almacenado
         try {
             DB::statement('CALL agregar_compra(?, ?)', [
@@ -25,10 +27,11 @@ class CompraController extends Controller
                 $request->fecha,
             ]);
 
+
             return redirect()->route('dashboard.compras')->with('success', 'Compra agregada exitosamente.');
         } catch (\Exception $e) {
             // Manejar errores del procedimiento
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Sucedio un error al agregar la compra: ' . $e->getMessage());
         }
     }
 
@@ -47,47 +50,62 @@ class CompraController extends Controller
 
     public function agregarProducto(Request $request)
     {
-        $compraId = $request->input('compra_id');
-        $productoId = $request->input('producto_id');
-        $cantidad = $request->input('cantidad', 1);
+        // Validar la entrada
+        $request->validate([
+            'compra_id' => 'required|exists:compras,id',
+            'producto_id' => 'required|exists:productos,id',
+            'cantidad' => 'required|integer|min:1',
+        ]);
 
-        // Check if the product already exists in the current purchase
-        $detalleCompra = DetalleCompra::where('id_compra', $compraId)
-            ->where('id_producto', $productoId)
-            ->first();
-
-        if ($detalleCompra) {
-            // If the product exists, update the quantity
-            $detalleCompra->cantidad += $cantidad;
-            $detalleCompra->save();
-            return redirect()->back()->with('success', 'Cantidad actualizada en el carrito.');
-        } else {
-            // If the product does not exist, create a new record
-            DetalleCompra::create([
-                'id_compra' => $compraId,
-                'id_producto' => $productoId,
-                'cantidad' => $cantidad
+        try {
+            // Llamar al procedimiento almacenado
+            DB::statement('CALL agregar_producto(?, ?, ?)', [
+                $request->compra_id,
+                $request->producto_id,
+                $request->cantidad,
             ]);
-            return redirect()->back()->with('success', 'Producto agregado al carrito.');
+
+            return redirect()->back()->with('success', 'Producto agregado o actualizado exitosamente.');
+        } catch (\Exception $e) {
+            // Manejo de errores
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
 
 
     public function quitarProducto(Request $request)
     {
-        $productoId = $request->input('producto_id');
-        $compraId = $request->input('compra_id');
+        // Validar la entrada
+        $request->validate([
+            'producto_id' => 'required|exists:detalle_compra,id_producto',
+            'compra_id' => 'required|exists:detalle_compra,id_compra',
+        ]);
 
-        DetalleCompra::where('id_producto', $productoId)->where('id_compra', $compraId)->delete();
+        try {
+            // Llamar al procedimiento almacenado
+            DB::statement('CALL quitar_producto(?, ?)', [
+                $request->producto_id,
+                $request->compra_id,
+            ]);
 
-        return redirect()->back()->with('success', 'Producto eliminado del carrito.');
+            return redirect()->back()->with('success', 'Producto eliminado del carrito.');
+        } catch (\Exception $e) {
+            // Manejo de errores
+            return redirect()->back()->with('error', 'Error al eliminar el producto del carrito');
+        }
     }
 
     public function limpiarCarrito($id)
     {
-        DetalleCompra::where('id_compra', $id)->delete();
-        return redirect()->back()->with('success', 'Carrito limpiado.');
+        try {
+            DB::statement('CALL limpiar_carrito(?)', [$id]);
+
+            return redirect()->back()->with('success', 'Carrito limpiado.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al limpiar el carrito');
+        }
     }
+
 
 
 }

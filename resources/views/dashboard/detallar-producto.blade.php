@@ -62,6 +62,9 @@
         <!-- Sidebar -->
         <div class="col-md-4 col-lg-3" style="position: fixed; top: 0; left: 0; height: 100%; padding: 20px; z-index: 10;">
             <div style="position: sticky; top: 20px; background-color: #f8e8f8; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+
+
+
                 <h4 class="text-center" style="color: #ba68c8;">Resumen de Compra</h4>
 
                 <!-- Cart Items with Scroll -->
@@ -112,6 +115,10 @@
 
         <!-- Main Content -->
         <div class="col-md-8 col-lg-9" style="margin-left: 25%; padding: 20px;">
+            <a href="/dashboard/compras" class="btn btn-primary">
+                VOLVER AL MENU
+            </a>
+
             <h1 class="text-center" style="color: #007bff; margin-bottom: 30px;">Compra al provedor: {{ $compra->proveedor->nombre_empresa }}({{ $compra->proveedor->nombre_persona }})</h1>
 
             <!-- Divider between Sidebar and Products -->
