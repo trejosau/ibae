@@ -6,24 +6,32 @@ use App\Models\Compras;
 use App\Models\DetalleCompra;
 use App\Models\Productos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CompraController extends Controller
 {
     public function agregar(Request $request)
-    { $request->validate([
+    {
+        // Validar la entrada
+        $request->validate([
             'proveedor_id' => 'required|exists:proveedores,id',
             'fecha' => 'required|date',
         ]);
-        $compra = Compras::create([
-            'id_proveedor' => $request->proveedor_id,
-            'fecha_compra' => $request->fecha,
-            'fecha_entrega' => null,
-            'estado' => 'pendiente de detalle',
-            'total' => 0,
-        ]);
 
-        return redirect()->route('dashboard.compras');
+        // Ejecutar el procedimiento almacenado
+        try {
+            DB::statement('CALL agregar_compra(?, ?)', [
+                $request->proveedor_id,
+                $request->fecha,
+            ]);
+
+            return redirect()->route('dashboard.compras')->with('success', 'Compra agregada exitosamente.');
+        } catch (\Exception $e) {
+            // Manejar errores del procedimiento
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
+
 
     public function detallarProducto($id)
     {
