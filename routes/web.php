@@ -156,7 +156,7 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
         Route::middleware(['role:estudiante'])->group(function () {
             Route::get('/plataforma/espacio/mis-cursos', [PlataformaController::class, 'misCursosEspacio'])->name('plataforma.espacio-mis-cursos');
             Route::get('/plataforma/espacio/mis-pagos', [PlataformaController::class, 'misPagosEspacio'])->name('plataforma.espacio-mis-pagos');
-            Route::get('/plataforma/espacio/perfil', [PlataformaController::class, 'perfilEspacio'])->name('plataforma.espacio-perfil');
+            Route::get('/plataforma/espacio/mis-cursos', [PlataformaController::class, 'misCursosEspacio'])->name('plataforma.espacio-perfil');
         });
 
         Route::middleware(['role:profesor|admin'])->group(function () {
