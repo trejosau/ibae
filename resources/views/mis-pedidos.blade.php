@@ -167,7 +167,7 @@
                     </span>
             </div>
             <p><strong>Total:</strong> ${{ number_format($pedido->total, 2) }}</p>
-            <p><strong>Fecha:</strong> {{ \Carbon\Carbon::parse($pedido['fecha-hora_pedido'])->format('d/m/Y H:i') }}</p>
+            <p><strong>Fecha:</strong> {{ \Carbon\Carbon::parse($pedido->fecha_hora_pedido)->format('d/m/Y H:i') }}</p>
 
             <p><strong>Estado:</strong> {{ ucfirst($pedido->estado) }}</p>
             @if ($pedido->estado == 'listo para entrega')

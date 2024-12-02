@@ -73,7 +73,7 @@
                     <!-- Card Body: Basic Info -->
                     <div class="card-body d-flex flex-column" style="padding: 10px;">
                         <h5 class="card-title" style="font-size: 1rem;">Total: ${{ number_format($pedido->total, 2) }}</h5>
-                        <p><strong>Fecha de Pedido:</strong> {{ $pedido['fecha-hora_pedido'] }}</p>
+                        <p><strong>Fecha de Pedido:</strong> {{ $pedido->fecha_hora_pedido }}</p>
 
                         <button class="btn btn-outline-primary mt-auto" data-bs-toggle="modal" data-bs-target="#detalleModal{{ $pedido->id }}">
                             Ver Detalles

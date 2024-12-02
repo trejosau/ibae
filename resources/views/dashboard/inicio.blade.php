@@ -3,7 +3,7 @@
 
     <!-- Accesos Directos -->
     <div class="row mb-4 d-flex justify-content-center">
-        <div class="col-3">
+        <div class="col-12 col-sm-6 col-md-3">
             <div class="card border-success text-center">
                 <div class="card-body">
                     <h5 class="card-title">Atajo a ventas</h5>
@@ -11,7 +11,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-12 col-sm-6 col-md-3">
             <div class="card border-warning text-center">
                 <div class="card-body">
                     <h5 class="card-title">Gestión de Usuarios</h5>
@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-12 col-sm-6 col-md-3">
             <div class="card border-danger text-center">
                 <div class="card-body">
                     <h5 class="card-title">Configuraciones</h5>
@@ -27,7 +27,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-12 col-sm-6 col-md-3">
             <div class="card border-secondary text-center">
                 <div class="card-body">
                     <h5 class="card-title">Acceso Directo</h5>
@@ -49,14 +49,11 @@
                 </div>
             </div>
         </div>
-
     </div>
-
-
 
     <!-- Ingresos por Proceso -->
     <div class="row mb-4">
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
             <div class="card border-success h-100 mb-4">
                 <div class="card-body text-center">
                     <h5 class="card-title">
@@ -67,7 +64,7 @@
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
             <div class="card border-warning h-100 mb-4">
                 <div class="card-body text-center">
                     <h5 class="card-title">
@@ -78,7 +75,7 @@
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
             <div class="card border-info h-100 mb-4">
                 <div class="card-body text-center">
                     <h5 class="card-title">
@@ -90,10 +87,9 @@
         </div>
     </div>
 
-
     <!-- Detalles de Usuarios -->
     <div class="row text-center mb-4">
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
             <div class="card border-primary h-100 mb-4">
                 <div class="card-body">
                     <h5 class="card-title">
@@ -111,25 +107,24 @@
                     </ul>
                 </div>
             </div>
-
         </div>
 
-        <div class="col-md-8">
+        <div class="col-12 col-md-8">
             <div class="card border-success h-100 mb-4">
                 <div class="card-body row">
-                    <div class="col-md-4 text-center">
+                    <div class="col-12 col-md-4 text-center">
                         <h5 class="card-title">
                             <i class="fas fa-box-open fa-2x text-success"></i> Valor de stock
                         </h5>
                         <p class="card-text h2">$ {{ $valorStock }}</p>
                     </div>
-                    <div class="col-md-4 text-center">
+                    <div class="col-12 col-md-4 text-center">
                         <h5 class="card-title">
                             <i class="fas fa-dollar-sign fa-2x text-success"></i> Valor stock venta
                         </h5>
                         <p class="card-text h2">$ {{ $valorStockVenta }}</p>
                     </div>
-                    <div class="col-md-4 text-center">
+                    <div class="col-12 col-md-4 text-center">
                         <h5 class="card-title">
                             <i class="fas fa-chart-line fa-2x text-success"></i> Ganancia Aproximada
                         </h5>
@@ -139,16 +134,15 @@
             </div>
         </div>
 
-        <div class="col-md-12 mt-4">
+        <div class="col-12 mt-4">
             <div class="card border-success h-100 mb-4">
                 <div class="card-body text-center">
                     <h5 class="card-title">
-                        <i class="fas fa-school fa-2x text-success"></i> Grafica de ingresos
+                        <i class="fas fa-school fa-2x text-success"></i> Gráfica de ingresos
                     </h5>
                     <div id="chart" style="width: 100%;"></div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>

@@ -121,62 +121,59 @@
                         <i class="fas fa-shopping-cart fa-2x text-success"></i> Ventas Recientes
                     </h5>
 
-                    <table class="table table-bordered table-sm text-center">
-                        <thead>
-                        <tr>
-                            <th>Comprador</th>
-                            <th>Fecha</th>
-                            <th>Total</th>
-
-                            <th>Estudiante?</th>
-                            <th>Vendedor</th>
-                            <th>Acc.</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($ventas as $venta)
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm text-center">
+                            <thead>
                             <tr>
-                                <td>{{ $venta->nombre_comprador }}</td>
-                                <td>{{ $venta->fecha_compra }}</td>
-                                <td>${{ $venta->total }}</td>
-                                <td>{{ $venta->es_estudiante === 'si' ? 'Sí' : 'No' }}</td>
-                                <td>
-                                    @if($venta->administrador && $venta->administrador->persona)
-                                        {{ $venta->administrador->persona->nombre }} {{ $venta->administrador->persona->apellido_pa }}
-                                    @else
-                                        N/A
-                                    @endif
-                                </td>
-                                <td>
-                                    <!-- Botón para abrir modal de detalles de la venta específica -->
-                                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detalle-venta-{{ $venta->id }}">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <!-- Botón para eliminar venta específica -->
-                                    <form action="{{ route('ventas.destroy', $venta->id) }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger btn-sm" type="submit">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
+                                <th>Comprador</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <th>Estudiante?</th>
+                                <th>Vendedor</th>
+                                <th>Acc.</th>
                             </tr>
-                        @endforeach
-
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            @foreach($ventas as $venta)
+                                <tr>
+                                    <td>{{ $venta->nombre_comprador }}</td>
+                                    <td>{{ $venta->fecha_compra }}</td>
+                                    <td>${{ $venta->total }}</td>
+                                    <td>{{ $venta->es_estudiante === 'si' ? 'Sí' : 'No' }}</td>
+                                    <td>
+                                        @if($venta->administrador && $venta->administrador->persona)
+                                            {{ $venta->administrador->persona->nombre }} {{ $venta->administrador->persona->apellido_pa }}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <!-- Botón para abrir modal de detalles de la venta específica -->
+                                        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detalle-venta-{{ $venta->id }}">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
 
                     <!-- Paginación -->
                     <div class="d-flex justify-content-center">
                         {{ $ventas->links('pagination::bootstrap-5') }}
                     </div>
 
-                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-agregar-venta">Agregar Venta</button>
+                    <button class="btn btn-primary btn-sm w-100 w-md-auto mt-3 d-none d-lg-block" data-bs-toggle="modal" data-bs-target="#modal-agregar-venta">
+                        Agregar Venta
+                    </button>
+
+
                 </div>
             </div>
         </div>
     </div>
+
 
 
 
