@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EnvioCredenciales;
 use App\Models\Comprador;
 use App\Models\Persona;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
@@ -82,27 +84,28 @@ class ProfileController extends Controller
 
     public function changePassword(Request $request)
     {
+        // Validar los datos de entrada
         $validatedData = $request->validate([
-            'current_password' => 'required|string|min:8',
-            'password' => 'required|string|min:8',
-            'password_confirmation' => 'required|string|min:8',
+            'current_password' => 'required|string|min:3',
+            'password' => 'required|string|min:3|confirmed',
         ]);
 
+        // Obtener el usuario autenticado
         $user = Auth::user();
-        if ($user->password !== Hash::make($validatedData['current_password'])) {
+
+        // Verificar si la contraseña actual es correcta
+        if (!Hash::check($validatedData['current_password'], $user->password)) {
             return redirect()->route('profile.edit')->with('error', 'La contraseña actual no es correcta.');
         }
 
-        if ($validatedData['password'] !== $validatedData['password_confirmation']) {
-            return redirect()->route('profile.edit')->with('error', 'Las contraseñas no coinciden.');
-        }
-
+        // Cambiar la contraseña del usuario
         $user->password = Hash::make($validatedData['password']);
         $user->save();
 
+        // Redirigir con mensaje de éxito
         return redirect()->route('profile.edit')->with('success', 'Contraseña cambiada correctamente.');
-
     }
+
 
 
 
@@ -145,5 +148,58 @@ class ProfileController extends Controller
         $user->save();
 
         return redirect()->route('profile.edit')->with('success', 'Foto de perfil actualizada correctamente.');
+    }
+
+
+    public function sendResetPasswordEmail(Request $request)
+    {
+        // Validar que el campo email sea obligatorio y tenga un formato válido
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        // Buscar el usuario por su email
+        $user = User::where('email', $request->email)->first();
+
+        // Si no se encuentra el usuario, redirigir con un mensaje de error
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'No se encontró ningún usuario con ese correo.');
+        }
+
+        // Generar una contraseña aleatoria para el usuario
+        $password = $this->generarContrasenaAleatoria();
+
+        // Actualizar la contraseña del usuario con la nueva (encriptada)
+        $user->password = Hash::make($password);
+        $user->save();
+
+        // Enviar el correo con las nuevas credenciales
+        Mail::to($request->email)->send(new EnvioCredenciales($user, $password));
+
+        // Redirigir con un mensaje de éxito
+        return redirect()->route('login')->with('success', 'Se ha enviado un correo con las instrucciones para restablecer la contraseña.');
+    }
+
+    function generarContrasenaAleatoria($longitud = 8) {
+        // Caracteres permitidos en cada categoría
+        $minusculas = 'abcdefghijklmnopqrstuvwxyz';
+        $mayusculas = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $numeros = '0123456789';
+        $simbolos = '!@#$()_+-={}:?';
+
+        // Aseguramos que cada tipo de carácter esté presente al menos una vez
+        $contrasena = $minusculas[random_int(0, strlen($minusculas) - 1)] .
+            $mayusculas[random_int(0, strlen($mayusculas) - 1)] .
+            $numeros[random_int(0, strlen($numeros) - 1)] .
+            $simbolos[random_int(0, strlen($simbolos) - 1)];
+
+        // Llenamos el resto de la contraseña hasta la longitud deseada
+        $todos = $minusculas . $mayusculas . $numeros . $simbolos;
+        for ($i = strlen($contrasena); $i < $longitud; $i++) {
+            $contrasena .= $todos[random_int(0, strlen($todos) - 1)];
+        }
+
+        // Mezclamos los caracteres para mayor aleatoriedad
+        return str_shuffle($contrasena);
     }
 }

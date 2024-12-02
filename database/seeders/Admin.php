@@ -47,6 +47,14 @@ class Admin extends Seeder
             'updated_at' => now(),
         ]);
 
+        Inscripcion::create([
+            'nombre' => 'Temporada navideña',
+            'precio' => 450,
+            'descripcion' => 'Descuento por temporada navideña con material incluido',
+            'material_incluido' => 1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
         $estudiante = Estudiante::create([
             'id_persona' => $persona->id,

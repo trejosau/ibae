@@ -235,7 +235,9 @@
                         @method('PUT')
                         <div class="mb-3">
                             <label class="labels">Username</label>
-                            <input type="text" class="form-control" name="username" placeholder="username" value="{{ $user->username }}">
+                            <input type="text" class="form-control" name="username" placeholder="username" value="{{ $user->username }}"
+                                   @if(auth()->user()->hasRole('estudiante')) disabled @endif>
+
                         </div>
                         <div class="mb-3">
                             <label class="labels">Teléfono</label>

@@ -49,6 +49,9 @@ Route::get('/phpinfo', function () {
 });
 
 
+Route::post('/reset-password', [ProfileController::class, 'sendResetPasswordEmail'])->name('resetPassword');
+
+
 Route::get('auth/google', [loginGoogleController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleCallback'])->name('login.google.callback');
 
