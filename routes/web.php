@@ -144,7 +144,7 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
             }
 
             if ($user->hasRole('estudiante')) {
-                return Redirect::to('/plataforma/espacio-perfil');
+                return Redirect::to('/plataforma/espacio-mis-cursos');
             }
 
             // Redirección predeterminada si no tiene rol específico

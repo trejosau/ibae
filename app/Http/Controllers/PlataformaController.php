@@ -981,14 +981,10 @@ public function actualizarTemas(Request $request, $moduloId)
     return view('plataforma.index', compact('cursos', 'estudiante'));
 }
 
-<<<<<<< HEAD
-    
-=======
 
 
 
 
->>>>>>> fa0e1e84597558203ae4abbdb864cb82e09fdaa3
 
 
     public function misPagosEspacio()
