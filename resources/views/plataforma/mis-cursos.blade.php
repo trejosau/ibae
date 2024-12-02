@@ -153,58 +153,61 @@
 
 
         <!-- Modal para agregar curso -->
-    <div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addCourseModalLabel">Agregar Curso</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addCourseModalLabel">Agregar Curso</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('cursos.store') }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre del Curso</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <textarea
+                                    class="form-control"
+                                    id="descripcion"
+                                    name="descripcion"
+                                    maxlength="200"
+                                    required
+                                    oninput="actualizarContador(this)"
+                                ></textarea>
+                                <small id="contador" class="form-text text-muted">
+                                    200 caracteres restantes.
+                                </small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="duracion_semanas" class="form-label">Duración (semanas)</label>
+                                <input type="number" class="form-control" id="duracion_semanas" name="duracion_semanas" min="1" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="duracion_horas" class="form-label">Duración (horas)</label>
+                                <input type="number" class="form-control" id="duracion_horas" name="duracion_horas" min="1" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_certificacion" class="form-label">Certificado</label>
+                                <select class="form-select" id="id_certificacion" name="id_certificacion" required>
+                                    <option value="">Seleccione un certificado</option>
+                                    @foreach($certificados as $certificado)
+                                        <option value="{{ $certificado->id }}">{{ $certificado->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Agregar Curso</button>
+                        </div>
+                    </form>
                 </div>
-                <form action="{{ route('cursos.store') }}" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre del Curso</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="descripcion" class="form-label">Descripción</label>
-                            <textarea
-                                class="form-control"
-                                id="descripcion"
-                                name="descripcion"
-                                maxlength="200"
-                                required
-                                oninput="actualizarContador(this)"
-                            ></textarea>
-                            <small id="contador" class="form-text text-muted">
-                                200 caracteres restantes.
-                            </small>
-                        </div>
-                        
-                        
-                        <div class="mb-3">
-                            <label for="duracion_semanas" class="form-label">Duración (semanas)</label>
-                            <input type="number" class="form-control" id="duracion_semanas" name="duracion_semanas" min="1" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="id_certificacion" class="form-label">Certificado</label>
-                            <select class="form-select" id="id_certificacion" name="id_certificacion" required>
-                                <option value="">Seleccione un certificado</option>
-                                @foreach($certificados as $certificado)
-                                    <option value="{{ $certificado->id }}">{{ $certificado->nombre }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Agregar Curso</button>
-                    </div>
-                </form>
             </div>
         </div>
-    </div>
+        
 
     <!-- Modal para agregar certificado -->
     <div class="modal fade" id="addCertificadoModal" tabindex="-1" aria-labelledby="addCertificadoModalLabel" aria-hidden="true">

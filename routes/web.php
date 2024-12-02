@@ -133,7 +133,7 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
             $user = Auth::user();
 
             if ($user->hasRole('admin')) {
-                return Redirect::to('/plataforma/espacio/mis-cursos');
+                return Redirect::to('/plataforma/cursos/mis-cursos');
             }
 
             if ($user->hasRole('profesor')) {
@@ -182,7 +182,8 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
             // Rutas de Asignación de Módulos a Temas
             Route::get('/temas-modulos', [PlataformaController::class, 'ligarModulosATemas'])->name('ligarTemasModulo');
             Route::post('/plataforma/asignar-temas', [PlataformaController::class, 'asignarTemas'])->name('asignar.temas');
-            Route::post('/eliminar-tema', [PlataformaController::class, 'eliminarTemaDeModulo'])->name('eliminar.tema');
+            Route::delete('/eliminar-tema', [PlataformaController::class, 'eliminarTemaDeModulo'])->name('eliminar.tema');
+
 
             // Rutas para temas
             Route::put('/tema/modificar/{id}', [PlataformaController::class, 'actualizarTema'])->name('plataforma.actualizarTema');

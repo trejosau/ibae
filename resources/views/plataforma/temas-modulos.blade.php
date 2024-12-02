@@ -92,6 +92,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        @if ($modulosSinTemas->isEmpty())
+                        <p class="text-center text-muted">No hay módulos sin temas asociados.</p>
+                    @else
                         <form action="{{ route('asignar.temas') }}" method="POST">
                             @csrf
                             <div class="mb-3">
@@ -103,7 +106,7 @@
                                     @endforeach
                                 </select>
                             </div>
-    
+                            <!-- Campos para seleccionar temas -->
                             @for ($i = 1; $i <= 3; $i++)
                                 <div class="mb-3">
                                     <label for="tema{{ $i }}Select" class="form-label">Selecciona el tema {{ $i }}</label>
@@ -115,16 +118,18 @@
                                     </select>
                                 </div>
                             @endfor
-    
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                 <button type="submit" class="btn btn-primary">Guardar cambios</button>
                             </div>
                         </form>
+                    @endif
+                    
                     </div>
                 </div>
             </div>
         </div>
+        
     
         <!-- Módulos por categoría -->
         <div class="row">
@@ -150,11 +155,14 @@
                                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                                             {{ $tema->nombre }}
                                                             <!-- Botón para quitar tema -->
-                                                            <form action="{{ route('plataforma.eliminarTema', [$modulo->id, $tema->id]) }}" method="POST" onsubmit="return confirm('¿Estás seguro de quitar este tema?');">
+                                                            <form action="{{ route('eliminar.tema') }}" method="POST" onsubmit="return confirm('¿Estás seguro de quitar este tema?');">
                                                                 @csrf
-                                                                @method('DELETE')
+                                                                @method('DELETE') <!-- Simula el método DELETE -->
+                                                                <input type="hidden" name="modulo_id" value="{{ $modulo->id }}">
+                                                                <input type="hidden" name="tema_id" value="{{ $tema->id }}">
                                                                 <button type="submit" class="btn btn-danger btn-sm">Quitar</button>
                                                             </form>
+                                                            
                                                         </li>
                                                     @endforeach
                                                 @endif
@@ -214,89 +222,102 @@
             </div>
     
       <!-- Barbería -->
-<div class="col-md-6">
-    <h2 class="text-center">Barbería</h2>
-    <div class="accordion" id="accordionBarberia">
-        @if(isset($modulos['Barberia']) && $modulos['Barberia']->count() > 0)
-            @foreach ($modulos['Barberia'] as $modulo)
-                <div class="col-md-12 mb-3">
-                    <div class="card">
-                        <div class="card-header" data-bs-toggle="collapse" data-bs-target="#collapseModuloBarberia{{ $modulo->id }}" aria-expanded="false" aria-controls="collapseModuloBarberia{{ $modulo->id }}">
-                            {{ $modulo->nombre }} - Ver Más <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div id="collapseModuloBarberia{{ $modulo->id }}" class="collapse">
-                            <div class="card-body">
-                                <h6>Temas:</h6>
-                                <ul class="list-group">
-                                    @if ($modulo->temas->isEmpty())
-                                        <li class="list-group-item">Este módulo no tiene temas.</li>
-                                    @else
-                                        @foreach ($modulo->temas as $tema)
-                                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                {{ $tema->nombre }}
-                                                <!-- Botón para quitar tema -->
-                                                <form action="{{ route('plataforma.eliminarTema', [$modulo->id, $tema->id]) }}" method="POST" onsubmit="return confirm('¿Estás seguro de quitar este tema?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm">Quitar</button>
-                                                </form>
-                                            </li>
-                                        @endforeach
-                                    @endif
-                                </ul>
-
-                                <!-- Botón para editar temas -->
-                                <button type="button" class="btn btn-warning btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#editarTemasModalBarberia{{ $modulo->id }}">
-                                    Editar Temas
-                                </button>
+      <div class="col-md-6">
+        <h2 class="text-center">Barbería</h2>
+        <div class="accordion" id="accordionBarberia">
+            @if(isset($modulos['Barberia']) && $modulos['Barberia']->count() > 0)
+                @foreach ($modulos['Barberia'] as $modulo)
+                    <div class="col-md-12 mb-3">
+                        <div class="card">
+                            <div class="card-header" data-bs-toggle="collapse" data-bs-target="#collapseModuloBarberia{{ $modulo->id }}" aria-expanded="false" aria-controls="collapseModuloBarberia{{ $modulo->id }}">
+                                {{ $modulo->nombre }} - Ver Más <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div id="collapseModuloBarberia{{ $modulo->id }}" class="collapse">
+                                <div class="card-body">
+                                    <h6>Temas:</h6>
+                                    <ul class="list-group">
+                                        @if ($modulo->temas->isEmpty())
+                                            <li class="list-group-item">Este módulo no tiene temas.</li>
+                                        @else
+                                            @foreach ($modulo->temas as $tema)
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    {{ $tema->nombre }}
+                                                    <!-- Botón para quitar tema -->
+                                                    <form action="{{ route('eliminar.tema') }}" method="POST" onsubmit="return confirm('¿Estás seguro de quitar este tema?');">
+                                                        @csrf
+                                                        @method('DELETE') <!-- Simula el método DELETE -->
+                                                        <input type="hidden" name="modulo_id" value="{{ $modulo->id }}">
+                                                        <input type="hidden" name="tema_id" value="{{ $tema->id }}">
+                                                        <button type="submit" class="btn btn-danger btn-sm">Quitar</button>
+                                                    </form>
+                                                    
+                                                </li>
+                                            @endforeach
+                                        @endif
+                                    </ul>
+    
+                                    <!-- Botón para editar temas -->
+                                    <button type="button" class="btn btn-warning btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#editarTemasModalBarberia{{ $modulo->id }}">
+                                        Editar Temas
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Modal para editar temas -->
-                <div class="modal fade" id="editarTemasModalBarberia{{ $modulo->id }}" tabindex="-1" aria-labelledby="editarTemasModalLabelBarberia{{ $modulo->id }}" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editarTemasModalLabelBarberia{{ $modulo->id }}">Editar temas de "{{ $modulo->nombre }}"</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="{{ route('modulos.actualizarTemas', $modulo->id) }}" method="POST">
-                                    @csrf
-                                    @method('PUT')
-
-                                    @for ($i = 0; $i < 3; $i++)
-                                        <div class="mb-3">
-                                            <label for="temaSelectBarberia{{ $modulo->id }}_{{ $i }}" class="form-label">Tema {{ $i + 1 }}</label>
-                                            <select class="form-select" id="temaSelectBarberia{{ $modulo->id }}_{{ $i }}" name="tema_ids[]">
-                                                <option value="" {{ $i >= $modulo->temas->count() ? 'selected' : '' }}>Elige un tema...</option>
-                                                @foreach ($todosLosTemas as $tema)
-                                                    <option value="{{ $tema->id }}" 
-                                                        {{ $modulo->temas[$i]->id ?? null == $tema->id ? 'selected' : '' }}>
-                                                        {{ $tema->nombre }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+    
+                    <!-- Modal para editar temas -->
+                    <div class="modal fade" id="editarTemasModalBarberia{{ $modulo->id }}" tabindex="-1" aria-labelledby="editarTemasModalLabelBarberia{{ $modulo->id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editarTemasModalLabelBarberia{{ $modulo->id }}">Editar temas de "{{ $modulo->nombre }}"</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{ route('modulos.actualizarTemas', $modulo->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+    
+                                        @php
+                                            $idsTemasAsignados = $modulo->temas->pluck('id')->toArray();
+                                        @endphp
+    
+                                        @for ($i = 0; $i < 3; $i++)
+                                            <div class="mb-3">
+                                                <label for="temaSelectBarberia{{ $modulo->id }}_{{ $i }}" class="form-label">Tema {{ $i + 1 }}</label>
+                                                <select class="form-select" id="temaSelectBarberia{{ $modulo->id }}_{{ $i }}" name="tema_ids[]">
+                                                    <!-- Opción predeterminada -->
+                                                    <option value="" {{ $i >= $modulo->temas->count() ? 'selected' : '' }}>Elige un tema...</option>
+                                                    
+                                                    <!-- Mostrar opciones dinámicas -->
+                                                    @foreach ($todosLosTemas as $tema)
+                                                        @if (!in_array($tema->id, $idsTemasAsignados) || ($modulo->temas[$i]->id ?? null) == $tema->id)
+                                                            <option value="{{ $tema->id }}" 
+                                                                {{ (isset($modulo->temas[$i]) && $modulo->temas[$i]->id == $tema->id) ? 'selected' : '' }}>
+                                                                {{ $tema->nombre }}
+                                                            </option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        @endfor
+    
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
                                         </div>
-                                    @endfor
-
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
-        @else
-            <p>No hay módulos disponibles para Barbería.</p>
-        @endif
+                @endforeach
+            @else
+                <p>No hay módulos disponibles para Barbería.</p>
+            @endif
+        </div>
     </div>
-</div>
+    
 
     
 
