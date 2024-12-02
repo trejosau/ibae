@@ -45,12 +45,20 @@ class UsuarioController extends Controller
             'nombre' => 'required|string|max:255',
             'ap_paterno' => 'required|string|max:255',
             'ap_materno' => 'required|string|max:255',
+<<<<<<< HEAD
+            'phone' => ['required', 'string', 'min:10', 'max:14', 'regex:/^\+52\d{10,11}$/'],
+            'username' => 'required|string|max:255|unique:users,username',
+            'email' => 'required|email|max:255|unique:users,email',
+        ]);
+ 
+=======
             'phone' => ['required', 'string', 'min:13', 'max:13', 'regex:/^\+52\d{10}$/'],
             'username' => 'required|string|max:255|unique:users,username',
             'email' => 'required|email|max:255|unique:users,email',
         ]);
 
 
+>>>>>>> ee29135d516006770c217abc75c8078bc4243a31
         // Generar contraseña aleatoria
         $password = $this->generarContrasenaAleatoria();
 
@@ -208,6 +216,7 @@ class UsuarioController extends Controller
             'n_int' => 'nullable|string|max:10',
         ]);
 
+        dd($request->all());
 
 
 
