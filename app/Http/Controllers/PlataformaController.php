@@ -980,9 +980,6 @@ public function actualizarTemas(Request $request, $moduloId)
 }
 
     
-    
-
-    
 
 
     public function misPagosEspacio()
