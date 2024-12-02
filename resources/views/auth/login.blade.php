@@ -43,9 +43,12 @@
 
                                     <div class="col-12 d-flex justify-content-between align-items-center">
                                         <div class="text-end">
-                                            <a href="#" class="a-auth font-monospace">Recuperar contraseña</a>
+                                            <a href="#" class="a-auth font-monospace" data-bs-toggle="modal" data-bs-target="#recuperarModal">Recuperar contraseña</a>
                                         </div>
                                     </div>
+
+
+
 
                                     <div class="col-12">
                                         <div class="form-check mb-3">
@@ -80,6 +83,30 @@
                                 </a>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="recuperarModal" tabindex="-1" aria-labelledby="recuperarModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="recuperarModalLabel">Recuperar Contraseña</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="recuperarForm" action="{{ route('resetPassword') }}" method="POST">
+                            @csrf  <!-- Protección CSRF -->
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Correo electrónico</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Ingresa tu correo" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        </form>
+
                     </div>
                 </div>
             </div>

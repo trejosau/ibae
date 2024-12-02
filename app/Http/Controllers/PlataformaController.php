@@ -106,24 +106,24 @@ class PlataformaController extends Controller
             ->whereHas('temas') // Filtra solo los módulos con temas asociados
             ->get()
             ->groupBy('categoria');
-    
+
         // Obtener todos los módulos que no tienen temas asociados
         $modulosSinTemas = Modulos::doesntHave('temas')->get();
-    
+
         // Obtener todos los temas disponibles
         $todosLosTemas = Temas::all();
-    
+
         // Agrupar los temas por categoría
         $temasPorCategoria = [];
         foreach ($todosLosTemas as $tema) {
             $temasPorCategoria[$tema->categoria][] = $tema;
         }
-    
+
         // Pasar los datos filtrados a la vista
         return view('plataforma.temas-modulos', compact('modulos', 'todosLosTemas', 'temasPorCategoria', 'modulosSinTemas'));
     }
-    
-    
+
+
     public function eliminarTemaDeModulo(Request $request)
     {
         // Validar la entrada
@@ -131,26 +131,26 @@ class PlataformaController extends Controller
             'modulo_id' => 'required|exists:modulos,id',
             'tema_id' => 'required|exists:temas,id',
         ]);
-    
+
         // Eliminar la relación en la tabla pivot `modulo_temas`
         $eliminado = DB::table('modulo_temas')
             ->where('id_modulo', $validado['modulo_id'])
             ->where('id_tema', $validado['tema_id'])
             ->delete();
-    
+
             if ($eliminado) {
                 // Cargar la vista deseada con un mensaje de éxito
                 return view('plataforma.temas-modulos', [
                     'success' => 'El tema se eliminó del módulo exitosamente.'
                 ]);
             }
-        
+
             // Cargar la vista deseada con un mensaje de error
             return view('plataforma.temas-modulos', [
                 'error' => 'No se pudo eliminar el tema del módulo.',
             ]);
         }
-    
+
 
 public function actualizarTemas(Request $request, $moduloId)
 {
@@ -179,10 +179,10 @@ public function actualizarTemas(Request $request, $moduloId)
         $cursos = Cursos::with('certificado')->paginate(5); // Paginación con 5 resultados por página
         $certificados = Certificados::all();
         $instituciones = ['SEP', 'Otra']; // Enum de instituciones
-    
+
         return view('plataforma.index', compact('cursos', 'certificados', 'instituciones'));
     }
-    
+
 
     public function cursoDestroy(Request $request)
     {
@@ -207,7 +207,7 @@ public function actualizarTemas(Request $request, $moduloId)
             'duracion_horas' => 'required|integer|min:1', // Validación para duracion_horas
             'id_certificacion' => 'nullable|exists:certificados,id',
         ]);
-    
+
         // Crea un nuevo curso
         $curso = Cursos::create([
             'nombre' => $request->nombre,
@@ -216,10 +216,10 @@ public function actualizarTemas(Request $request, $moduloId)
             'duracion_horas' => $request->duracion_horas, // Guarda la duración en horas
             'id_certificacion' => $request->id_certificacion, // Guarda el ID del certificado
         ]);
-    
+
         return redirect()->route('plataforma.mis-cursos');
     }
-    
+
 
 
     public function storeCertificado(Request $request)
@@ -261,10 +261,10 @@ public function actualizarTemas(Request $request, $moduloId)
         $user = auth()->user();
         $esAdmin = $user->hasRole('admin');
         $esProfesor = $user->hasRole('profesor');
-    
+
         $estadoFiltro = $request->input('estado');
         $cursosApertura = collect(); // Valor por defecto
-    
+
         // Cursos por rol
         if ($esAdmin) {
             $cursosApertura = CursoApertura::with(['moduloCursos.modulo.temas', 'curso']);
@@ -272,30 +272,30 @@ public function actualizarTemas(Request $request, $moduloId)
             $profesor = Profesor::whereHas('persona', function ($query) use ($user) {
                 $query->where('usuario', $user->id);
             })->first();
-    
+
             if ($profesor) {
                 $cursosApertura = CursoApertura::whereHas('moduloCursos', function ($query) use ($profesor) {
                     $query->where('id_profesor', $profesor->id);
                 })->with(['moduloCursos.modulo.temas', 'curso']);
             }
         }
-    
+
         // Aplicar filtro de estado si se proporciona
         if (!empty($estadoFiltro) && $cursosApertura instanceof \Illuminate\Database\Eloquent\Builder) {
             $cursosApertura->where('estado', $estadoFiltro);
         }
-    
+
         // Paginación de cursos apertura con filtro
         $cursosAperturaPaginados = $cursosApertura instanceof \Illuminate\Database\Eloquent\Builder
             ? $cursosApertura->paginate(2)->appends(['estado' => $estadoFiltro])
             : collect();
-    
+
         // Otros datos necesarios con paginación
         $todosCursos = Cursos::where('estado', 'activo')->paginate(10);
         $modulosConTemas = Modulos::with('temas:id,nombre')->has('temas')->get(['id', 'nombre']); // Sin paginar porque se usa para selects
         $profesores = Profesor::with('persona')->paginate(10);
         $estudiantes = Estudiante::with(['persona', 'cursosApertura'])->paginate(10);
-    
+
         // Preparar el resultado agrupando los cursos por estudiante
         $resultado = [];
         foreach ($estudiantes as $estudiante) {
@@ -309,18 +309,18 @@ public function actualizarTemas(Request $request, $moduloId)
                     'cursos' => []
                 ];
             }
-    
+
             foreach ($estudiante->cursosApertura as $curso) {
                 if (!empty($curso->hora_clase)) {
                     $horaClaseRaw = trim($curso->hora_clase);
                     try {
                         $horaClase = Carbon::createFromFormat('H:i:s', $horaClaseRaw);
                         $horaFin = $horaClase->copy()->addHours(2);
-    
+
                         if ($horaClase->hour < 8 || $horaFin->hour >= 22 || ($horaClase->hour == 21 && $horaClase->minute > 0)) {
                             continue;
                         }
-    
+
                         $estado = $curso->pivot->estado;
                         $resultado[$matricula]['cursos'][] = [
                             'id_curso_apertura' => $curso->id,
@@ -337,7 +337,7 @@ public function actualizarTemas(Request $request, $moduloId)
                 }
             }
         }
-    
+
         return view('plataforma.index', [
             'resultado' => array_values($resultado),
             'estudiantes' => $estudiantes, // Paginado
@@ -347,12 +347,12 @@ public function actualizarTemas(Request $request, $moduloId)
             'profesores' => $profesores, // Paginado
         ]);
     }
-    
 
 
-    
 
-    
+
+
+
 
 
     public function storeAlumnoCurso(Request $request)
@@ -513,24 +513,24 @@ public function actualizarTemas(Request $request, $moduloId)
         ]);
     }
 
-    
+
     public function listaModulos(Request $request)
     {
         // Obtén las páginas actuales para módulos y temas de los parámetros de la solicitud
         $modulosPage = $request->input('modulos_page', 1);
         $temasPage = $request->input('temas_page', 1);
-    
+
         $categoria = $request->input('categoria', ''); // Filtrar por categoría si está presente
-    
+
         $modulos = Modulos::when($categoria, function ($query, $categoria) {
             return $query->where('categoria', $categoria);
         })->paginate(2, ['*'], 'modulos_page')->withQueryString();
-    
+
         $temas = Temas::paginate(2, ['*'], 'temas_page')->withQueryString();
-    
+
         return view('plataforma.index', compact('modulos', 'temas'));
     }
-    
+
 
     public function crearModulo(Request $request)
     {
@@ -613,17 +613,17 @@ public function actualizarTemas(Request $request, $moduloId)
     {
         // Paginación de estudiantes
         $estudiantes = Estudiante::with(['persona.usuario', 'inscripcion'])->paginate(10);
-    
+
         // Obtener usuarios sin el rol de "estudiante"
         $usuariosSinRolEstudiante = User::whereDoesntHave('roles', function ($query) {
             $query->where('name', 'estudiante');
         })->get();
-    
+
         $inscripciones = Inscripcion::all();
-    
+
         return view('plataforma.index', compact('estudiantes', 'usuariosSinRolEstudiante', 'inscripciones'));
     }
-    
+
 
     function generarContrasenaAleatoria($longitud = 8) {
         // Caracteres permitidos en cada categoría
@@ -647,6 +647,8 @@ public function actualizarTemas(Request $request, $moduloId)
         // Mezclamos los caracteres para mayor aleatoriedad
         return str_shuffle($contrasena);
     }
+
+
 
     public function registrarEstudiante(Request $request)
     {
@@ -747,7 +749,7 @@ public function actualizarTemas(Request $request, $moduloId)
 
         return redirect()->route('plataforma.estudiantes')->with('success', 'Estudiante dado de baja correctamente.');
     }
-    
+
 
     public function darDeAlta($matricula)
     {
@@ -910,7 +912,7 @@ public function actualizarTemas(Request $request, $moduloId)
     $persona = DB::table('personas')
         ->join('users', 'personas.usuario', '=', 'users.id')
         ->where('users.username', $username)
-        ->select('personas.id') 
+        ->select('personas.id')
         ->first();
 
     if (!$persona || !isset($persona->id)) {
@@ -979,7 +981,14 @@ public function actualizarTemas(Request $request, $moduloId)
     return view('plataforma.index', compact('cursos', 'estudiante'));
 }
 
+<<<<<<< HEAD
     
+=======
+
+
+
+
+>>>>>>> fa0e1e84597558203ae4abbdb864cb82e09fdaa3
 
 
     public function misPagosEspacio()

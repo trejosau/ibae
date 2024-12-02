@@ -47,6 +47,14 @@ class Admin extends Seeder
             'updated_at' => now(),
         ]);
 
+        Inscripcion::create([
+            'nombre' => 'Temporada navideña',
+            'precio' => 450,
+            'descripcion' => 'Descuento por temporada navideña con material incluido',
+            'material_incluido' => 1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
         $estudiante = Estudiante::create([
             'id_persona' => $persona->id,
@@ -98,52 +106,6 @@ class Admin extends Seeder
         $user->assignRole('profesor');
         $user->assignRole('estilista');
         $user->assignRole('admin');
-
-
-        $nombres = [
-            ['nombre' => 'Carlos', 'ap_paterno' => 'Hernández', 'ap_materno' => 'Lopez'],
-            ['nombre' => 'María', 'ap_paterno' => 'González', 'ap_materno' => 'Martínez'],
-            ['nombre' => 'Luis', 'ap_paterno' => 'Rodríguez', 'ap_materno' => 'García'],
-        ];
-
-        foreach ($nombres as $key => $datos) {
-            $user = User::create([
-                'username' => strtolower($datos['nombre']) . '-user-' . ($key + 1),
-                'email' => strtolower($datos['nombre']) . '-' . ($key + 1) . '@example.com',
-                'password' => bcrypt('1234'),
-                'profile_photo_url' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/profiles/default_profile.jpg',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            $persona = Persona::create([
-                'nombre' => $datos['nombre'],
-                'ap_paterno' => $datos['ap_paterno'],
-                'ap_materno' => $datos['ap_materno'],
-                'telefono' => '+52871' . random_int(1000000, 9999999),
-                'usuario' => $user->id,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            Comprador::create([
-                'id_persona' => $persona->id,
-                'razon_social' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            Administrador::create([
-                'id_persona' => $persona->id,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            // Asignar roles
-            $user->assignRole('cliente');
-            $user->assignRole('estudiante');
-            $user->assignRole('admin');
-        }
     }
 }
 

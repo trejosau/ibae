@@ -14,7 +14,7 @@
     @endif
 
 
-    
+
     <h2 class="text-center mb-4" style="color: #0D1E4C; border-bottom: 3px solid #26415E;">Gestión de Cursos</h2>
 
     <!-- Botones -->
@@ -82,10 +82,10 @@
                 </div>
             @endif
         @endforeach
-    </div> 
+    </div>
 
-        
-        
+
+
 
         <!-- Paginación con estilos -->
         @if ($cursos->hasPages())
@@ -98,13 +98,13 @@
                         </li>
                     @else
                         <li style="margin: 0 5px;">
-                            <a href="{{ $cursos->previousPageUrl() }}" rel="prev" 
+                            <a href="{{ $cursos->previousPageUrl() }}" rel="prev"
                                style="display: inline-block; padding: 10px 15px; color: #007bff; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; text-decoration: none;">
                                 &laquo;
                             </a>
                         </li>
                     @endif
-        
+
                     {{-- Números de página --}}
                     @foreach ($cursos->links()->elements as $element)
                         @if (is_string($element))
@@ -112,7 +112,7 @@
                                 <span style="display: inline-block; padding: 10px 15px; color: #ccc; background-color: #f5f5f5; border: 1px solid #ddd; border-radius: 5px;">{{ $element }}</span>
                             </li>
                         @endif
-        
+
                         @if (is_array($element))
                             @foreach ($element as $page => $url)
                                 @if ($page == $cursos->currentPage())
@@ -123,7 +123,7 @@
                                     </li>
                                 @else
                                     <li style="margin: 0 5px;">
-                                        <a href="{{ $url }}" 
+                                        <a href="{{ $url }}"
                                            style="display: inline-block; padding: 10px 15px; color: #007bff; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; text-decoration: none;">
                                             {{ $page }}
                                         </a>
@@ -132,11 +132,11 @@
                             @endforeach
                         @endif
                     @endforeach
-        
+
                     {{-- Botón de página siguiente --}}
                     @if ($cursos->hasMorePages())
                         <li style="margin: 0 5px;">
-                            <a href="{{ $cursos->nextPageUrl() }}" rel="next" 
+                            <a href="{{ $cursos->nextPageUrl() }}" rel="next"
                                style="display: inline-block; padding: 10px 15px; color: #007bff; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; text-decoration: none;">
                                 &raquo;
                             </a>
@@ -149,7 +149,7 @@
                 </ul>
             </nav>
         @endif
-        
+
 
 
         <!-- Modal para agregar curso -->
@@ -183,7 +183,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="duracion_semanas" class="form-label">Duración (semanas)</label>
-                                <input type="number" class="form-control" id="duracion_semanas" name="duracion_semanas" min="1" required>
+                                <input type="number" class="form-control" id="duracion_semanas" name="duracion_semanas" min="1" step="1" required>
+
                             </div>
                             <div class="mb-3">
                                 <label for="duracion_horas" class="form-label">Duración (horas)</label>
@@ -194,7 +195,7 @@
                                 <select class="form-select" id="id_certificacion" name="id_certificacion" required>
                                     <option value="">Seleccione un certificado</option>
                                     @foreach($certificados as $certificado)
-                                        <option value="{{ $certificado->id }}">{{ $certificado->nombre }}</option>
+                                        <option value="{{ $certificado->id }}">{{ $certificado->nombre }} - {{ $certificado->institucion }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -207,7 +208,7 @@
                 </div>
             </div>
         </div>
-        
+
 
     <!-- Modal para agregar certificado -->
     <div class="modal fade" id="addCertificadoModal" tabindex="-1" aria-labelledby="addCertificadoModalLabel" aria-hidden="true">
@@ -222,12 +223,12 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="nombre_certificado" class="form-label">Nombre del Certificado</label>
-                            <input 
-                                type="text" 
-                                class="form-control" 
-                                id="nombre_certificado" 
-                                name="nombre" 
-                                value="{{ old('nombre') }}" 
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="nombre_certificado"
+                                name="nombre"
+                                value="{{ old('nombre') }}"
                                 required
                             >
                         </div>
@@ -247,15 +248,15 @@
                         </div>
                     <div class="mb-3">
                     <label for="horas" class="form-label">Horas</label>
-                    <input 
-                        type="number" 
-                        class="form-control" 
-                        id="horas" 
-                        name="horas" 
-                        value="{{ old('horas') }}" 
-                        min="1" 
-                        max="120" 
-                        required 
+                    <input
+                        type="number"
+                        class="form-control"
+                        id="horas"
+                        name="horas"
+                        value="{{ old('horas') }}"
+                        min="1"
+                        max="120"
+                        required
                     >
                      </div>
                         <div class="mb-3">
@@ -278,7 +279,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="modal fade" id="changeStatusModal" tabindex="-1" aria-labelledby="changeStatusModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
