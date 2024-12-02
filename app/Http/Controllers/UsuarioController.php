@@ -40,15 +40,16 @@ class UsuarioController extends Controller
 
     public function agregarAdmin(Request $request)
     {
+
         $request->validate([
             'nombre' => 'required|string|max:255',
             'ap_paterno' => 'required|string|max:255',
             'ap_materno' => 'required|string|max:255',
-            'phone' => ['required', 'string','min:15', 'max:15', 'regex:/^\+52\d{10}$/'],
+            'phone' => ['required', 'string', 'min:10', 'max:14', 'regex:/^\+52\d{10,11}$/'],
             'username' => 'required|string|max:255|unique:users,username',
             'email' => 'required|email|max:255|unique:users,email',
         ]);
-
+ 
         // Generar contraseña aleatoria
         $password = $this->generarContrasenaAleatoria();
 
@@ -205,6 +206,7 @@ class UsuarioController extends Controller
             'n_int' => 'nullable|string|max:10',
         ]);
 
+        dd($request->all());
 
         // Generate a random password
         $password = $this->generarContrasenaAleatoria();
