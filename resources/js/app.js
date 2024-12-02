@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const minutos = String(hoy.getMinutes()).padStart(2, '0');
             const segundos = String(hoy.getSeconds()).padStart(2, '0');
 
-            document.querySelectorAll('#fecha-hora').forEach((element) => {
+            document.querySelectorAll('#fecha_hora').forEach((element) => {
                 element.textContent = `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;
             });
         }
