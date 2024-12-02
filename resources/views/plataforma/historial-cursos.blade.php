@@ -73,7 +73,7 @@
                                 <button class="btn btn-danger btn-sm" style="position: absolute; top: 10px; right: 10px;" data-bs-toggle="modal" data-bs-target="#inscribirAlumnosModal-{{ $apertura->id }}">
                                     Inscribir
                                 </button>
-                            @elseif(auth()->user()->hasRole('profesor') && $apertura->estado == 'en curso')
+                            @elseif(auth()->user()->hasRole('profesor', 'admin') && $apertura->estado == 'en curso')
                                 <a href="{{ route('plataforma.registrarAsistencia', $apertura->id) }}" class="btn btn-info btn-sm registrar-btn" style="position: absolute; top: 10px; right: 10px; z-index: 15;" target="_blank">
                                     Asistencia/Colegiaturas
                                 </a>
