@@ -453,12 +453,44 @@ public function actualizarTemas(Request $request, $moduloId)
         return redirect()->route('plataforma.historial-cursos')->with('success', 'Curso aperturado exitosamente.');
     }
 
-    public function guardarAsistencia(Request $request)
+    public function guardarAsistencia($curso_apertura_id, Request $request)
     {
         $asistencia = $request->input('asistencia');
         $colegiatura = $request->input('colegiatura');
 
+        foreach ($asistencia as $matricula => $semanasAsistencia) {
+            $estudianteCurso = EstudianteCurso::whereHas('estudiante', function($query) use ($matricula) {
+                $query->where('matricula', $matricula);
+            })
+                ->where('id_curso_apertura', $curso_apertura_id)
+                ->first();
+
+
+            foreach ($semanasAsistencia as $semana => $estadoAsistencia) {
+                $estadoColegiatura = isset($colegiatura[$matricula][$semana]) ? $colegiatura[$matricula][$semana] : 'off';
+
+                Colegiaturas::updateOrCreate(
+                    [
+                        'id_estudiante_curso' => $estudianteCurso->id,
+                        'semana' => $semana,
+                    ],
+                    [
+                        'asistio' => $estadoAsistencia == 'on' ? 1 : 0,
+
+                        'colegiatura' => $estadoColegiatura == 'on' ? 1 : 0,
+
+                        'fecha_pago' => Carbon::now(),
+                    ]
+                );
+            }
+        }
+
+        // Retornar una respuesta de éxito con los datos recibidos
+        return redirect()->back()->with('success', 'Datos de asistencia guardados correctamente.');
     }
+
+
+
 
 
 
@@ -473,9 +505,8 @@ public function actualizarTemas(Request $request, $moduloId)
             ->join('personas as p', 'e.id_persona', '=', 'p.id')
             ->join('colegiaturas as c', 'ec.id', '=', 'c.id_estudiante_curso')
             ->where('ec.id_curso_apertura', $idApertura)
-            ->select('e.matricula', 'p.nombre', 'p.ap_paterno', 'p.ap_materno', 'ec.estado', 'ec.id as id_estudiante_curso', 'c.semana', 'c.asistio', 'c.colegiatura')
+            ->select('e.matricula', 'p.nombre', 'p.ap_paterno', 'p.ap_materno', 'ec.estado', 'ec.id as id_estudiante_curso', 'c.id', 'c.semana', 'c.asistio', 'c.colegiatura')
             ->get();
-
 
 
         // Agrupar los datos por estudiante
