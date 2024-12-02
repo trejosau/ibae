@@ -33,8 +33,8 @@ class AcademiaSeeder extends Seeder
                 'descripcion' => 'Descripción del curso ' . $i,
                 'duracion_semanas' => rand(4, 20),
                 'estado' => rand(0, 1) ? 'activo' : 'inactivo',
-                'id_certificacion' => rand(1, 5),
-                'duracion_horas' => rand(40, 200),
+                'id_certificacion' => rand(2, 4),
+                'duracion_horas' => rand(1, 5),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];

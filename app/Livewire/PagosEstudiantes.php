@@ -5,15 +5,21 @@ namespace App\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use App\Models\Colegiaturas;
+use Livewire\WithPagination;
 
 class PagosEstudiantes extends Component
 {
+    use WithPagination;
+
     public $matricula = '';
     public $nombre = '';
     public $fecha_pago = null;
     public $fecha_inicio = null;
     public $fecha_fin = null;
-    public $colegiaturas;
+
+    public $modalOpen = false;
+    public $selectedColegiatura = null;
+    protected $paginationTheme = 'bootstrap'; // Opcional, define el tema para la paginación.
 
     public function historialPagos()
     {
@@ -27,7 +33,6 @@ class PagosEstudiantes extends Component
             })
             ->with(['estudianteCurso.estudiante.persona', 'estudianteCurso.cursoApertura', 'estudianteCurso.colegiaturas']);
 
-        // Filtros dinámicos
         if (!empty($this->matricula)) {
             $query->whereHas('estudianteCurso.estudiante', function ($q) {
                 $q->where('matricula', 'like', '%' . $this->matricula . '%');
@@ -43,16 +48,20 @@ class PagosEstudiantes extends Component
         if (!empty($this->fecha_pago)) {
             $query->whereDate('colegiaturas.fecha_pago', $this->fecha_pago);
         }
-
+        if (!empty($this->fecha_inicio)) {
+            $query->where('colegiaturas.fecha_pago', '>=', $this->fecha_inicio);
+        }
+    
+        // Filtro por rango de fechas (fecha de inicio y fecha de fin)
         if (!empty($this->fecha_inicio) && !empty($this->fecha_fin)) {
             $query->whereBetween('colegiaturas.fecha_pago', [$this->fecha_inicio, $this->fecha_fin]);
         }
 
-        $colegiaturas = $query->get();
+        $colegiaturas = $query->paginate(9); // Cambia el número según tus necesidades.
 
         foreach ($colegiaturas as $colegiatura) {
             $adeudo = $colegiatura->estudianteCurso->colegiaturas
-                ->where('colegiatura', 0) // 0 indica no pagado
+                ->where('colegiatura', 0)
                 ->sum('Monto');
 
             $colegiatura->adeudo = $adeudo;
@@ -61,9 +70,27 @@ class PagosEstudiantes extends Component
         return $colegiaturas;
     }
 
+    public function goToPage($page)
+    {
+        $this->setPage($page); // Método de Livewire para cambiar la página
+    }
     public function render()
     {
-        $this->colegiaturas = $this->historialPagos();
-        return view('livewire.pagos-estudiantes', ['colegiaturas' => $this->colegiaturas]);
+        return view('livewire.pagos-estudiantes', [
+            'colegiaturas' => $this->historialPagos(),
+        ]);
+    } public function openModal($id)
+    {
+        // Obtener los detalles de la colegiatura seleccionada
+        $this->selectedColegiatura = Colegiaturas::find($id);
+        $this->modalOpen = true; // Abrir el modal
     }
+
+    public function closeModal()
+    {
+        $this->modalOpen = false; // Cerrar el modal
+        $this->selectedColegiatura = null; // Limpiar la colegiatura seleccionada
+    }
+
 }
+
