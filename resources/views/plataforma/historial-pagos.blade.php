@@ -2,14 +2,10 @@
     <h2 class="text-center mb-4" style="color: var(--color-acento); font-weight: bold;">Historial de Pagos</h2>
 </div>
 
-
-<livewire:pagosestudiantes />
-@livewireScripts
-@livewireStyles
-
-
-
+<div>
+<livewire:pagos-estudiantes />
 </div>
+
 
 <script>
     document.querySelectorAll('.clickable-row').forEach(row => {
