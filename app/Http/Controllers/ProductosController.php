@@ -538,7 +538,7 @@ public function storeCategoria(Request $request)
                 'total' => 0, // Será actualizado después de calcular el total
                 'estado' => $estado,
                 'clave_entrega' => $claveEntrega,
-                'fecha-hora_pedido' => now(),
+                'fecha_hora_pedido' => now(),
                 'id_comprador' => $idComprador,
                 'es_estudiante' => $esEstudiante,
                 'id_estudiante' => $idEstudiante,
