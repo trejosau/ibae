@@ -32,7 +32,7 @@
             >
         </div>
     </div>
-    
+
     <!-- Tabla de Pagos -->
     <div class="table-responsive">
         <table class="table table-striped" style="background-color: #fff; color: #4a4a4a; border-radius: 8px;">
@@ -41,49 +41,73 @@
                     <th style="color: #d9534f;">Matrícula</th>
                     <th style="color: #d9534f;">Nombre del Estudiante</th>
                     <th style="color: #d9534f;">Adeudo</th>
+                    <th style="color: #d9534f;">Acciones</th> <!-- Nueva columna de acciones -->
                 </tr>
             </thead>
             <tbody>
-                @foreach($colegiaturas as $colegiatura)
-                    <tr class="clickable-row" data-type="colegiatura" style="cursor: pointer;">
+                @foreach($colegiaturas as $index => $colegiatura)
+                    <tr>
                         <td>{{ $colegiatura->estudianteCurso->estudiante->matricula ?? 'N/A' }}</td>
                         <td>{{ $colegiatura->estudianteCurso->estudiante->persona->nombre ?? 'N/A' }}</td>
                         <td>${{ $colegiatura->adeudo }}</td>
-                    </tr>
-                    <tr class="details-row" style="display: none; background-color: #f1e3e1;">
-                        <td colspan="4">
-                            <div class="p-3" style="background-color: #fff; border: 1px solid #e6d4d2; border-radius: 5px;">
-                                <!-- Detalles del Curso -->
-                                <div class="mb-3">
-                                    <strong style="color: #d9534f;">Curso Actual:</strong>
-                                    <p style="color: #4a4a4a; margin-top: 5px;">{{ $colegiatura->estudianteCurso->cursoApertura->curso->nombre ?? 'N/A' }}</p>
-                                </div>
-
-                                <!-- Detalles de las Semanas -->
-                                <div class="mb-3">
-                                    <strong style="color: #d9534f;">Semanas:</strong>
-                                    <ul class="list-unstyled mt-3">
-                                        @foreach($colegiatura->estudianteCurso->colegiaturas as $semana)
-                                            <li style="color: #4a4a4a; margin-bottom: 10px;">
-                                                <strong>{{ $semana->semana }}:</strong> 
-                                                @if($semana->colegiatura == 1)
-                                                    <span class="badge bg-success ms-2">Pagado</span>
-                                                    <span style="color: #4a4a4a;">${{ $semana->Monto }}</span>
-                                                    <!-- Mostrar la fecha solo si está pagado -->
-                                                    <div><strong>Fecha de Pago:</strong> {{ $colegiatura->fecha_pago }}</div>
-                                                @else
-                                                    <span class="badge bg-danger ms-2">No Pagado</span>
-                                                    <span style="color: #4a4a4a;">${{ $semana->Monto }}</span>
-                                                @endif
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
+                        <td>
+                            <!-- Botón para abrir el modal -->
+                            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalDetails{{ $index }}">
+                                Ver Detalles
+                            </button>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+
+        <!-- Paginación -->
+        <div class="mt-4">
+            {{ $colegiaturas->links() }}
+        </div>
     </div>
+
+    <!-- Modal para detalles -->
+    @foreach($colegiaturas as $index => $colegiatura)
+        <div class="modal fade" id="modalDetails{{ $index }}" tabindex="-1" aria-labelledby="modalLabel{{ $index }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #e6d4d2;">
+                        <h5 class="modal-title" id="modalLabel{{ $index }}" style="color: #d9534f;">Detalles del Curso y Pagos</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Detalles del Curso -->
+                        <div class="mb-3">
+                            <strong style="color: #d9534f;">Curso Actual:</strong>
+                            <p style="color: #4a4a4a; margin-top: 5px;">{{ $colegiatura->estudianteCurso->cursoApertura->curso->nombre ?? 'N/A' }}</p>
+                        </div>
+
+                        <!-- Detalles de las Semanas -->
+                        <div class="mb-3">
+                            <strong style="color: #d9534f;">Semanas:</strong>
+                            <ul class="list-unstyled mt-3">
+                                @foreach($colegiatura->estudianteCurso->colegiaturas as $semana)
+                                    <li style="color: #4a4a4a; margin-bottom: 10px;">
+                                        <strong>{{ $semana->semana }}:</strong> 
+                                        @if($semana->colegiatura == 1)
+                                            <span class="badge bg-success ms-2">Pagado</span>
+                                            <span style="color: #4a4a4a;">${{ $semana->Monto }}</span>
+                                            <div><strong>Fecha de Pago:</strong> {{ $colegiatura->fecha_pago }}</div>
+                                        @else
+                                            <span class="badge bg-danger ms-2">No Pagado</span>
+                                            <span style="color: #4a4a4a;">${{ $semana->Monto }}</span>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
 </div>

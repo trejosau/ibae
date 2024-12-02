@@ -49,6 +49,9 @@ Route::get('/phpinfo', function () {
 });
 
 
+Route::post('/reset-password', [ProfileController::class, 'sendResetPasswordEmail'])->name('resetPassword');
+
+
 Route::get('auth/google', [loginGoogleController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('auth/google/callback', [loginGoogleController::class, 'handleGoogleCallback'])->name('login.google.callback');
 
@@ -133,7 +136,7 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
             $user = Auth::user();
 
             if ($user->hasRole('admin')) {
-                return Redirect::to('/plataforma/espacio/mis-cursos');
+                return Redirect::to('/plataforma/cursos/mis-cursos');
             }
 
             if ($user->hasRole('profesor')) {
@@ -141,7 +144,7 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
             }
 
             if ($user->hasRole('estudiante')) {
-                return Redirect::to('/plataforma/espacio/perfil');
+                return Redirect::to('/plataforma/espacio/mis-cursos');
             }
 
             // Redirección predeterminada si no tiene rol específico
@@ -153,7 +156,6 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
         Route::middleware(['role:estudiante'])->group(function () {
             Route::get('/plataforma/espacio/mis-cursos', [PlataformaController::class, 'misCursosEspacio'])->name('plataforma.espacio-mis-cursos');
             Route::get('/plataforma/espacio/mis-pagos', [PlataformaController::class, 'misPagosEspacio'])->name('plataforma.espacio-mis-pagos');
-            Route::get('/plataforma/espacio/perfil', [PlataformaController::class, 'perfilEspacio'])->name('plataforma.espacio-perfil');
         });
 
         Route::middleware(['role:profesor|admin'])->group(function () {
@@ -182,7 +184,8 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
             // Rutas de Asignación de Módulos a Temas
             Route::get('/temas-modulos', [PlataformaController::class, 'ligarModulosATemas'])->name('ligarTemasModulo');
             Route::post('/plataforma/asignar-temas', [PlataformaController::class, 'asignarTemas'])->name('asignar.temas');
-            Route::post('/eliminar-tema', [PlataformaController::class, 'eliminarTemaDeModulo'])->name('eliminar.tema');
+            Route::delete('/eliminar-tema', [PlataformaController::class, 'eliminarTemaDeModulo'])->name('eliminar.tema');
+
 
             // Rutas para temas
             Route::put('/tema/modificar/{id}', [PlataformaController::class, 'actualizarTema'])->name('plataforma.actualizarTema');

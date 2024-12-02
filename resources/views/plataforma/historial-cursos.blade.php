@@ -40,13 +40,13 @@
         </form>
     </div>
 </div>
-    
+
 
 
     <div class="row mt-4">
         @foreach ($cursosApertura as $apertura)
             <!-- Mostrar cursos según el rol -->
-            @if(auth()->user()->hasRole('admin') || 
+            @if(auth()->user()->hasRole('admin') ||
                 (auth()->user()->hasRole('profesor') && $apertura->estado == 'en curso'))
                 <div class="col-12 mb-4">
                     <div class="card shadow-sm curso-card" style="font-size: 0.9rem; border: 1px solid #D32F2F; overflow: hidden; position: relative;">
@@ -67,19 +67,19 @@
                                     {{ ucfirst($apertura->estado) }}
                                 </span>
                             </p>
-                            
+
                             <!-- Botones según el rol y el estado -->
                             @if(auth()->user()->hasRole('admin') && $apertura->estado == 'programado')
                                 <button class="btn btn-danger btn-sm" style="position: absolute; top: 10px; right: 10px;" data-bs-toggle="modal" data-bs-target="#inscribirAlumnosModal-{{ $apertura->id }}">
                                     Inscribir
                                 </button>
-                            @elseif(auth()->user()->hasRole('profesor') && $apertura->estado == 'en curso')
-                                <a href="{{ route('plataforma.registrarAsistencia', $apertura->id) }}" class="btn btn-info btn-sm registrar-btn" style="position: absolute; top: 10px; right: 10px; z-index: 15;" target="_blank">
+                            @elseif((auth()->user()->hasRole('profesor') || auth()->user()->hasRole('admin')) && $apertura->estado == 'en curso')
+                            <a href="{{ route('plataforma.registrarAsistencia', $apertura->id) }}" class="btn btn-info btn-sm registrar-btn" style="position: absolute; top: 10px; right: 10px; z-index: 15;" target="_blank">
                                     Asistencia/Colegiaturas
                                 </a>
                             @endif
                         </div>
-                        
+
                         <!-- Detalles del curso (visible para todos los roles) -->
                         <div class="card-footer" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#dropdown-{{ $apertura->id }}">
                             <small class="text-muted">Ver detalles del curso</small>
@@ -120,7 +120,7 @@
                 </li>
             @else
                 <li style="margin: 0 5px;">
-                    <a href="{{ $cursosApertura->previousPageUrl() }}" rel="prev" 
+                    <a href="{{ $cursosApertura->previousPageUrl() }}" rel="prev"
                        style="display: inline-block; padding: 10px 15px; color: #007bff; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; text-decoration: none;">
                         &laquo;
                     </a>
@@ -137,7 +137,7 @@
                     </li>
                 @else
                     <li style="margin: 0 5px;">
-                        <a href="{{ $url }}" 
+                        <a href="{{ $url }}"
                            style="display: inline-block; padding: 10px 15px; color: #007bff; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; text-decoration: none;">
                             {{ $page }}
                         </a>
@@ -148,7 +148,7 @@
             {{-- Botón de página siguiente --}}
             @if ($cursosApertura->hasMorePages())
                 <li style="margin: 0 5px;">
-                    <a href="{{ $cursosApertura->nextPageUrl() }}" rel="next" 
+                    <a href="{{ $cursosApertura->nextPageUrl() }}" rel="next"
                        style="display: inline-block; padding: 10px 15px; color: #007bff; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; text-decoration: none;">
                         &raquo;
                     </a>
@@ -213,7 +213,7 @@
 
 
 
-    
+
     <!-- Modals -->
     @foreach ($cursosApertura as $apertura)
         @if ($apertura->estado == 'programado')
@@ -308,7 +308,7 @@
                                 @endforeach
                             </select>
                         </div>
-    
+
                         <!-- Select para Profesores -->
                         <div class="mb-3">
                             <label for="id_profesor" class="form-label">Profesor</label>
@@ -321,34 +321,34 @@
                                 @endforeach
                             </select>
                         </div>
-    
+
                         <!-- Campo para la Fecha de Inicio -->
                         <div class="mb-3">
                             <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
-                            <input 
-                                type="date" 
-                                class="form-control" 
-                                id="fechaInicio" 
-                                name="fecha_inicio" 
-                                min="" 
+                            <input
+                                type="date"
+                                class="form-control"
+                                id="fechaInicio"
+                                name="fecha_inicio"
+                                min=""
                                 required>
                             <div class="invalid-feedback" id="fechaError" style="display: none;">La fecha debe ser a futuro.</div>
                         </div>
-                        
-    
+
+
                         <!-- Campo para la Hora de Clase -->
                         <div class="mb-3">
                             <label for="horaClase" class="form-label">Hora de Clase</label>
                             <input type="time" class="form-control" id="horaClase" name="hora_clase" min="08:00" max="22:00" required>
                             <div class="invalid-feedback" id="errorHoraClase" style="display: none;">La hora de inicio debe estar entre 8:00 AM y 10:00 PM, y no puede exceder el horario límite de 2 horas.</div>
                         </div>
-    
+
                         <!-- Campo para el Monto de Colegiatura -->
                         <div class="mb-3">
                             <label for="montoColegiatura" class="form-label">Monto de Colegiatura</label>
                             <input type="number" class="form-control" id="montoColegiatura" name="monto_colegiatura" placeholder="Ingrese el monto de colegiatura" required>
                         </div>
-    
+
                         <!-- Contenedor de semanas -->
                         <div id="semanasContainer"></div>
                     </div>
@@ -365,10 +365,10 @@
         function validarHora() {
         const horaClase = document.getElementById('horaClase').value;
         const errorHoraClase = document.getElementById('errorHoraClase');
-    
+
         const [hora, minutos] = horaClase.split(':').map(Number);
         const horaFin = hora + 2; // Calculamos la hora de término para clases de 2 horas
-    
+
         // Validamos que la hora esté dentro del rango
         if (hora < 8 || horaFin > 22 || (hora === 21 && minutos > 0)) {
             errorHoraClase.style.display = 'block';
@@ -378,10 +378,10 @@
             document.getElementById('horaClase').setCustomValidity('');
         }
     }
-    
+
     </script>
-    
-    
+
+
     <script>
       document.addEventListener('DOMContentLoaded', function () {
     const fechaInicio = document.getElementById('fechaInicio');
@@ -389,6 +389,7 @@
 
     // Establecer el atributo 'min' con la fecha de hoy
     const hoy = new Date();
+    hoy.setDate(hoy.getDate() + 1);
     const año = hoy.getFullYear();
     const mes = (hoy.getMonth() + 1).toString().padStart(2, '0'); // Mes en formato 2 dígitos
     const dia = hoy.getDate().toString().padStart(2, '0'); // Día en formato 2 dígitos
@@ -412,7 +413,7 @@
 });
 
     </script>
-    
+
 
     <script>
         document.getElementById('cursoSelect').addEventListener('change', function() {

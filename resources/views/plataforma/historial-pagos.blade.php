@@ -1,5 +1,7 @@
-<div class="container-fluid mt-5" style="background-color: #f9f3f0; padding: 20px; border-radius: 8px;">
-    <h2 class="text-center mb-4" style="color: #d9534f;">Historial de Pagos</h2>
+<div class="container-fluid mt-5" style="background-color: var(--color-footer); padding: 20px; border-radius: 8px;">
+    <h2 class="text-center mb-4" style="color: var(--color-acento); font-weight: bold;">Historial de Pagos</h2>
+</div>
+
    
 <livewire:pagosestudiantes />
 @livewireScripts

@@ -45,11 +45,20 @@ class UsuarioController extends Controller
             'nombre' => 'required|string|max:255',
             'ap_paterno' => 'required|string|max:255',
             'ap_materno' => 'required|string|max:255',
+<<<<<<< HEAD
             'phone' => ['required', 'string', 'min:10', 'max:14', 'regex:/^\+52\d{10,11}$/'],
             'username' => 'required|string|max:255|unique:users,username',
             'email' => 'required|email|max:255|unique:users,email',
         ]);
  
+=======
+            'phone' => ['required', 'string', 'min:13', 'max:13', 'regex:/^\+52\d{10}$/'],
+            'username' => 'required|string|max:255|unique:users,username',
+            'email' => 'required|email|max:255|unique:users,email',
+        ]);
+
+
+>>>>>>> ee29135d516006770c217abc75c8078bc4243a31
         // Generar contraseña aleatoria
         $password = $this->generarContrasenaAleatoria();
 
@@ -96,6 +105,7 @@ class UsuarioController extends Controller
             if ($admin) {
                 Mail::to($request->email)->send(new EnvioCredenciales($usuario, $password));
             }
+
 
             return redirect()->route('dashboard.usuarios')->with('success', 'Usuario creado con éxito. Se ha enviado un correo con las credenciales.');
 
@@ -192,13 +202,13 @@ class UsuarioController extends Controller
             'nombre' => 'required|string|max:255',
             'ap_paterno' => 'required|string|max:255',
             'ap_materno' => 'required|string|max:255',
-            'phone' => ['required', 'string', 'max:15','min:15', 'regex:/^\+52\d{10}$/'],
+            'phone' => ['required', 'string', 'max:13','min:13', 'regex:/^\+52\d{10}$/'],
             'RFC' => 'nullable|string|max:20',
             'CURP' => 'nullable|string|max:20',
             'username' => 'required|string|max:255|unique:users,username',
             'email' => 'required|email|max:255|unique:users,email',
             'especialidad' => 'required|string|in:estilismo,barbería,maquillaje,uñas',
-            'zipcode' => 'required|string|size:6',
+            'zipcode' => 'required|string|size:5',
             'ciudad' => 'required|string|max:100',
             'colonia' => 'required|string|max:100',
             'calle' => 'required|string|max:100',
@@ -207,6 +217,9 @@ class UsuarioController extends Controller
         ]);
 
         dd($request->all());
+
+
+
 
         // Generate a random password
         $password = $this->generarContrasenaAleatoria();
@@ -238,6 +251,8 @@ class UsuarioController extends Controller
                 'created_at' => now(),
                 'updated_at' => null,
             ]);
+
+
 
         // Create the professor
         $profesor = Profesor::create([
