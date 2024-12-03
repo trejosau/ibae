@@ -32,25 +32,28 @@ class PlataformaController extends Controller
     public function iniciarCursosHoy()
     {
         $hoy = Carbon::today();
-
+    
+        // Buscar los cursos que deben iniciarse hoy
         $cursosIniciados = CursoApertura::where('fecha_inicio', $hoy)
             ->where('estado', 'programado')
             ->get();
-
+    
         foreach ($cursosIniciados as $curso) {
             $curso->estado = 'en curso';
             $curso->save();
         }
-
+    
+        // Si no hay cursos que iniciar hoy
         if ($cursosIniciados->isEmpty()) {
-            return response()->json([
-                'message' => 'No hay cursos que necesiten iniciar hoy.',
-            ], 200);
+            session()->flash('message', 'No hay cursos que necesiten iniciar hoy.');
+            return redirect()->back();
         }
-
-        redirect()->back()->with('success', 'Cursos iniciados correctamente.');
+    
+        // Si los cursos se han iniciado correctamente
+        session()->flash('success', 'Cursos iniciados correctamente.');
+        return redirect()->back();
     }
-
+    
 
 
     public function asignarTemas(Request $request)
@@ -61,27 +64,21 @@ class PlataformaController extends Controller
             'tema_ids' => 'required|array',
             'tema_ids.*' => 'exists:temas,id',
         ]);
-
         // Recoge el ID del módulo y los IDs de los temas
         $moduloId = $validated['modulo_id'];
         $temaIds = $validated['tema_ids'];
-
         // Obtener el nombre del módulo
         $moduloNombre = Modulos::find($moduloId)->nombre; // Asegúrate de que el campo 'nombre' exista en la tabla 'modulos'
-
         $successMessages = [];
         $errorMessages = [];
-
         foreach ($temaIds as $temaId) {
             // Inserta el tema en la tabla modulo_temas
             $created = ModuloTemas::create([
                 'id_modulo' => $moduloId,
                 'id_tema' => $temaId,
             ]);
-
             // Obtener el nombre del tema
             $temaNombre = Temas::find($temaId)->nombre; // Asegúrate de que el campo 'nombre' exista en la tabla 'temas'
-
             // Verifica si se creó correctamente
             if ($created) {
                 $successMessages[] = "Tema '$temaNombre' asignado correctamente al módulo '$moduloNombre'.";
@@ -89,38 +86,27 @@ class PlataformaController extends Controller
                 $errorMessages[] = "Error al asignar el tema '$temaNombre' al módulo '$moduloNombre'.";
             }
         }
-
         // Mensajes de éxito o error
         $messages = array_merge($successMessages, $errorMessages);
-
         // Redirecciona con mensajes
         return redirect()->back()->with('messages', $messages);
     }
 
-
-
     public function ligarModulosATemas()
     {
-        // Obtener todos los módulos con sus temas, agrupados por categoría
-        $modulos = Modulos::with('temas')
-            ->whereHas('temas') // Filtra solo los módulos con temas asociados
-            ->get()
-            ->groupBy('categoria');
-
+        // Obtener todos los módulos con sus temas y agruparlos por categoría
+        $modulos = Modulos::with('temas')->get()->groupBy('categoria');
         // Obtener todos los módulos que no tienen temas asociados
-        $modulosSinTemas = Modulos::doesntHave('temas')->get();
-
+        $modulosSinTemas = DB::table('modulos AS m')
+            ->leftJoin('modulo_temas AS mt', 'm.id', '=', 'mt.id_modulo')
+            ->select('m.*')
+            ->whereNull('mt.id_modulo')
+            ->get();
         // Obtener todos los temas disponibles
         $todosLosTemas = Temas::all();
-
-        // Agrupar los temas por categoría
-        $temasPorCategoria = [];
-        foreach ($todosLosTemas as $tema) {
-            $temasPorCategoria[$tema->categoria][] = $tema;
-        }
-
-        // Pasar los datos filtrados a la vista
-        return view('plataforma.temas-modulos', compact('modulos', 'todosLosTemas', 'temasPorCategoria', 'modulosSinTemas'));
+        
+        // Pasar los módulos y los temas a la vista
+        return view('plataforma.temas-modulos', compact('modulos', 'todosLosTemas','modulosSinTemas'));
     }
 
 

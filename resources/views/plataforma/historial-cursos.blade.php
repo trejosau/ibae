@@ -1,4 +1,17 @@
 <div class="container mt-4">
+
+    @if (session('message'))
+    <div class="alert alert-info">
+        {{ session('message') }}
+    </div>
+@endif
+
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
     <h2 class="text-center mb-4">Gestión de Cursos Aperturados</h2>
 
     @if(session('success'))
@@ -337,14 +350,11 @@
 
 
                         <!-- Campo para la Hora de Clase -->
-                          <div class="mb-3">
+                        <div class="mb-3">
                             <label for="horaClase" class="form-label">Hora de Clase</label>
-                            <select class="form-select" id="horaClase" name="hora_clase" required>
-                                <option value="" disabled selected>Seleccione una hora</option>
-                            </select>
+                            <input type="time" class="form-control" id="horaClase" name="hora_clase" min="08:00" max="22:00" required>
                             <div class="invalid-feedback" id="errorHoraClase" style="display: none;">La hora de inicio debe estar entre 8:00 AM y 10:00 PM, y no puede exceder el horario límite de 2 horas.</div>
                         </div>
-
 
                         <!-- Campo para el Monto de Colegiatura -->
                         <div class="mb-3">
