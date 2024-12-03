@@ -1,4 +1,17 @@
 <div class="container mt-4">
+
+    @if (session('message'))
+    <div class="alert alert-info">
+        {{ session('message') }}
+    </div>
+@endif
+
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
     <h2 class="text-center mb-4">Gestión de Cursos Aperturados</h2>
 
     @if(session('success'))

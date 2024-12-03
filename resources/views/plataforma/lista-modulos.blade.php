@@ -26,7 +26,6 @@
                         <div class="card-body">
                             <h5 class="card-title" style="color: #6A4E77;">{{ $modulo->nombre }}</h5>
                             <p class="card-text" style="color: #8C7A71;"><strong>Categoría:</strong> {{ $modulo->categoria }}</p>
-                            <p class="card-text" style="color: #8C7A71;"><strong>Duración:</strong> {{ $modulo->duracion }} Horas</p>
                             <div class="d-flex justify-content-end gap-2">
                                 <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarModulo-{{ $modulo->id }}" style="background-color: #C9A3BE; color: white; border: none;">Modificar</button>
                                 <form action="{{ route('plataforma.eliminarModulo', $modulo->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este módulo?');">
@@ -128,9 +127,7 @@
                 </div>
                 @endforeach
                 
-                
-
-
+            
                 @if ($temas->hasPages())
                 <nav aria-label="Page navigation" style="margin-top: 20px;">
                     <ul style="display: flex; justify-content: center; list-style: none; padding: 0;">
