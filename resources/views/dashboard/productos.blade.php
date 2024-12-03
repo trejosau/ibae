@@ -33,7 +33,8 @@
             <div class="input-group me-3">
                 <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#agregarProductoModal"
                         style="background-color: #4CAF50; border-color: #4CAF50; color: white; border-radius: 8px;">
-                    Agregar Producto
+                    <i class="bi bi-box" style="font-size: 1.5rem;"></i> <!-- Icono Agregar Producto -->
+                    <span class="d-none d-sm-inline">Agregar Producto</span> <!-- Texto solo en pantallas grandes -->
                 </button>
             </div>
 
@@ -41,23 +42,27 @@
             <div class="input-group me-3">
                 <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalAgregarCategoria"
                         style="background-color: #2196F3; border-color: #2196F3; color: white; border-radius: 8px 0 0 8px; border-right: 0;">
-                    Agregar Categoría
+                    <i class="bi bi-folder-plus" style="font-size: 1.5rem;"></i> <!-- Icono Agregar Categoría -->
+                    <span class="d-none d-sm-inline">Agregar Categoría</span> <!-- Texto solo en pantallas grandes -->
                 </button>
                 <!-- Botón de Ojo para Ver Categoría -->
-                <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#modalVerCategoria" style="border-radius: 0 8px 8px 0; background-color: #1976D2; border-left: 0;">
-                    <i class="bi bi-eye" style="font-size: 1.5rem; color: white;"></i>
+                <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#modalVerCategoria"
+                        style="border-radius: 0 8px 8px 0; background-color: #1976D2; border-left: 0;">
+                    <i class="bi bi-eye" style="font-size: 1.5rem; color: white;"></i> <!-- Icono Ojo -->
+                    <span class="d-none d-sm-inline">Ver Categoría</span> <!-- Texto solo en pantallas grandes -->
                 </button>
-
             </div>
 
             <!-- Botón de Agregar Subcategoría -->
             <div class="input-group me-3">
                 <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalAgregarSubcategoria"
                         style="background-color: #FF9800; border-color: #FF9800; color: white; border-radius: 8px;">
-                    Agregar Subcategoría
+                    <i class="bi bi-tags" style="font-size: 1.5rem;"></i> <!-- Icono Agregar Subcategoría -->
+                    <span class="d-none d-sm-inline">Agregar Subcategoría</span> <!-- Texto solo en pantallas grandes -->
                 </button>
             </div>
         </div>
+
 
 
         <!-- Modal para Ver Categorías -->
@@ -68,7 +73,7 @@
                         <h5 class="modal-title" id="modalVerCategoriaLabel">Ver Categorías y Subcategorías</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                    <div class="modal-body" style="max-height: 60vh; overflow-y: auto;"> <!-- Agregado estilo para altura y scroll -->
                         @foreach ($categorias as $categoria)
                             <div class="card mb-3">
                                 <div class="card-body">
@@ -84,8 +89,10 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm">
-                                                    <i class="bi bi-trash"></i> Eliminar
+                                                    <i class="bi bi-trash"></i>
+                                                    <span class="d-none d-sm-inline">Eliminar</span> <!-- El texto solo se muestra en pantallas grandes -->
                                                 </button>
+
                                             </form>
                                         </div>
                                         @endforeach
@@ -104,6 +111,7 @@
 
 
 
+
         <!-- Modal -->
     <div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-labelledby="agregarProductoModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -117,11 +125,11 @@
                         @csrf
                         <!-- Nombre y Marca -->
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 col-md-6 mb-3">
                                 <label for="nombre" class="form-label">Nombre del Producto</label>
                                 <input type="text" class="form-control" id="nombre" name="nombre" required>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 col-md-6 mb-3">
                                 <label for="marca" class="form-label">Marca</label>
                                 <select class="form-select" id="marca" name="marca">
                                     <option value="">Selecciona una marca...</option>
@@ -131,26 +139,29 @@
                                 </select>
                             </div>
                         </div>
+
                         <!-- Descripción -->
                         <div class="mb-3">
                             <label for="descripcion" class="form-label">Descripción</label>
                             <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
                         </div>
+
                         <!-- Precios -->
                         <div class="row">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-12 col-md-4 mb-3">
                                 <label for="precio_proveedor" class="form-label">Precio Proveedor</label>
                                 <input type="number" class="form-control" id="precio_proveedor" name="precio_proveedor" required>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-12 col-md-4 mb-3">
                                 <label for="precio_lista" class="form-label">Precio Lista</label>
                                 <input type="number" class="form-control" id="precio_lista" name="precio_lista" required>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-12 col-md-4 mb-3">
                                 <label for="precio_venta" class="form-label">Precio Venta</label>
                                 <input type="number" class="form-control" id="precio_venta" name="precio_venta" required>
                             </div>
                         </div>
+
                         <!-- Cantidad/Medida/Categoría -->
                         <div class="row">
                             <div class="col-md-4 mb-3">
@@ -505,18 +516,19 @@
     <div class="card">
         <div class="card-header">Lista de Productos</div>
         <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Imagen</th>
-                    <th>Nombre</th>
-                    <th>Categoría</th>
-                    <th>Marca</th>
-                    <th>Precio Venta</th>
-                    <th>Stock</th>
-                    <th>Estado</th>
-                    <th>Fecha Agregado</th>
-                    <th>Acciones</th>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Marca</th>
+                        <th>Precio Venta</th>
+                        <th>Stock</th>
+                        <th>Estado</th>
+                        <th>Fecha Agregado</th>
+                        <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -524,7 +536,8 @@
                     <tr>
                         <td>
                             <a href="{{ $producto->main_photo }}" data-lightbox="producto-{{ $producto->id }}" data-title="{{ $producto->nombre }}">
-                                <img src="{{ $producto->main_photo }}" alt="{{ $producto->nombre }}" style="width: 128px; height: auto; object-fit: cover;">
+                                <img src="{{ $producto->main_photo }}" alt="{{ $producto->nombre }}" class="img-fluid" style="max-width: 50px; height: auto; object-fit: cover;">
+
                             </a>
                         </td>
                         <td>{{ $producto->nombre }}</td>

@@ -5,6 +5,7 @@
         <button
             data-mdb-collapse-init
             class="navbar-toggler"
+            style="color: #fff"
             type="button"
             data-mdb-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent"
@@ -54,7 +55,7 @@
 
         </div>
 
-      
+
 
             <!-- Avatar -->
             <div class="dropdown">

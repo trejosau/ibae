@@ -23,25 +23,26 @@
         @endif
     <h2 class="mb-4">Pedidos</h2>
 
-    <form action="{{ route('dashboard.pedidos') }}" method="GET">
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <input type="text" name="search" id="searchInput" class="form-control" placeholder="Buscar Pedido..." value="{{ request('search') }}">
+        <form action="{{ route('dashboard.pedidos') }}" method="GET">
+            <div class="row mb-4">
+                <div class="col-12 col-md-3">
+                    <input type="text" name="search" id="searchInput" class="form-control" placeholder="Buscar Pedido..." value="{{ request('search') }}">
+                </div>
+                <div class="col-12 col-md-3">
+                    <select name="estado" id="statusFilter" class="form-select">
+                        <option value="">Filtrar por Estado</option>
+                        <option value="entregado" {{ request('estado') == 'entregado' ? 'selected' : '' }}>Entregado</option>
+                        <option value="listo para entrega" {{ request('estado') == 'listo para entrega' ? 'selected' : '' }}>Listo para Entrega</option>
+                        <option value="preparando para entrega" {{ request('estado') == 'preparando para entrega' ? 'selected' : '' }}>Preparando para Entrega</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end mt-3">
+                    <button type="submit" class="btn btn-primary w-100 w-md-auto">Filtrar</button>
+                    <a href="{{ route('dashboard.pedidos') }}" class="btn btn-secondary ms-2 w-100 w-md-auto">Limpiar Filtro</a>
+                </div>
             </div>
-            <div class="col-md-3">
-                <select name="estado" id="statusFilter" class="form-select">
-                    <option value="">Filtrar por Estado</option>
-                    <option value="entregado" {{ request('estado') == 'entregado' ? 'selected' : '' }}>Entregado</option>
-                    <option value="listo para entrega" {{ request('estado') == 'listo para entrega' ? 'selected' : '' }}>Listo para Entrega</option>
-                    <option value="preparando para entrega" {{ request('estado') == 'preparando para entrega' ? 'selected' : '' }}>Preparando para Entrega</option>
-                </select>
-            </div>
-            <div class="col-md-6 d-flex justify-content-end mt-3">
-                <button type="submit" class="btn btn-primary">Filtrar</button>
-                <a href="{{ route('dashboard.pedidos') }}" class="btn btn-secondary ms-2">Limpiar Filtro</a>
-            </div>
-        </div>
-    </form>
+        </form>
+
 
 
 
@@ -49,7 +50,7 @@
         <!-- Card Layout for Pedidos -->
         <div class="row" id="pedidosContainer">
             @foreach ($pedidos as $pedido)
-                <div class="col-12 col-md-3 mb-4 pedido-card" style="height: 220px; display: flex; flex-direction: column; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9; position: relative; padding: 10px;">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 pedido-card" style="display: flex; flex-direction: column; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9; position: relative; padding: 10px;">
                     <!-- Card Header: Pedido Info -->
                     <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #6c5ce7; color: #fff; padding: 10px;">
                         <span>Pedido #{{ $pedido->id }}</span>
@@ -57,18 +58,17 @@
 
                     <!-- Floating Badge for Estado -->
                     <span class="badge" style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); padding: 7px 15px; font-size: 0.8rem;
-                        @if ($pedido->estado == 'entregado')
-                            background-color: #2ecc71; color: white;
-                        @elseif ($pedido->estado == 'listo para entrega')
-                            background-color: #3498db; color: white;
-                        @elseif ($pedido->estado == 'preparando para entrega')
-                            background-color: #f39c12; color: white;
-                        @else
-                            background-color: #95a5a6; color: white;
-                        @endif">
-                        {{ ucfirst($pedido->estado) }}
-                    </span>
-
+                @if ($pedido->estado == 'entregado')
+                    background-color: #2ecc71; color: white;
+                @elseif ($pedido->estado == 'listo para entrega')
+                    background-color: #3498db; color: white;
+                @elseif ($pedido->estado == 'preparando para entrega')
+                    background-color: #f39c12; color: white;
+                @else
+                    background-color: #95a5a6; color: white;
+                @endif">
+                {{ ucfirst($pedido->estado) }}
+            </span>
 
                     <!-- Card Body: Basic Info -->
                     <div class="card-body d-flex flex-column" style="padding: 10px;">
@@ -82,6 +82,7 @@
                 </div>
             @endforeach
         </div>
+
 
         <!-- Pagination -->
         <div class="d-flex justify-content-center">

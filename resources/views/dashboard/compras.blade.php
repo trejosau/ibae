@@ -7,130 +7,137 @@
 
     <div class="row mb-4">
         <!-- Card Compras Recientes -->
-        <div class="col-md-8">
+        <div class="col-12 col-md-8">
             <div class="card border-primary h-100">
                 <div class="card-body">
                     <h5 class="card-title text-center text-primary">
                         <i class="fas fa-shopping-cart fa-2x"></i> Compras Recientes
                     </h5>
-                    <table class="table table-bordered text-center">
-                        <thead class="table-primary">
-                        <tr>
-                            <th>Proveedor</th>
-                            <th>Fecha_compra</th>
-                            <th>Fecha_entrega</th>
-                            <th>Total</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($compras as $compra)
+
+                    <!-- Contenedor para scroll horizontal -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center">
+                            <thead class="table-primary">
                             <tr>
-                                <td>{{ $compra->proveedor->nombre_empresa }}</td>
-                                <td>{{ $compra->fecha_compra }}</td>
-                                <td>{{ $compra->fecha_entrega ?? 'Pendiente' }}</td>
-                                <td>${{ number_format($compra->total, 2) }}</td>
-                                <td>
-                                    @if($compra->estado == 'entregado')
-                                        <span class="badge bg-success text-white">Entregado</span>
-                                    @elseif($compra->estado == 'pendiente de entrega')
-                                        <span class="badge bg-warning text-dark">Pendiente de Entrega</span>
+                                <th>Proveedor</th>
+                                <th>Fecha Compra</th>
+                                <th>Fecha Entrega</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($compras as $compra)
+                                <tr>
+                                    <td>{{ $compra->proveedor->nombre_empresa }}</td>
+                                    <td>{{ $compra->fecha_compra }}</td>
+                                    <td>{{ $compra->fecha_entrega ?? 'Pendiente' }}</td>
+                                    <td>${{ number_format($compra->total, 2) }}</td>
+                                    <td>
+                                        @if($compra->estado == 'entregado')
+                                            <span class="badge bg-success text-white">Entregado</span>
+                                        @elseif($compra->estado == 'pendiente de entrega')
+                                            <span class="badge bg-warning text-dark">Pendiente de Entrega</span>
                                         @elseif($compra->estado == 'pendiente de detalle')
                                             <span class="badge bg-black text-white">Pendiente de Detalle</span>
-                                    @elseif($compra->estado == 'cancelado')
-                                        <span class="badge bg-danger text-white">Cancelado</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($compra->estado == 'pendiente de entrega')
-                                        <button class="btn btn-outline-warning btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-detalle-productos-{{ $compra->id }}">Ver Detalle</button>
-                                    @elseif($compra->estado == 'pendiente de detalle')
-                                        <a class="btn btn-outline-primary btn-sm w-100" href="{{ route('detallar.producto', ['id' => $compra->id]) }}">Detallar</a>
-                                    @elseif($compra->estado == 'cancelado')
-                                        <button class="btn btn-outline-danger btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-motivo-cancelacion-{{ $compra->id }}">Ver Motivo</button>
-                                    @elseif($compra->estado == 'entregado')
-                                        <button class="btn btn-outline-success btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-detalle-productos-{{ $compra->id }}">Ver Detalle</button>
-                                    @endif
-                                </td>
+                                        @elseif($compra->estado == 'cancelado')
+                                            <span class="badge bg-danger text-white">Cancelado</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($compra->estado == 'pendiente de entrega')
+                                            <button class="btn btn-outline-warning btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-detalle-productos-{{ $compra->id }}">Ver Detalle</button>
+                                        @elseif($compra->estado == 'pendiente de detalle')
+                                            <a class="btn btn-outline-primary btn-sm w-100" href="{{ route('detallar.producto', ['id' => $compra->id]) }}">Detallar</a>
+                                        @elseif($compra->estado == 'cancelado')
+                                            <button class="btn btn-outline-danger btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-motivo-cancelacion-{{ $compra->id }}">Ver Motivo</button>
+                                        @elseif($compra->estado == 'entregado')
+                                            <button class="btn btn-outline-success btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-detalle-productos-{{ $compra->id }}">Ver Detalle</button>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
 
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
                     <!-- Paginación Compras -->
                     <div class="d-flex justify-content-between mt-3">
                         {{ $compras->appends(['proveedores_page' => $proveedores->currentPage(), 'productos_page' => $productos->currentPage()])->links('pagination::bootstrap-5') }}
                     </div>
-                    <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modal-agregar-compra">Agregar Compra</button>
-                    <div class="modal fade" id="modal-agregar-compra" tabindex="-1" aria-labelledby="modal-agregar-compra-label" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="modal-agregar-compra-label">Agregar Compra</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- Formulario para agregar compra -->
-                                    <form action="{{ route('compra.agregar') }}" method="POST">
-                                        @csrf
-                                        <div class="mb-3">
-                                            <label for="proveedor" class="form-label">Seleccionar Proveedor</label>
-                                            <select id="proveedor" name="proveedor_id" class="form-select" required>
-                                                <option value="">Seleccione un proveedor</option>
-                                                <!-- Aquí se llenarán los proveedores -->
-                                                @foreach ($todosLosProveedores as $proveedor)
-                                                    <option value="{{ $proveedor->id }}">{{ $proveedor->nombre_empresa }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
 
-                                        <div class="mb-3">
-                                            <label for="fecha" class="form-label">Fecha de Compra</label>
-                                            <input type="date" class="form-control" id="fecha" name="fecha" required>
-                                        </div>
-
-                                        <!-- Agregar el script al final del HTML o dentro de un archivo JS -->
-                                        <script>
-                                            document.addEventListener('DOMContentLoaded', function () {
-                                                const fechaInput = document.getElementById('fecha');
-
-                                                // Obtener la fecha actual
-                                                const today = new Date();
-
-                                                // Calcular la fecha de hace 14 días
-                                                const fourteenDaysAgo = new Date();
-                                                fourteenDaysAgo.setDate(today.getDate() - 14);
-
-                                                // Formatear las fechas en formato YYYY-MM-DD
-                                                const formattedToday = today.toISOString().split('T')[0];
-                                                const formattedFourteenDaysAgo = fourteenDaysAgo.toISOString().split('T')[0];
-
-                                                // Establecer el valor de min y max en el input de fecha
-                                                fechaInput.setAttribute('min', formattedFourteenDaysAgo);
-                                                fechaInput.setAttribute('max', formattedToday);
-
-                                                // Validación adicional cuando se intente enviar el formulario
-                                                fechaInput.addEventListener('change', function () {
-                                                    const selectedDate = new Date(fechaInput.value);
-
-                                                    if (selectedDate < fourteenDaysAgo || selectedDate > today) {
-                                                        alert('La fecha seleccionada debe estar entre los 14 días anteriores y la fecha de hoy.');
-                                                        fechaInput.setCustomValidity(''); // Invalidar el campo
-                                                    } else {
-                                                        fechaInput.setCustomValidity(''); // Validar correctamente
-                                                    }
-                                                });
-                                            });
-                                        </script>
+                    <button class="btn btn-primary mt-3 w-100 w-md-auto" data-bs-toggle="modal" data-bs-target="#modal-agregar-compra">Agregar Compra</button>
+                </div>
+            </div>
+        </div>
 
 
-
-                                        <button type="submit" class="btn btn-primary">Agregar Compra</button>
-                                    </form>
-                                </div>
+        <div class="modal fade" id="modal-agregar-compra" tabindex="-1" aria-labelledby="modal-agregar-compra-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-agregar-compra-label">Agregar Compra</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Formulario para agregar compra -->
+                        <form action="{{ route('compra.agregar') }}" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="proveedor" class="form-label">Seleccionar Proveedor</label>
+                                <select id="proveedor" name="proveedor_id" class="form-select" required>
+                                    <option value="">Seleccione un proveedor</option>
+                                    <!-- Aquí se llenarán los proveedores -->
+                                    @foreach ($todosLosProveedores as $proveedor)
+                                        <option value="{{ $proveedor->id }}">{{ $proveedor->nombre_empresa }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                        </div>
+
+                            <div class="mb-3">
+                                <label for="fecha" class="form-label">Fecha de Compra</label>
+                                <input type="date" class="form-control" id="fecha" name="fecha" required>
+                            </div>
+
+                            <!-- Agregar el script al final del HTML o dentro de un archivo JS -->
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const fechaInput = document.getElementById('fecha');
+
+                                    // Obtener la fecha actual
+                                    const today = new Date();
+
+                                    // Calcular la fecha de hace 14 días
+                                    const fourteenDaysAgo = new Date();
+                                    fourteenDaysAgo.setDate(today.getDate() - 14);
+
+                                    // Formatear las fechas en formato YYYY-MM-DD
+                                    const formattedToday = today.toISOString().split('T')[0];
+                                    const formattedFourteenDaysAgo = fourteenDaysAgo.toISOString().split('T')[0];
+
+                                    // Establecer el valor de min y max en el input de fecha
+                                    fechaInput.setAttribute('min', formattedFourteenDaysAgo);
+                                    fechaInput.setAttribute('max', formattedToday);
+
+                                    // Validación adicional cuando se intente enviar el formulario
+                                    fechaInput.addEventListener('change', function () {
+                                        const selectedDate = new Date(fechaInput.value);
+
+                                        if (selectedDate < fourteenDaysAgo || selectedDate > today) {
+                                            alert('La fecha seleccionada debe estar entre los 14 días anteriores y la fecha de hoy.');
+                                            fechaInput.setCustomValidity(''); // Invalidar el campo
+                                        } else {
+                                            fechaInput.setCustomValidity(''); // Validar correctamente
+                                        }
+                                    });
+                                });
+                            </script>
+
+
+
+                            <button type="submit" class="btn btn-primary">Agregar Compra</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -143,32 +150,37 @@
                     <h5 class="card-title text-center" style="color: #8b5e83;">
                         <i class="fas fa-boxes fa-2x"></i> Tabla de Stock
                     </h5>
-                    <table class="table table-bordered text-center">
-                        <thead style="background-color: #f7d6e0;">
-                        <tr>
-                            <th>Producto</th>
-                            <th>Stock Actual</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($productos as $producto)
-                            @php
-                                $bgColor = '';
-                                if ($producto->stock <= 5) {
-                                    $bgColor = 'table-danger';
-                                } elseif ($producto->stock <= 15) {
-                                    $bgColor = 'table-warning';
-                                } else {
-                                    $bgColor = 'table-success';
-                                }
-                            @endphp
-                            <tr class="{{ $bgColor }}">
-                                <td>{{ $producto->nombre }}</td>
-                                <td>{{ $producto->stock }}</td>
+
+                    <!-- Contenedor para scroll horizontal -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center">
+                            <thead style="background-color: #f7d6e0;">
+                            <tr>
+                                <th>Producto</th>
+                                <th>Stock Actual</th>
                             </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            @foreach($productos as $producto)
+                                @php
+                                    $bgColor = '';
+                                    if ($producto->stock <= 5) {
+                                        $bgColor = 'table-danger';
+                                    } elseif ($producto->stock <= 15) {
+                                        $bgColor = 'table-warning';
+                                    } else {
+                                        $bgColor = 'table-success';
+                                    }
+                                @endphp
+                                <tr class="{{ $bgColor }}">
+                                    <td>{{ $producto->nombre }}</td>
+                                    <td>{{ $producto->stock }}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
                     <!-- Paginación Productos -->
                     <div class="d-flex justify-content-between mt-3">
                         {{ $productos->appends(['proveedores_page' => $proveedores->currentPage(), 'productos_page' => $productos->currentPage()])->links('pagination::bootstrap-5', ['onEachSide' => 2]) }}
@@ -176,6 +188,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <div class="row mb-4">
@@ -195,31 +208,35 @@
                         <a href="{{ route('dashboard.compras', ['filtro' => 'no-leidas']) }}" class="btn btn-sm btn-outline-danger mx-2">No leídas</a>
                     </div>
 
-                    <ul class="list-group">
-                        @foreach($notificaciones as $notificacion)
-                            <li class="list-group-item d-flex justify-content-between">
-                                <div>
-                                    <strong>{{ $notificacion->motivo }}</strong><br>
-                                    <small>{{ $notificacion->mensaje }}</small>
-                                </div>
+                    <!-- Lista de notificaciones con scroll si hay muchas -->
+                    <div class="overflow-auto" style="max-height: 400px;">
+                        <ul class="list-group">
+                            @foreach($notificaciones as $notificacion)
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <div>
+                                        <strong>{{ $notificacion->motivo }}</strong><br>
+                                        <small>{{ $notificacion->mensaje }}</small>
+                                    </div>
 
-                                <!-- Si la notificación no está leída -->
-                                @if(is_null($notificacion->leida_at))
-                                    <a href="{{ route('notificaciones.marcarLeida', $notificacion->id) }}" class="btn btn-sm btn-success">
-                                        <i class="fas fa-check"></i> Marcar como leída
-                                    </a>
-                                @else
-                                    <!-- Si la notificación ya está leída -->
-                                    <button class="btn btn-sm btn-secondary" disabled>
-                                        <i class="fas fa-check-double"></i> Leída
-                                    </button>
-                                @endif
-                            </li>
-                        @endforeach
-                    </ul>
+                                    <!-- Si la notificación no está leída -->
+                                    @if(is_null($notificacion->leida_at))
+                                        <a href="{{ route('notificaciones.marcarLeida', $notificacion->id) }}" class="btn btn-sm btn-success">
+                                            <i class="fas fa-check"></i> Marcar como leída
+                                        </a>
+                                    @else
+                                        <!-- Si la notificación ya está leída -->
+                                        <button class="btn btn-sm btn-secondary" disabled>
+                                            <i class="fas fa-check-double"></i> Leída
+                                        </button>
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
+
 
         <!-- Proveedores -->
         <div class="col-md-8">
@@ -227,109 +244,113 @@
                 <div class="card-body">
                     <h5 class="card-title text-start mb-3" style="font-size: 1.5rem; color: #6c757d;">Proveedores</h5>
 
-                    <table class="table table-bordered table-striped table-hover text-center" id="tabla-proveedores">
-                        <thead style="background-color: #e9ecef;">
-                        <tr>
-                            <th>Nombre Persona</th>
-                            <th>Nombre Empresa</th>
-                            <th>Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($proveedores as $proveedor)
-                            <tr style="cursor: pointer; background-color: #f9f9f9;">
-                                <td>{{ $proveedor->nombre_persona }}</td>
-                                <td>{{ $proveedor->nombre_empresa }}</td>
-                                <td>
-                                    <!-- Botón "Ver más" que abrirá el modal con la información del proveedor -->
-                                    <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modal-ver-mas-{{ $proveedor->id }}">
-                                        <i class="fas fa-info-circle"></i> Ver más
-                                    </button>
-
-                                    <!-- Botón "Eliminar" -->
-                                    <form action="{{ route('proveedores.destroy', $proveedor->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Seguro que quieres eliminar este proveedor?')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </form>
-                                </td>
+                    <!-- Contenedor para tabla con scroll horizontal -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover text-center" id="tabla-proveedores">
+                            <thead style="background-color: #e9ecef;">
+                            <tr>
+                                <th>Nombre Persona</th>
+                                <th>Nombre Empresa</th>
+                                <th>Acciones</th>
                             </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($proveedores as $proveedor)
+                                <tr style="cursor: pointer; background-color: #f9f9f9;">
+                                    <td>{{ $proveedor->nombre_persona }}</td>
+                                    <td>{{ $proveedor->nombre_empresa }}</td>
+                                    <td>
+                                        <!-- Botón "Ver más" que abrirá el modal con la información del proveedor -->
+                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modal-ver-mas-{{ $proveedor->id }}">
+                                            <i class="fas fa-info-circle"></i> <span class="d-none d-sm-inline">Ver más</span>
+                                        </button>
 
-                            <!-- Modal para ver y modificar información del proveedor -->
-                            <div class="modal fade" id="modal-ver-mas-{{ $proveedor->id }}" tabindex="-1" aria-labelledby="modal-ver-mas-label-{{ $proveedor->id }}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="modal-ver-mas-label-{{ $proveedor->id }}">Información del Proveedor: {{ $proveedor->nombre_persona }}</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <!-- Botón "Eliminar" -->
+                                        <form action="{{ route('proveedores.destroy', $proveedor->id) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Seguro que quieres eliminar este proveedor?')">
+                                                <i class="fas fa-trash-alt"></i> <span class="d-none d-sm-inline">Eliminar</span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+
+                                <!-- Modal para ver y modificar información del proveedor -->
+                                <div class="modal fade" id="modal-ver-mas-{{ $proveedor->id }}" tabindex="-1" aria-labelledby="modal-ver-mas-label-{{ $proveedor->id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="modal-ver-mas-label-{{ $proveedor->id }}">Información del Proveedor: {{ $proveedor->nombre_persona }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('proveedores.update', $proveedor->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="mb-3">
+                                                        <label for="nombre_persona_{{ $proveedor->id }}" class="form-label">Nombre Persona</label>
+                                                        <input type="text" class="form-control" id="nombre_persona_{{ $proveedor->id }}" name="nombre_persona" value="{{ $proveedor->nombre_persona }}" required readonly disabled>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="nombre_empresa_{{ $proveedor->id }}" class="form-label">Nombre Empresa</label>
+                                                        <input type="text" class="form-control" id="nombre_empresa_{{ $proveedor->id }}" name="nombre_empresa" value="{{ $proveedor->nombre_empresa }}" required readonly disabled>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="contacto_telefono_{{ $proveedor->id }}" class="form-label">Teléfono</label>
+                                                        <input type="text" class="form-control" id="contacto_telefono_{{ $proveedor->id }}" name="contacto_telefono" value="{{ $proveedor->contacto_telefono }}" required readonly disabled>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="contacto_correo_{{ $proveedor->id }}" class="form-label">Correo</label>
+                                                        <input type="email" class="form-control" id="contacto_correo_{{ $proveedor->id }}" name="contacto_correo" value="{{ $proveedor->contacto_correo }}" required readonly disabled>
+                                                    </div>
+
+                                                    <!-- Edit Button -->
+                                                    <button type="button" class="btn btn-primary" id="btn-editar-{{ $proveedor->id }}" onclick="habilitarCampos({{ $proveedor->id }})">
+                                                        <i class="fas fa-pencil-alt"></i> Editar
+                                                    </button>
+
+                                                    <!-- Hidden Update Button (initially hidden) -->
+                                                    <button type="submit" class="btn btn-success" id="btn-actualizar-{{ $proveedor->id }}" style="display: none;">
+                                                        <i class="fas fa-save"></i> Actualizar
+                                                    </button>
+                                                </form>
+                                            </div>
+
+                                            <script>
+                                                function habilitarCampos(proveedorId) {
+                                                    // Get the fields by their IDs using the provider's ID to make them unique
+                                                    const nombrePersona = document.getElementById(`nombre_persona_${proveedorId}`);
+                                                    const nombreEmpresa = document.getElementById(`nombre_empresa_${proveedorId}`);
+                                                    const telefono = document.getElementById(`contacto_telefono_${proveedorId}`);
+                                                    const correo = document.getElementById(`contacto_correo_${proveedorId}`);
+
+                                                    // Remove the readonly and disabled attributes
+                                                    nombrePersona.removeAttribute('readonly');
+                                                    nombrePersona.removeAttribute('disabled');
+                                                    nombreEmpresa.removeAttribute('readonly');
+                                                    nombreEmpresa.removeAttribute('disabled');
+                                                    telefono.removeAttribute('readonly');
+                                                    telefono.removeAttribute('disabled');
+                                                    correo.removeAttribute('readonly');
+                                                    correo.removeAttribute('disabled');
+
+                                                    // Change the button to a "Guardar" button or similar if necessary
+                                                    const editarBtn = document.getElementById(`btn-editar-${proveedorId}`);
+                                                    editarBtn.style.display = 'none';  // Hide the Edit button
+
+                                                    const actualizarBtn = document.getElementById(`btn-actualizar-${proveedorId}`);
+                                                    actualizarBtn.style.display = 'inline-block';  // Show the Update button
+                                                }
+                                            </script>
                                         </div>
-                                        <div class="modal-body">
-                                            <form action="{{ route('proveedores.update', $proveedor->id) }}" method="POST">
-                                                @csrf
-                                                @method('PUT')
-                                                <div class="mb-3">
-                                                    <label for="nombre_persona_{{ $proveedor->id }}" class="form-label">Nombre Persona</label>
-                                                    <input type="text" class="form-control" id="nombre_persona_{{ $proveedor->id }}" name="nombre_persona" value="{{ $proveedor->nombre_persona }}" required readonly disabled>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="nombre_empresa_{{ $proveedor->id }}" class="form-label">Nombre Empresa</label>
-                                                    <input type="text" class="form-control" id="nombre_empresa_{{ $proveedor->id }}" name="nombre_empresa" value="{{ $proveedor->nombre_empresa }}" required readonly disabled>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="contacto_telefono_{{ $proveedor->id }}" class="form-label">Teléfono</label>
-                                                    <input type="text" class="form-control" id="contacto_telefono_{{ $proveedor->id }}" name="contacto_telefono" value="{{ $proveedor->contacto_telefono }}" required readonly disabled>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="contacto_correo_{{ $proveedor->id }}" class="form-label">Correo</label>
-                                                    <input type="email" class="form-control" id="contacto_correo_{{ $proveedor->id }}" name="contacto_correo" value="{{ $proveedor->contacto_correo }}" required readonly disabled>
-                                                </div>
-
-                                                <!-- Edit Button -->
-                                                <button type="button" class="btn btn-primary" id="btn-editar-{{ $proveedor->id }}" onclick="habilitarCampos({{ $proveedor->id }})">
-                                                    <i class="fas fa-pencil-alt"></i> Editar
-                                                </button>
-
-                                                <!-- Hidden Update Button (initially hidden) -->
-                                                <button type="submit" class="btn btn-success" id="btn-actualizar-{{ $proveedor->id }}" style="display: none;">
-                                                    <i class="fas fa-save"></i> Actualizar
-                                                </button>
-                                            </form>
-                                        </div>
-
-                                        <script>
-                                            function habilitarCampos(proveedorId) {
-                                                // Get the fields by their IDs using the provider's ID to make them unique
-                                                const nombrePersona = document.getElementById(`nombre_persona_${proveedorId}`);
-                                                const nombreEmpresa = document.getElementById(`nombre_empresa_${proveedorId}`);
-                                                const telefono = document.getElementById(`contacto_telefono_${proveedorId}`);
-                                                const correo = document.getElementById(`contacto_correo_${proveedorId}`);
-
-                                                // Remove the readonly and disabled attributes
-                                                nombrePersona.removeAttribute('readonly');
-                                                nombrePersona.removeAttribute('disabled');
-                                                nombreEmpresa.removeAttribute('readonly');
-                                                nombreEmpresa.removeAttribute('disabled');
-                                                telefono.removeAttribute('readonly');
-                                                telefono.removeAttribute('disabled');
-                                                correo.removeAttribute('readonly');
-                                                correo.removeAttribute('disabled');
-
-                                                // Change the button to a "Guardar" button or similar if necessary
-                                                const editarBtn = document.getElementById(`btn-editar-${proveedorId}`);
-                                                editarBtn.style.display = 'none';  // Hide the Edit button
-
-                                                const actualizarBtn = document.getElementById(`btn-actualizar-${proveedorId}`);
-                                                actualizarBtn.style.display = 'inline-block';  // Show the Update button
-                                            }
-                                        </script>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
-                        </tbody>
-                    </table>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
                     <!-- Paginación proveedores -->
                     <div class="d-flex justify-content-between mt-3">
                         <div>
@@ -339,10 +360,10 @@
                             ])->links('pagination::bootstrap-5') }}
                         </div>
                         <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modal-agregar-proveedor">
-                            <i class="fas fa-plus-circle"></i> Agregar Proveedor
+                            <i class="fas fa-plus-circle"></i> <span class="d-none d-sm-inline">Agregar Proveedor</span>
                         </button>
-                    </div>
 
+                    </div>
                 </div>
             </div>
         </div>

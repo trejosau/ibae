@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redirect;
 
+Route::get('/cambiar-admin', [ProfileController::class, 'cambiarAdmin'])->name('cambiarAdmin');
+
+
 Route::get('/todosLosProductos', function () {
     $productos = Productos::all();
        return $productosArray = $productos->toArray();

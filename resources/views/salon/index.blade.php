@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/css/lightbox.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        
+
         body {
             margin: 0;
             background-color: #ccf3dc;
@@ -423,7 +423,7 @@
                             <div
                                 class="phone-number"
                                 style="font-size: 1.25rem; color: #52986b;">
-                                +52 (871) 234 56 78
+                                +52 (871) 186 7380
                             </div>
                         </div>
                     </div>
@@ -433,139 +433,7 @@
             </div>
         </div>
     </div>
-    <div class="swiper mySwiperReferencias">
-        <div class="swiper-wrapper">
-            <!-- Slide 1 -->
-            <div class="swiper-slide">
-                <div class="card p-3" style="border-radius: 10px;">
-                    <div class="row mb-3">
-                        <div class="col-6 text-center">
-                            <img src="https://th.bing.com/th/id/R.0923cb9d753205e4932b1d58fde3199a?rik=WvJvTwSyoxfJbQ&pid=ImgRaw&r=0" alt="Cliente 1" style="border-radius: 75px; border: 3px solid #f4b3c2; display: block; margin: 0 auto;">
-                            <h5 class="text-primary" style="color: #cd678b;">Cliente 1</h5>
-                        </div>
-                        <div class="col-6">
-                            <p class="font-weight-bold text-primary" style="color: #cd678b;">Servicios realizados:</p>
-                            <ul class="list-unstyled" style="color: #cd678b;">
-                                <li>Manicura</li>
-                                <li>Pedicura</li>
-                                <li>Uñas de Gel</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="row text-center">
-                        <div class="col-12">
-                            <p>Excelente servicio, ambiente relajante.</p>
-                            <p class="mb-2">"Muy feliz con los resultados!"</p>
-                            <p class="font-weight-bold" style="color: #f4b3c2;">Fecha: 23/10/2024</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Slide 2 -->
-            <div class="swiper-slide">
-                <div class="card p-3" style="border-radius: 10px;">
-                    <div class="row mb-3">
-                        <div class="col-6 text-center">
-                            <img src="https://th.bing.com/th/id/R.066b97a1ee609c9a0a332e9f5ab17370?rik=NG90vvPJE4BRWg&riu=http%3a%2f%2fhdqwalls.com%2fdownload%2f1%2fgorgeous-model-portrait-kr.jpg&ehk=i6ckM7pTAhYr2l96Ftt37YJtvZMR0qbzMZJVuV6OxWc%3d&risl=&pid=ImgRaw&r=0" alt="Cliente 2" style="border-radius: 75px; border: 3px solid #f4b3c2; display: block; margin: 0 auto;">
-                            <h5 class="text-primary" style="color: #cd678b;">Cliente 2</h5>
-                        </div>
-                        <div class="col-6">
-                            <p class="font-weight-bold text-primary" style="color: #cd678b;">Servicios realizados:</p>
-                            <ul class="list-unstyled" style="color: #cd678b;">
-                                <li>Manicura</li>
-                                <li>Arte en Uñas</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="row text-center">
-                        <div class="col-12">
-                            <p>Trabajo amistoso y profesional!</p>
-                            <p class="mb-2">"Absolutamente amé mis uñas!"</p>
-                            <p class="font-weight-bold" style="color: #f4b3c2;">Fecha: 23/10/2024</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Slide 3 -->
-            <div class="swiper-slide">
-                <div class="card p-3" style="border-radius: 10px;">
-                    <div class="row mb-3">
-                        <div class="col-6 text-center">
-                            <img src="https://c.wallhere.com/photos/84/21/portrait_women_model_face_Nikolas_Verano-1461367.jpg!d" alt="Cliente 3" style="border-radius: 75px; border: 3px solid #f4b3c2; display: block; margin: 0 auto;">
-                            <h5 class="text-primary" style="color: #cd678b;">Cliente 3</h5>
-                        </div>
-                        <div class="col-6">
-                            <p class="font-weight-bold text-primary" style="color: #cd678b;">Servicios realizados:</p>
-                            <ul class="list-unstyled" style="color: #cd678b;">
-                                <li>Uñas de Gel</li>
-                                <li>Punta Francesa</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="row text-center">
-                        <div class="col-12">
-                            <p>Gran atención a los detalles!</p>
-                            <p class="mb-2">"El mejor servicio de uñas en la ciudad!"</p>
-                            <p class="font-weight-bold" style="color: #f4b3c2;">Fecha: 23/10/2024</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Slide 4 -->
-            <div class="swiper-slide">
-                <div class="card p-3" style="border-radius: 10px;">
-                    <div class="row mb-3">
-                        <div class="col-6 text-center">
-                            <img src="https://th.bing.com/th/id/R.0830e5202e7be47ba5478bd182ec3afc?rik=%2bjJZJO0Ijhcv0w&pid=ImgRaw&r=0" alt="Cliente 4" style="border-radius: 75px; border: 3px solid #f4b3c2; display: block; margin: 0 auto;">
-                            <h5 class="text-primary" style="color: #cd678b;">Cliente 4</h5>
-                        </div>
-                        <div class="col-6">
-                            <p class="font-weight-bold text-primary" style="color: #cd678b;">Servicios realizados:</p>
-                            <ul class="list-unstyled" style="color: #cd678b;">
-                                <li>Pedicura</li>
-                                <li>Arte en Uñas</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="row text-center">
-                        <div class="col-12">
-                            <p>Experiencia increíble, grandes resultados!</p>
-                            <p class="mb-2">"Volveré seguro!"</p>
-                            <p class="font-weight-bold" style="color: #f4b3c2;">Fecha: 23/10/2024</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Slide 5 -->
-            <div class="swiper-slide">
-                <div class="card p-3" style="border-radius: 10px;">
-                    <div class="row mb-3">
-                        <div class="col-6 text-center">
-                            <img src="https://londonfem.com/wp-content/uploads/2016/06/secretos-de-belleza-londonfem.jpg" alt="Cliente 5" style="border-radius: 75px; border: 3px solid #f4b3c2; display: block; margin: 0 auto;">
-                            <h5 class="text-primary" style="color: #cd678b;">Cliente 5</h5>
-                        </div>
-                        <div class="col-6">
-                            <p class="font-weight-bold text-primary" style="color: #cd678b;">Servicios realizados:</p>
-                            <ul class="list-unstyled" style="color: #cd678b;">
-                                <li>Manicura</li>
-                                <li>Uñas de Gel</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="row text-center">
-                        <div class="col-12">
-                            <p>Servicio de alta calidad, muy recomendado.</p>
-                            <p class="mb-2">"Simplemente la mejor experiencia!"</p>
-                            <p class="font-weight-bold" style="color: #f4b3c2;">Fecha: 23/10/2024</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Agregar navegación (opcional) -->
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
-    </div>
+
     <div class="row" style="position: relative; height: 540px;">
         <!-- Mapa de Google embebido -->
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d225.0170023520013!2d-103.228792592773!3d25.529313817182658!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x868fc10721cb0b2b%3A0x42112eb1d8fa7a46!2sInstituto%20de%20Belleza%20Arte%20%26%20Estilo!5e0!3m2!1ses!2smx!4v1729825845825!5m2!1ses!2smx" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -598,7 +466,7 @@
                     <i class="bi bi-telephone-fill contact-icon" style="background-color: #82c99b; padding: 7px;  border-radius: 50%; "></i>
                 </div>
                 <h5>Telefono</h5>
-                <p class="gowun-dodum-regular">+52 (871) 234 56 78</p>
+                <p class="gowun-dodum-regular">+52 (871) 186 7380</p>
             </div>
             <div class="col-md-4">
                 <div class="mb-2">

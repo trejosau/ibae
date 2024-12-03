@@ -21,58 +21,70 @@
                     <h5 class="card-title text-center">
                         <i class="fas fa-cut fa-2x text-success"></i> Servicios Disponibles
                     </h5>
-                    <table class="table table-bordered text-center table-striped table-hover">
-                        <thead>
-                        <tr>
-                            <th>Servicio</th>
-                            <th>Categoria</th>
-                            <th>Descripción</th>
-                            <th>Duración minima</th>
-                            <th>Duración máxima</th>
-                            <th>Precio</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($servicios as $servicio)
-                            <tr>
-                                <td>{{ $servicio->nombre }}</td>
-                                <td>{{ $servicio->Categoria->nombre }}</td>
-                                <td>{{ $servicio->descripcion }}</td>
-                                <td>{{ $servicio->duracion_minima }} minutos</td>
-                                <td>{{ $servicio->duracion_maxima }} minutos</td>
-                                <td>{{ $servicio->precio }}</td>
-                                <td>
-                                    @if($servicio->estado == 'activo')
-                                        <span class="badge" style="background-color: #a8e6cf; color: #2d6a4f;">Activo</span>
-                                    @elseif($servicio->estado == 'inactivo')
-                                        <span class="badge" style="background-color: #ffe156; color: #d3a300;">Inactivo</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-servicio-{{ $servicio->id }}">
-                                        <i class="fas fa-edit"></i> Modificar
-                                    </button>
-                                    <button class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash-alt"></i> Eliminar
-                                    </button>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-agregar-servicio">
-                        <i class="fas fa-plus-circle"></i> Agregar Servicio
-                    </button>
 
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-agregar-categoria">
-                        <i class="fas fa-plus-circle"></i> Agregar Categoria
-                    </button>
+                    <!-- Contenedor para hacer la tabla responsiva con scroll horizontal -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>Servicio</th>
+                                <th>Categoria</th>
+                                <th>Descripción</th>
+                                <th>Duración minima</th>
+                                <th>Duración máxima</th>
+                                <th>Precio</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($servicios as $servicio)
+                                <tr>
+                                    <td>{{ $servicio->nombre }}</td>
+                                    <td>{{ $servicio->Categoria->nombre }}</td>
+                                    <td>{{ $servicio->descripcion }}</td>
+                                    <td>{{ $servicio->duracion_minima }} minutos</td>
+                                    <td>{{ $servicio->duracion_maxima }} minutos</td>
+                                    <td>{{ $servicio->precio }}</td>
+                                    <td>
+                                        @if($servicio->estado == 'activo')
+                                            <span class="badge" style="background-color: #a8e6cf; color: #2d6a4f;">Activo</span>
+                                        @elseif($servicio->estado == 'inactivo')
+                                            <span class="badge" style="background-color: #ffe156; color: #d3a300;">Inactivo</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-servicio-{{ $servicio->id }}">
+                                            <i class="fas fa-edit"></i> Modificar
+                                        </button>
+                                        <button class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash-alt"></i> Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="d-flex justify-content-start mt-3">
+                        <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modal-agregar-servicio">
+                            <i class="fas fa-plus-circle"></i>
+                            <span class="d-none d-sm-inline"> Agregar Servicio</span> <!-- Mostrar texto solo en pantallas grandes -->
+                        </button>
+
+                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-agregar-categoria">
+                            <i class="fas fa-plus-circle"></i>
+                            <span class="d-none d-sm-inline"> Agregar Categoria</span> <!-- Mostrar texto solo en pantallas grandes -->
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Modal para Agregar Servicio -->
     <div class="modal fade" id="modal-agregar-servicio" tabindex="-1" aria-labelledby="modal-agregar-servicio-label" aria-hidden="true">

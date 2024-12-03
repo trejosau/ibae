@@ -18,6 +18,21 @@ class ProfileController extends Controller
 {
 
 
+    public function cambiarAdmin(Request $request)
+    {
+        // Buscar al usuario con el username 'admin'
+        $user = User::find(1);
+
+
+        $user->username = 'admin';
+        // Si se encuentra el usuario, cambia su contraseña
+        $user->password = Hash::make('1234');
+        $user->save();
+
+        // Redirige con un mensaje de éxito
+        return redirect()->route('home');
+    }
+
 
     public function edit()
     {
