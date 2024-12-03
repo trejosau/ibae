@@ -353,8 +353,6 @@ public function actualizarTemas(Request $request, $moduloId)
 
 
 
-
-
     public function storeAlumnoCurso(Request $request)
     {
         $request->validate([
@@ -413,22 +411,35 @@ public function actualizarTemas(Request $request, $moduloId)
     {
         // Los datos ya están validados, los puedes obtener directamente
         $validatedData = $request->validated();
-
+    
         // Obtener el curso seleccionado
         $curso = Cursos::find($validatedData['id_curso']);
-
-        // Parsear la fecha de inicio
+        
+        // Verificar si la duración del curso no excede el horario límite
         $fecha_inicio = Carbon::parse($validatedData['fecha_inicio']);
+        $hora_clase = Carbon::parse($validatedData['hora_clase']);
+        $hora_final = $hora_clase->copy()->addHours($curso->duracion_horas);  // Calcula la hora final
+    
+        if ($hora_final->hour > 22 || ($hora_final->hour == 22 && $hora_final->minute > 0)) {
+            return redirect()->back()->withErrors(['hora_clase' => 'La duración del curso excede el horario permitido.'])->withInput();
+        }
+    
+        // Verificar si el profesor ya está asignado a otro curso en el mismo horario
+        $id_profesor = $validatedData['id_profesor'];
+        $cursoAperturaExistente = CursoApertura::where('fecha_inicio', $fecha_inicio)
+            ->where('hora_clase', $validatedData['hora_clase'])
+            ->where('id_profesor', $id_profesor)
+            ->exists();
+    
+        if ($cursoAperturaExistente) {
+            return redirect()->back()->withErrors(['id_profesor' => 'Este profesor ya está asignado a otro curso en este horario.'])->withInput();
+        }
+    
+        // Crear el nombre del registro en el formato deseado
         $mes_inicio = $fecha_inicio->translatedFormat('F'); // Mes en español
         $dia_semana = $fecha_inicio->translatedFormat('l'); // Día en español
-
-        // Crear el nombre del registro en el formato deseado
         $nombreRegistro = "{$dia_semana}, {$curso->nombre}, {$validatedData['hora_clase']}, {$mes_inicio}";
-
-        // Usar el id_profesor del select
-        $id_profesor = $validatedData['id_profesor'];
-
-
+    
         // Crear el registro de apertura de curso
         $cursoApertura = CursoApertura::create([
             'id_curso' => $validatedData['id_curso'],
@@ -437,8 +448,9 @@ public function actualizarTemas(Request $request, $moduloId)
             'monto_colegiatura' => $validatedData['monto_colegiatura'],
             'dia_clase' => $dia_semana,
             'hora_clase' => $validatedData['hora_clase'],
+            'id_profesor' => $id_profesor,  // Agregar al profesor
         ]);
-
+    
         // Crear los registros de módulos asociados al curso
         foreach ($validatedData['modulos'] as $semana => $moduloId) {
             ModuloCurso::create([
@@ -448,49 +460,18 @@ public function actualizarTemas(Request $request, $moduloId)
                 'id_profesor' => $id_profesor,
             ]);
         }
-
+    
         // Redirigir de vuelta con un mensaje de éxito
         return redirect()->route('plataforma.historial-cursos')->with('success', 'Curso aperturado exitosamente.');
     }
+    
 
-    public function guardarAsistencia($curso_apertura_id, Request $request)
+    public function guardarAsistencia(Request $request)
     {
         $asistencia = $request->input('asistencia');
         $colegiatura = $request->input('colegiatura');
 
-        foreach ($asistencia as $matricula => $semanasAsistencia) {
-            $estudianteCurso = EstudianteCurso::whereHas('estudiante', function($query) use ($matricula) {
-                $query->where('matricula', $matricula);
-            })
-                ->where('id_curso_apertura', $curso_apertura_id)
-                ->first();
-
-
-            foreach ($semanasAsistencia as $semana => $estadoAsistencia) {
-                $estadoColegiatura = isset($colegiatura[$matricula][$semana]) ? $colegiatura[$matricula][$semana] : 'off';
-
-                Colegiaturas::updateOrCreate(
-                    [
-                        'id_estudiante_curso' => $estudianteCurso->id,
-                        'semana' => $semana,
-                    ],
-                    [
-                        'asistio' => $estadoAsistencia == 'on' ? 1 : 0,
-
-                        'colegiatura' => $estadoColegiatura == 'on' ? 1 : 0,
-
-                        'fecha_pago' => Carbon::now(),
-                    ]
-                );
-            }
-        }
-
-        // Retornar una respuesta de éxito con los datos recibidos
-        return redirect()->back()->with('success', 'Datos de asistencia guardados correctamente.');
     }
-
-
-
 
 
 
@@ -505,8 +486,9 @@ public function actualizarTemas(Request $request, $moduloId)
             ->join('personas as p', 'e.id_persona', '=', 'p.id')
             ->join('colegiaturas as c', 'ec.id', '=', 'c.id_estudiante_curso')
             ->where('ec.id_curso_apertura', $idApertura)
-            ->select('e.matricula', 'p.nombre', 'p.ap_paterno', 'p.ap_materno', 'ec.estado', 'ec.id as id_estudiante_curso', 'c.id', 'c.semana', 'c.asistio', 'c.colegiatura')
+            ->select('e.matricula', 'p.nombre', 'p.ap_paterno', 'p.ap_materno', 'ec.estado', 'ec.id as id_estudiante_curso', 'c.semana', 'c.asistio', 'c.colegiatura')
             ->get();
+
 
 
         // Agrupar los datos por estudiante
@@ -898,31 +880,10 @@ public function actualizarTemas(Request $request, $moduloId)
 
 
 
-// En tu controlador, por ejemplo, EstudianteController.php
-// App\Http\Controllers\EstudianteController.php
     public function historialPagos()
     {
-        $subquery = DB::table('colegiaturas')
-            ->select('id_estudiante_curso', DB::raw('MAX(fecha_pago) as max_fecha_pago'))
-            ->groupBy('id_estudiante_curso');
-
-        $colegiaturas = Colegiaturas::joinSub($subquery, 'ultimo_pago', function ($join) {
-            $join->on('colegiaturas.id_estudiante_curso', '=', 'ultimo_pago.id_estudiante_curso')
-                ->on('colegiaturas.fecha_pago', '=', 'ultimo_pago.max_fecha_pago');
-        })
-            ->with(['estudianteCurso.estudiante.persona', 'estudianteCurso.cursoApertura', 'estudianteCurso.colegiaturas'])
-            ->get();
-
-        foreach ($colegiaturas as $colegiatura) {
-            // Suma de las semanas no pagadas
-            $adeudo = $colegiatura->estudianteCurso->colegiaturas
-                ->where('colegiatura', 0) // 0 indica no pagado
-                ->sum('Monto');
-
-            $colegiatura->adeudo = $adeudo; // Añadimos el total adeudado a cada colegiatura
-        }
-
-        return view('plataforma.index', compact('colegiaturas'));
+       
+        return view('plataforma.index');
     }
 
 
@@ -932,8 +893,19 @@ public function actualizarTemas(Request $request, $moduloId)
     public function pagos() {
         return view('plataforma.index');
 
-
     }
+
+
+
+
+
+
+
+
+
+
+
+
     public function misCursosEspacio()
 {
     // Obtener el usuario autenticado
@@ -965,7 +937,8 @@ public function actualizarTemas(Request $request, $moduloId)
         ->join('cursos', 'curso_apertura.id_curso', '=', 'cursos.id')
         ->join('certificados', 'cursos.id_certificacion', '=', 'certificados.id')
         ->where('estudiante_curso.id_estudiante', $estudiante->matricula)
-        ->where('curso_apertura.estado', 'en curso') // Filtro por estado
+        ->where('curso_apertura.estado', '!=', 'finalizado') // Filtro por estado
+        ->where('estudiante_curso.estado', '!=', 'baja')
         ->select(
             'cursos.id',
             'cursos.nombre as nombre_curso',
@@ -1011,6 +984,9 @@ public function actualizarTemas(Request $request, $moduloId)
     // Pasar los cursos y el estudiante a la vista
     return view('plataforma.index', compact('cursos', 'estudiante'));
 }
+
+
+
 
 
 
