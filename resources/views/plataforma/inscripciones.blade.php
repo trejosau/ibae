@@ -1,7 +1,7 @@
 <div class="container my-4">
     <h2 class="text-center mb-4">Gestión de Inscripciones</h2>
 
-    <!-- Botón para agregar Inscripción -->
+  
 
     <!-- Botón para agregar Inscripción -->
     <div class="d-flex justify-content-center mb-4">
@@ -14,7 +14,28 @@
             Agregar Inscripción
         </button>
     </div>
-
+    <div class="row">
+        @foreach ($inscripciones as $inscripcion)
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm" style="border: none; background-color: #F9F7FB; border-radius: 10px;">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: #6A4E77;">{{ $inscripcion->nombre }}</h5>
+                    <p class="card-text" style="color: #8C7A71;"><strong>Precio:</strong> ${{ number_format($inscripcion->precio, 2) }}</p>
+                    <p class="card-text" style="color: #8C7A71;"><strong>Descripción:</strong> {{ $inscripcion->descripcion }}</p>
+                    <div class="d-flex justify-content-end gap-2">
+                        <!-- Modificar / Eliminar botones -->
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarInscripcion-{{ $inscripcion->id }}" style="background-color: #C9A3BE; color: white; border: none;">Modificar</button>
+                        <form method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta inscripción?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" style="background-color: #D2968E; border: none;">Eliminar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
 
 <div class="modal fade" id="modalAgregarInscripcion" tabindex="-1" aria-labelledby="modalAgregarInscripcionLabel" aria-hidden="true">
     <div class="modal-dialog">
