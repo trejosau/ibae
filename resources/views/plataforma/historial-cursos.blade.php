@@ -337,14 +337,11 @@
 
 
                         <!-- Campo para la Hora de Clase -->
-                          <div class="mb-3">
+                        <div class="mb-3">
                             <label for="horaClase" class="form-label">Hora de Clase</label>
-                            <select class="form-select" id="horaClase" name="hora_clase" required>
-                                <option value="" disabled selected>Seleccione una hora</option>
-                            </select>
-                            <div class="invalid-feedback" id="errorHoraClase" style="display: none;">La hora de inicio debe estar entre 8:00 AM y 10:00 PM, y no puede exceder el horario límite de 2 horas.</div>
+                            <input type="time" class="form-control" id="horaClase" name="hora_clase" min="08:00" max="22:00" required>
+                            <div class="invalid-feedback" id="errorHoraClase" style="display: none;">La hora de inicio debe estar entre 8:00 AM y 10:00 PM</div>
                         </div>
-
 
                         <!-- Campo para el Monto de Colegiatura -->
                         <div class="mb-3">
@@ -368,19 +365,19 @@
         document.addEventListener('DOMContentLoaded', function() {
             const cursoSelect = document.getElementById('cursoSelect');
             const horaClaseSelect = document.getElementById('horaClase');
-    
+
             // Función para actualizar las opciones de la hora de clase
             function actualizarHorasDisponibles() {
                 const curso = cursoSelect.selectedOptions[0];
                 const duracion = curso ? parseInt(curso.getAttribute('data-duracion')) : 0; // Duración en horas
-    
+
                 // Limpiar las opciones actuales
                 horaClaseSelect.innerHTML = '<option value="" disabled selected>Seleccione una hora</option>';
-    
+
                 // Definir el rango de horas disponibles (8 AM a 10 PM)
                 const horaInicio = 8; // 8 AM
                 const horaFin = 22;  // 10 PM
-    
+
                 // Generar las opciones de hora según la duración del curso (en horas)
                 for (let i = horaInicio; i <= horaFin - duracion; i++) {
                     for (let j = 0; j < 60; j += 30) { // 30 minutos de diferencia
@@ -394,12 +391,12 @@
                     }
                 }
             }
-    
+
             // Al cambiar el curso, actualizamos las opciones de hora
             cursoSelect.addEventListener('change', actualizarHorasDisponibles);
         });
     </script>
-    
+
 
 
     <script>

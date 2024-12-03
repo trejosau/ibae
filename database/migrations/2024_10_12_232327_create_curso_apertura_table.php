@@ -16,6 +16,7 @@ return new class extends Migration
             $table->decimal('monto_colegiatura');
             $table->enum('dia_clase', ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']);
             $table->time('hora_clase')->nullable();
+            $table->time('hora_clase_fin')->nullable();
             $table->enum('estado', ['programado', 'finalizado', 'en curso'])->default('programado');
         });
     }

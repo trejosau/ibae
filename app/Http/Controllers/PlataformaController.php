@@ -409,37 +409,33 @@ public function actualizarTemas(Request $request, $moduloId)
 
     public function storeCursoApertura(CursoAperturaRequest $request)
     {
-        // Los datos ya están validados, los puedes obtener directamente
+        // Los datos ya están validados
         $validatedData = $request->validated();
-    
+
         // Obtener el curso seleccionado
         $curso = Cursos::find($validatedData['id_curso']);
-        
-        // Verificar si la duración del curso no excede el horario límite
+
+        // Parsear la fecha de inicio
         $fecha_inicio = Carbon::parse($validatedData['fecha_inicio']);
-        $hora_clase = Carbon::parse($validatedData['hora_clase']);
-        $hora_final = $hora_clase->copy()->addHours($curso->duracion_horas);  // Calcula la hora final
-    
-        if ($hora_final->hour > 22 || ($hora_final->hour == 22 && $hora_final->minute > 0)) {
-            return redirect()->back()->withErrors(['hora_clase' => 'La duración del curso excede el horario permitido.'])->withInput();
-        }
-    
-        // Verificar si el profesor ya está asignado a otro curso en el mismo horario
-        $id_profesor = $validatedData['id_profesor'];
-        $cursoAperturaExistente = CursoApertura::where('fecha_inicio', $fecha_inicio)
-            ->where('hora_clase', $validatedData['hora_clase'])
-            ->where('id_profesor', $id_profesor)
-            ->exists();
-    
-        if ($cursoAperturaExistente) {
-            return redirect()->back()->withErrors(['id_profesor' => 'Este profesor ya está asignado a otro curso en este horario.'])->withInput();
-        }
-    
-        // Crear el nombre del registro en el formato deseado
         $mes_inicio = $fecha_inicio->translatedFormat('F'); // Mes en español
         $dia_semana = $fecha_inicio->translatedFormat('l'); // Día en español
+
+        // Crear el nombre del registro
         $nombreRegistro = "{$dia_semana}, {$curso->nombre}, {$validatedData['hora_clase']}, {$mes_inicio}";
-    
+
+        // Calcular la hora de inicio y la hora final
+        $hora_inicio = Carbon::createFromFormat('H:i:s', $validatedData['hora_clase']);
+        $duracion_horas = $curso->duracion_horas;
+        $hora_final = $hora_inicio->copy()->addHours($duracion_horas);
+
+        // Validar que la hora final no exceda las 10 PM
+        $limite_hora = Carbon::createFromFormat('H:i', '22:00');
+        if ($hora_final->greaterThan($limite_hora)) {
+            return redirect()->back()
+                ->withErrors(['hora_clase' => 'La hora final del curso no puede exceder las 10:00 PM.'])
+                ->withInput();
+        }
+
         // Crear el registro de apertura de curso
         $cursoApertura = CursoApertura::create([
             'id_curso' => $validatedData['id_curso'],
@@ -448,23 +444,23 @@ public function actualizarTemas(Request $request, $moduloId)
             'monto_colegiatura' => $validatedData['monto_colegiatura'],
             'dia_clase' => $dia_semana,
             'hora_clase' => $validatedData['hora_clase'],
-            'id_profesor' => $id_profesor,  // Agregar al profesor
+            'hora_clase_fin' => $hora_final->format('H:i:s'),
         ]);
-    
+
         // Crear los registros de módulos asociados al curso
         foreach ($validatedData['modulos'] as $semana => $moduloId) {
             ModuloCurso::create([
                 'id_modulo' => $moduloId,
                 'id_curso_apertura' => $cursoApertura->id,
                 'orden' => str_replace('semana_', '', $semana),
-                'id_profesor' => $id_profesor,
+                'id_profesor' => $validatedData['id_profesor'],
             ]);
         }
-    
-        // Redirigir de vuelta con un mensaje de éxito
+
+        // Redirigir con un mensaje de éxito
         return redirect()->route('plataforma.historial-cursos')->with('success', 'Curso aperturado exitosamente.');
     }
-    
+
 
     public function guardarAsistencia(Request $request)
     {
@@ -882,7 +878,7 @@ public function actualizarTemas(Request $request, $moduloId)
 
     public function historialPagos()
     {
-       
+
         return view('plataforma.index');
     }
 

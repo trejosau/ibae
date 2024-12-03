@@ -4,16 +4,16 @@
     <!-- Filtros -->
 
 
-   
+
     <div class="row mb-4">
         <div class="col-6">
             <div class="input-group">
                 <label class="input-group-text" for="filtro-estilista">Filtrar por Estilista</label>
                 <select class="form-select" id="filtro-estilista">
-                    <option selected>Selecciona un estilista...</option>
-                    <option value="1">Estilista 1</option>
-                    <option value="2">Estilista 2</option>
-                    <option value="3">Estilista 3</option>
+                    <option selected disabled>Selecciona un estilista...</option>
+                    @foreach($estilistas as $estilista)
+                        <option value="{{ $estilista->id }}">{{ $estilista->persona->nombre }} {{ $estilista->persona->ap_paterno }} {{ $estilista->persona->ap_materno }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -34,30 +34,10 @@
                     </h5>
                     <table class="table table-bordered text-center">
                         <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Fecha</th>
-                            <th>Hora</th>
-                            <th>Servicios</th>
-                            <th>Estilista</th> <!-- Nueva columna para Estilista -->
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
+
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>Ana López</td>
-                            <td>2024-10-15</td>
-                            <td>10:00 AM</td>
-                            <td>Corte + Peinado</td>
-                            <td>Estilista 1</td> <!-- Estilista asignado -->
-                            <td>Completada</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-cita">Editar</button>
-                                <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modal-ver-detalle">Ver Detalle</button>
-                                <button class="btn btn-danger btn-sm">Cancelar</button>
-                            </td>
-                        </tr>
+
                         </tbody>
                     </table>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-agregar-cita">Agregar Cita</button>
