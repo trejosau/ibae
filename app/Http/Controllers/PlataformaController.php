@@ -12,6 +12,7 @@ use App\Models\ModuloTemas;
 use App\Models\Profesor;
 use App\Models\Temas;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use App\Models\Cursos;
 use App\Models\Certificados;
@@ -32,28 +33,28 @@ class PlataformaController extends Controller
     public function iniciarCursosHoy()
     {
         $hoy = Carbon::today();
-    
+
         // Buscar los cursos que deben iniciarse hoy
         $cursosIniciados = CursoApertura::where('fecha_inicio', $hoy)
             ->where('estado', 'programado')
             ->get();
-    
+
         foreach ($cursosIniciados as $curso) {
             $curso->estado = 'en curso';
             $curso->save();
         }
-    
+
         // Si no hay cursos que iniciar hoy
         if ($cursosIniciados->isEmpty()) {
             session()->flash('message', 'No hay cursos que necesiten iniciar hoy.');
             return redirect()->back();
         }
-    
+
         // Si los cursos se han iniciado correctamente
         session()->flash('success', 'Cursos iniciados correctamente.');
         return redirect()->back();
     }
-    
+
 
 
     public function asignarTemas(Request $request)
@@ -104,7 +105,7 @@ class PlataformaController extends Controller
             ->get();
         // Obtener todos los temas disponibles
         $todosLosTemas = Temas::all();
-        
+
         // Pasar los módulos y los temas a la vista
         return view('plataforma.temas-modulos', compact('modulos', 'todosLosTemas','modulosSinTemas'));
     }
@@ -147,7 +148,7 @@ public function actualizarTemas(Request $request, $moduloId)
     $temasValidos = Temas::whereIn('id', $temaIds)->pluck('id')->toArray();
 
     if (count($temaIds) !== count($temasValidos)) {
-        return redirect()->back()->withErrors('Algunos temas seleccionados no son válidos.');
+        return redirect()->back()->with('error', 'Algunos temas seleccionados no son válidos.');
     }
 
     // Actualizar temas del módulo
@@ -273,14 +274,14 @@ public function actualizarTemas(Request $request, $moduloId)
 
         // Paginación de cursos apertura con filtro
         $cursosAperturaPaginados = $cursosApertura instanceof \Illuminate\Database\Eloquent\Builder
-            ? $cursosApertura->paginate(2)->appends(['estado' => $estadoFiltro])
+            ? $cursosApertura->paginate(3)->appends(['estado' => $estadoFiltro])
             : collect();
 
         // Otros datos necesarios con paginación
-        $todosCursos = Cursos::where('estado', 'activo')->paginate(10);
+        $todosCursos = Cursos::where('estado', 'activo')->get();
         $modulosConTemas = Modulos::with('temas:id,nombre')->has('temas')->get(['id', 'nombre']); // Sin paginar porque se usa para selects
-        $profesores = Profesor::with('persona')->paginate(10);
-        $estudiantes = Estudiante::with(['persona', 'cursosApertura'])->paginate(10);
+        $profesores = Profesor::with('persona')->get();
+        $estudiantes = Estudiante::with(['persona', 'cursosApertura'])->get();
 
         // Preparar el resultado agrupando los cursos por estudiante
         $resultado = [];
@@ -398,61 +399,105 @@ public function actualizarTemas(Request $request, $moduloId)
         // Los datos ya están validados
         $validatedData = $request->validated();
 
+
+
         // Obtener el curso seleccionado
-        $curso = Cursos::find($validatedData['id_curso']);
+        $curso = Cursos::findOrFail($validatedData['id_curso']);
+
+
+
 
         // Parsear la fecha de inicio
-        $fecha_inicio = Carbon::parse($validatedData['fecha_inicio']);
+        $fecha_inicio = Carbon::createFromFormat('Y-m-d', $validatedData['fecha_inicio']); // Convertir a Carbon
         $mes_inicio = $fecha_inicio->translatedFormat('F'); // Mes en español
         $dia_semana = $fecha_inicio->translatedFormat('l'); // Día en español
 
-        // Crear el nombre del registro
-        $nombreRegistro = "{$dia_semana}, {$curso->nombre}, {$validatedData['hora_clase']}, {$mes_inicio}";
+        $fecha_inicio = $fecha_inicio->format('Y-m-d');
+        $nombreRegistro = " {$curso->nombre}, {$validatedData['hora_clase']}";
 
-        // Calcular la hora de inicio y la hora final
-        $hora_inicio = Carbon::createFromFormat('H:i:s', $validatedData['hora_clase']);
-        $duracion_horas = $curso->duracion_horas;
-        $hora_final = $hora_inicio->copy()->addHours($duracion_horas);
 
-        // Validar que la hora final no exceda las 10 PM
-        $limite_hora = Carbon::createFromFormat('H:i', '22:00');
-        if ($hora_final->greaterThan($limite_hora)) {
-            return redirect()->back()
-                ->withErrors(['hora_clase' => 'La hora final del curso no puede exceder las 10:00 PM.'])
-                ->withInput();
+
+
+
+        $hora_clase = $validatedData['hora_clase'];
+        if (strlen($hora_clase) === 5) {
+            $hora_clase .= ':00';
         }
 
-        // Crear el registro de apertura de curso
+        $hora_inicio = Carbon::createFromFormat('H:i:s', $hora_clase);
+
+        $duracion_horas = $curso->duracion_horas ?? 0;
+
+        $hora_final = $hora_inicio->copy()->addHours($duracion_horas);
+
+
+
+
+        // Validar que la hora final no exceda las 10 PM
+        $limite_hora = Carbon::createFromTime(22, 0); // 10:00 PM
+        if ($hora_final->greaterThan($limite_hora)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Este curso tiene una duración de ' . $duracion_horas . ' horas y la hora de inicio es ' . $hora_clase . '. Esto excede las 10 PM. Por favor, seleccione otra hora.');
+        }
+
         $cursoApertura = CursoApertura::create([
             'id_curso' => $validatedData['id_curso'],
             'nombre' => $nombreRegistro,
             'fecha_inicio' => $fecha_inicio,
             'monto_colegiatura' => $validatedData['monto_colegiatura'],
             'dia_clase' => $dia_semana,
-            'hora_clase' => $validatedData['hora_clase'],
+            'hora_clase' => $hora_clase,
             'hora_clase_fin' => $hora_final->format('H:i:s'),
         ]);
 
-        // Crear los registros de módulos asociados al curso
+
         foreach ($validatedData['modulos'] as $semana => $moduloId) {
-            ModuloCurso::create([
+            $modulo = ModuloCurso::create([
                 'id_modulo' => $moduloId,
                 'id_curso_apertura' => $cursoApertura->id,
                 'orden' => str_replace('semana_', '', $semana),
                 'id_profesor' => $validatedData['id_profesor'],
             ]);
+
         }
+
 
         // Redirigir con un mensaje de éxito
         return redirect()->route('plataforma.historial-cursos')->with('success', 'Curso aperturado exitosamente.');
+
     }
 
 
-    public function guardarAsistencia(Request $request)
+
+    public function guardarAsistencia($curso_apertura_id, Request $request)
     {
         $asistencia = $request->input('asistencia');
         $colegiatura = $request->input('colegiatura');
 
+        foreach ($asistencia as $matricula => $semanasAsistencia) {
+            $estudianteCurso = EstudianteCurso::whereHas('estudiante', function($query) use ($matricula) {
+                $query->where('matricula', $matricula);
+            })
+                ->where('id_curso_apertura', $curso_apertura_id)
+                ->first();
+            foreach ($semanasAsistencia as $semana => $estadoAsistencia) {
+                $estadoColegiatura = isset($colegiatura[$matricula][$semana]) ? $colegiatura[$matricula][$semana] : 'off';
+                Colegiaturas::updateOrCreate(
+                    [
+                        'id_estudiante_curso' => $estudianteCurso->id,
+                        'semana' => $semana,
+                    ],
+                    [
+                        'asistio' => $estadoAsistencia == 'on' ? 1 : 0,
+                        'colegiatura' => $estadoColegiatura == 'on' ? 1 : 0,
+                        'fecha_pago' => Carbon::now(),
+                    ]
+                );
+            }
+        }
+        // Retornar una respuesta de éxito con los datos recibidos
+        return redirect()->back()->with('success', 'Datos de asistencia guardados correctamente.');
     }
 
 
@@ -653,7 +698,7 @@ public function actualizarTemas(Request $request, $moduloId)
             'ap_paterno' => 'required|string',
             'ap_materno' => 'nullable|string',
             'telefono' => 'required|string',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email',
             'id_inscripcion' => 'required|exists:inscripciones,id',
             'fecha_inscripcion_estudiante' => 'required|date',
             'grado_estudio' => 'required|string',
@@ -665,6 +710,52 @@ public function actualizarTemas(Request $request, $moduloId)
             'num_int' => 'nullable|string',
         ]);
 
+        $emailExiste = User::where('email', $request->email)->first();
+
+        if ($emailExiste) {
+            // Si el email ya existe, actualizamos los datos
+            $user = $emailExiste;
+            $user->assignRole('estudiante');
+
+            // Actualizar datos de la persona
+            $persona = $user->persona;
+            $persona->nombre = $request->nombre;
+            $persona->ap_paterno = $request->ap_paterno;
+            $persona->ap_materno = $request->ap_materno;
+            $persona->telefono = $request->telefono;
+            $persona->save();
+
+            // Crear el Estudiante relacionado con la persona y usuario
+            $estudiante = Estudiante::create([
+                'estado' => 'activo',
+                'id_persona' => $persona->id,
+                'id_inscripcion' => $request->id_inscripcion,
+                'fecha_inscripcion' => $request->fecha_inscripcion_estudiante,
+                'grado_estudio' => $request->grado_estudio,
+                'zipcode' => $request->zipcode,
+                'ciudad' => $request->ciudad,
+                'colonia' => $request->colonia,
+                'calle' => $request->calle,
+                'num_ext' => $request->num_ext,
+                'num_int' => $request->num_int,
+            ]);
+
+            $prefix = date('y') . date('m');
+            $estudiante->matricula = $prefix . $user->id;
+            $estudiante->save();
+
+            // Asignar la matrícula al usuario
+            $user->username = $estudiante->matricula;
+            $user->save();
+
+            $passowrdExiste = 'Ingresa con tu contraseña actual o en su caso con google';
+
+            // Enviar correo con las credenciales
+            Mail::to($request->email)->send(new EnvioCredenciales($user, $passowrdExiste));
+
+            // Redirigir con mensaje de éxito
+            return redirect()->route('plataforma.estudiantes')->with('success', 'Estudiante ya existente, datos actualizados y correo enviado.');
+        }
 
         $password = $this->generarContrasenaAleatoria();
         // Crear Usuario con contraseña por defecto
@@ -708,12 +799,14 @@ public function actualizarTemas(Request $request, $moduloId)
             'num_int' => $request->num_int,
         ]);
         $prefix = date('y') . date('m');
-        $estudiante->matricula = $prefix . $estudiante->matricula;
+
+        $estudiante->matricula = $prefix . $usuario->id;
+
         $estudiante->save();
 
         $usuario->username = $estudiante->matricula;
         $usuario->save();
-        $estudiante->save;
+
 
 
         if ($estudiante)

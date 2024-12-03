@@ -12,12 +12,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SalonController;
 use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\UsuarioController;
+use App\Models\CursoApertura;
 use App\Models\Productos;
 use App\Models\User;
-use Illuminate\Http\Request;
-
 use App\Livewire\CatalogoTienda;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redirect;
@@ -44,7 +42,12 @@ Route::get('/about-us', function () {
 
 
 Route::get('/cursos', function () {
-    return view('cursos');
+    // Obtener cursos con estado 'programado' y sus relaciones
+    $cursos = CursoApertura::where('estado', 'programado')
+        ->with('moduloCursos.modulo.temas', 'curso')
+        ->get();
+
+    return view('cursos', compact('cursos'));
 })->name('cursos.info');
 
 Route::get('/phpinfo', function () {

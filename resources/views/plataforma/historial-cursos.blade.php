@@ -6,12 +6,6 @@
     </div>
 @endif
 
-@if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-
     <h2 class="text-center mb-4">Gestión de Cursos Aperturados</h2>
 
     @if(session('success'))
@@ -27,6 +21,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+
 
     <div class="text-center mb-4">
         @if(auth()->user()->hasRole('admin'))
@@ -61,7 +56,7 @@
             <!-- Mostrar cursos según el rol -->
             @if(auth()->user()->hasRole('admin') ||
                 (auth()->user()->hasRole('profesor') && $apertura->estado == 'en curso'))
-                <div class="col-12 mb-4">
+                <div class="col-4 mb-4">
                     <div class="card shadow-sm curso-card" style="font-size: 0.9rem; border: 1px solid #D32F2F; overflow: hidden; position: relative;">
                         <div class="card-body" style="padding: 15px;">
                             <h5 class="card-title" style="font-size: 1.2rem; color: #333; margin-bottom: 10px;">
@@ -98,15 +93,15 @@
                             <small class="text-muted">Ver detalles del curso</small>
                         </div>
                         <div id="dropdown-{{ $apertura->id }}" class="collapse">
-                            <div class="card-body" style="padding-top: 10px;">
+                            <div class="card-body" style="padding-top: 10px; max-height: 300px; overflow-y: auto;">
                                 @foreach ($apertura->moduloCursos as $moduloCurso)
-                                    <div style="margin: 15px 0; padding: 10px;">
+                                    <div style="margin: 15px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
                                         <h6 style="margin: 0; font-size: 1.2rem; color: #333;">Semana {{ $moduloCurso->orden }}</h6>
                                         <hr style="border: 2px solid #C2185B; margin: 5px 0;">
                                         <p class="mt-1" style="margin: 0; font-size: 1rem; color: #C2185B;">
-                                            <span class="badge" style="background-color: #FFABAB; color: #333; border-radius: 4px; border: 1px solid #C2185B;">
-                                                Módulo: {{ $moduloCurso->modulo->nombre }}
-                                            </span>
+                    <span class="badge" style="background-color: #FFABAB; color: #333; border-radius: 4px; border: 1px solid #C2185B;">
+                        Módulo: {{ $moduloCurso->modulo->nombre }}
+                    </span>
                                         </p>
                                         @foreach ($moduloCurso->modulo->temas as $tema)
                                             <p class="mt-1" style="margin: 0; margin-left: 10px; font-size: 0.9rem; color: #555; border-left: 2px solid #C2185B; padding-left: 10px;">
@@ -117,6 +112,7 @@
                                 @endforeach
                             </div>
                         </div>
+
                     </div>
                 </div>
             @endif
@@ -313,9 +309,9 @@
                         <div class="mb-3">
                             <label for="cursoSelect" class="form-label">Selecciona el Curso</label>
                             <select class="form-select" id="cursoSelect" name="id_curso" required>
-                                <option value="" disabled selected>Seleccione un curso</option>
+                                <option value="" disabled {{ old('id_curso') ? '' : 'selected' }}>Seleccione un curso</option>
                                 @foreach($cursos as $curso)
-                                    <option value="{{ $curso->id }}" data-duracion="{{ $curso->duracion_semanas }}">
+                                    <option value="{{ $curso->id }}" data-duracion="{{ $curso->duracion_semanas }}" {{ old('id_curso') == $curso->id ? 'selected' : '' }}>
                                         {{ $curso->nombre }} ({{ $curso->duracion_semanas }} semanas)
                                     </option>
                                 @endforeach
@@ -326,9 +322,9 @@
                         <div class="mb-3">
                             <label for="id_profesor" class="form-label">Profesor</label>
                             <select class="form-select" id="id_profesor" name="id_profesor" required>
-                                <option value="">Seleccione un profesor</option>
+                                <option value="" {{ old('id_profesor') ? '' : 'selected' }}>Seleccione un profesor</option>
                                 @foreach($profesores as $profesor)
-                                    <option value="{{ $profesor->id }}">
+                                    <option value="{{ $profesor->id }}" {{ old('id_profesor') == $profesor->id ? 'selected' : '' }}>
                                         {{ $profesor->persona->nombre }} {{ $profesor->persona->apellido_pa }} {{ $profesor->persona->apellido_ma }}
                                     </option>
                                 @endforeach
@@ -344,22 +340,38 @@
                                 id="fechaInicio"
                                 name="fecha_inicio"
                                 min=""
+                                value="{{ old('fecha_inicio') }}"
                                 required>
                             <div class="invalid-feedback" id="fechaError" style="display: none;">La fecha debe ser a futuro.</div>
                         </div>
 
-
                         <!-- Campo para la Hora de Clase -->
                         <div class="mb-3">
                             <label for="horaClase" class="form-label">Hora de Clase</label>
-                            <input type="time" class="form-control" id="horaClase" name="hora_clase" min="08:00" max="22:00" required>
+                            <input
+                                type="time"
+                                class="form-control"
+                                id="horaClase"
+                                name="hora_clase"
+                                min="08:00"
+                                max="22:00"
+                                value="{{ old('hora_clase') }}"
+                                required>
                             <div class="invalid-feedback" id="errorHoraClase" style="display: none;">La hora de inicio debe estar entre 8:00 AM y 10:00 PM</div>
                         </div>
+
 
                         <!-- Campo para el Monto de Colegiatura -->
                         <div class="mb-3">
                             <label for="montoColegiatura" class="form-label">Monto de Colegiatura</label>
-                            <input type="number" class="form-control" id="montoColegiatura" name="monto_colegiatura" placeholder="Ingrese el monto de colegiatura" required>
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="montoColegiatura"
+                                name="monto_colegiatura"
+                                placeholder="Ingrese el monto de colegiatura"
+                                value="{{ old('monto_colegiatura') }}"
+                                required>
                         </div>
 
                         <!-- Contenedor de semanas -->
@@ -370,6 +382,7 @@
                         <button type="submit" class="btn btn-primary">Aperturar Curso</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>

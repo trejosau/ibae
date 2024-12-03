@@ -187,7 +187,7 @@
 
                             </div>
                             <div class="mb-3">
-                                <label for="duracion_horas" class="form-label">Duración (horas)</label>
+                                <label for="duracion_horas" class="form-label">Duración por clase (horas)</label>
                                 <input type="number" class="form-control" id="duracion_horas" name="duracion_horas" min="1" required>
                             </div>
                             <div class="mb-3">
