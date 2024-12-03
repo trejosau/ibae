@@ -262,6 +262,7 @@
     </div>
 </div>
 
+
 <!-- Modal para Editar Módulo -->
 @foreach($modulos as $modulo)
 <div class="modal fade" id="modalEditarModulo-{{ $modulo->id }}" tabindex="-1" aria-labelledby="modalEditarModuloLabel" aria-hidden="true">
@@ -342,6 +343,29 @@
 </div>
 @endforeach
 
+<script>
+    function contarCaracteres() {
+    const descripcion = document.getElementById('themeDescription');
+    const caracteresRestantes = document.getElementById('caracteresRestantes');
+    const maxLength = descripcion.getAttribute('maxlength');
+    const currentLength = descripcion.value.length;
+    
+    const remaining = maxLength - currentLength;
+    caracteresRestantes.textContent = `${remaining} caracteres restantes`;
+
+    // Mostrar error si se excede el límite de caracteres
+    const errorDescripcion = document.getElementById('errorDescripcion');
+    if (remaining < 0) {
+        errorDescripcion.style.display = 'block';
+    } else {
+        errorDescripcion.style.display = 'none';
+    }
+}
+
+// Llama a la función al cargar la página para inicializar el contador
+window.onload = contarCaracteres;
+
+    </script>
 
 
 

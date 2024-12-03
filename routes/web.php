@@ -144,7 +144,7 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
             }
 
             if ($user->hasRole('estudiante')) {
-                return Redirect::to('/plataforma/espacio-mis-cursos');
+                return Redirect::to('/plataforma/espacio/mis-cursos');
             }
 
             // Redirección predeterminada si no tiene rol específico
@@ -156,10 +156,9 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
         Route::middleware(['role:estudiante'])->group(function () {
             Route::get('/plataforma/espacio/mis-cursos', [PlataformaController::class, 'misCursosEspacio'])->name('plataforma.espacio-mis-cursos');
             Route::get('/plataforma/espacio/mis-pagos', [PlataformaController::class, 'misPagosEspacio'])->name('plataforma.espacio-mis-pagos');
-            Route::get('/plataforma/espacio/perfil', [PlataformaController::class, 'perfilEspacio'])->name('plataforma.espacio-perfil');
         });
 
-        Route::middleware(['role:profesor|admin'])->group(function () {
+        Route::middleware([])->group(function () {
             Route::get('/plataforma/cursos/historial-cursos', [PlataformaController::class, 'historialCursos'])->name('plataforma.historial-cursos');
             Route::get('/plataforma/cursos/ver-asistencia/{curso_apertura_id}', [PlataformaController::class, 'registrarAsistencia'])->name('plataforma.registrarAsistencia');
             Route::post('/plataforma/cursos/guardar-asistencia/{curso_apertura_id}', [PlataformaController::class, 'guardarAsistencia'])->name('guardarAsistencia');

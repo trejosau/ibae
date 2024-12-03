@@ -1,49 +1,39 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <style>
-        /* Paleta de colores */
-        :root {
-            --color-fondo: #F8F9FA; /* Gris claro para fondo principal */
-            --color-primario: #0D1E4C; /* Azul oscuro */
-            --color-secundario: #83A6CE; /* Azul claro */
-            --color-acento: #C48CB3; /* Rosa oscuro */
-            --color-texto: #26415E; /* Azul medio */
-            --color-footer: #0B1B32; /* Azul noche */
-        }
-        .navbar {
-            background: linear-gradient(90deg, var(--color-primario), var(--color-acento));
-            color: white;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            margin-left: 15px;
-        }
-
-        .navbar a:hover {
-            text-decoration: underline;
-        }
-.logo {
-    width: auto;
-    height: 60px;
+/* Paleta de colores */
+:root {
+    --color-fondo: #F8F9FA; /* Gris claro para fondo principal */
+    --color-primario: #0D1E4C; /* Azul oscuro */
+    --color-secundario: #83A6CE; /* Azul claro */
+    --color-acento: #C48CB3; /* Rosa oscuro */
+    --color-texto: #26415E; /* Azul medio */
+    --color-footer: #0B1B32; /* Azul noche */
 }
+
+/* Navbar */
 .navbar {
+    background: linear-gradient(90deg, var(--color-primario), var(--color-acento));
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     position: fixed;
     top: 0;
-     left: 0;
+    left: 0;
     right: 0;
     z-index: 1000;
-    background-color: white;
-    padding: 10px 20px;
+}
+
+.logo {
+    height: 80px; /* Limita la altura máxima */
+    width: 150px; /* (Opcional) Limita el ancho máximo */
+    display: block; /* Asegura que sea tratado como un bloque */
 }
 
 
-    /* Iconos de navegación */
+
+/* Iconos de navegación */
 .nav-icons {
     background-color: #333;
     color: white;
@@ -58,7 +48,6 @@
 }
 
 /* Carrito de compras */
-
 .btn-cart {
     color: #333;
     display: flex;
@@ -69,14 +58,12 @@
     color: #f1c6d4;
 }
 
-
 .btn-cart:hover i, /* El carrito */
 .btn-cart:hover #cart-icon-total { /* El total */
     color: #f1c6d4;
 }
 
-
-
+/* Sidebar */
 .cart-sidebar {
     width: 400px;
     padding: 20px;
@@ -102,6 +89,7 @@
     color: #333;
 }
 
+/* Cart Header */
 .cart-header {
     display: flex;
     justify-content: space-between;
@@ -222,7 +210,6 @@
     color: #666;
 }
 
-
 /* Total Price and Cart Footer */
 .total-price {
     font-size: 1.4em;
@@ -253,8 +240,6 @@
     background-color: #f1c6d4;
 }
 
-
-
 /* Sidebar */
 .cart-sidebar.active .navegacion {
     display: none;
@@ -284,42 +269,93 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .cart-item {
-        flex-direction: column;
-        align-items: flex-start;
+    /* Navbar */
+    .navbar {
+        background: linear-gradient(90deg, var(--color-primario), var(--color-acento));
+        color: white;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        flex-wrap: nowrap; /* Asegura que todo esté en una sola línea */
     }
 
-    .product-image-container {
-        margin-bottom: 10px;
+    /* Logo */
+    .logo {
+    height: 60px; /* Limita la altura máxima */
+    width: 60px; /* (Opcional) Limita el ancho máximo */
+    object-fit: contain; /* Ajusta el contenido dentro del área disponible */
+    display: block; /* Asegura que sea tratado como un bloque */
+    margin: 0 auto; /* Centra el logo si es necesario */
     }
 
-    .cart-item-details {
-        margin-left: 0;
+    /* Contenedor de los elementos de navegación */
+    .navbar-content {
+        display: flex;
+        align-items: center;
+        gap: 15px; /* Espaciado uniforme entre elementos */
+        flex-wrap: nowrap; /* Evita el salto de línea */
+    }
+
+    /* Iconos y enlaces */
+    .navbar-content a {
+        font-size: 14px; /* Ajusta el tamaño del texto */
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .navbar-content a:hover {
+        text-decoration: underline;
+    }
+
+    /* Iconos (carrito, usuario) */
+    .nav-icons {
+        display: flex;
+        align-items: center;
+        gap: 8px; /* Espaciado entre iconos */
+        color: white;
+    }
+
+    .nav-icons i {
+        font-size: 1rem; /* Ajusta el tamaño de los iconos */
+    }
+
+    /* Botón de carrito */
+    .btn-cart {
+        display: flex;
+        align-items: center;
+        gap: 5px; /* Espaciado entre el texto y el icono */
+        font-size: 14px; /* Tamaño del texto del carrito */
+    }
+
+    /* Ajusta el avatar */
+    .perfil{
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+    }
+
+    .btn{
+        font-size: 13px;
     }
 }
 
-.padding-left{
-    padding-left: 50px;
+@media (min-width: 768px) {
+    /* Restablecer tamaño del logo a su valor original en pantallas más grandes */
+    .logo {
+    height: 60px; /* Limita la altura máxima */
+    width: 150px; /* (Opcional) Limita el ancho máximo */
+    object-fit: contain; /* Ajusta el contenido dentro del área disponible */
+    display: block; /* Asegura que sea tratado como un bloque */
+    margin: 0 auto; /* Centra el logo si es necesario */
+    }
 }
 
-
-.login-btn {
-    background-color: #333;
-    color: white;
-    padding: 10px 20px; /* Tamaño del botón */
-    border: 2px solid #333; /* Borde para darle definición */
-    border-radius: 5px; /* Esquinas redondeadas */
-    font-size: 16px; /* Tamaño del texto */
-    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-    transition: all 0.3s ease; /* Transición suave para todos los cambios */
-}
-
-.login-btn:hover {
-    background-color: #f0c4d0;
-    color: #333;
-    border-color: #f0c4d0; /* Cambia el color del borde al pasar el mouse */
-    transform: scale(1.05); /* Un pequeño efecto de zoom */
-}
 
 
 </style>
@@ -331,7 +367,7 @@
         <div style="display: flex; align-items: center;">
             <!-- Logo -->
             <a class="navbar-brand" href="{{ route('home') }}">
-                <img class="logo img-fluid" src="{{ asset('images/logo.png') }}" alt="Logo">
+                <img class="logo" src="{{ asset('images/logo.png') }}" alt="Logo">
             </a>
         </div>
 
@@ -360,7 +396,7 @@
             <div class="dropdown ms-3" style="display: flex; align-items: center;">
                 @if(auth()->check())
                     <a href="#" id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: flex; align-items: center;">
-                        <img src="{{ auth()->user()->profile_photo_url }}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%;">
+                        <img class="perfil" src="{{ auth()->user()->profile_photo_url }}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%;">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Mi perfil</a></li>

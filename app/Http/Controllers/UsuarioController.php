@@ -208,6 +208,7 @@ class UsuarioController extends Controller
             'n_int' => 'nullable|string|max:10',
         ]);
 
+        dd($request->all());
 
 
 
