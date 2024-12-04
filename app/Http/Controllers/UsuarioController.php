@@ -6,6 +6,7 @@ use App\Mail\EnvioCredenciales;
 use App\Models\Administrador;
 use App\Models\Comprador;
 use App\Models\Estilista;
+use App\Models\Estudiante;
 use App\Models\Persona;
 use App\Models\Profesor;
 use App\Models\User;
@@ -54,7 +55,41 @@ class UsuarioController extends Controller
         // Generar contraseña aleatoria
         $password = $this->generarContrasenaAleatoria();
 
-        // Iniciar una transacción
+        $emailExiste = User::where('email', $request->email)->first();
+
+        if ($emailExiste) {
+            // Si el email ya existe, actualizamos los datos
+            $user = User::where('email', $request->email)->first();
+            $user->assignRole('admin');
+            $persona = $user->persona;
+
+            $persona->update([
+                'nombre' => $request->nombre,
+                'ap_paterno' => $request->ap_paterno,
+                'ap_materno' => $request->ap_materno,
+                'telefono' => $request->telefono,
+            ]);
+
+
+            $estudiante = Estudiante::create([
+                'estado' => 'activo',
+                'id_persona' => $persona->id,
+                'id_inscripcion' => $request->id_inscripcion,
+                'fecha_inscripcion' => $request->fecha_inscripcion_estudiante,
+                'grado_estudio' => $request->grado_estudio,
+                'zipcode' => $request->zipcode,
+                'ciudad' => $request->ciudad,
+                'colonia' => $request->colonia,
+                'calle' => $request->calle,
+                'num_ext' => $request->num_ext,
+                'num_int' => $request->num_int,
+            ]);
+
+
+            $user->save();
+
+            return redirect()->route('dashboard.usuarios')->with('success', 'Usuario con este correo ya existe, datos actualizados y correo enviado.');
+        }
         \DB::beginTransaction();
 
         try {
@@ -123,6 +158,27 @@ class UsuarioController extends Controller
             'email' => 'required|email|max:255|unique:users,email',
         ]);
 
+        $emailExiste = User::where('email', $request->email)->first();
+        if ($emailExiste) {
+            $user = User::where('email', $request->email)->first();
+            $user->assignRole('estilista');
+
+            $persona = $user->persona;
+
+            $persona->update([
+                'nombre' => $request->nombre,
+                'ap_paterno' => $request->ap_paterno,
+                'ap_materno' => $request->ap_materno,
+                'telefono' => $request->phone,
+            ]);
+
+            Estilista::create([
+                'estado' => 'activo',
+                'id_persona' => $persona->id,
+            ]);
+
+            return redirect()->route('dashboard.usuarios')->with('success', 'Usuario con este correo ya existe, datos actualizados y correo enviado.');
+        }
 
 
 
@@ -208,10 +264,37 @@ class UsuarioController extends Controller
             'n_int' => 'nullable|string|max:10',
         ]);
 
-        dd($request->all());
+        $emailExiste = User::where('email', $request->email)->first();
 
+        if ($emailExiste) {
+            // Si el email ya existe, actualizamos los datos
+            $user = User::where('email', $request->email)->first();
 
-
+            $persona = $user->persona;
+            $persona->update([
+                'nombre' => $request->nombre,
+                'ap_paterno' => $request->ap_paterno,
+                'ap_materno' => $request->ap_materno,
+                'telefono' => $request->phone,
+            ]);
+            Profesor::create([
+                'especialidad' => $request->especialidad,
+                'fecha_contratacion' => now(),
+                'RFC' => $request->RFC,
+                'CURP' => $request->CURP,
+                'estado' => 'activo',
+                'id_persona' => $persona->id,
+                'zipcode' => $request->zipcode,
+                'ciudad' => $request->ciudad,
+                'colonia' => $request->colonia,
+                'calle' => $request->calle,
+                'n_ext' => $request->n_ext,
+                'n_int' => $request->n_int,
+                'created_at' => now(),
+                'updated_at' => null,
+            ]);
+            $user->assignRole('profesor');
+        }
 
         // Generate a random password
         $password = $this->generarContrasenaAleatoria();

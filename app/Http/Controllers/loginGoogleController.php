@@ -55,18 +55,6 @@ class loginGoogleController extends Controller
 
             Auth::login($user, true);
 
-            // Redirigir basado en el rol del usuario
-            if ($user->hasRole('admin')) {
-                return redirect('/plataforma/cursos/mis-cursos');
-            }
-
-            if ($user->hasRole('profesor')) {
-                return redirect('/plataforma/cursos/historial-cursos');
-            }
-
-            if ($user->hasRole('estudiante')) {
-                return redirect('/plataforma/espacio/perfil');
-            }
 
             // Redirección predeterminada si no se cumple ningún rol
             return redirect()->route('home');

@@ -226,61 +226,49 @@
     <div class="row">
         @foreach($usuarios as $usuario)
             <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    <!-- Card Header with General and Role States Badges -->
-                    <div class="card-header" style="display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: flex-end;">
-                        <!-- General User State Badge -->
-                        <span class="badge {{ $usuario->estado == 'activo' ? 'bg-success' : 'bg-danger' }}">
-                Usuario: {{ ucfirst($usuario->estado) }}
-            </span>
+                <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; height: auto;">
+                    <!-- Card Body -->
+                    <div style="padding: 1rem; text-align: center;">
+                        <!-- Profile Image -->
+                        <div style="margin-bottom: 1rem;">
+                            <img src="{{ $usuario->profile_photo_url }}" alt="Profile Image" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #ddd;">
+                        </div>
 
-                        <!-- Role-specific State Badges -->
+                        <!-- User Info -->
+                        <h5 style="margin: 0; font-size: 1.25rem; color: #333;">{{ $usuario->username }}</h5>
+                        <span style="font-size: 0.9rem; color: #007bff;">{{ $usuario->email }}</span>
+                        <hr style="border: 0; height: 1px; background-color: #e9ecef; margin: 1rem 0;">
+
                         @if($persona = $usuario->persona)
-                            @if($persona->estilista)
-                                <span class="badge {{ $persona->estilista->estado == 'activo' ? 'bg-success' : ($persona->estilista->estado == 'vacaciones' ? 'bg-warning' : 'bg-danger') }}">
-                        Estilista: {{ ucfirst($persona->estilista->estado) }}
-                    </span>
-                            @endif
-                            @if($persona->profesor)
-                                <span class="badge {{ $persona->profesor->estado == 'activo' ? 'bg-success' : ($persona->profesor->estado == 'vacaciones' ? 'bg-warning' : 'bg-danger') }}">
-                        Profesor: {{ ucfirst($persona->profesor->estado) }}
-                    </span>
-                            @endif
-                            @if($persona->estudiante)
-                                <span class="badge {{ $persona->estudiante->estado == 'activo' ? 'bg-success' : 'bg-danger' }}">
-                        Estudiante: {{ ucfirst($persona->estudiante->estado) }}
-                    </span>
-                            @endif
+                            <p style="margin: 0.5rem 0; font-size: 0.95rem;"><strong>Nombre:</strong> {{ $persona->nombre }} {{ $persona->ap_paterno }} {{ $persona->ap_materno }}</p>
+                            <p style="margin: 0.5rem 0; font-size: 0.95rem;"><strong>Teléfono:</strong> {{ $persona->telefono }}</p>
                         @endif
                     </div>
 
-                    <div class="card-body">
-                        <!-- Profile Image -->
-                        <div class="text-center mb-3">
-                            <img src="{{ $usuario->profile_photo_url }}" alt="Profile Image" class="img-fluid rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
-                        </div>
-
-                        <h5 class="card-title">{{ $usuario->username }} <span class="badge bg-primary">{{ $usuario->email }}</span></h5>
-
-                        @if($persona = $usuario->persona)
-                            <p><strong>Nombre:</strong> {{ $persona->nombre }} {{ $persona->ap_paterno }} {{ $persona->ap_materno }}</p>
-                            <p><strong>Teléfono:</strong> {{ $persona->telefono }}</p>
-
-                            <!-- Roles -->
-                            <div class="mb-2">
-                                @foreach(['administrador', 'estilista', 'profesor', 'estudiante', 'comprador'] as $role)
-                                    @if($persona->$role)
-                                        <span class="badge bg-secondary me-1">{{ ucfirst($role) }}</span>
-                                    @endif
-                                @endforeach
-                            </div>
-
-                            <!-- Botón para ver más -->
-                            <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#modal{{ $usuario->id }}">Ver más</button>
+                    <!-- Card Footer -->
+                    <div style="padding: 0.75rem; background-color: #f8f9fa; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                        @if($persona)
+                            @foreach([ 'estilista', 'profesor', 'estudiante'] as $role)
+                                @if($persona->$role)
+                                    @php
+                                        $estado = $persona->$role->estado ?? 'inactivo';
+                                        $color = match($estado) {
+                                            'activo' => '#28a745',
+                                            'vacaciones' => '#ffc107',
+                                            default => '#dc3545'
+                                        };
+                                    @endphp
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; padding: 0.25rem 0.5rem; background-color: #fff; border: 1px solid #ddd; border-radius: 4px; width: fit-content;">
+                                        <span style="width: 12px; height: 12px; background-color: {{ $color }}; border-radius: 50%; display: inline-block;"></span>
+                                        {{ ucfirst($role) }}
+                                    </div>
+                                @endif
+                            @endforeach
                         @endif
                     </div>
                 </div>
             </div>
+
 
 
 
