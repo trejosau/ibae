@@ -278,43 +278,53 @@ class ProductosController extends Controller
 
 
 
-
     public function agregarAlCarrito(Request $request, $id)
-    {
-        $producto = Productos::find($id);
-        $esEstudiante = Auth::check() && Auth::user()->persona->estudiante ? 1 : 0;
+{
+    // Buscar el producto en la base de datos usando el ID
+    $producto = Productos::find($id);
+    $esEstudiante = Auth::check() && Auth::user()->persona->estudiante ? 1 : 0;
 
-        $cantidad = (int)$request->cantidad;
+    // Obtener la cantidad seleccionada por el usuario
+    $cantidad = (int) $request->cantidad;
 
-        if (!$producto || $cantidad <= 0 || $cantidad > $producto->stock) {
-            return response()->json(['success' => false, 'message' => 'Cantidad inválida o insuficiente stock']);
-        }
-
-        $carrito = session()->get('carrito', []);
-
-
-
-        if (isset($carrito[$id])) {
-            // Asegúrate de no exceder el stock total
-            if ($carrito[$id]['cantidad'] + $cantidad > $producto->stock) {
-                return response()->json(['success' => false, 'message' => 'Cantidad excede el stock disponible']);
-            }
-            $carrito[$id]['cantidad'] += $cantidad;
-        } else {
-            $precio = $esEstudiante ? $producto->precio_lista : $producto->precio_venta; // Determinar precio según condición
-
-            $carrito[$id] = [
-                "nombre" => $producto->nombre,
-                "precio" => $precio,
-                "cantidad" => $cantidad,
-                "main_photo" => $producto->main_photo
-            ];
-        }
-
-        session()->put('carrito', $carrito);
-
-        return response()->json(['success' => true, 'carrito' => $carrito]);
+    // Validaciones de cantidad y existencia en stock
+    if (!$producto || $cantidad <= 0 || $cantidad > $producto->stock) {
+        return response()->json(['success' => false, 'message' => 'Cantidad inválida o insuficiente stock']);
     }
+
+    // Obtener el carrito actual desde la sesión
+    $carrito = session()->get('carrito', []);
+
+    // Verificar si el producto ya está en el carrito
+    if (isset($carrito[$id])) {
+        // Si ya está en el carrito, verificar que la cantidad no exceda el stock
+        if ($carrito[$id]['cantidad'] + $cantidad > $producto->stock) {
+            return response()->json(['success' => false, 'message' => 'Cantidad excede el stock disponible']);
+        }
+        // Incrementar la cantidad en el carrito
+        $carrito[$id]['cantidad'] += $cantidad;
+    } else {
+        // Si el producto no está en el carrito, agregarlo
+        $precio = $esEstudiante ? $producto->precio_lista : $producto->precio_venta;
+
+        // Agregar el producto al carrito con su información
+        $carrito[$id] = [
+            'id' => $producto->id, // Usamos 'id' como referencia del producto
+            'nombre' => $producto->nombre,
+            'precio' => $precio,
+            'cantidad' => $cantidad,
+            'main_photo' => $producto->main_photo,
+        ];
+    }
+
+    // Guardar el carrito actualizado en la sesión
+    session()->put('carrito', $carrito);
+
+    // Retornar respuesta con el carrito actualizado
+    return response()->json(['success' => true, 'carrito' => $carrito]);
+}
+
+    
 
 
 
@@ -373,13 +383,46 @@ public function eliminarDelCarrito($id)
 
 public function checkout()
 {
+    // Obtener el carrito desde la sesión
     $carrito = session()->get('carrito', []);
-    $subtotal = array_reduce($carrito, function ($total, $item) {
+    $productos_actualizados = [];
+    $errores_stock = [];
+
+    // Iterar sobre los productos en el carrito
+    foreach ($carrito as $id => $item) {
+        // Buscar el producto en la base de datos utilizando el 'id' almacenado en el carrito
+        $producto = Productos::find($id);
+
+        if ($producto) {
+            // Verificar si el stock disponible es suficiente
+            if ($producto->stock >= $item['cantidad']) {
+                // Producto con stock suficiente
+                $productos_actualizados[] = [
+                    'id_producto' => $id,  // Usar el 'id' como referencia
+                    'nombre' => $producto->nombre,
+                    'precio' => $producto->precio_venta,  // Usar el precio de venta
+                    'cantidad' => $item['cantidad']
+                ];
+            } else {
+                // Producto sin stock suficiente
+                $errores_stock[] = [
+                    'nombre' => $producto->nombre,
+                    'stock_disponible' => $producto->stock,
+                    'cantidad_solicitada' => $item['cantidad']
+                ];
+            }
+        }
+    }
+
+    // Calcular el subtotal solo para los productos válidos
+    $subtotal = array_reduce($productos_actualizados, function ($total, $item) {
         return $total + $item['precio'] * $item['cantidad'];
     }, 0);
 
-    return view('checkout', compact('carrito', 'subtotal'));
+    // Retornar la vista con los datos procesados
+    return view('checkout', compact('productos_actualizados', 'subtotal', 'errores_stock'));
 }
+
 public function storeCategoria(Request $request)
 {
         $request->validate([
