@@ -26,6 +26,7 @@ use App\Models\User;
 use App\Models\Ventas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -204,12 +205,43 @@ class DashboardController extends Controller
 
     public function compraEntregada($id)
     {
+        // Buscar la compra
         $compra = Compras::find($id);
+
+        // Cambiar el estado de la compra a 'entregado'
         $compra->estado = 'entregado';
         $compra->fecha_entrega = now();
         $compra->save();
-        return redirect()->route('dashboard.compras')->with('success', 'Compra actualizada el stock se actualizara automaticamente.');
+
+        // Obtener los detalles de la compra (productos y cantidades)
+        $detalleCompra = DB::table('detalle_compra')
+            ->where('id_compra', $id)
+            ->get(['id_producto', 'cantidad']); // Obtener producto y cantidad de la compra
+
+        foreach ($detalleCompra as $detalle) {
+            // Obtener el producto
+            $producto = Productos::find($detalle->id_producto);  // Busca el producto por su ID
+
+            // Si el producto no existe, saltamos al siguiente
+            if (!$producto) {
+                continue;
+            }
+
+            // Actualizar el stock del producto
+            $producto->stock += $detalle->cantidad;
+            $producto->save();
+
+            // Si el stock es mayor que 0, cambiar el estado del producto a 'activo'
+            if ($producto->stock > 0) {
+                $producto->estado = 'activo';
+                $producto->save();
+            }
+        }
+
+        // Redirigir con mensaje de éxito
+        return redirect()->route('dashboard.compras')->with('success', 'Compra actualizada y stock de productos actualizado automáticamente.');
     }
+
 
     public function compraCancelar(Request $request, $id)
     {
