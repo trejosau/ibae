@@ -48,7 +48,7 @@ class UsuarioController extends Controller
             'ap_materno' => 'required|string|max:255',
             'phone' => ['required', 'string', 'min:13', 'max:13', 'regex:/^\+52\d{10}$/'],
             'username' => 'required|string|max:255|unique:users,username',
-            'email' => 'required|email|max:255|unique:users,email',
+            'email' => 'required|email|max:255',
         ]);
 
 
@@ -70,20 +70,12 @@ class UsuarioController extends Controller
                 'telefono' => $request->telefono,
             ]);
 
-
-            $estudiante = Estudiante::create([
-                'estado' => 'activo',
+            Administrador::create([
                 'id_persona' => $persona->id,
-                'id_inscripcion' => $request->id_inscripcion,
-                'fecha_inscripcion' => $request->fecha_inscripcion_estudiante,
-                'grado_estudio' => $request->grado_estudio,
-                'zipcode' => $request->zipcode,
-                'ciudad' => $request->ciudad,
-                'colonia' => $request->colonia,
-                'calle' => $request->calle,
-                'num_ext' => $request->num_ext,
-                'num_int' => $request->num_int,
+                'created_at' => now(),
+                'updated_at' => null,
             ]);
+
 
 
             $user->save();
@@ -254,7 +246,7 @@ class UsuarioController extends Controller
             'RFC' => 'nullable|string|max:20',
             'CURP' => 'nullable|string|max:20',
             'username' => 'required|string|max:255|unique:users,username',
-            'email' => 'required|email|max:255|unique:users,email',
+            'email' => 'required|email|max:255',
             'especialidad' => 'required|string|in:estilismo,barbería,maquillaje,uñas',
             'zipcode' => 'required|string|size:5',
             'ciudad' => 'required|string|max:100',
@@ -369,4 +361,21 @@ class UsuarioController extends Controller
             return redirect()->route('dashboard.usuarios')->with('error', 'Error al crear usuario: ' . $e->getMessage());
         }
     }
+
+    public function bloquear($id)
+    {
+        $usuario = User::find($id);
+        $usuario->estado = 'inactivo';
+        $usuario->save();
+        return redirect()->route('dashboard.usuarios')->with('success', 'Usuario bloqueado con éxito.');
+    }
+
+    public function desbloquear($id)
+    {
+        $usuario = User::find($id);
+        $usuario->estado = 'activo';
+        $usuario->save();
+        return redirect()->route('dashboard.usuarios')->with('success', 'Usuario desbloqueado con éxito.');
+    }
+
 }

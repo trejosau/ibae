@@ -146,7 +146,7 @@
 
                                     <form action="{{ route('compra.agregarProducto') }}" method="POST" style="margin: 0;">
                                         @csrf
-                                        <input type="number" name="cantidad" value="1" min="1">
+                                        <input type="number" name="cantidad" value="1" min="1" max="999" class="form-control" style="width: 90px; height: 30px; font-size: 14px;">
                                         <input type="hidden" name="compra_id" value="{{ $compra->id }}">
                                         <input type="hidden" name="producto_id" value="{{ $producto->id }}">
                                         <button type="submit" class="btn btn-sm btn-success" style=" padding: 8px 3px; font-size: 14px;">
