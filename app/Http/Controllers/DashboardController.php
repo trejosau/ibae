@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Administrador;
+
 use App\Models\Auditoria;
 use App\Models\Categorias;
 use App\Models\DetalleCompra;
+use App\Models\DetalleCita;
 use App\Models\Subcategoria;
 use App\Models\Categorias_de_Servicios;
 use App\Models\Citas;
 use App\Models\Colegiaturas;
 use App\Models\Comprador;
 use App\Models\Compras;
+use Carbon\Carbon;
 use App\Models\DetalleVenta;
 use App\Models\Estilista;
 use App\Models\Estudiante;
@@ -423,8 +426,27 @@ class DashboardController extends Controller
 
     public function citas(Request $request)
     {
-        return view('dashboard.index');
+        $estilistas = Estilista::all();
+        $citas = Citas::with('comprador')->get()->map(function ($cita) {
+            $cita->fecha_inicio = $cita->fecha_hora_inicio_cita->format('Y-m-d'); // Solo fecha
+            $cita->hora_inicio = $cita->fecha_hora_inicio_cita->format('H:i:s'); // Solo hora
+            return $cita;
+        });
+        $servicios = Servicios::all();
+        return view('dashboard.index', compact('estilistas', 'citas', 'servicios'));
     }
+
+    
+
+
+
+
+
+
+
+
+
+
 
     public function servicios(Request $request)
     {

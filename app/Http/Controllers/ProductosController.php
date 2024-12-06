@@ -550,21 +550,21 @@ public function storeCategoria(Request $request)
     {
         // Configurar la clave de API de Stripe
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-
+    
         // Obtener el session_id desde la URL de retorno
         $sessionId = $request->get('session_id');
-
+    
         // Asegúrate de que el session_id sea válido y no esté vacío
         if (!$sessionId) {
             return redirect()->route('error');  // Redirigir a una página de error si el sessionId es inválido
         }
-
+    
         // Intentar obtener la sesión de Stripe
         try {
             $session = Session::retrieve($sessionId);
-
+    
             $usuario = Auth::user();
-
+    
             $total = 0; // Inicializa el total en 0
             $descuentoTotal = 0; // Inicializa el descuento total en 0
             $estado = 'preparando para entrega';
@@ -575,7 +575,7 @@ public function storeCategoria(Request $request)
             $stripe_paymet_id = $session->payment_intent;
             $fechaPago = date('Y-m-d H:i:s', $session->created);
             $sessionCarrito = session()->get('carrito', []);
-
+    
             // Crear el pedido
             $pedido = Pedidos::create([
                 'total' => 0, // Será actualizado después de calcular el total
@@ -589,26 +589,26 @@ public function storeCategoria(Request $request)
                 'estado_pago' => 'completado',
                 'fecha_pago' => $fechaPago,
             ]);
-
+    
             // Procesar los productos del carrito
             foreach ($sessionCarrito as $index => $producto) {
                 $productoId = $index;
                 $productoRegistro = Productos::findOrFail($productoId);
-
+    
                 // Determinar el precio aplicado
                 $precioAplicado = $esEstudiante
                     ? $productoRegistro->precio_lista
                     : $productoRegistro->precio_venta;
-
+    
                 // Calcular descuento por producto (si aplica)
                 $descuento = $esEstudiante
                     ? $productoRegistro->precio_venta - $productoRegistro->precio_lista
                     : 0;
-
+    
                 // Actualizar el total y el descuento acumulado
                 $total += $precioAplicado * $producto['cantidad'];
                 $descuentoTotal += $descuento * $producto['cantidad'];
-
+    
                 // Crear el detalle del pedido
                 DetallePedido::create([
                     'id_pedido' => $pedido->id,
@@ -618,18 +618,22 @@ public function storeCategoria(Request $request)
                     'descuento' => $descuento,
                 ]);
             }
-
+    
             // Actualizar el total del pedido
             $pedido->update([
                 'total' => $total,
             ]);
-
+    
+            // Eliminar el carrito de la sesión
+            session()->forget('carrito');
+    
             return redirect()->route('tienda.mis-pedidos');
-
+    
         } catch (\Stripe\Exception\UnexpectedValueException $e) {
             return redirect()->route('error')->with('error', 'Error al recuperar la sesión de pago.');
         }
     }
+    
 
 public function cancel()
 {
