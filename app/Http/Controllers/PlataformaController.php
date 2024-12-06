@@ -430,6 +430,7 @@ public function actualizarTemas(Request $request, $moduloId)
 
         $hora_final = $hora_inicio->copy()->addHours($duracion_horas);
 
+        $id_profesor = $validatedData['id_profesor'];
 
 
 
@@ -449,6 +450,7 @@ public function actualizarTemas(Request $request, $moduloId)
             'dia_clase' => $dia_semana,
             'hora_clase' => $hora_clase,
             'hora_clase_fin' => $hora_final->format('H:i:s'),
+            'id_profesor' => $id_profesor,
         ]);
 
 
@@ -457,7 +459,6 @@ public function actualizarTemas(Request $request, $moduloId)
                 'id_modulo' => $moduloId,
                 'id_curso_apertura' => $cursoApertura->id,
                 'orden' => str_replace('semana_', '', $semana),
-                'id_profesor' => $validatedData['id_profesor'],
             ]);
 
         }
