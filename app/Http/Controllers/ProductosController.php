@@ -658,6 +658,9 @@ public function storeCategoria(Request $request)
                 $total += $precioAplicado * $producto['cantidad'];
                 $descuentoTotal += $descuento * $producto['cantidad'];
 
+
+                $productoRegistro->stock += $producto['cantidad'];
+
                 // Crear el detalle del pedido
                 DetallePedido::create([
                     'id_pedido' => $pedido->id,
@@ -667,6 +670,8 @@ public function storeCategoria(Request $request)
                     'descuento' => $descuento,
                 ]);
             }
+
+            dd('fin');
 
             // Actualizar el total del pedido
             $pedido->update([
