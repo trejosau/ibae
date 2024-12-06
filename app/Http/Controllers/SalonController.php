@@ -18,4 +18,14 @@ class SalonController extends Controller
     public function confirmar(){
         return view('salon.confirmarCita');
     }
+
+    public function miagenda()
+    {
+        return view('salon.miagenda');
+    }
+
+    public function miscitas()
+    {
+        return view('salon.miscitas');
+    }
 }
