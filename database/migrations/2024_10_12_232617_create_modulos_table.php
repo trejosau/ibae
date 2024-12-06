@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->enum('categoria', ['Barberia', 'Belleza']);
-            $table->integer('duracion');
         });
     }
 

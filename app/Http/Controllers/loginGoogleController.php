@@ -52,7 +52,9 @@ class loginGoogleController extends Controller
 
                 $user->assignRole('cliente'); // Asigna el rol predeterminado a nuevos usuarios
             }
-
+            if ($user->estado === 'inactivo') {
+                return redirect()->route('login')->with('error', 'Tu cuenta esta bloqueada.');
+            }
             Auth::login($user, true);
 
 

@@ -578,13 +578,11 @@ public function actualizarTemas(Request $request, $moduloId)
         $validatedData = $request->validate([
             'nombre' => 'required|string|max:255',
             'categoria' => 'required|string|max:255',
-            'duracion' => 'required|integer|min:1',
         ]);
 
         $modulo = new Modulos();
         $modulo->nombre = $validatedData['nombre'];
         $modulo->categoria = $validatedData['categoria'];
-        $modulo->duracion = $validatedData['duracion'];
         $modulo->save();
 
         return redirect()->back()->with('success', 'Módulo agregado correctamente.');

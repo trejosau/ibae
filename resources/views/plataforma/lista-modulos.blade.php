@@ -1,6 +1,6 @@
 <div class="container my-4">
     <h2 class="text-center mb-4">Gestión de Módulos y Temas</h2>
-    
+
     <div class="row">
         <!-- Módulos -->
         <div class="col-md-6">
@@ -14,12 +14,12 @@
                         <option value="belleza" {{ request('categoria') == 'belleza' ? 'selected' : '' }}>Belleza</option>
                     </select>
                 </form>
-                <button type="button" class="btn botoncin-ca" data-bs-toggle="modal" data-bs-target="#modalAgregarModulo" 
+                <button type="button" class="btn botoncin-ca" data-bs-toggle="modal" data-bs-target="#modalAgregarModulo"
                         style="padding: 10px 20px; background-color: #6A4E77; color: white; border: none; border-radius: 8px;">
                     Agregar Módulo
                 </button>
             </div>
-            
+
             <div class="module-list">
                 @forelse ($modulos as $modulo)
                     <div class="card shadow-sm mb-3" style="border: none; background-color: #F9F7FB; border-radius: 10px;">
@@ -39,7 +39,7 @@
                 @empty
                     <p class="text-center" style="color: #8C7A71;">No hay módulos disponibles.</p>
                 @endforelse
-        
+
                 @if ($modulos->hasPages())
                 <nav aria-label="Page navigation" style="margin-top: 20px;">
                     <ul style="display: flex; justify-content: center; list-style: none; padding: 0;">
@@ -50,13 +50,13 @@
                             </li>
                         @else
                             <li style="margin: 0 5px;">
-                                <a href="{{ $modulos->appends(['temas_page' => $temas->currentPage()])->previousPageUrl() }}" rel="prev" 
+                                <a href="{{ $modulos->appends(['temas_page' => $temas->currentPage()])->previousPageUrl() }}" rel="prev"
                                    style="display: inline-block; padding: 10px 15px; color: #007bff; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; text-decoration: none;">
                                     &laquo;
                                 </a>
                             </li>
                         @endif
-            
+
                         {{-- Números de página (máximo 3 botones) --}}
                         @foreach (range(max(1, $modulos->currentPage() - 1), min($modulos->lastPage(), $modulos->currentPage() + 1)) as $page)
                             @if ($page == $modulos->currentPage())
@@ -67,18 +67,18 @@
                                 </li>
                             @else
                                 <li style="margin: 0 5px;">
-                                    <a href="{{ $modulos->appends(['temas_page' => $temas->currentPage()])->url($page) }}" 
+                                    <a href="{{ $modulos->appends(['temas_page' => $temas->currentPage()])->url($page) }}"
                                        style="display: inline-block; padding: 10px 15px; color: #007bff; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; text-decoration: none;">
                                         {{ $page }}
                                     </a>
                                 </li>
                             @endif
                         @endforeach
-            
+
                         {{-- Botón de página siguiente --}}
                         @if ($modulos->hasMorePages())
                             <li style="margin: 0 5px;">
-                                <a href="{{ $modulos->appends(['temas_page' => $temas->currentPage()])->nextPageUrl() }}" rel="next" 
+                                <a href="{{ $modulos->appends(['temas_page' => $temas->currentPage()])->nextPageUrl() }}" rel="next"
                                    style="display: inline-block; padding: 10px 15px; color: #007bff; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; text-decoration: none;">
                                     &raquo;
                                 </a>
@@ -90,7 +90,7 @@
                         @endif
                     </ul>
                 </nav>
-            @endif            
+            @endif
             </div>
         </div>
 
@@ -111,9 +111,9 @@
                             <strong>Descripción:</strong> {{ $tema->descripcion }}
                         </p>
                         <div class="d-flex justify-content-end gap-2">
-                            <button type="button" class="btn btn-sm" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#modalEditarTema{{ $tema->id }}" 
+                            <button type="button" class="btn btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEditarTema{{ $tema->id }}"
                                     style="background-color: #C9A3BE; color: white; border: none;">
                                 Modificar
                             </button>
@@ -126,8 +126,8 @@
                     </div>
                 </div>
                 @endforeach
-                
-            
+
+
                 @if ($temas->hasPages())
                 <nav aria-label="Page navigation" style="margin-top: 20px;">
                     <ul style="display: flex; justify-content: center; list-style: none; padding: 0;">
@@ -138,13 +138,13 @@
                             </li>
                         @else
                             <li style="margin: 0 5px;">
-                                <a href="{{ $temas->previousPageUrl() }}" rel="prev" 
+                                <a href="{{ $temas->previousPageUrl() }}" rel="prev"
                                    style="display: inline-block; padding: 10px 15px; color: #007bff; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; text-decoration: none;">
                                     &laquo;
                                 </a>
                             </li>
                         @endif
-            
+
                         {{-- Números de página (solo 3 botones) --}}
                         @php
                             $currentPage = $temas->currentPage();
@@ -152,7 +152,7 @@
                             $start = max(1, $currentPage - 1); // Página inicial
                             $end = min($lastPage, $currentPage + 1); // Página final
                         @endphp
-            
+
                         @for ($page = $start; $page <= $end; $page++)
                             @if ($page == $currentPage)
                                 <li style="margin: 0 5px;">
@@ -162,18 +162,18 @@
                                 </li>
                             @else
                                 <li style="margin: 0 5px;">
-                                    <a href="{{ $temas->url($page) }}" 
+                                    <a href="{{ $temas->url($page) }}"
                                        style="display: inline-block; padding: 10px 15px; color: #007bff; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; text-decoration: none;">
                                         {{ $page }}
                                     </a>
                                 </li>
                             @endif
                         @endfor
-            
+
                         {{-- Botón de página siguiente --}}
                         @if ($temas->hasMorePages())
                             <li style="margin: 0 5px;">
-                                <a href="{{ $temas->nextPageUrl() }}" rel="next" 
+                                <a href="{{ $temas->nextPageUrl() }}" rel="next"
                                    style="display: inline-block; padding: 10px 15px; color: #007bff; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; text-decoration: none;">
                                     &raquo;
                                 </a>
@@ -185,7 +185,7 @@
                         @endif
                     </ul>
                 </nav>
-            @endif              
+            @endif
             </div>
         </div>
     </div>
@@ -213,10 +213,6 @@
                             <option value="barberia">Barbería</option>
                             <option value="belleza">Belleza</option>
                         </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="moduleDuration" class="form-label">Duración (Horas)</label>
-                        <input type="number" name="duracion" class="form-control" id="moduleDuration" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -312,21 +308,21 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="temaNombre-{{ $tema->id }}" class="form-label">Nombre del Tema</label>
-                        <input 
-                            type="text" 
-                            name="nombre" 
-                            class="form-control" 
-                            id="temaNombre-{{ $tema->id }}" 
-                            value="{{ $tema->nombre }}" 
+                        <input
+                            type="text"
+                            name="nombre"
+                            class="form-control"
+                            id="temaNombre-{{ $tema->id }}"
+                            value="{{ $tema->nombre }}"
                             required>
                     </div>
                     <div class="mb-3">
                         <label for="temaDescripcion-{{ $tema->id }}" class="form-label">Descripción</label>
-                        <textarea 
-                            name="descripcion" 
-                            class="form-control" 
-                            id="temaDescripcion-{{ $tema->id }}" 
-                            rows="3" 
+                        <textarea
+                            name="descripcion"
+                            class="form-control"
+                            id="temaDescripcion-{{ $tema->id }}"
+                            rows="3"
                             required>{{ $tema->descripcion }}</textarea>
                     </div>
                 </div>
@@ -346,7 +342,7 @@
     const caracteresRestantes = document.getElementById('caracteresRestantes');
     const maxLength = descripcion.getAttribute('maxlength');
     const currentLength = descripcion.value.length;
-    
+
     const remaining = maxLength - currentLength;
     caracteresRestantes.textContent = `${remaining} caracteres restantes`;
 
