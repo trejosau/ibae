@@ -627,7 +627,7 @@ public function storeCategoria(Request $request)
 
             // Crear el pedido
             $pedido = Pedidos::create([
-                'total' => 0, // Será actualizado después de calcular el total
+                'total' => 0,
                 'estado' => $estado,
                 'clave_entrega' => $claveEntrega,
                 'fecha_hora_pedido' => now(),
@@ -643,6 +643,12 @@ public function storeCategoria(Request $request)
             foreach ($sessionCarrito as $index => $producto) {
                 $productoId = $index;
                 $productoRegistro = Productos::findOrFail($productoId);
+                $productoRegistro->stock += $producto['cantidad'];
+                $productoRegistro->save(); // Guardar el cambio de stock
+                // Verificar si hay suficiente stock disponible
+                if ($productoRegistro->stock < $producto['cantidad']) {
+                    throw new \Exception('Stock insuficiente para el producto solicitado.');
+                }
 
                 // Determinar el precio aplicado
                 $precioAplicado = $esEstudiante
@@ -658,9 +664,6 @@ public function storeCategoria(Request $request)
                 $total += $precioAplicado * $producto['cantidad'];
                 $descuentoTotal += $descuento * $producto['cantidad'];
 
-
-                $productoRegistro->stock += $producto['cantidad'];
-
                 // Crear el detalle del pedido
                 DetallePedido::create([
                     'id_pedido' => $pedido->id,
@@ -671,7 +674,8 @@ public function storeCategoria(Request $request)
                 ]);
             }
 
-            dd('fin');
+
+
 
             // Actualizar el total del pedido
             $pedido->update([
