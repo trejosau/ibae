@@ -10,10 +10,10 @@
 <body>
     <div class="main-container">
         <a href="/tienda" class="back-link">← Volver a la tienda</a>
-    
+
         <div class="checkout-container">
             <h2>Detalles del Pedido</h2>
-    
+
             <div class="checkout-content">
                 <!-- Lista de Productos con stock suficiente -->
                 <div class="checkout-items">
@@ -31,7 +31,7 @@
                         </div>
                     @endforeach
                 </div>
-    
+
                 <!-- Errores de Stock -->
                 @if (count($errores_stock) > 0)
                     <div class="checkout-items">
@@ -50,11 +50,11 @@
                         @endforeach
                     </div>
                 @endif
-    
+
                 <!-- Resumen del Pedido -->
                 <div class="checkout-summary">
                     <h3>Resumen del Pedido</h3>
-    
+
                     <div class="order-summary">
                         <div class="order-item">Subtotal de Productos:</div>
                         @php $subtotal = 0; @endphp
@@ -70,7 +70,7 @@
                             <h3>Subtotal: ${{ number_format($subtotal, 2) }}</h3>
                         </div>
                     </div>
-    
+
                     <form action="{{ route('pago') }}" method="POST">
                         @csrf
                         <button type="submit" class="checkout-button">Proceder al Pago</button>
@@ -79,7 +79,7 @@
             </div>
         </div>
     </div>
-    
+
     <style>
         /* Contenedor Principal */
         .main-container {
@@ -90,7 +90,7 @@
             padding-left: 20px;
             padding-right: 20px;
         }
-    
+
         .back-link {
             display: inline-block;
             margin-bottom: 20px;
@@ -98,11 +98,11 @@
             color: #333;
             text-decoration: none;
         }
-    
+
         .back-link:hover {
             text-decoration: underline;
         }
-    
+
         .checkout-container {
             padding: 20px;
             background-color: #f8f9fa;
@@ -110,33 +110,33 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             color: #333;
         }
-    
+
         .checkout-container h2 {
             text-align: center;
             font-size: 2rem;
             color: #333;
             margin-bottom: 30px;
         }
-    
+
         /* Estructura Principal */
         .checkout-content {
             display: grid;
             gap: 30px;
         }
-    
+
         @media (min-width: 768px) {
             .checkout-content {
                 grid-template-columns: 2fr 1fr;
             }
         }
-    
+
         /* Productos */
         .checkout-items {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
-    
+
         .checkout-item {
             display: flex;
             align-items: center;
@@ -147,11 +147,11 @@
             padding: 15px;
             transition: box-shadow 0.3s ease;
         }
-    
+
         .checkout-item:hover {
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
         }
-    
+
         /* Imagen del Producto */
         .product-img-container {
             width: 80px;
@@ -160,47 +160,47 @@
             overflow: hidden;
             background-color: #f0f0f0;
         }
-    
+
         .product-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-    
+
         .product-details {
             display: flex;
             flex-direction: column;
             gap: 5px;
         }
-    
+
         .product-name {
             font-size: 1.2rem;
             font-weight: 600;
         }
-    
+
         .product-price, .product-quantity, .product-total {
             font-size: 0.9rem;
             color: #666;
         }
-    
+
         /* Errores de Stock */
         .error-title {
             font-size: 1.5rem;
             color: #ff5a5f;
             margin-bottom: 15px;
         }
-    
+
         .error-item {
             background-color: #fff3f3;
             border: 1px solid #ff5a5f;
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
         }
-    
+
         .error-stock-info, .error-quantity {
             font-size: 0.9rem;
             color: #666;
         }
-    
+
         /* Resumen del Pedido */
         .checkout-summary {
             padding: 25px;
@@ -209,29 +209,29 @@
             border: 1px solid #ddd;
             text-align: center;
         }
-    
+
         .checkout-summary h3 {
             font-size: 1.8rem;
             margin-bottom: 15px;
         }
-    
+
         .order-summary {
             text-align: left;
             font-size: 1rem;
             margin-bottom: 20px;
         }
-    
+
         .order-item {
             margin: 10px 0;
             font-size: 1rem;
             color: #555;
         }
-    
+
         .subtotal {
             margin-top: 20px;
             font-weight: bold;
         }
-    
+
         /* Botón de Pago */
         .checkout-button {
             margin-top: 20px;
@@ -245,12 +245,12 @@
             transition: background-color 0.3s ease;
             width: 100%;
         }
-    
+
         .checkout-button:hover {
             background-color: #444;
         }
     </style>
-    
+
 
 
     @include('components.footer')

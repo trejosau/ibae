@@ -19,21 +19,21 @@
             --color-texto: #26415E; /* Azul medio */
             --color-footer: #0B1B32; /* Azul noche */
         }
-        
+
         /* Tipografía */
         .titulo-grande {
             font-size: 30px;
             font-weight: bold;
             color: var(--color-primario); /* Azul oscuro */
         }
-        
+
         /* Precio */
         .precio {
             color: var(--color-acento); /* Rosa oscuro */
             font-size: 1.2rem;
             margin-bottom: 1rem;
         }
-        
+
         /* Botón "Agregar al carrito" */
         .btn-agg {
             background-color: var(--color-primario); /* Azul oscuro */
@@ -46,11 +46,11 @@
             width: 100%;
             margin-top: auto;
         }
-        
+
         .btn-agg:hover {
             background-color: var(--color-acento); /* Rosa oscuro */
         }
-        
+
         /* Contenedor de productos */
         .productos-container {
             background-color: var(--color-fondo);
@@ -59,12 +59,12 @@
             width: 100%;
             padding: 20px 0;
         }
-        
+
         .productos-wrapper {
             display: flex;
             transition: transform 0.5s ease;
         }
-        
+
         /* Tarjetas de productos */
         .card-title {
             color: var(--color-texto); /* Azul medio */
@@ -75,7 +75,7 @@
             font-size: 1rem;
             margin-bottom: 0.5rem;
         }
-        
+
         .producto-card {
             background-color: var(--color-fondo); /* Fondo claro */
             min-width: 220px;
@@ -85,7 +85,7 @@
             justify-content: space-between;
             height: 100%;
         }
-        
+
         .card {
             background-color: rgba(255, 255, 255, 0.7); /* Fondo blanco semitransparente */
             text-decoration: none;
@@ -94,12 +94,12 @@
             padding: 10px;
             backdrop-filter: blur(5px); /* Efecto de desenfoque detrás */
         }
-        
+
         .card:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
-        
+
         /* Botones del carrusel */
         .carousel-control-prev,
         .carousel-control-next {
@@ -117,12 +117,12 @@
             border-radius: 50%;
             transition: background-color 0.3s ease;
         }
-        
+
         .carousel-control-prev:hover,
         .carousel-control-next:hover {
             background-color: var(--color-acento); /* Rosa oscuro */
         }
-        
+
         /* Contenedor del catálogo */
         .catalog-container {
             background-color: var(--color-fondo);
@@ -131,7 +131,7 @@
             max-width: 400px;
             margin: 0 auto;
         }
-        
+
         .catalog-title {
             font-size: 2rem;
             color: var(--color-primario); /* Azul oscuro */
@@ -139,7 +139,7 @@
             margin-bottom: 1.5rem;
             text-transform: uppercase;
         }
-        
+
         .catalog-link {
             display: inline-block;
             font-size: 1.25rem;
@@ -150,27 +150,33 @@
             border-radius: 50px;
             transition: background-color 0.3s, transform 0.3s ease;
         }
-        
+
         .catalog-link:hover {
             background-color: var(--color-acento); /* Rosa oscuro */
             color: var(--color-texto); /* Azul medio */
             transform: translateY(-5px);
         }
-        
+
         .catalog-link:active {
             transform: translateY(0);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        
+
         </style>
-        
+
 
 @include('components.navbarTienda')
 
 
-
+    @if(session('error'))
+        <div class="alert alert-danger alert-custom">
+            {{ session('error') }}
+        </div>
+    @endif
 <div class="contenedor-imagen container-fluid ps-0 pe-0">
+
+
     <div class="row g-0" style="margin-top: 100px;">
         <div class="col-lg-8 col-12 px-1">
             <!-- Carrusel -->
