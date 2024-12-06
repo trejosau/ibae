@@ -76,7 +76,9 @@ Route::get('/salon', [SalonController::class, 'index'])->name('salon.index');
 Route::middleware('auth')->group(function () {
     Route::get('/salon/agendar', [SalonController::class, 'agendar'])->name('salon.agendar');
     Route::get('/salon/confirmar', [SalonController::class, 'confirmar'])->name('salon.confirmar');
+    
 });
+
 
 
 
@@ -86,6 +88,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');
         Route::post('/dashboard/servicios/agregar', [ServiciosController::class, 'agregarServicio'])->name('servicios.agregar');
         Route::post('/dashboard/servicios/agregar-categoria', [ServiciosController::class, 'agregarCategoria'])->name('servicios.agregarCategoria');
+        Route::post('/salon/registrar-cita', [DashboardController::class, 'registrarCita'])->name('salon.registrarCita');
     });
 
     Route::middleware(['role:admin'])->group(function () {

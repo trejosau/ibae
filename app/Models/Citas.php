@@ -15,6 +15,7 @@ class Citas extends Model
     protected $fillable = [
         'id_estilista',
         'id_comprador',
+        'cliente',
         'fecha_hora_creacion',
         'fecha_hora_inicio_cita',
         'fecha_hora_fin_cita',
@@ -26,6 +27,14 @@ class Citas extends Model
         'nueva_fecha_hora_inicio_cita',
         'motivo_reprogramacion',
     ];
+
+    protected $casts = [
+        'fecha_hora_creacion' => 'datetime',
+        'fecha_hora_inicio_cita' => 'datetime',
+        'fecha_hora_fin_cita' => 'datetime',
+        'nueva_fecha_hora_inicio_cita' => 'datetime',
+    ];
+    
 
     public function estilista() : \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
