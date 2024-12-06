@@ -73,9 +73,6 @@ class ServiciosDisponibles extends Component
     }
 
 
-
-
-
     public function obtenerHorariosLibres()
     {
         // Verificar que los parámetros necesarios estén definidos

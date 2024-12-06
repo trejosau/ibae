@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Administrador;
+
 use App\Models\Auditoria;
 use App\Models\Categorias;
 use App\Models\DetalleCompra;
+use App\Models\DetalleCita;
 use App\Models\Subcategoria;
 use App\Models\Categorias_de_Servicios;
 use App\Models\Citas;
 use App\Models\Colegiaturas;
 use App\Models\Comprador;
 use App\Models\Compras;
+use Carbon\Carbon;
 use App\Models\DetalleVenta;
 use App\Models\Estilista;
 use App\Models\Estudiante;
@@ -26,6 +29,7 @@ use App\Models\User;
 use App\Models\Ventas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -204,12 +208,43 @@ class DashboardController extends Controller
 
     public function compraEntregada($id)
     {
+        // Buscar la compra
         $compra = Compras::find($id);
+
+        // Cambiar el estado de la compra a 'entregado'
         $compra->estado = 'entregado';
         $compra->fecha_entrega = now();
         $compra->save();
-        return redirect()->route('dashboard.compras')->with('success', 'Compra actualizada el stock se actualizara automaticamente.');
+
+        // Obtener los detalles de la compra (productos y cantidades)
+        $detalleCompra = DB::table('detalle_compra')
+            ->where('id_compra', $id)
+            ->get(['id_producto', 'cantidad']); // Obtener producto y cantidad de la compra
+
+        foreach ($detalleCompra as $detalle) {
+            // Obtener el producto
+            $producto = Productos::find($detalle->id_producto);  // Busca el producto por su ID
+
+            // Si el producto no existe, saltamos al siguiente
+            if (!$producto) {
+                continue;
+            }
+
+            // Actualizar el stock del producto
+            $producto->stock += $detalle->cantidad;
+            $producto->save();
+
+            // Si el stock es mayor que 0, cambiar el estado del producto a 'activo'
+            if ($producto->stock > 0) {
+                $producto->estado = 'activo';
+                $producto->save();
+            }
+        }
+
+        // Redirigir con mensaje de éxito
+        return redirect()->route('dashboard.compras')->with('success', 'Compra actualizada y stock de productos actualizado automáticamente.');
     }
+
 
     public function compraCancelar(Request $request, $id)
     {
@@ -269,36 +304,66 @@ class DashboardController extends Controller
     }
     public function compras(Request $request)
     {
+        // Cargar todos los proveedores y paginación específica
         $todosLosProveedores = Proveedores::all();
         $proveedores = Proveedores::paginate(4, ['*'], 'proveedores_page');
-        $proveedores->load(['productos' => function($query) {
+        $proveedores->load(['productos' => function ($query) {
             $query->whereIn('estado', ['activo', 'agotado']);
         }]);
 
+        // Cargar compras ordenadas por fecha
         $compras = Compras::with('proveedor')
             ->orderBy('fecha_compra', 'desc')
             ->paginate(6, ['*'], 'compras_page');
 
-        $productos = Productos::where('estado', '!=', 'inactivo')
+        $stockMin = $request->input('stock_min', 0);
+        $stockMax = $request->input('stock_max', PHP_INT_MAX);
+        $proveedorId = $request->input('proveedor', null);
+
+        $productosQuery = Productos::where('estado', '!=', 'inactivo');
+
+        // Aplicar filtro dinámico según valores ingresados
+        if ($stockMin !== null) {
+            $productosQuery->where('stock', '>=', $stockMin);
+        }
+
+        if ($stockMax !== null) {
+            $productosQuery->where('stock', '<=', $stockMax);
+        }
+
+        if ($proveedorId !== null) {
+            $productosQuery->where('id_proveedor', $proveedorId);
+        }
+
+        $productos = $productosQuery
             ->with('proveedor')
             ->paginate(10, ['*'], 'productos_page')->onEachSide(2);
 
         $catalogoProductos = Productos::where('estado', '!=', 'inactivo')->get();
 
-        // Obtener el filtro de la URL, por defecto 'todos'
-        $filtro = $request->get('filtro' );
-        $notificaciones = Notificaciones::where('user_id', auth()->id());
+        // Gestión de notificaciones
+        $filtro = $request->get('filtro'); // Obtener filtro de URL
+        $notificacionesQuery = Notificaciones::where('user_id', auth()->id());
 
         if ($filtro === 'leidas') {
-            $notificaciones = $notificaciones->whereNotNull('leida_at');
+            $notificacionesQuery->whereNotNull('leida_at');
         } elseif ($filtro === 'no-leidas') {
-            $notificaciones = $notificaciones->whereNull('leida_at');
+            $notificacionesQuery->whereNull('leida_at');
         }
-        $notificaciones = $notificaciones->get();
 
+        $notificaciones = $notificacionesQuery->get();
 
-        return view('dashboard.index', compact('proveedores', 'compras', 'productos', 'catalogoProductos', 'notificaciones', 'todosLosProveedores'));
+        // Retornar la vista con las variables necesarias
+        return view('dashboard.index', compact(
+            'proveedores',
+            'compras',
+            'productos',
+            'catalogoProductos',
+            'notificaciones',
+            'todosLosProveedores'
+        ));
     }
+
 
 
 
@@ -361,8 +426,27 @@ class DashboardController extends Controller
 
     public function citas(Request $request)
     {
-        return view('dashboard.index');
+        $estilistas = Estilista::all();
+        $citas = Citas::with('comprador')->get()->map(function ($cita) {
+            $cita->fecha_inicio = $cita->fecha_hora_inicio_cita->format('Y-m-d'); // Solo fecha
+            $cita->hora_inicio = $cita->fecha_hora_inicio_cita->format('H:i:s'); // Solo hora
+            return $cita;
+        });
+        $servicios = Servicios::all();
+        return view('dashboard.index', compact('estilistas', 'citas', 'servicios'));
     }
+
+    
+
+
+
+
+
+
+
+
+
+
 
     public function servicios(Request $request)
     {
@@ -401,7 +485,14 @@ class DashboardController extends Controller
 
     public function usuarios(Request $request)
     {
-        // Obtener todos los usuarios con las relaciones de las demás tablas
+        // Obtener los parámetros del filtro
+        $nombre = $request->input('nombre');
+        $ap_paterno = $request->input('ap_paterno');
+        $ap_materno = $request->input('ap_materno');
+        $username = $request->input('username');
+        $rol = $request->input('rol');
+
+        // Construir la consulta
         $usuarios = User::with([
             'persona',
             'persona.administrador',
@@ -409,10 +500,42 @@ class DashboardController extends Controller
             'persona.profesor',
             'persona.estudiante',
             'persona.comprador',
-             'roles'
-        ])->paginate(16);
+            'roles'
+        ]);
+
+        if ($username) {
+            $usuarios = $usuarios->where('username', 'like', '%'.$username.'%');
+        }
+
+        // Filtro por Nombre
+        if ($nombre) {
+            $usuarios = $usuarios->whereHas('persona', function($query) use ($nombre) {
+                $query->where('nombre', 'like', '%'.$nombre.'%');
+            });
+        }
+
+        if ($ap_paterno) {
+            $usuarios = $usuarios->whereHas('persona', function($query) use ($ap_paterno) {
+                $query->where('ap_paterno', 'like', '%'.$ap_paterno.'%');
+            });
+        }
+
+        if ($ap_materno) {
+            $usuarios = $usuarios->whereHas('persona', function($query) use ($ap_materno) {
+                $query->where('ap_materno', 'like', '%'.$ap_materno.'%');
+            });
+        }
 
 
+        // Filtro por Rol
+        if ($rol) {
+            $usuarios = $usuarios->whereHas('persona', function($query) use ($rol) {
+                $query->whereHas($rol);
+            });
+        }
+
+        // Obtener los usuarios con paginación
+        $usuarios = $usuarios->paginate(12);
 
         // Pasar los usuarios a la vista
         return view('dashboard.index', compact('usuarios'));

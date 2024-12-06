@@ -62,9 +62,15 @@
                         </table>
                     </div>
 
-                    <!-- Paginación Compras -->
+                    <!-- Paginación de Compras -->
                     <div class="d-flex justify-content-between mt-3">
-                        {{ $compras->appends(['proveedores_page' => $proveedores->currentPage(), 'productos_page' => $productos->currentPage()])->links('pagination::bootstrap-5') }}
+                        {{ $compras->appends([
+                            'proveedores_page' => $proveedores->currentPage(),
+                            'productos_page' => $productos->currentPage(),
+                            'stock_min' => request('stock_min'),
+                            'stock_max' => request('stock_max'),
+                            'proveedor' => request('proveedor'),
+                        ])->links('pagination::bootstrap-5') }}
                     </div>
 
                     <button class="btn btn-primary mt-3 w-100 w-md-auto" data-bs-toggle="modal" data-bs-target="#modal-agregar-compra">Agregar Compra</button>
@@ -150,6 +156,42 @@
                     <h5 class="card-title text-center" style="color: #8b5e83;">
                         <i class="fas fa-boxes fa-2x"></i> Tabla de Stock
                     </h5>
+                    <form method="GET" action="{{ route('dashboard.compras') }}" class="mb-3">
+                        <div class="row">
+                            <!-- Filtro por Stock Mínimo -->
+                            <div class="col-md-3">
+                                <label for="stock_min" class="form-label">Stock Mínimo</label>
+                                <input type="number" name="stock_min" id="stock_min" class="form-control"
+                                       value="{{ request('stock_min') }}" placeholder="0">
+                            </div>
+
+                            <!-- Filtro por Stock Máximo -->
+                            <div class="col-md-3">
+                                <label for="stock_max" class="form-label">Stock Máximo</label>
+                                <input type="number" name="stock_max" id="stock_max" class="form-control"
+                                       value="{{ request('stock_max') }}" placeholder="100">
+                            </div>
+
+                            <!-- Filtro por Proveedor -->
+                            <div class="col-md-3">
+                                <label for="proveedor" class="form-label">Proveedor</label>
+                                <select name="proveedor" id="proveedor" class="form-control">
+                                    <option value="">Todos</option>
+                                    @foreach($todosLosProveedores as $proveedor)
+                                        <option value="{{ $proveedor->id }}"
+                                            {{ request('proveedor') == $proveedor->id ? 'selected' : '' }}>
+                                            {{ $proveedor->nombre_empresa}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Botón de Filtrar -->
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                            </div>
+                        </div>
+                    </form>
 
                     <!-- Contenedor para scroll horizontal -->
                     <div class="table-responsive">
@@ -157,6 +199,7 @@
                             <thead style="background-color: #f7d6e0;">
                             <tr>
                                 <th>Producto</th>
+                                <th>Proveedor</th>
                                 <th>Stock Actual</th>
                             </tr>
                             </thead>
@@ -174,6 +217,7 @@
                                 @endphp
                                 <tr class="{{ $bgColor }}">
                                     <td>{{ $producto->nombre }}</td>
+                                    <td>{{ $producto->proveedor->nombre_empresa }}</td>
                                     <td>{{ $producto->stock }}</td>
                                 </tr>
                             @endforeach
@@ -181,9 +225,15 @@
                         </table>
                     </div>
 
-                    <!-- Paginación Productos -->
+                    <!-- Paginación de Productos // -->
                     <div class="d-flex justify-content-between mt-3">
-                        {{ $productos->appends(['proveedores_page' => $proveedores->currentPage(), 'productos_page' => $productos->currentPage()])->links('pagination::bootstrap-5', ['onEachSide' => 2]) }}
+                        {{ $productos->appends([
+                            'proveedores_page' => $proveedores->currentPage(),
+                            'compras_page' => $compras->currentPage(),
+                            'stock_min' => request('stock_min'),
+                            'stock_max' => request('stock_max'),
+                            'proveedor' => request('proveedor'),
+                        ])->links('pagination::bootstrap-5') }}
                     </div>
                 </div>
             </div>
@@ -353,10 +403,14 @@
 
                     <!-- Paginación proveedores -->
                     <div class="d-flex justify-content-between mt-3">
+                        <!-- Paginación de Proveedores -->
                         <div>
                             {{ $proveedores->appends([
                                 'compras_page' => $compras->currentPage(),
-                                'productos_page' => $productos->currentPage()
+                                'productos_page' => $productos->currentPage(),
+                                'stock_min' => request('stock_min'),
+                                'stock_max' => request('stock_max'),
+                                'proveedor' => request('proveedor'),
                             ])->links('pagination::bootstrap-5') }}
                         </div>
                         <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modal-agregar-proveedor">

@@ -8,6 +8,7 @@ use App\Http\Controllers\NotificacionesController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PlataformaController;
 use App\Http\Controllers\ProductosController;
+use App\Http\Controllers\ProfesorController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SalonController;
 use App\Http\Controllers\ServiciosController;
@@ -75,7 +76,9 @@ Route::get('/salon', [SalonController::class, 'index'])->name('salon.index');
 Route::middleware('auth')->group(function () {
     Route::get('/salon/agendar', [SalonController::class, 'agendar'])->name('salon.agendar');
     Route::get('/salon/confirmar', [SalonController::class, 'confirmar'])->name('salon.confirmar');
+    
 });
+
 
 
 
@@ -85,6 +88,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');
         Route::post('/dashboard/servicios/agregar', [ServiciosController::class, 'agregarServicio'])->name('servicios.agregar');
         Route::post('/dashboard/servicios/agregar-categoria', [ServiciosController::class, 'agregarCategoria'])->name('servicios.agregarCategoria');
+        Route::post('/salon/registrar-cita', [DashboardController::class, 'registrarCita'])->name('salon.registrarCita');
     });
 
     Route::middleware(['role:admin'])->group(function () {
@@ -117,9 +121,17 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/productos/{producto}/subcategoria/{subcategoria}', [ProductosController::class, 'eliminarSubcategoriaProducto'])->name('productos.subcategoria.destroy');
         Route::post('/productos/{producto}/subcategoria', [ProductosController::class, 'agregarSubcategoria'])->name('productos.subcategoria.agregar');
         Route::get('/dashboard/usuarios', [DashboardController::class, 'usuarios'])->name('dashboard.usuarios');
+        Route::get('/dashboard/usuarios/bloquear/{usuario}', [UsuarioController::class, 'bloquear'])->name('usuarios.bloquear');
+        Route::get('/dashboard/usuarios/desbloquear/{usuario}', [UsuarioController::class, 'desbloquear'])->name('usuarios.desbloquear');
         Route::post('/dashboard/usuarios/agregarAdmin', [UsuarioController::class, 'agregarAdmin'])->name('usuarios.agregarAdmin');
         Route::post('/dashboard/usuarios/agregarEstilista', [UsuarioController::class, 'agregarEstilista'])->name('usuarios.agregarEstilista');
         Route::post('/dashboard/usuarios/agregarProfesor', [UsuarioController::class, 'agregarProfesor'])->name('usuarios.agregarProfesor');
+
+        Route::get('profesor/{id}/dar-baja', [ProfesorController::class, 'darBaja'])->name('profesor.darBaja');
+        Route::get('profesor/{id}/dar-vacaciones', [ProfesorController::class, 'darVacaciones'])->name('profesor.darVacaciones');
+        Route::get('profesor/{id}/reactivar', [ProfesorController::class, 'reactivar'])->name('profesor.reactivar');
+        Route::get('profesor/{id}/terminar-vacaciones', [ProfesorController::class, 'terminarVacaciones'])->name('profesor.terminarVacaciones');
+
         Route::get('/dashboard/auditoria', [DashboardController::class, 'auditoria'])->name('dashboard.auditoria');
         Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
         Route::get('/notificaciones/marcar-leida/{id}', [NotificacionesController::class, 'marcarLeida'])->name('notificaciones.marcarLeida');

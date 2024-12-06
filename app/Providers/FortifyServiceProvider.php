@@ -61,6 +61,10 @@ class FortifyServiceProvider extends ServiceProvider
                     Auth::login($user, $request->filled('remember'));
                     return $user;
                 }
+
+                if ($user->estado === 'inactivo') {
+                    return redirect()->route('login')->with('error', 'Tu cuenta esta bloqueada.');
+                }
             }
 
             return null;

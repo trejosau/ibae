@@ -1,20 +1,23 @@
 <style>
     .agotado-banner {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(255, 0, 0, 0.7); /* Fondo rojo con transparencia */
+        top: 10px;
+        left: -35px;
+        width: 200px;
+        height: 50px;
+        background: rgba(255, 0, 0, 0.8); /* Fondo rojo con más opacidad */
         color: white;
-        font-size: 24px;
-        font-weight: bold;
-        transform: rotate(-45deg);
-        transform-origin: 100% 0;
+        font-size: 16px;
+
         text-align: center;
-        line-height: 100%;
-        padding-top: 40%;
+        line-height: 50px; /* Alineación vertical del texto */
+        transform: rotate(-45deg); /* Rotación para el efecto de banner */
+        transform-origin: left top; /* Ajuste del punto de rotación */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra para mayor visibilidad */
+        text-transform: uppercase; /* Texto en mayúsculas */
+        letter-spacing: 1px; /* Espaciado entre letras */
     }
+
 
     .card-container {
         position: relative;

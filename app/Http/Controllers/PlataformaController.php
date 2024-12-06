@@ -219,7 +219,7 @@ public function actualizarTemas(Request $request, $moduloId)
         ]);
 
         if ($request->horas > 120) {
-            return response()->json(['error' => 'Horas excedidas: el máximo permitido es 120.'], 422);
+            return redirect()->back()->with('error', 'Horas excedidas: el máximo permitido es 120.');
         }
 
         Certificados::create($request->all());

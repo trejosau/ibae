@@ -6,6 +6,7 @@ use App\Mail\EnvioCredenciales;
 use App\Models\Administrador;
 use App\Models\Comprador;
 use App\Models\Estilista;
+use App\Models\Estudiante;
 use App\Models\Persona;
 use App\Models\Profesor;
 use App\Models\User;
@@ -47,14 +48,40 @@ class UsuarioController extends Controller
             'ap_materno' => 'required|string|max:255',
             'phone' => ['required', 'string', 'min:13', 'max:13', 'regex:/^\+52\d{10}$/'],
             'username' => 'required|string|max:255|unique:users,username',
-            'email' => 'required|email|max:255|unique:users,email',
+            'email' => 'required|email|max:255',
         ]);
 
 
         // Generar contraseña aleatoria
         $password = $this->generarContrasenaAleatoria();
 
-        // Iniciar una transacción
+        $emailExiste = User::where('email', $request->email)->first();
+
+        if ($emailExiste) {
+            // Si el email ya existe, actualizamos los datos
+            $user = User::where('email', $request->email)->first();
+            $user->assignRole('admin');
+            $persona = $user->persona;
+
+            $persona->update([
+                'nombre' => $request->nombre,
+                'ap_paterno' => $request->ap_paterno,
+                'ap_materno' => $request->ap_materno,
+                'telefono' => $request->telefono,
+            ]);
+
+            Administrador::create([
+                'id_persona' => $persona->id,
+                'created_at' => now(),
+                'updated_at' => null,
+            ]);
+
+
+
+            $user->save();
+
+            return redirect()->route('dashboard.usuarios')->with('success', 'Usuario con este correo ya existe, datos actualizados y correo enviado.');
+        }
         \DB::beginTransaction();
 
         try {
@@ -123,6 +150,27 @@ class UsuarioController extends Controller
             'email' => 'required|email|max:255|unique:users,email',
         ]);
 
+        $emailExiste = User::where('email', $request->email)->first();
+        if ($emailExiste) {
+            $user = User::where('email', $request->email)->first();
+            $user->assignRole('estilista');
+
+            $persona = $user->persona;
+
+            $persona->update([
+                'nombre' => $request->nombre,
+                'ap_paterno' => $request->ap_paterno,
+                'ap_materno' => $request->ap_materno,
+                'telefono' => $request->phone,
+            ]);
+
+            Estilista::create([
+                'estado' => 'activo',
+                'id_persona' => $persona->id,
+            ]);
+
+            return redirect()->route('dashboard.usuarios')->with('success', 'Usuario con este correo ya existe, datos actualizados y correo enviado.');
+        }
 
 
 
@@ -198,7 +246,7 @@ class UsuarioController extends Controller
             'RFC' => 'nullable|string|max:20',
             'CURP' => 'nullable|string|max:20',
             'username' => 'required|string|max:255|unique:users,username',
-            'email' => 'required|email|max:255|unique:users,email',
+            'email' => 'required|email|max:255',
             'especialidad' => 'required|string|in:estilismo,barbería,maquillaje,uñas',
             'zipcode' => 'required|string|size:5',
             'ciudad' => 'required|string|max:100',
@@ -208,10 +256,37 @@ class UsuarioController extends Controller
             'n_int' => 'nullable|string|max:10',
         ]);
 
-        dd($request->all());
+        $emailExiste = User::where('email', $request->email)->first();
 
+        if ($emailExiste) {
+            // Si el email ya existe, actualizamos los datos
+            $user = User::where('email', $request->email)->first();
 
-
+            $persona = $user->persona;
+            $persona->update([
+                'nombre' => $request->nombre,
+                'ap_paterno' => $request->ap_paterno,
+                'ap_materno' => $request->ap_materno,
+                'telefono' => $request->phone,
+            ]);
+            Profesor::create([
+                'especialidad' => $request->especialidad,
+                'fecha_contratacion' => now(),
+                'RFC' => $request->RFC,
+                'CURP' => $request->CURP,
+                'estado' => 'activo',
+                'id_persona' => $persona->id,
+                'zipcode' => $request->zipcode,
+                'ciudad' => $request->ciudad,
+                'colonia' => $request->colonia,
+                'calle' => $request->calle,
+                'n_ext' => $request->n_ext,
+                'n_int' => $request->n_int,
+                'created_at' => now(),
+                'updated_at' => null,
+            ]);
+            $user->assignRole('profesor');
+        }
 
         // Generate a random password
         $password = $this->generarContrasenaAleatoria();
@@ -286,4 +361,21 @@ class UsuarioController extends Controller
             return redirect()->route('dashboard.usuarios')->with('error', 'Error al crear usuario: ' . $e->getMessage());
         }
     }
+
+    public function bloquear($id)
+    {
+        $usuario = User::find($id);
+        $usuario->estado = 'inactivo';
+        $usuario->save();
+        return redirect()->route('dashboard.usuarios')->with('success', 'Usuario bloqueado con éxito.');
+    }
+
+    public function desbloquear($id)
+    {
+        $usuario = User::find($id);
+        $usuario->estado = 'activo';
+        $usuario->save();
+        return redirect()->route('dashboard.usuarios')->with('success', 'Usuario desbloqueado con éxito.');
+    }
+
 }
