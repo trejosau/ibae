@@ -35,7 +35,10 @@
                         <tbody>
                             @forelse($citas as $cita)
                                 <tr>
-                                    <td>{{ $cita->comprador->persona->nombre ?? 'No asignado' }}</td>
+                                    <td>
+                                        {{ $cita->comprador->persona->nombre ?? $cita->cliente ?? 'No asignado' }}
+                                    </td>
+                                    
                                     <td>{{ $cita->estilista->persona->nombre ?? 'No asignado' }}</td>
                                     <td>{{ \Carbon\Carbon::parse($cita->fecha_hora_inicio_cita)->format('Y-m-d') }}</td> 
                                     <td>{{ \Carbon\Carbon::parse($cita->fecha_hora_inicio_cita)->format('H:i:s') }}</td> 
@@ -91,7 +94,7 @@
                 </div>
                 <div class="modal-body">
                     <ul class="list-group">
-                        <li class="list-group-item"><strong>Cliente:</strong> {{ $cita->cliente->nombre ?? 'Sin asignar' }}</li>
+                        <li class="list-group-item"><strong>Cliente:</strong>   {{ $cita->comprador->persona->nombre ?? $cita->cliente ?? 'No asignado' }}</li>
                         <li class="list-group-item"><strong>Fecha:</strong> {{ $cita->fecha }}</li>
                         <li class="list-group-item"><strong>Hora:</strong> {{ $cita->hora }}</li>
                         <li class="list-group-item"><strong>Estado:</strong> {{ $cita->estado ?? 'Pendiente' }}</li>
@@ -102,9 +105,7 @@
     </div>
     @endforeach
 
-
-    
-   <!-- Modal para registrar cita -->
+<!-- Modal para registrar cita -->
 <div class="modal fade" id="modal-agregar-cita" tabindex="-1" aria-labelledby="modalRegistrarCitaLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -115,67 +116,45 @@
             <form action="{{ route('salon.registrarCita') }}" method="POST">
                 @csrf
                 <div class="modal-body">
-                    <!-- Comprador -->
                     <div class="mb-3">
-                        <label for="comprador_id" class="form-label">ID Comprador</label>
-                        <input type="number" class="form-control" id="comprador_id" name="comprador_id" required>
-                    </div>
-                    
-                    <!-- Estilista -->
-                    <div class="mb-3">
-                        <label for="estilista_id" class="form-label">ID Estilista</label>
-                        <input type="number" class="form-control" id="estilista_id" name="estilista_id" required>
+                        <label for="cliente" class="form-label">Nombre del Cliente</label>
+                        <input type="text" class="form-control" id="cliente" name="cliente" required>
                     </div>
 
-                    <!-- Fecha y hora de inicio de la cita -->
+                    <div class="mb-3">
+                        <label for="estilista_id" class="form-label">Estilista</label>
+                        <select class="form-control" id="estilista_id" name="estilista_id" required>
+                            <option value="">Seleccione un Estilista</option>
+                            @foreach ($estilistas as $estilista)
+                                <option value="{{ $estilista->id }}">{{ $estilista->persona->nombre ?? 'No asignado' }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div class="mb-3">
                         <label for="fecha_hora_inicio_cita" class="form-label">Fecha y Hora de Inicio</label>
                         <input type="datetime-local" class="form-control" id="fecha_hora_inicio_cita" name="fecha_hora_inicio_cita" required>
                     </div>
 
-                    <!-- Fecha y hora de fin de la cita -->
-                    <div class="mb-3">
-                        <label for="fecha_hora_fin_cita" class="form-label">Fecha y Hora de Fin</label>
-                        <input type="datetime-local" class="form-control" id="fecha_hora_fin_cita" name="fecha_hora_fin_cita" required>
-                    </div>
-
-                    <!-- Total -->
                     <div class="mb-3">
                         <label for="total" class="form-label">Total</label>
                         <input type="number" class="form-control" id="total" name="total" step="0.01" required>
                     </div>
 
-                    <!-- Anticipo -->
-                    <div class="mb-3">
-                        <label for="anticipo" class="form-label">Anticipo</label>
-                        <input type="number" class="form-control" id="anticipo" name="anticipo" step="0.01" required>
+                    <div class="mb-3" id="servicios-container">
+                        <label for="servicios" class="form-label">Servicios</label>
+                        <div class="input-group mb-2">
+                            <select class="form-control" name="servicios[]" required>
+                                <option value="">Seleccione un servicio</option>
+                                @foreach ($servicios as $servicio)
+                                    <option value="{{ $servicio->id }}">{{ $servicio->nombre }}</option>
+                                @endforeach
+                            </select>
+                            <button type="button" class="btn btn-secondary" onclick="agregarServicio()">+</button>
+                        </div>
                     </div>
+                     </div>
 
-                    <!-- Pago restante -->
-                    <div class="mb-3">
-                        <label for="pago_restante" class="form-label">Pago Restante</label>
-                        <input type="number" class="form-control" id="pago_restante" name="pago_restante" required>
-                    </div>
-
-                    <!-- Estado de pago -->
-                    <div class="mb-3">
-                        <label for="estado_pago" class="form-label">Estado de Pago</label>
-                        <select class="form-control" id="estado_pago" name="estado_pago" required>
-                            <option value="pendiente">concluido</option>
-                            <option value="pagado">anticipo</option>
-                        </select>
-                    </div>
-
-                    <!-- Estado de la cita -->
-                    <div class="mb-3">
-                        <label for="estado_cita" class="form-label">Estado de la Cita</label>
-                        <select class="form-control" id="estado_cita" name="estado_cita" required>
-                            <option value="programada">Programada</option>
-                            <option value="cancelada">Cancelada</option>
-                            <option value="completada">Completada</option>
-                        </select>
-                    </div>
-                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     <button type="submit" class="btn btn-primary">Guardar Cita</button>
@@ -185,6 +164,27 @@
     </div>
 </div>
 
+<script>
+    function agregarServicio() {
+        const container = document.getElementById('servicios-container');
+        const newSelect = `
+            <div class="input-group mb-2">
+                <select class="form-control" name="servicios[]" required>
+                    <option value="">Seleccione un servicio</option>
+                    @foreach ($servicios as $servicio)
+                        <option value="{{ $servicio->id }}">{{ $servicio->nombre }}</option>
+                    @endforeach
+                </select>
+                <button type="button" class="btn btn-danger" onclick="eliminarServicio(this)">-</button>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', newSelect);
+    }
 
-    
+    function eliminarServicio(button) {
+        button.parentElement.remove();
+    }
+</script>
+
+
 </div>

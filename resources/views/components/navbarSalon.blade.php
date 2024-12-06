@@ -12,7 +12,7 @@
                 <ul class="navbar-nav mx-auto">
                     @if(auth()->check())
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Mis Citas</a>
+                        <a class="nav-link" href="/miscitas">Mis Citas</a>
                     </li>
                     @if( auth()->user()->hasRole('estilista'))
 

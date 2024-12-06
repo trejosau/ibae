@@ -45,4 +45,9 @@ class Citas extends Model
     {
         return $this->belongsTo(Comprador::class, 'id_comprador');
     }
+
+    public function detalleCita()
+    {
+        return $this->hasMany(DetalleCita::class, 'id_cita');
+    }
 }

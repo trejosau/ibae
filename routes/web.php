@@ -71,6 +71,8 @@ Route::middleware(['auth', 'role:cliente'])->group(function () {
     Route::get('/checkout', [ProductosController::class, 'checkout'])->name('checkout');
     Route::put('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.changePassword');
     Route::get('/miscitas', [SalonController::class, 'miscitas'])->name('miscitas');
+    Route::put('/citas/{id}/cancelar', [SalonController::class, 'cancelarCita'])->name('citas.cancelar');
+
 
 });
 
@@ -81,7 +83,6 @@ Route::middleware('auth')->group(function () {
     
 });
 
-Route::get('/miscitas', [SalonController::class, 'miscitas'])->name('miscitas');
 
 
 
@@ -90,7 +91,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('role: estilista')->group(function () {
         Route::get('/miagenda', [SalonController::class, 'miagenda'])->name('miagenda');
     });
-    
+
     Route::middleware('role:admin|estilista')->group(function () {
         Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');
         Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');

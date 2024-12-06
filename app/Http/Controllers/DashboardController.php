@@ -436,6 +436,50 @@ class DashboardController extends Controller
         return view('dashboard.index', compact('estilistas', 'citas', 'servicios'));
     }
 
+
+
+public function registrarCita(Request $request)
+{
+    // Validación de datos
+    $validatedData = $request->validate([
+        'cliente' => 'required|string|max:255',
+        'estilista_id' => 'required|exists:estilistas,id',
+        'fecha_hora_inicio_cita' => 'required|date',
+        'total' => 'required|numeric|min:0',
+        'estado_cita' => 'required|in:programada,cancelada,completada',
+        'servicios' => 'required|array', // Servicios seleccionados
+        'servicios.*' => 'exists:servicios,id', // Cada servicio debe existir
+    ]);
+
+    // Crear la cita
+    $cita = Citas::create([
+        'id_estilista' => $validatedData['estilista_id'],
+        'cliente' => $validatedData['cliente'],
+        'fecha_hora_creacion' => now(),
+        'fecha_hora_inicio_cita' => $validatedData['fecha_hora_inicio_cita'],
+        'total' => $validatedData['total'],
+        'estado_cita' => 'programada',
+        'id_comprador' => null,
+        'fecha_hora_fin_cita' => null,
+        'anticipo' => 0,
+        'pago_restante' => 0,
+        'estado_pago' => 'concluido',
+        'nueva_fecha_hora_inicio_cita' => null,
+        'motivo_reprogramacion' => null,
+    ]);
+
+    // Registrar los servicios en detalle_cita
+    foreach ($validatedData['servicios'] as $servicioId) {
+        DB::table('detalle_cita')->insert([
+            'id_cita' => $cita->id, // ID de la cita recién creada
+            'id_servicio' => $servicioId,
+        ]);
+    }
+
+    // Redirigir con un mensaje de éxito
+    return redirect()->back()->with('success', 'Cita registrada exitosamente.');
+}
+
     
 
 
