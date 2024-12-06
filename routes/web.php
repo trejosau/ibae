@@ -70,6 +70,8 @@ Route::middleware(['auth', 'role:cliente'])->group(function () {
     Route::post('/profile/image-update', [ProfileController::class, 'imageUpdate'])->name('profile.imageUpdate');
     Route::get('/checkout', [ProductosController::class, 'checkout'])->name('checkout');
     Route::put('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.changePassword');
+    Route::get('/miscitas', [SalonController::class, 'miscitas'])->name('miscitas');
+
 });
 
 Route::get('/salon', [SalonController::class, 'index'])->name('salon.index');
@@ -79,10 +81,16 @@ Route::middleware('auth')->group(function () {
     
 });
 
+Route::get('/miscitas', [SalonController::class, 'miscitas'])->name('miscitas');
 
 
 
 Route::middleware(['auth'])->group(function () {
+
+    Route::middleware('role: estilista')->group(function () {
+        Route::get('/miagenda', [SalonController::class, 'miagenda'])->name('miagenda');
+    });
+    
     Route::middleware('role:admin|estilista')->group(function () {
         Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');
         Route::get('/dashboard/servicios', [DashboardController::class, 'servicios'])->name('dashboard.servicios');

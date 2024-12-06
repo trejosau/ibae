@@ -238,63 +238,76 @@
         }
 
         .photo-gallery {
-            padding: 50px 0;
-        }
+    padding: 50px 0;
+}
 
-        .photo-gallery h2 {
-            margin-bottom: 30px;
-            font-size: 26px;
-            text-align: center;
-            color: #333;
-        }
+.photo-gallery h2 {
+    margin-bottom: 30px;
+    font-size: 26px;
+    text-align: center;
+    color: #333;
+}
 
-        .photo-gallery .photos {
-            display: flex;
-            flex-wrap: wrap;
-        }
+.photo-gallery .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrar el contenido horizontalmente */
+    justify-content: center;
+}
 
-        .photo-gallery .item {
-            padding: 15px;
-        }
+.photo-gallery .photos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; /* Espaciado entre las imágenes */
+    justify-content: center; /* Centrar las imágenes horizontalmente */
+}
 
-        .photo-gallery figure {
-            position: relative;
-            overflow: hidden;
-        }
+.photo-gallery .item {
+    flex: 1 1 calc(25% - 30px); /* Ajusta el tamaño a 25% con margen */
+    max-width: 300px; /* Ancho máximo para limitar el tamaño */
+    box-sizing: border-box;
+}
 
-        .photo-gallery img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            object-fit: cover;
-            aspect-ratio: 1 / 1; /* Mantener proporción 1:1 */
-            display: block;
-            transition: transform 0.3s ease-in-out;
-        }
+.photo-gallery figure {
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+}
 
-        /* Efecto de brillo (shine) */
-        .photo-gallery figure::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -75%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 100%);
-            transform: skewX(-25deg);
-            transition: left 0.75s ease-in-out;
-            z-index: 1;
-        }
+.photo-gallery img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+    aspect-ratio: 1 / 1; /* Mantener proporción 1:1 */
+    display: block;
+    transition: transform 0.3s ease-in-out;
+}
 
-        .photo-gallery figure:hover::before {
-            left: 125%;
-        }
+/* Efecto de brillo (shine) */
+.photo-gallery figure::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 100%);
+    transform: skewX(-25deg);
+    transition: left 0.75s ease-in-out;
+    z-index: 1;
+}
 
-        /* Efecto hover en la imagen */
-        .photo-gallery figure:hover img {
-            transform: scale(1.05);
-            z-index: 2;
-        }
+.photo-gallery figure:hover::before {
+    left: 125%;
+}
+
+/* Efecto hover en la imagen */
+.photo-gallery figure:hover img {
+    transform: scale(1.05);
+    z-index: 2;
+}
+
     </style>
 </head>
 <body>
@@ -355,36 +368,34 @@
             </div>
             <div class="row photos">
                 <div class="col-sm-6 col-md-4 col-lg-3 item">
-                    <a href="https://peakbusinessvaluation.com/wp-content/uploads/Business-Valuation-for-Buying-a-Hair-and-Nail-Salon.jpg" data-lightbox="photos">
+                    <a href="{{asset('images/WhatsApp Image 2024-12-06 at 8.03.18 AM (1).jpeg')}}" data-lightbox="photos">
                         <figure>
-                            <img class="img-fluid" src="https://peakbusinessvaluation.com/wp-content/uploads/Business-Valuation-for-Buying-a-Hair-and-Nail-Salon.jpg" alt="Salón 1">
+                            <img class="img-fluid" src="{{asset('images/WhatsApp Image 2024-12-06 at 8.03.18 AM (1).jpeg')}}" alt="Salón 1">
                         </figure>
                     </a>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 item">
-                    <a href="https://www.daysmart.com/salon/wp-content/uploads/sites/2/2023/09/fetaure-beauty-bar.jpg" data-lightbox="photos">
+                    <a href="{{asset('images/WhatsApp Image 2024-12-06 at 8.03.18 AM.jpeg')}}" data-lightbox="photos">
                         <figure>
-                            <img class="img-fluid" src="https://www.daysmart.com/salon/wp-content/uploads/sites/2/2023/09/fetaure-beauty-bar.jpg" alt="Salón 2">
+                            <img class="img-fluid" src="{{asset('images/WhatsApp Image 2024-12-06 at 8.03.18 AM.jpeg')}}" alt="Salón 2">
                         </figure>
                     </a>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 item">
-                    <a href="https://5.imimg.com/data5/SELLER/Default/2021/1/KU/WP/HK/121167792/beauty-palour-interior-500x500.jpg" data-lightbox="photos">
+                    <a href="{{asset('images/WhatsApp Image 2024-12-06 at 8.03.19 AM.jpeg')}}" data-lightbox="photos">
                         <figure>
-                            <img class="img-fluid" src="https://5.imimg.com/data5/SELLER/Default/2021/1/KU/WP/HK/121167792/beauty-palour-interior-500x500.jpg" alt="Salón 3">
+                            <img class="img-fluid" src="{{asset('images/WhatsApp Image 2024-12-06 at 8.03.19 AM.jpeg')}}" alt="Salón 3">
                         </figure>
                     </a>
                 </div>
-                <div class="col-sm-6 col-md-4 col-lg-3 item">
-                    <a href="https://img.freepik.com/premium-photo/elegant-modern-beauty-salon_456977-1626.jpg" data-lightbox="photos">
-                        <figure>
-                            <img class="img-fluid" src="https://img.freepik.com/premium-photo/elegant-modern-beauty-salon_456977-1626.jpg" alt="Salón 4">
-                        </figure>
-                    </a>
-                </div>
+
             </div>
         </div>
     </div>
+
+
+
+
     <div class="row pb-5">
         <div class="col-12">
             <div class="row">

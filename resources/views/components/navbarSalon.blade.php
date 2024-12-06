@@ -10,21 +10,17 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
+                    @if(auth()->check())
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Servicios</a>
+                        <a class="nav-link" href="#">Mis Citas</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Instalaciones</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Estilistas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Referencias</a>
-                    </li>
+                    @if( auth()->user()->hasRole('estilista'))
+
                     <li class="nav-item">
                         <a class="nav-link" href="#">Agenda</a>
                     </li>
+                    @endif
+                    @endif
                 </ul>
                 <div class="dropdown ms-3" style="display: flex; align-items: center;">
                     @if(auth()->check())
