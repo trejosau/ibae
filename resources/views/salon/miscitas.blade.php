@@ -6,6 +6,21 @@
     <title>Document</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
+        .back-link {
+        color: #333;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .back-link:hover {
+        color: #555; /* Color más claro al pasar el mouse */
+        text-decoration: underline;
+        transform: translateX(-5px); /* Movimiento sutil hacia la izquierda */
+    }
         /* General card styling */
         .card {
             border-radius: 10px;
@@ -72,6 +87,8 @@
     @include('components.navbarSalon')
 
     <div class="container">
+
+
         @if (session('error'))
             <div class="alert alert-danger">
                 {{ session('error') }}
@@ -84,6 +101,9 @@
             </div>
         @else
             <div class="row" style="padding-top: 120px">
+                <div class="mb-3">
+                    <a href="/salon" class="back-link">← Volver a la Salon</a>
+                </div>
                 @foreach ($citas as $cita)
                     <div class="col-md-6 mb-4">
                         <div class="card">

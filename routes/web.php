@@ -83,14 +83,13 @@ Route::middleware('auth')->group(function () {
     
 });
 
+Route::get('/miagenda', [SalonController::class, 'miagenda'])->name('miagenda');
 
 
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::middleware('role: estilista')->group(function () {
-        Route::get('/miagenda', [SalonController::class, 'miagenda'])->name('miagenda');
-    });
+
 
     Route::middleware('role:admin|estilista')->group(function () {
         Route::get('/dashboard/citas', [DashboardController::class, 'citas'])->name('dashboard.citas');

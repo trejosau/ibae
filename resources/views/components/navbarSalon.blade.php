@@ -109,8 +109,9 @@ background-color: #934e66; /* Color de fondo al hacer clic */
                     @if( auth()->user()->hasRole('estilista'))
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Agenda</a>
+                        <a class="nav-link" href="{{ route('miagenda') }}">Agenda</a>
                     </li>
+                    
                     @endif
                     @endif
                 </ul>
@@ -128,7 +129,6 @@ background-color: #934e66; /* Color de fondo al hacer clic */
                                     <button class="dropdown-item" type="submit">Cerrar sesión</button>
                                 </form>
                             </li>
-                            <li><a class="dropdown-item" href="/pedidos">Mis Citas</a></li>
                         </ul>
                     @else
                         <a href="{{ route('login') }}" class="btn nav-icons">Iniciar sesión</a>

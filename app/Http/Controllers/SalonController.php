@@ -24,8 +24,23 @@ class SalonController extends Controller
 
     public function miagenda()
     {
-        return view('salon.miagenda');
+        // Obtenemos al estilista autenticado
+        $estilista = Auth::user()->persona?->estilista;
+    
+        if (!$estilista) {
+            return redirect()->back()->with('error', 'No tienes citas asignadas.');
+        }
+    
+        // Obtenemos las citas del estilista, incluyendo comprador, detalleCita y servicio
+        $citas = Citas::where('id_estilista', $estilista->id)
+            ->with(['comprador.persona', 'detalleCita.servicio'])
+            ->orderBy('fecha_hora_inicio_cita', 'asc')
+            ->get();
+    
+        // Retornamos la vista con las citas del estilista
+        return view('salon.miagenda', compact('citas'));
     }
+    
 
     public function miscitas()
     {
