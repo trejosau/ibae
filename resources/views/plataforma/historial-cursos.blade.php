@@ -77,15 +77,38 @@
                             </p>
 
                             <!-- Botones según el rol y el estado -->
-                            @if(auth()->user()->hasRole('admin') && $apertura->estado == 'programado')
-                                <button class="btn btn-danger btn-sm" style="position: absolute; top: 10px; right: 10px;" data-bs-toggle="modal" data-bs-target="#inscribirAlumnosModal-{{ $apertura->id }}">
-                                    Inscribir
-                                </button>
-                            @elseif((auth()->user()->hasRole('profesor') || auth()->user()->hasRole('admin')) && $apertura->estado == 'en curso')
-                            <a href="{{ route('plataforma.registrarAsistencia', $apertura->id) }}" class="btn btn-info btn-sm registrar-btn" style="position: absolute; top: 10px; right: 10px; z-index: 15;" target="_blank">
+                            @if (auth()->user()->hasRole('admin'))
+                                @if ($apertura->estado == 'programado')
+                                    <button class="btn btn-danger btn-sm"
+                                            style="position: absolute; top: 10px; right: 10px;"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#inscribirAlumnosModal-{{ $apertura->id }}">
+                                        Inscribir
+                                    </button>
+                                @elseif ($apertura->estado == 'en curso')
+                                    <div class="d-flex flex-column align-items-end" style="position: absolute; top: 10px; right: 10px; z-index: 15;">
+                                        <a href="{{ route('plataforma.finalizarCurso', $apertura->id) }}"
+                                           class="btn btn-danger btn-sm mb-1">
+                                            Finalizar Curso
+                                        </a>
+                                        <a href="{{ route('plataforma.registrarAsistencia', $apertura->id) }}"
+                                           class="btn btn-info btn-sm"
+                                           target="_blank">
+                                            Asistencia/Colegiaturas
+                                        </a>
+                                    </div>
+                                @endif
+                            @endif
+
+                            @if ((auth()->user()->hasRole('profesor') || auth()->user()->hasRole('admin')) && $apertura->estado == 'en curso' && !auth()->user()->hasRole('admin'))
+                                <a href="{{ route('plataforma.registrarAsistencia', $apertura->id) }}"
+                                   class="btn btn-info btn-sm"
+                                   style="position: absolute; top: 10px; right: 10px; z-index: 15;"
+                                   target="_blank">
                                     Asistencia/Colegiaturas
                                 </a>
                             @endif
+
                         </div>
 
                         <!-- Detalles del curso (visible para todos los roles) -->

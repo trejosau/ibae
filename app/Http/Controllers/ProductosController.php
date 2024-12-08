@@ -434,35 +434,9 @@ public function storeCategoria(Request $request)
 {
         $request->validate([
             'nombre_categoria' => 'required|string|max:255|unique:categorias,nombre',
-            'foto_categoria' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'crop_x_categoria' => 'nullable|numeric',
-            'crop_y_categoria' => 'nullable|numeric',
-            'crop_width_categoria' => 'nullable|numeric',
-            'crop_height_categoria' => 'nullable|numeric',
         ]);
-
-
-
-        $manager = new ImageManager(new Driver());
-        $image = $manager->read($request->file('foto_categoria')->getContent());
-        if ($request->has('crop_x_categoria') && $request->has('crop_y_categoria') && $request->has('crop_width_categoria') && $request->has('crop_height_categoria')) {
-            $image->crop(
-                $request->input('crop_width_categoria'),
-                $request->input('crop_height_categoria'),
-                $request->input('crop_x_categoria'),
-                $request->input('crop_y_categoria')
-            );
-        }
-
-
-        $image = $image->toWebp(90);
-        $fileName = "{$request->nombre_categoria}.webp";
-        Storage::disk('s3')->put("images/categorias/{$fileName}", $image);
-
-        $url = Storage::disk('s3')->url("images/categorias/{$fileName}");
         $categoria = Categorias::create([
             'nombre' => $request->nombre_categoria,
-            'photo' => $url,
         ]);
 
         return redirect()->route('dashboard.productos')->with('success', 'Categoría creada exitosamente');

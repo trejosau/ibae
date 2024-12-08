@@ -80,7 +80,7 @@ Route::get('/salon', [SalonController::class, 'index'])->name('salon.index');
 Route::middleware('auth')->group(function () {
     Route::get('/salon/agendar', [SalonController::class, 'agendar'])->name('salon.agendar');
     Route::get('/salon/confirmar', [SalonController::class, 'confirmar'])->name('salon.confirmar');
-    
+
 });
 
 Route::get('/miagenda', [SalonController::class, 'miagenda'])->name('miagenda');
@@ -187,6 +187,7 @@ Route::middleware(['auth', 'role:profesor|admin|estudiante'])->group(function ()
         Route::middleware([])->group(function () {
             Route::get('/plataforma/cursos/historial-cursos', [PlataformaController::class, 'historialCursos'])->name('plataforma.historial-cursos');
             Route::get('/plataforma/cursos/ver-asistencia/{curso_apertura_id}', [PlataformaController::class, 'registrarAsistencia'])->name('plataforma.registrarAsistencia');
+            Route::get('/plataforma/cursos/finalizar-curso/{curso_apertura_id}', [PlataformaController::class, 'finalizarCurso'])->name('plataforma.finalizarCurso');
             Route::post('/plataforma/cursos/guardar-asistencia/{curso_apertura_id}', [PlataformaController::class, 'guardarAsistencia'])->name('guardarAsistencia');
         });
 

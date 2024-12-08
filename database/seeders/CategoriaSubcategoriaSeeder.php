@@ -14,7 +14,6 @@ class CategoriaSubcategoriaSeeder extends Seeder
         $categorias = [
             [
                 'nombre' => 'Cuidado Capilar',
-                'photo' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/categorias/Cuidado%20Capilar.webp',
                 'subcategorias' => [
                     'Champús y Acondicionadores',
                     'Tratamientos Capilares',
@@ -23,7 +22,6 @@ class CategoriaSubcategoriaSeeder extends Seeder
             ],
             [
                 'nombre' => 'Cuidado Facial',
-                'photo' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/categorias/Cuidado%20Facial.webp',
                 'subcategorias' => [
                     'Limpiadores',
                     'Hidratantes y Cremas',
@@ -32,7 +30,6 @@ class CategoriaSubcategoriaSeeder extends Seeder
             ],
             [
                 'nombre' => 'Cuidado Corporal',
-                'photo' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/categorias/Cuidado%20Corporal.webp',
                 'subcategorias' => [
                     'Hidratación Corporal',
                     'Scrubs y Exfoliantes',
@@ -41,7 +38,6 @@ class CategoriaSubcategoriaSeeder extends Seeder
             ],
             [
                 'nombre' => 'Uñas',
-                'photo' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/categorias/U%C3%B1as.webp',
                 'subcategorias' => [
                     'Esmaltes',
                     'Herramientas',
@@ -50,7 +46,6 @@ class CategoriaSubcategoriaSeeder extends Seeder
             ],
             [
                 'nombre' => 'Barberia',
-                'photo' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/categorias/Barberia.webp',
                 'subcategorias' => [
                     'Afeitado y Cejas',
                     'Aceites y Bálsamos para Barba',
@@ -59,7 +54,6 @@ class CategoriaSubcategoriaSeeder extends Seeder
             ],
             [
                 'nombre' => 'Maquillaje',
-                'photo' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/categorias/Maquillaje.webp',
                 'subcategorias' => [
                     'Bases y Correctores',
                     'Sombras y Rubores',
@@ -68,7 +62,6 @@ class CategoriaSubcategoriaSeeder extends Seeder
             ],
             [
                 'nombre' => 'Herramientas y equipos',
-                'photo' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/categorias/Herramientas%20y%20equipos.webp',
                 'subcategorias' => [
                     'Secadores y Plancha',
                     'Cortadoras y Tijeras',
@@ -77,7 +70,6 @@ class CategoriaSubcategoriaSeeder extends Seeder
             ],
             [
                 'nombre' => 'Kits',
-                'photo' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/categorias/Kits.webp',
                 'subcategorias' => [
                     'Manicura y Pedicura',
                     'Maquillaje',
@@ -86,7 +78,6 @@ class CategoriaSubcategoriaSeeder extends Seeder
             ],
             [
                 'nombre' => 'Accesorios',
-                'photo' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/categorias/Accesorios.webp',
                 'subcategorias' => [
                     'Pinzas y Brochas',
                     'Decoración de uñas',
@@ -94,7 +85,6 @@ class CategoriaSubcategoriaSeeder extends Seeder
             ],
             [
                 'nombre' => 'Productos',
-                'photo' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/categorias/Productos.webp',
                 'subcategorias' => [
                     'Champús',
                     'Cremas y Sprays',
@@ -103,7 +93,6 @@ class CategoriaSubcategoriaSeeder extends Seeder
             ],
             [
                 'nombre' => 'Tintes y Coloracion',
-                'photo' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/categorias/Tintes%20y%20Coloracion.webp',
                 'subcategorias' => [
                     'Tintes',
                     'Decoloración',
@@ -117,7 +106,6 @@ class CategoriaSubcategoriaSeeder extends Seeder
             // Crear la categoría
             $cat = Categorias::create([
                 'nombre' => $categoria['nombre'],
-                'photo' => $categoria['photo'],
             ]);
 
             // Crear las subcategorías asociadas a la categoría

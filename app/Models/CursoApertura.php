@@ -20,7 +20,9 @@ class CursoApertura extends Model
         'monto_colegiatura',
         'dia_clase',
         'hora_clase',
+        'hora_clase_fin',
         'estado',
+        'id_profesor',
     ];
 
     public function estudiantes()

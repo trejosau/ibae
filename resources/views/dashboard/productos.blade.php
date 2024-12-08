@@ -405,28 +405,6 @@
                             <input type="text" class="form-control" id="nombre_categoria" name="nombre_categoria" required>
                         </div>
 
-                        <!-- Foto -->
-                        <div class="mb-3">
-                            <label for="foto_categoria" class="form-label">Foto de la Categoría</label>
-                            <div class="d-flex align-items-center">
-                                <div class="photo-upload-btn position-relative">
-                                    <input type="file" class="form-control position-absolute top-0 start-0 opacity-0" id="foto_categoria" name="foto_categoria" accept="image/*" style="width: 100%; height: 100%;" onchange="previewImageCategoria(event)">
-                                    <input type="hidden" id="crop_x_categoria" name="crop_x_categoria">
-                                    <input type="hidden" id="crop_y_categoria" name="crop_y_categoria">
-                                    <input type="hidden" id="crop_width_categoria" name="crop_width_categoria">
-                                    <input type="hidden" id="crop_height_categoria" name="crop_height_categoria">
-                                    <div class="btn-circle">
-                                        <i class="fa fa-camera"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Contenedor para la imagen y el área de recorte -->
-                            <div class="mt-3">
-                                <img id="image_to_crop_categoria" src="#" alt="Image to crop" style="max-width: 100%; display: none;">
-                            </div>
-                        </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

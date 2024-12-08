@@ -30,14 +30,25 @@ use Illuminate\Support\Facades\DB;
 
 class PlataformaController extends Controller
 {
+    public function finalizarCurso($cursoAperturaId)
+        {
+            $cursoApertura = CursoApertura::find($cursoAperturaId);
+
+            $cursoApertura->estado = 'finalizado';
+            $cursoApertura->save();
+
+            return redirect()->route('plataforma.historial-cursos')->with('success', 'Curso finalizado correctamente.');
+        }
+
     public function iniciarCursosHoy()
     {
         $hoy = Carbon::today();
 
         // Buscar los cursos que deben iniciarse hoy
-        $cursosIniciados = CursoApertura::where('fecha_inicio', $hoy)
+        $cursosIniciados = CursoApertura::where('fecha_inicio', '<=', $hoy)
             ->where('estado', 'programado')
             ->get();
+
 
         foreach ($cursosIniciados as $curso) {
             $curso->estado = 'en curso';
@@ -254,28 +265,33 @@ public function actualizarTemas(Request $request, $moduloId)
 
         // Cursos por rol
         if ($esAdmin) {
+            // Consulta para administradores
             $cursosApertura = CursoApertura::with(['moduloCursos.modulo.temas', 'curso']);
         } elseif ($esProfesor) {
+            // Obtener el profesor asociado al usuario
             $profesor = Profesor::whereHas('persona', function ($query) use ($user) {
                 $query->where('usuario', $user->id);
             })->first();
 
             if ($profesor) {
-                $cursosApertura = CursoApertura::whereHas('moduloCursos', function ($query) use ($profesor) {
-                    $query->where('id_profesor', $profesor->id);
-                })->with(['moduloCursos.modulo.temas', 'curso']);
+                // Consulta para profesores
+                $cursosApertura = CursoApertura::where('id_profesor', $profesor->id);
+
             }
         }
 
-        // Aplicar filtro de estado si se proporciona
-        if (!empty($estadoFiltro) && $cursosApertura instanceof \Illuminate\Database\Eloquent\Builder) {
+// Aplicar filtro de estado si se proporciona
+        if (!empty($estadoFiltro) && isset($cursosApertura)) {
             $cursosApertura->where('estado', $estadoFiltro);
         }
 
-        // Paginación de cursos apertura con filtro
-        $cursosAperturaPaginados = $cursosApertura instanceof \Illuminate\Database\Eloquent\Builder
+// Paginar resultados si existen cursos
+        $cursosAperturaPaginados = isset($cursosApertura)
             ? $cursosApertura->paginate(3)->appends(['estado' => $estadoFiltro])
-            : collect();
+            : collect(); // Retornar colección vacía si no hay cursos
+
+
+
 
         // Otros datos necesarios con paginación
         $todosCursos = Cursos::where('estado', 'activo')->get();
@@ -396,7 +412,9 @@ public function actualizarTemas(Request $request, $moduloId)
 
     public function storeCursoApertura(CursoAperturaRequest $request)
     {
-        // Los datos ya están validados
+
+
+        // Los datos ya están validadosd
         $validatedData = $request->validated();
 
 
@@ -442,16 +460,35 @@ public function actualizarTemas(Request $request, $moduloId)
                 ->with('error', 'Este curso tiene una duración de ' . $duracion_horas . ' horas y la hora de inicio es ' . $hora_clase . '. Esto excede las 10 PM. Por favor, seleccione otra hora.');
         }
 
-        $cursoApertura = CursoApertura::create([
-            'id_curso' => $validatedData['id_curso'],
-            'nombre' => $nombreRegistro,
-            'fecha_inicio' => $fecha_inicio,
-            'monto_colegiatura' => $validatedData['monto_colegiatura'],
-            'dia_clase' => $dia_semana,
-            'hora_clase' => $hora_clase,
-            'hora_clase_fin' => $hora_final->format('H:i:s'),
-            'id_profesor' => $id_profesor,
-        ]);
+        $cursoExistente = CursoApertura::where('dia_clase', $validatedData['dia_clase']) // Filtro por el día de la clase
+        ->where(function ($query) use ($hora_inicio, $hora_final) {
+            $query->whereBetween('hora_clase', [$hora_inicio, $hora_final]) // Verifica si el horario de inicio se superpone
+            ->orWhereBetween('hora_clase_fin', [$hora_inicio, $hora_final]) // Verifica si el horario de finalización se solapa
+            ->orWhere(function($query) use ($hora_inicio, $hora_final) {
+                // Verifica si el nuevo curso se encuentra dentro de otro curso
+                $query->where('hora_clase', '<', $hora_inicio)
+                    ->where('hora_clase_fin', '>', $hora_final);
+            });
+        })
+            ->exists();
+
+        if (!$cursoExistente) {
+            // Si no existe un curso en el mismo horario, podemos continuar con la creación del curso
+            $cursoApertura = CursoApertura::create([
+                'id_curso' => $validatedData['id_curso'],
+                'nombre' => $nombreRegistro,
+                'fecha_inicio' => $fecha_inicio,
+                'monto_colegiatura' => $validatedData['monto_colegiatura'],
+                'dia_clase' => $validatedData['dia_clase'],
+                'hora_clase' => $hora_inicio->format('H:i:s'),
+                'hora_clase_fin' => $hora_final->format('H:i:s'),
+                'id_profesor' => $id_profesor,
+            ]);
+        } else {
+            // Si hay un curso en el mismo horario, retornamos un error
+            return redirect()->back()->withErrors(['error' => 'Ya existe un curso a esa hora en ese día.']);
+        }
+
 
 
         foreach ($validatedData['modulos'] as $semana => $moduloId) {

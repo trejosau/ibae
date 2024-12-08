@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CursoAperturaRequest extends FormRequest
+class  CursoAperturaRequest extends FormRequest
 {
     /**
      * Determina si el usuario está autorizado para hacer esta solicitud.
@@ -29,7 +29,7 @@ class CursoAperturaRequest extends FormRequest
                     $hora = \Carbon\Carbon::createFromFormat('H:i', $value);
                     $inicio = \Carbon\Carbon::createFromTime(8, 0);  // 8:00 AM
                     $fin = \Carbon\Carbon::createFromTime(22, 0);   // 10:00 PM
-    
+
                     if ($hora->lt($inicio) || $hora->gt($fin)) {
                         $fail('La hora debe estar entre las 8:00 a.m. y las 10:00 p.m.');
                     }
@@ -40,7 +40,7 @@ class CursoAperturaRequest extends FormRequest
             'id_profesor' => 'required|exists:profesores,id',
         ];
     }
-    
+
 
     /**
      * Mensajes personalizados para las reglas de validación.
