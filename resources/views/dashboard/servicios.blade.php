@@ -54,12 +54,18 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-editar-servicio-{{ $servicio->id }}">
-                                            <i class="fas fa-edit"></i> Modificar
+                                        <button 
+                                            class="btn btn-primary btn-sm" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#modalEditarServicio{{ $servicio->id }}">
+                                            Modificar
                                         </button>
-                                        <button class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash-alt"></i> Eliminar
-                                        </button>
+                                     <!-- Botón que abre el modal -->
+                                    @if ($servicio->estado == 'activo')
+                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-{{ $servicio->id }}">
+                                        <i class="fas fa-trash-alt"></i> Eliminar
+                                    </button>
+                                    @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -171,6 +177,95 @@
             </div>
         </div>
     </div>
+
+    @foreach ($servicios as $servicio)
+<div class="modal fade" id="modalEditarServicio{{ $servicio->id }}" tabindex="-1" aria-labelledby="modalEditarServicioLabel{{ $servicio->id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('servicios.update', $servicio->id) }}">
+                @csrf
+                @method('PUT')
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarServicioLabel{{ $servicio->id }}">Modificar Servicio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombre{{ $servicio->id }}" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre{{ $servicio->id }}" name="nombre" value="{{ $servicio->nombre }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoria{{ $servicio->id }}" class="form-label">Categoría</label>
+                        <select class="form-select" id="categoria{{ $servicio->id }}" name="categoria" required>
+                            @foreach ($categorias as $categoria)
+                                <option value="{{ $categoria->id }}" 
+                                    {{ $servicio->categoria == $categoria->id ? 'selected' : '' }}>
+                                    {{ $categoria->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                        
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="descripcion{{ $servicio->id }}" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcion{{ $servicio->id }}" name="descripcion" required>{{ $servicio->descripcion }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="duracion_minima{{ $servicio->id }}" class="form-label">Duración mínima</label>
+                        <input type="number" class="form-control" id="duracion_minima{{ $servicio->id }}" name="duracion_minima" value="{{ $servicio->duracion_minima }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="duracion_maxima{{ $servicio->id }}" class="form-label">Duración máxima</label>
+                        <input type="number" class="form-control" id="duracion_maxima{{ $servicio->id }}" name="duracion_maxima" value="{{ $servicio->duracion_maxima }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="precio{{ $servicio->id }}" class="form-label">Precio</label>
+                        <input type="number" class="form-control" id="precio{{ $servicio->id }}" name="precio" value="{{ $servicio->precio }}" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="estado{{ $servicio->id }}" class="form-label">Estado</label>
+                        <select class="form-select" id="estado{{ $servicio->id }}" name="estado" required>
+                            <option value="activo" {{ $servicio->estado == 'activo' ? 'selected' : '' }}>Activo</option>
+                            <option value="inactivo" {{ $servicio->estado == 'inactivo' ? 'selected' : '' }}>Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
+
+@foreach ($servicios as $servicio)
+    <!-- Modal de Confirmación -->
+    <div class="modal fade" id="confirmDeleteModal-{{ $servicio->id }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel-{{ $servicio->id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel-{{ $servicio->id }}">Confirmar Acción</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas inactivar el servicio "{{ $servicio->nombre }}"?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form method="POST" action="{{ route('servicios.updateEstado', $servicio->id) }}">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-danger">Confirmar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endforeach
+
 
 
 </div>

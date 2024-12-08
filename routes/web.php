@@ -20,6 +20,7 @@ use App\Livewire\CatalogoTienda;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redirect;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/cambiar-admin', [ProfileController::class, 'cambiarAdmin'])->name('cambiarAdmin');
 
@@ -97,6 +98,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/servicios/agregar', [ServiciosController::class, 'agregarServicio'])->name('servicios.agregar');
         Route::post('/dashboard/servicios/agregar-categoria', [ServiciosController::class, 'agregarCategoria'])->name('servicios.agregarCategoria');
         Route::post('/salon/registrar-cita', [DashboardController::class, 'registrarCita'])->name('salon.registrarCita');
+        Route::put('/servicios/{servicio}', [ServiciosController::class, 'update'])->name('servicios.update');
+        Route::put('/servicios/update-estado/{id}', [ServiciosController::class, 'updateEstado'])->name('servicios.updateEstado');
+
     });
 
     Route::middleware(['role:admin'])->group(function () {
