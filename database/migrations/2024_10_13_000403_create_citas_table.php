@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('total', 10, 2);
             $table->decimal('anticipo', 10, 2)->nullable();
             $table->decimal('pago_restante', 10, 2)->default(0); // Nuevo campo agregado
-            $table->enum('estado_pago', ['concluido', 'anticipo']);
+            $table->enum('estado_pago', ['concluido', 'anticipo'])->nullable();
             $table->enum('estado_cita', ['programada', 'reprogramada', 'cancelada', 'completada'])->default('programada');
             $table->dateTime('nueva_fecha_hora_inicio_cita')->nullable();
             $table->string('motivo_reprogramacion')->nullable();

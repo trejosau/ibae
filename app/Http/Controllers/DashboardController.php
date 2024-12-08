@@ -424,19 +424,27 @@ class DashboardController extends Controller
 
 
 
-    public function citas(Request $request)
-    {
-        $estilistas = Estilista::all();
-        $citas = Citas::with('comprador')->get()->map(function ($cita) {
-            $cita->fecha_inicio = $cita->fecha_hora_inicio_cita->format('Y-m-d'); // Solo fecha
-            $cita->hora_inicio = $cita->fecha_hora_inicio_cita->format('H:i:s'); // Solo hora
-            return $cita;
-        });
-        $servicios = Servicios::all();
-        return view('dashboard.index', compact('estilistas', 'citas', 'servicios'));
-    }
 
 
+
+
+
+
+
+    
+public function citas(Request $request)
+{
+    $estilistas = Estilista::all();
+    $citas = Citas::with('comprador')->get()->map(function ($cita) {
+        $cita->fecha_inicio = $cita->fecha_hora_inicio_cita->format('Y-m-d'); // Solo fecha
+        $cita->hora_inicio = $cita->fecha_hora_inicio_cita->format('H:i:s'); // Solo hora
+        return $cita;
+    });
+    $servicios = Servicios::all();
+    $detalleCitas = DetalleCita::all();
+
+    return view('dashboard.index', compact('estilistas', 'citas', 'servicios', 'detalleCitas'));
+} 
 
 public function registrarCita(Request $request)
 {
@@ -447,8 +455,8 @@ public function registrarCita(Request $request)
         'fecha_hora_inicio_cita' => 'required|date',
         'total' => 'required|numeric|min:0',
         'estado_cita' => 'required|in:programada,cancelada,completada',
-        'servicios' => 'required|array', // Servicios seleccionados
-        'servicios.*' => 'exists:servicios,id', // Cada servicio debe existir
+        'servicios' => 'required|array|min:1',
+        'servicios.*' => 'exists:servicios,id',
     ]);
 
     // Crear la cita
@@ -458,7 +466,7 @@ public function registrarCita(Request $request)
         'fecha_hora_creacion' => now(),
         'fecha_hora_inicio_cita' => $validatedData['fecha_hora_inicio_cita'],
         'total' => $validatedData['total'],
-        'estado_cita' => 'programada',
+        'estado_cita' => $validatedData['estado_cita'],
         'id_comprador' => null,
         'fecha_hora_fin_cita' => null,
         'anticipo' => 0,
@@ -468,10 +476,10 @@ public function registrarCita(Request $request)
         'motivo_reprogramacion' => null,
     ]);
 
-    // Registrar los servicios en detalle_cita
+    // Registrar servicios en detalle_cita
     foreach ($validatedData['servicios'] as $servicioId) {
-        DB::table('detalle_cita')->insert([
-            'id_cita' => $cita->id, // ID de la cita recién creada
+        DetalleCita::create([
+            'id_cita' => $cita->id,
             'id_servicio' => $servicioId,
         ]);
     }
@@ -479,18 +487,6 @@ public function registrarCita(Request $request)
     // Redirigir con un mensaje de éxito
     return redirect()->back()->with('success', 'Cita registrada exitosamente.');
 }
-
-    
-
-
-
-
-
-
-
-
-
-
 
     public function servicios(Request $request)
     {
