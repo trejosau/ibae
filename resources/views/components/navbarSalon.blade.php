@@ -1,3 +1,95 @@
+<style>
+
+body {
+    margin: 0;
+    background-color: #ccf3dc;
+    overflow-x: hidden;
+}
+.btn.nav-icons {
+background-color: #cd678b; /* Color de fondo */
+color: white; /* Color del texto */
+padding: 10px 20px; /* Espaciado alrededor del texto */
+border-radius: 5px; /* Bordes redondeados */
+text-decoration: none; /* Eliminar subrayado */
+font-size: 16px; /* Tamaño de la fuente */
+font-weight: bold; /* Negrita */
+transition: background-color 0.3s, transform 0.2s; /* Transición suave */
+}
+
+.btn.nav-icons:hover {
+background-color: #a75b74; /* Color de fondo al pasar el ratón */
+transform: scale(1.05); /* Efecto de agrandamiento */
+}
+
+.btn.nav-icons:active {
+background-color: #934e66; /* Color de fondo al hacer clic */
+}
+
+.header {
+    background-color: transparent;
+    position: absolute;
+    width: 100%;
+    max-height: 110px;
+    z-index: 1000;
+    transition: background-color 0.3s ease-in-out; /* Transición de color al hacer scroll */
+    animation: slideDown 1s ease-out;
+    margin-bottom: 110px;
+}
+
+.navbar {
+    box-shadow: none;
+    padding: 0;
+}
+
+.navbar-nav {
+    display: flex;
+    justify-content: center; /* Centrar los elementos del menú */
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+.nav-item {
+    margin: 0 15px; /* Espacio entre los elementos */
+}
+
+.nav-link {
+    color: #cd678b; /* Color del texto */
+    transition: color 0.3s, border 0.3s, transform 0.3s; /* Transiciones para el color, borde y transformación */
+    padding: 10px 15px; /* Espacio interior */
+    border: 2px solid transparent; /* Borde transparente inicialmente */
+    border-radius: 50px; /* Borde circular */
+}
+
+.nav-link:hover {
+    color: #f4b3c2; /* Color del texto al pasar el mouse */
+    border-color: #f4b3c2; /* Borde al pasar el mouse */
+}
+
+.icons {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.icons a {
+    color: #cd678b;
+    margin-left: 15px;
+    transition: color 0.3s, transform 0.3s;
+}
+
+.icons a:hover {
+    color: #f4b3c2;
+    transform: rotate(15deg) scale(1.1);
+}
+
+.logo {
+    max-width: 100px; /* Ajusta el tamaño máximo según lo necesites */
+    height: auto; /* Mantiene la proporción de la imagen */
+    display: block; /* Se comporta como un bloque */
+    animation: fadeIn 1.5s ease-in-out; /* Animación de entrada */
+}
+
+</style>
 <header class="header">
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">

@@ -32,34 +32,24 @@ class SalonController extends Controller
         // Obtenemos al comprador autenticado
         $comprador = Auth::user()->persona?->comprador;
     
-        // Verificamos si no es un comprador válido
         if (!$comprador) {
             return redirect()->back()->with('error', 'No tienes citas registradas.');
         }
     
-        // Obtenemos las citas del comprador, incluyendo estilista y detalle_cita con servicios
+        // Obtenemos las citas del comprador, incluyendo estilista, detalleCita y servicio
         $citas = Citas::where('id_comprador', $comprador->id)
-            ->with(['estilista', 'detallecita.servicio'])
-            ->orderBy('fecha_hora_inicio_cita', 'asc')
-            ->get();
+        ->with(['estilista.persona', 'detalleCita.servicio'])
+        ->orderBy('fecha_hora_inicio_cita', 'asc')
+        ->get();
+    
+    
+    
+        // Depuración opcional para verificar los datos
+        // dd($citas);
     
         return view('salon.miscitas', compact('citas'));
     }
+
     
 
-    public function cancelarCita($id)
-    {
-        $cita = Citas::findOrFail($id);
-
-        if ($cita->id_comprador !== Auth::user()->persona?->comprador?->id) {
-            return redirect()->route('miscitas')->with('error', 'No puedes cancelar esta cita.');
-        }
-
-        if (in_array($cita->estado_cita, ['completada', 'cancelada'])) {
-            return redirect()->route('miscitas')->with('error', 'No puedes cancelar una cita completada o ya cancelada.');
-        }
-
-        $cita->update(['estado_cita' => 'cancelada']);
-        return redirect()->route('miscitas')->with('success', 'Cita cancelada exitosamente.');
-    }
 }

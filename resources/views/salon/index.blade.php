@@ -237,7 +237,7 @@
             color: #666;
         }
 
-        .photo-gallery {
+.photo-gallery {
     padding: 50px 0;
 }
 

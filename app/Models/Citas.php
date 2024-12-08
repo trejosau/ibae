@@ -36,17 +36,18 @@ class Citas extends Model
     ];
     
 
-    public function estilista() : \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function estilista()
     {
-        return $this->belongsTo(Estilista::class, 'id_estilista');
+        return $this->belongsTo(Estilista::class, 'id_estilista', 'id');
     }
+    
 
     public function comprador() : \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Comprador::class, 'id_comprador');
     }
 
-    public function detalleCita()
+    public function detallecita()
     {
         return $this->hasMany(DetalleCita::class, 'id_cita');
     }
