@@ -334,11 +334,15 @@
                             <select class="form-select" id="cursoSelect" name="id_curso" required>
                                 <option value="" disabled {{ old('id_curso') ? '' : 'selected' }}>Seleccione un curso</option>
                                 @foreach($cursos as $curso)
-                                    <option value="{{ $curso->id }}" data-duracion="{{ $curso->duracion_semanas }}" {{ old('id_curso') == $curso->id ? 'selected' : '' }}>
-                                        {{ $curso->nombre }} ({{ $curso->duracion_semanas }} semanas)
+                                    <option value="{{ $curso->id }}"
+                                            data-duracion="{{ $curso->duracion_horas }}"
+                                            data-duracionhoras="{{ $curso->duracion_horas }}"
+                                        {{ old('id_curso') == $curso->id ? 'selected' : '' }}>
+                                        {{ $curso->nombre }} ({{ $curso->duracion_semanas }} semanas {{ $curso->duracion_horas }} horas c/u)
                                     </option>
                                 @endforeach
                             </select>
+
                         </div>
 
                         <!-- Select para Profesores -->
