@@ -6,6 +6,7 @@ use App\Models\Servicios;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Citas;
+use Carbon\Carbon;
 
 
 class SalonController extends Controller
@@ -43,28 +44,81 @@ class SalonController extends Controller
     
 
     public function miscitas()
-    {
-        // Obtenemos al comprador autenticado
-        $comprador = Auth::user()->persona?->comprador;
-    
-        if (!$comprador) {
-            return redirect()->back()->with('error', 'No tienes citas registradas.');
-        }
-    
-        // Obtenemos las citas del comprador, incluyendo estilista, detalleCita y servicio
-        $citas = Citas::where('id_comprador', $comprador->id)
-        ->with(['estilista.persona', 'detalleCita.servicio'])
-        ->orderBy('fecha_hora_inicio_cita', 'asc')
-        ->get();
-    
-    
-    
-        // Depuración opcional para verificar los datos
-     
-    
-        return view('salon.miscitas', compact('citas'));
+{
+    $comprador = Auth::user()->persona?->comprador;
+
+    if (!$comprador) {
+        return redirect()->back()->with('error', 'No tienes citas registradas.');
     }
 
+    $citas = Citas::where('id_comprador', $comprador->id)
+        ->with(['estilista.persona', 'detalleCita.servicio'])
+        ->get()
+        ->map(function ($cita) {
+            // Calcula el total de los servicios por cita
+            $cita->totalServicios = $cita->detalleCita->sum(function ($detalle) {
+                return $detalle->servicio->precio;
+            });
+            return $cita;
+        });
+
+    // Asegurarse de que cada cita tenga el campo estado_cita accesible
+    $citas->each(function ($cita) {
+        $cita->estado_cita = $cita->estado_cita;
+    });
+
+    return view('salon.miscitas', compact('citas'));
+}
+
+
+    public function reprogramar(Request $request, $id)
+    {
+        // Validar los datos de entrada
+        $request->validate([
+            'fecha' => 'required|date',
+            'hora' => 'required|date_format:H:i',
+        ]);
     
+        // Buscar la cita por ID
+        $cita = Citas::findOrFail($id);
+    
+        // Actualizar la fecha y hora
+        $nuevaFechaHora = $request->fecha . ' ' . $request->hora;
+        $cita->update([
+            'fecha_hora_inicio_cita' => $nuevaFechaHora,
+        ]);
+    
+        // Redirigir con mensaje de éxito
+        return redirect()->back()->with('success', 'La cita se ha reprogramado correctamente.');
+    }
+    
+
+    public function concluirPago($id)
+    {
+        // Buscar la cita por ID
+        $cita = Citas::findOrFail($id);
+    
+        // Verificar el estado del pago
+        if ($cita->estado_pago !== 'anticipo') {
+            return redirect()->back()->with('error', 'El pago no está en estado de anticipo, no se puede concluir.');
+        }
+    
+        // Realizar la actualización
+        $cita->update([
+            'estado_pago' => 'concluido',
+            'anticipo' => 0,
+            'pago_restante' => 0,
+            'estado_cita' => 'completada'
+        ]);
+    
+        // Verificar la actualización
+        if ($cita->estado_cita == 'completada') {
+            return redirect()->back()->with('success', 'El pago se ha concluido correctamente y la cita está ahora completada.');
+        } else {
+            return redirect()->back()->with('error', 'Hubo un error al actualizar el estado de la cita.');
+        }
+    }
+    
+
 
 }

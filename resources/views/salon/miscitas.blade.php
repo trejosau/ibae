@@ -96,9 +96,9 @@
         @endif
     
         @if ($citas->isEmpty())
-            <div class="alert alert-info">
-                No tienes citas registradas.
-            </div>
+        <div class="alert alert-warning text-center" style="margin-top: 120px;">
+            <p><i class="bi bi-calendar-x"></i> No tienes citas registradas.</p>
+        </div>
         @else
             <div class="row" style="padding-top: 120px">
                 <div class="mb-3">
