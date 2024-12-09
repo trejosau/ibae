@@ -237,13 +237,18 @@
   </div>
 
 
-
-<div class="col-md-12">
+  <div class="col-md-12">
     <h2 class="mt-4 text-center titulo-grande pt-5 pb-3">✨ Productos Más Vendidos ✨</h2>
     <div class="productos-container">
         <div class="productos-wrapper" id="wrapper1">
             @forelse ($productosMasVendidos as $producto)
-            <div class="producto-card">
+            <div class="producto-card position-relative">
+                <!-- Estado Agotado -->
+                @if($producto->estado === 'agotado')
+                <div class="position-absolute top-0 start-0 w-100 h-100 bg-danger bg-opacity-50 d-flex justify-content-center align-items-center">
+                    <span class="text-white fs-4">Agotado</span>
+                </div>
+                @endif
                 <!-- Enlace al detalle del producto -->
                 <a href="{{ route('producto.detalle', $producto->id) }}" class="card h-100 shadow-sm border-0">
                     <img src="{{ $producto->main_photo }}" class="card-img-top img-fluid" alt="{{ $producto->nombre }}">
@@ -255,8 +260,12 @@
                         @else
                             <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
                         @endif
-
                     </div>
+                    <p>En stock:
+                        <span class="badge {{ $producto->stock > 0 ? 'bg-success' : 'bg-danger' }}">
+                            {{ $producto->stock }}
+                        </span>
+                    </p>
                 </a>
 
                 <!-- Formulario para agregar al carrito fuera del enlace -->
@@ -270,10 +279,9 @@
                     </button>
                 </form>
             </div>
-
             @empty
                 <div class="col-md-12">
-                    <p class="text-center text-muted">No se encontraron productos recientes.</p>
+                    <p class="text-center text-muted">No se encontraron productos más vendidos.</p>
                 </div>
             @endforelse
         </div>
@@ -282,18 +290,21 @@
     </div>
 </div>
 
-
-
-
 <div class="col-md-12">
     <h2 class="mt-4 text-center titulo-grande pt-5 pb-3">✨ Productos Más Recientes ✨</h2>
     <div class="productos-container">
         <div class="productos-wrapper" id="wrapper2">
             @forelse ($productosMasRecientes as $producto)
-            <div class="producto-card">
+            <div class="producto-card position-relative">
+                <!-- Estado Agotado -->
+                @if($producto->estado === 'agotado')
+                <div class="position-absolute top-0 start-0 w-100 h-100 bg-danger bg-opacity-50 d-flex justify-content-center align-items-center">
+                    <span class="text-white fs-4">Agotado</span>
+                </div>
+                @endif
                 <!-- Enlace al detalle del producto -->
                 <a href="{{ route('producto.detalle', $producto->id) }}" class="card h-100 shadow-sm border-0">
-                    <img src="{{ $producto->main_photo }}" class="card-img-top img-fluid " alt="{{ $producto->nombre }}">
+                    <img src="{{ $producto->main_photo }}" class="card-img-top img-fluid" alt="{{ $producto->nombre }}">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title fw-bold text-dark" style="font-size: 15px">{{ $producto->nombre }}</h5>
                         @if (auth()->check() && auth()->user()->Persona?->Estudiante)
@@ -303,8 +314,12 @@
                             <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
                         @endif
                     </div>
+                    <p>En stock:
+                        <span class="badge {{ $producto->stock > 0 ? 'bg-success' : 'bg-danger' }}">
+                            {{ $producto->stock }}
+                        </span>
+                    </p>
                 </a>
-
                 <!-- Formulario para agregar al carrito fuera del enlace -->
                 <form id="agregar-carrito-form">
                     @csrf
@@ -318,15 +333,14 @@
             </div>
             @empty
                 <div class="col-md-12">
-                    <p class="text-center text-muted">No se encontraron productos recientes.</p>
+                    <p class="text-center text-muted">No se encontraron productos más recientes.</p>
                 </div>
             @endforelse
         </div>
-        <button class="btn carousel-control-prev" id="prevBtn2"><i class="bi bi-arrow-left"></i></button>
-        <button class="btn carousel-control-next" id="nextBtn2"><i class="bi bi-arrow-right"></i></button>
+        <button class="btn btn-warning carousel-control-prev" id="prevBtn2"><i class="bi bi-arrow-left"></i></button>
+        <button class="btn btn-warning carousel-control-next" id="nextBtn2"><i class="bi bi-arrow-right"></i></button>
     </div>
 </div>
-
 
 
 <script>
