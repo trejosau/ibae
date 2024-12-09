@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidebar</title>
+    <title>Dashboard</title>
+    <link rel="icon" href="{{ asset('images/logo.png.webp') }}" type="image/x-icon">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>

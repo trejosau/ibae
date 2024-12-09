@@ -421,33 +421,42 @@ class DashboardController extends Controller
         return redirect()->route('dashboard.compras')->with('success', 'Proveedor eliminado correctamente.');
     }
 
-
-
-
-
-
-
-
-
-
-
-    
     public function citas(Request $request)
     {
         $estilistas = Estilista::all();
-        $citas = Citas::with(['comprador', 'detalleCita.servicio'])->get()->map(function ($cita) {
-            $cita->fecha_inicio = $cita->fecha_hora_creacion->format('Y-m-d');
-            $cita->hora_inicio = $cita->fecha_hora_creacion->format('H:i:s');
+        $servicios = Servicios::all();
+        $detalleCitas = DetalleCita::all();
+    
+        // Aplicar filtros
+        $query = Citas::query()->with(['comprador', 'detalleCita.servicio']);
+    
+        if ($request->filled('nombre')) {
+            $query->whereHas('comprador.persona', function ($query) use ($request) {
+                $query->where('nombre', 'like', '%' . $request->nombre . '%');
+            });
+        }
+    
+        if ($request->filled('fecha')) {
+            $query->whereDate('fecha_hora_creacion', $request->fecha);
+        }
+    
+        if ($request->filled('estado')) {
+            $query->where('estado_cita', $request->estado);
+        }
+    
+        $citas = $query->paginate(10)->through(function ($cita) {
+            $cita->fecha_inicio = $cita->fecha_hora_inicio_cita->format('Y-m-d');
+            $cita->hora_inicio = $cita->fecha_hora_inicio_cita->format('H:i:s');
             $cita->total_servicios = $cita->detalleCita->sum(function ($detalle) {
                 return $detalle->servicio->precio;
             });
             return $cita;
         });
-        $servicios = Servicios::all();
-        $detalleCitas = DetalleCita::all();
     
         return view('dashboard.index', compact('estilistas', 'citas', 'servicios', 'detalleCitas'));
     }
+    
+    
      
     public function registrarCita(Request $request)
     {
@@ -532,14 +541,31 @@ class DashboardController extends Controller
 
     // Redirigir con un mensaje de éxito
     return redirect()->back()->with('success', 'El pago se ha concluido correctamente.');
-}
+
+
 
     
+}
 
 
+public function completarCita($id)
+{
+    // Encuentra la cita
+    $cita = Citas::findOrFail($id);
 
+    // Verifica que la cita no esté ya completada
+    if ($cita->estado_cita == 'completada') {
+        return redirect()->back()->with('error', 'La cita ya está completada.');
+    }
 
+    // Actualiza los valores
+    $cita->estado_cita = 'completada';
+    
+    // Guarda los cambios
+    $cita->save();
 
+    return redirect()->back()->with('success', 'Cita completada y pago actualizado.');
+}
 
 
     public function servicios(Request $request)

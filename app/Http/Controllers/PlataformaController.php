@@ -999,89 +999,99 @@ public function actualizarTemas(Request $request, $moduloId)
 
 
 
-
-
-
-
-
     public function misCursosEspacio()
-{
-    // Obtener el usuario autenticado
-    $username = auth()->user()->username;
-
-    // Obtener la persona asociada al usuario
-    $persona = DB::table('personas')
-        ->join('users', 'personas.usuario', '=', 'users.id')
-        ->where('users.username', $username)
-        ->select('personas.id')
-        ->first();
-
-    if (!$persona || !isset($persona->id)) {
-        return redirect()->back()->with('error', 'Usuario no encontrado.');
-    }
-
-    // Obtener el estudiante basado en el id_persona de la tabla personas
-    $estudiante = DB::table('estudiantes')
-        ->where('id_persona', $persona->id)
-        ->first();
-
-    if (!$estudiante) {
-        return redirect()->back()->with('error', 'Estudiante no encontrado.');
-    }
-
-    // Consultar los cursos del estudiante cuyo estado sea "en curso"
-    $cursos = DB::table('estudiante_curso')
-        ->join('curso_apertura', 'estudiante_curso.id_curso_apertura', '=', 'curso_apertura.id')
-        ->join('cursos', 'curso_apertura.id_curso', '=', 'cursos.id')
-        ->join('certificados', 'cursos.id_certificacion', '=', 'certificados.id')
-        ->where('estudiante_curso.id_estudiante', $estudiante->matricula)
-        ->where('curso_apertura.estado', '!=', 'finalizado') // Filtro por estado
-        ->where('estudiante_curso.estado', '!=', 'baja')
-        ->select(
-            'cursos.id',
-            'cursos.nombre as nombre_curso',
-            'cursos.descripcion as descripcion_curso',
-            'cursos.duracion_semanas',
-            'certificados.nombre as nombre_certificado',
-            'curso_apertura.id as id_curso_apertura', // Para relacionar con modulo_curso
-            'curso_apertura.fecha_inicio',
-            'curso_apertura.dia_clase',
-            'curso_apertura.hora_clase'
-        )
-        ->get();
-
-    // Agregar módulos, temas y profesor para cada curso
-    foreach ($cursos as $curso) {
-        // Obtener módulos relacionados con el curso
-        $curso->modulos = DB::table('modulos')
-            ->join('modulo_curso', 'modulos.id', '=', 'modulo_curso.id_modulo')
-            ->leftJoin('profesores', 'modulo_curso.id_profesor', '=', 'profesores.id') // Relación con profesores
-            ->leftJoin('personas', 'profesores.id_persona', '=', 'personas.id') // Relación con personas para obtener los datos del profesor
-            ->where('modulo_curso.id_curso_apertura', $curso->id_curso_apertura)
-            ->select(
-                'modulos.id',
-                'modulos.nombre as nombre_modulo',
-                'modulo_curso.orden',
-                'personas.nombre as nombre_profesor', // Nombre del profesor desde personas
-                'personas.ap_paterno as ap_paterno_profesor', // Apellido paterno
-                'personas.ap_materno as ap_materno_profesor' // Apellido materno
-            )
-            ->orderBy('modulo_curso.orden')
-            ->get();
-
-        // Obtener temas para cada módulo
-        foreach ($curso->modulos as $modulo) {
-            $modulo->temas = DB::table('temas')
-                ->join('modulo_temas', 'temas.id', '=', 'modulo_temas.id_tema')
-                ->where('modulo_temas.id_modulo', $modulo->id) // Relacionar con el módulo
-                ->select('temas.id', 'temas.nombre as nombre_tema')
-                ->get();
+    {
+        // Obtener el usuario autenticado
+        $username = auth()->user()->username;
+    
+        // Obtener la persona asociada al usuario
+        $persona = DB::table('personas')
+            ->join('users', 'personas.usuario', '=', 'users.id')
+            ->where('users.username', $username)
+            ->select('personas.id')
+            ->first();
+    
+        if (!$persona || !isset($persona->id)) {
+            return redirect()->back()->with('error', 'Usuario no encontrado.');
         }
+    
+        // Obtener el estudiante basado en el id_persona de la tabla personas
+        $estudiante = DB::table('estudiantes')
+            ->where('id_persona', $persona->id)
+            ->first();
+    
+        if (!$estudiante) {
+            return redirect()->back()->with('error', 'Estudiante no encontrado.');
+        }
+    
+        // Consultar los cursos del estudiante cuyo estado sea "en curso"
+        $cursos = DB::table('estudiante_curso')
+            ->join('curso_apertura', 'estudiante_curso.id_curso_apertura', '=', 'curso_apertura.id')
+            ->join('cursos', 'curso_apertura.id_curso', '=', 'cursos.id')
+            ->join('certificados', 'cursos.id_certificacion', '=', 'certificados.id')
+            ->leftJoin('profesores', 'curso_apertura.id_profesor', '=', 'profesores.id') // Nueva relación con curso_apertura.id_profesor
+            ->leftJoin('personas', 'profesores.id_persona', '=', 'personas.id') // Para obtener datos del profesor
+            ->where('estudiante_curso.id_estudiante', $estudiante->matricula)
+            ->where('curso_apertura.estado', '!=', 'finalizado') // Filtro por estado
+            ->where('estudiante_curso.estado', '!=', 'baja')
+            ->select(
+                'cursos.id',
+                'cursos.nombre as nombre_curso',
+                'cursos.descripcion as descripcion_curso',
+                'cursos.duracion_semanas',
+                'certificados.nombre as nombre_certificado',
+                'curso_apertura.id as id_curso_apertura', // Para relacionar con modulo_curso
+                'curso_apertura.fecha_inicio',
+                'curso_apertura.dia_clase',
+                'curso_apertura.hora_clase',
+                'personas.nombre as nombre_profesor', // Profesor asignado al curso
+                'personas.ap_paterno as ap_paterno_profesor',
+                'personas.ap_materno as ap_materno_profesor'
+            )
+            ->get();
+    
+        // Agregar módulos y temas para cada curso
+        foreach ($cursos as $curso) {
+            // Obtener módulos relacionados con el curso
+            $curso->modulos = DB::table('modulos')
+                ->join('modulo_curso', 'modulos.id', '=', 'modulo_curso.id_modulo')
+                ->where('modulo_curso.id_curso_apertura', $curso->id_curso_apertura)
+                ->select(
+                    'modulos.id',
+                    'modulos.nombre as nombre_modulo',
+                    'modulo_curso.orden'
+                )
+                ->orderBy('modulo_curso.orden')
+                ->get();
+        
+            // Obtener el profesor del curso
+            $curso->profesor = DB::table('curso_apertura')
+                ->join('profesores', 'curso_apertura.id_profesor', '=', 'profesores.id') // Relación con profesores
+                ->join('personas', 'profesores.id_persona', '=', 'personas.id') // Relación con personas para obtener los datos del profesor
+                ->where('curso_apertura.id', $curso->id_curso_apertura)
+                ->select(
+                    'personas.nombre as nombre_profesor', // Nombre del profesor desde personas
+                    'personas.ap_paterno as ap_paterno_profesor', // Apellido paterno
+                    'personas.ap_materno as ap_materno_profesor' // Apellido materno
+                )
+                ->first(); // Solo un profesor por curso
+        
+            // Obtener temas para cada módulo
+            foreach ($curso->modulos as $modulo) {
+                $modulo->temas = DB::table('temas')
+                    ->join('modulo_temas', 'temas.id', '=', 'modulo_temas.id_tema')
+                    ->where('modulo_temas.id_modulo', $modulo->id) // Relacionar con el módulo
+                    ->select('temas.id', 'temas.nombre as nombre_tema')
+                    ->get();
+            }
+        }
+        
+        
+    
+        // Pasar los cursos y el estudiante a la vista
+        return view('plataforma.index', compact('cursos', 'estudiante'));
     }
-
-    // Pasar los cursos y el estudiante a la vista
-    return view('plataforma.index', compact('cursos', 'estudiante'));
-}
+    
 
 
 

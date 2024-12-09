@@ -28,11 +28,6 @@
                             <p class="card-text" style="color: #8C7A71;"><strong>Categoría:</strong> {{ $modulo->categoria }}</p>
                             <div class="d-flex justify-content-end gap-2">
                                 <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarModulo-{{ $modulo->id }}" style="background-color: #C9A3BE; color: white; border: none;">Modificar</button>
-                                <form action="{{ route('plataforma.eliminarModulo', $modulo->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este módulo?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" style="background-color: #D2968E; border: none;">Eliminar</button>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -117,11 +112,6 @@
                                     style="background-color: #C9A3BE; color: white; border: none;">
                                 Modificar
                             </button>
-                            <form action="{{ route('plataforma.eliminarTema', $tema->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este tema?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" style="background-color: #D2968E; border: none;">Eliminar</button>
-                            </form>
                         </div>
                     </div>
                 </div>
@@ -279,10 +269,6 @@
                             <option value="barberia" {{ $modulo->categoria == 'barberia' ? 'selected' : '' }}>Barbería</option>
                             <option value="belleza" {{ $modulo->categoria == 'belleza' ? 'selected' : '' }}>Belleza</option>
                         </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="moduleDuration" class="form-label">Duración (Horas)</label>
-                        <input type="number" name="duracion" class="form-control" id="moduleDuration" value="{{ $modulo->duracion }}" required>
                     </div>
                 </div>
                 <div class="modal-footer">

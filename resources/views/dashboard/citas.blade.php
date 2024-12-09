@@ -3,13 +3,43 @@
 
     <!-- Filtros -->
     <div class="row mb-4">
-        <div class="col-6">
+        <!-- Filtro por nombre del cliente o comprador -->
+        <div class="col-md-4">
             <div class="input-group">
-                <label class="input-group-text" for="filtro-fecha">Filtrar por Fecha</label>
-                <input type="date" class="form-control" id="filtro-fecha">
+                <label class="input-group-text" for="filtro-nombre">Nombre del Cliente</label>
+                <input type="text" class="form-control" id="filtro-nombre" name="nombre" value="{{ request('nombre') }}">
+            </div>
+        </div>
+        <!-- Filtro por fecha -->
+        <div class="col-md-4">
+            <div class="input-group">
+                <label class="input-group-text" for="filtro-fecha">Fecha</label>
+                <input type="date" class="form-control" id="filtro-fecha" name="fecha" value="{{ request('fecha') }}">
+            </div>
+        </div>
+        <!-- Filtro por estado -->
+        <div class="col-md-4">
+            <div class="input-group">
+                <label class="input-group-text" for="filtro-estado">Estado</label>
+                <select class="form-control" id="filtro-estado" name="estado">
+                    <option value="">Todos</option>
+                    <option value="programada" {{ request('estado') == 'programada' ? 'selected' : '' }}>Programada</option>
+                    <option value="reprogramada" {{ request('estado') == 'reprogramada' ? 'selected' : '' }}>Reprogramada</option>
+                    <option value="cancelada" {{ request('estado') == 'cancelada' ? 'selected' : '' }}>Cancelada</option>
+                    <option value="completada" {{ request('estado') == 'completada' ? 'selected' : '' }}>Completada</option>
+                </select>
             </div>
         </div>
     </div>
+    
+    <!-- Botones para aplicar y limpiar filtros -->
+    <div class="row mb-4">
+        <div class="col-md-12 text-center">
+            <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+            <a href="{{ route('dashboard.citas') }}" class="btn btn-secondary">Limpiar Filtros</a>
+        </div>
+    </div>
+    
 
 
     <!-- Citas Recientes -->
@@ -86,6 +116,10 @@
                 </div>
             </div>
         </div>
+        <div class="d-flex justify-content-center mt-3">
+            {{ $citas->links('pagination::bootstrap-5') }}
+        </div>
+        
     </div>
     
     @foreach ($citas as $cita)
@@ -157,6 +191,15 @@
                         </button>
                     </form>
                     @endif
+                    @if($cita->estado_cita != 'completada')
+                <form action="{{ route('citas.completar', $cita->id) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="btn btn-primary">
+                        Completar Cita
+                    </button>
+                </form>
+                @endif
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
@@ -262,6 +305,10 @@
             </form>
         </div>
     </div>
+
+
+ 
+    
 </div>
 
 <script>

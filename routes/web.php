@@ -107,6 +107,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/servicios/update-estado/{id}', [ServiciosController::class, 'updateEstado'])->name('servicios.updateEstado');
         Route::put('/citas/{id}/reprogramar', [DashboardController::class, 'reprogramar'])->name('citas.reprogramar');
         Route::put('/citas/{id}/concluir-pago', [DashboardController::class, 'concluirPago'])->name('citas.concluirPago');
+        Route::put('/citas/{id}/completar', [DashboardController::class, 'completarCita'])->name('citas.completar');
+
 
 
     });

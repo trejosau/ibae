@@ -38,8 +38,7 @@
                         <i class="fas fa-ellipsis-v" style="color: #fff; cursor: pointer;"></i>
                     </div>
                 </div>
-
-  <!-- Modal de Calendario -->
+<!-- Modal de Calendario -->
 <div class="modal fade" id="modalCalendario{{ $curso->id }}" tabindex="-1" aria-labelledby="modalCalendarioLabel{{ $curso->id }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 30px; overflow: hidden;">
@@ -52,16 +51,8 @@
                 
                 <!-- Nueva sección: Profesor -->
                 <p><strong>Profesor:</strong> 
-                    @if($curso->modulos->isNotEmpty())
-                        @php
-                            // Obtener el primer módulo con profesor asignado
-                            $profesor = $curso->modulos->firstWhere('nombre_profesor');
-                        @endphp
-                        @if($profesor)
-                            {{ $profesor->nombre_profesor }} {{ $profesor->ap_paterno_profesor }} {{ $profesor->ap_materno_profesor }}
-                        @else
-                            No asignado
-                        @endif
+                    @if($curso->nombre_profesor && $curso->ap_paterno_profesor && $curso->ap_materno_profesor)
+                        {{ $curso->nombre_profesor }} {{ $curso->ap_paterno_profesor }} {{ $curso->ap_materno_profesor }}
                     @else
                         No asignado
                     @endif
@@ -72,6 +63,7 @@
         </div>
     </div>
 </div>
+
 
                 
 
@@ -102,7 +94,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Fin del Modal de Módulos -->
             @endforeach
         </div>
     @endif
