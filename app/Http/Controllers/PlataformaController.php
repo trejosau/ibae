@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CursoAperturaRequest;
 use App\Mail\EnvioCredenciales;
+use App\Models\Comprador;
 use App\Models\Estudiante;
 use App\Models\EstudianteCurso;
 use App\Models\ModuloCurso;
@@ -790,11 +791,6 @@ public function actualizarTemas(Request $request, $moduloId)
             'profile_photo_url' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/profiles/default_profile.jpg',
         ]);
 
-        $usuario->assignRole('cliente');
-        $usuario->assignRole('estudiante');
-
-
-        // Crear Persona
         $persona = Persona::create([
             'nombre' => $request->nombre,
             'ap_paterno' => $request->ap_paterno,
@@ -802,8 +798,21 @@ public function actualizarTemas(Request $request, $moduloId)
             'telefono' => $request->telefono,
             'usuario' => $usuario->id,
         ]);
-        // Asignar rol de estudiante
+
+        Comprador::create([
+            'id_persona' => $persona->id,
+            'razon_social' => null,
+            'created_at' => now(),
+            'updated_at' => null,
+        ]);
+
+        $usuario->assignRole('cliente');
         $usuario->assignRole('estudiante');
+
+
+        // Crear Persona
+
+
 
 
 
@@ -1003,27 +1012,27 @@ public function actualizarTemas(Request $request, $moduloId)
     {
         // Obtener el usuario autenticado
         $username = auth()->user()->username;
-    
+
         // Obtener la persona asociada al usuario
         $persona = DB::table('personas')
             ->join('users', 'personas.usuario', '=', 'users.id')
             ->where('users.username', $username)
             ->select('personas.id')
             ->first();
-    
+
         if (!$persona || !isset($persona->id)) {
             return redirect()->back()->with('error', 'Usuario no encontrado.');
         }
-    
+
         // Obtener el estudiante basado en el id_persona de la tabla personas
         $estudiante = DB::table('estudiantes')
             ->where('id_persona', $persona->id)
             ->first();
-    
+
         if (!$estudiante) {
             return redirect()->back()->with('error', 'Estudiante no encontrado.');
         }
-    
+
         // Consultar los cursos del estudiante cuyo estado sea "en curso"
         $cursos = DB::table('estudiante_curso')
             ->join('curso_apertura', 'estudiante_curso.id_curso_apertura', '=', 'curso_apertura.id')
@@ -1049,7 +1058,7 @@ public function actualizarTemas(Request $request, $moduloId)
                 'personas.ap_materno as ap_materno_profesor'
             )
             ->get();
-    
+
         // Agregar módulos y temas para cada curso
         foreach ($cursos as $curso) {
             // Obtener módulos relacionados con el curso
@@ -1063,7 +1072,7 @@ public function actualizarTemas(Request $request, $moduloId)
                 )
                 ->orderBy('modulo_curso.orden')
                 ->get();
-        
+
             // Obtener el profesor del curso
             $curso->profesor = DB::table('curso_apertura')
                 ->join('profesores', 'curso_apertura.id_profesor', '=', 'profesores.id') // Relación con profesores
@@ -1075,7 +1084,7 @@ public function actualizarTemas(Request $request, $moduloId)
                     'personas.ap_materno as ap_materno_profesor' // Apellido materno
                 )
                 ->first(); // Solo un profesor por curso
-        
+
             // Obtener temas para cada módulo
             foreach ($curso->modulos as $modulo) {
                 $modulo->temas = DB::table('temas')
@@ -1085,13 +1094,13 @@ public function actualizarTemas(Request $request, $moduloId)
                     ->get();
             }
         }
-        
-        
-    
+
+
+
         // Pasar los cursos y el estudiante a la vista
         return view('plataforma.index', compact('cursos', 'estudiante'));
     }
-    
+
 
 
 

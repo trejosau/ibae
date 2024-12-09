@@ -200,8 +200,7 @@ class ServiciosDisponibles extends Component
     {
         // Verificar si los datos necesarios están disponibles
         if (!$this->fechaElegida || !$this->estilistaSeleccionada || !$this->selectedServices) {
-            session()->flash('error', 'Faltan datos para confirmar la cita.');
-            return;
+            return redirect()->back()->with('error', 'Faltan datos para confirmar la cita.');
         }
 
         // Obtener el comprador asociado al usuario autenticado
@@ -209,8 +208,7 @@ class ServiciosDisponibles extends Component
 
         // Verificar si el comprador existe
         if (!$comprador) {
-            session()->flash('error', 'No se encontró un comprador asociado a su cuenta.');
-            return;
+            return redirect()->back()->with('error', 'No se encontró un comprador asociado a su cuenta.');
         }
 
         // Calcular la duración total de la cita basada en los servicios seleccionados
@@ -219,20 +217,31 @@ class ServiciosDisponibles extends Component
             $duracionTotal += $servicio->duracion_maxima;
         }
 
+        // Validar si el horario está libre
+        $this->duracionTotal = $duracionTotal;
+        $this->obtenerHorariosLibres();
+
+        $fechaHoraCompleta = Carbon::parse($this->fechaElegida . ' ' . $this->horaElegida);
+        $horaSeleccionada = $fechaHoraCompleta->format('H:i');
+
+        if (!in_array($horaSeleccionada, $this->horariosLibres)) {
+            return redirect()->back()->with('error', 'El horario seleccionado no está disponible.');
+        }
+
         // Calcular los valores de la cita
         $total = $this->calcularTotal($this->selectedServices);
         $anticipo = $total * 0.30; // Ejemplo de anticipo del 30%
         $pagoRestante = 0;
-        $fechaHoraCompleta = Carbon::parse($this->fechaElegida . ' ' . $this->horaElegida);
-        $fechaHoraFin = $fechaHoraCompleta->copy()->addMinutes($duracionTotal);
 
         if ($this->tipopago == 'anticipo') {
             $pagoRestante = $total - $anticipo;
             $total = $anticipo;
         }
 
+        $fechaHoraFin = $fechaHoraCompleta->copy()->addMinutes($duracionTotal);
         $nombreEstilista = Estilista::find($this->estilistaSeleccionada)->persona->nombre;
 
+        // Crear la cita
         $cita = Citas::create([
             'id_estilista' => $this->estilistaSeleccionada,
             'id_comprador' => $comprador->id,
@@ -245,7 +254,6 @@ class ServiciosDisponibles extends Component
             'estado_cita' => 'programada',
         ]);
 
-
         foreach ($this->selectedServices as $servicio) {
             DetalleCita::create([
                 'id_cita' => $cita->id,
@@ -255,7 +263,6 @@ class ServiciosDisponibles extends Component
 
         // Resetear los datos de la cita
         $this->resetDatosCita();
-
 
         try {
             // Crear la sesión de pago de Stripe

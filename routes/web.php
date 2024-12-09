@@ -88,8 +88,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/miagenda', [SalonController::class, 'miagenda'])->name('miagenda');
-Route::put('/citas/{id}/reprogramar', [SalonController::class, 'reprogramar'])->name('citas.reprogramar');
-Route::put('/citas/{id}/concluir-pago', [SalonController::class, 'concluirPago'])->name('citas.concluirPago');
 
 
 
