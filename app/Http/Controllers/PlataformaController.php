@@ -412,30 +412,19 @@ public function actualizarTemas(Request $request, $moduloId)
 
     public function storeCursoApertura(CursoAperturaRequest $request)
     {
-
-
-        // Los datos ya están validadosd
+        // Los datos ya están validados
         $validatedData = $request->validated();
-
-
 
         // Obtener el curso seleccionado
         $curso = Cursos::findOrFail($validatedData['id_curso']);
-
-
-
 
         // Parsear la fecha de inicio
         $fecha_inicio = Carbon::createFromFormat('Y-m-d', $validatedData['fecha_inicio']); // Convertir a Carbon
         $mes_inicio = $fecha_inicio->translatedFormat('F'); // Mes en español
         $dia_semana = $fecha_inicio->translatedFormat('l'); // Día en español
-
         $fecha_inicio = $fecha_inicio->format('Y-m-d');
+
         $nombreRegistro = " {$curso->nombre}, {$validatedData['hora_clase']}";
-
-
-
-
 
         $hora_clase = $validatedData['hora_clase'];
         if (strlen($hora_clase) === 5) {
@@ -445,12 +434,9 @@ public function actualizarTemas(Request $request, $moduloId)
         $hora_inicio = Carbon::createFromFormat('H:i:s', $hora_clase);
 
         $duracion_horas = $curso->duracion_horas ?? 0;
-
         $hora_final = $hora_inicio->copy()->addHours($duracion_horas);
 
         $id_profesor = $validatedData['id_profesor'];
-
-
 
         // Validar que la hora final no exceda las 10 PM
         $limite_hora = Carbon::createFromTime(22, 0); // 10:00 PM
@@ -460,51 +446,52 @@ public function actualizarTemas(Request $request, $moduloId)
                 ->with('error', 'Este curso tiene una duración de ' . $duracion_horas . ' horas y la hora de inicio es ' . $hora_clase . '. Esto excede las 10 PM. Por favor, seleccione otra hora.');
         }
 
-        $cursoExistente = CursoApertura::where('dia_clase', $validatedData['dia_clase']) // Filtro por el día de la clase
-        ->where(function ($query) use ($hora_inicio, $hora_final) {
-            $query->whereBetween('hora_clase', [$hora_inicio, $hora_final]) // Verifica si el horario de inicio se superpone
-            ->orWhereBetween('hora_clase_fin', [$hora_inicio, $hora_final]) // Verifica si el horario de finalización se solapa
-            ->orWhere(function($query) use ($hora_inicio, $hora_final) {
-                // Verifica si el nuevo curso se encuentra dentro de otro curso
-                $query->where('hora_clase', '<', $hora_inicio)
-                    ->where('hora_clase_fin', '>', $hora_final);
-            });
-        })
+        // Validar que el profesor no tenga otro curso en el mismo horario
+        $conflicto = CursoApertura::where('id_profesor', $id_profesor)
+            ->where(function ($query) use ($fecha_inicio, $hora_inicio, $hora_final) {
+                $query->where('fecha_inicio', $fecha_inicio)
+                    ->where(function ($q) use ($hora_inicio, $hora_final) {
+                        $q->whereBetween('hora_clase', [$hora_inicio->format('H:i:s'), $hora_final->format('H:i:s')])
+                            ->orWhereBetween('hora_clase_fin', [$hora_inicio->format('H:i:s'), $hora_final->format('H:i:s')])
+                            ->orWhere(function ($subQuery) use ($hora_inicio, $hora_final) {
+                                $subQuery->where('hora_clase', '<=', $hora_inicio->format('H:i:s'))
+                                    ->where('hora_clase_fin', '>=', $hora_final->format('H:i:s'));
+                            });
+                    });
+            })
             ->exists();
 
-        if (!$cursoExistente) {
-            // Si no existe un curso en el mismo horario, podemos continuar con la creación del curso
-            $cursoApertura = CursoApertura::create([
-                'id_curso' => $validatedData['id_curso'],
-                'nombre' => $nombreRegistro,
-                'fecha_inicio' => $fecha_inicio,
-                'monto_colegiatura' => $validatedData['monto_colegiatura'],
-                'dia_clase' => $validatedData['dia_clase'],
-                'hora_clase' => $hora_inicio->format('H:i:s'),
-                'hora_clase_fin' => $hora_final->format('H:i:s'),
-                'id_profesor' => $id_profesor,
-            ]);
-        } else {
-            // Si hay un curso en el mismo horario, retornamos un error
-            return redirect()->back()->withErrors(['error' => 'Ya existe un curso a esa hora en ese día.']);
+        if ($conflicto) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'El profesor ya tiene un curso asignado en este horario. Por favor, seleccione otro horario o profesor.');
         }
 
+        // Crear el curso aperturado
+        $cursoApertura = CursoApertura::create([
+            'id_curso' => $validatedData['id_curso'],
+            'nombre' => $nombreRegistro,
+            'fecha_inicio' => $fecha_inicio,
+            'monto_colegiatura' => $validatedData['monto_colegiatura'],
+            'dia_clase' => $dia_semana,
+            'hora_clase' => $hora_clase,
+            'hora_clase_fin' => $hora_final->format('H:i:s'),
+            'id_profesor' => $id_profesor,
+        ]);
 
-
+        // Crear los módulos del curso
         foreach ($validatedData['modulos'] as $semana => $moduloId) {
-            $modulo = ModuloCurso::create([
+            ModuloCurso::create([
                 'id_modulo' => $moduloId,
                 'id_curso_apertura' => $cursoApertura->id,
                 'orden' => str_replace('semana_', '', $semana),
             ]);
-
         }
-
 
         // Redirigir con un mensaje de éxito
         return redirect()->route('plataforma.historial-cursos')->with('success', 'Curso aperturado exitosamente.');
-
     }
+
 
 
 

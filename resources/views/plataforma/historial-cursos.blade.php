@@ -65,6 +65,7 @@
                             <p class="card-text mb-1">
                                 <strong>Día de Clase:</strong> {{ $apertura->dia_clase }}<br>
                                 <strong>Hora de Clase:</strong> {{ $apertura->hora_clase }}<br>
+                                <strong>Hora de Fin:</strong> {{ $apertura->hora_clase_fin }}<br>
                                 <strong>Fecha de Inicio:</strong> {{ $apertura->fecha_inicio }}
                             </p>
                             <p class="card-text mb-2">
@@ -334,11 +335,15 @@
                             <select class="form-select" id="cursoSelect" name="id_curso" required>
                                 <option value="" disabled {{ old('id_curso') ? '' : 'selected' }}>Seleccione un curso</option>
                                 @foreach($cursos as $curso)
-                                    <option value="{{ $curso->id }}" data-duracion="{{ $curso->duracion_semanas }}" {{ old('id_curso') == $curso->id ? 'selected' : '' }}>
-                                        {{ $curso->nombre }} ({{ $curso->duracion_semanas }} semanas)
+                                    <option value="{{ $curso->id }}"
+                                            data-duracion="{{ $curso->duracion_horas }}"
+                                            data-duracionhoras="{{ $curso->duracion_horas }}"
+                                        {{ old('id_curso') == $curso->id ? 'selected' : '' }}>
+                                        {{ $curso->nombre }} ({{ $curso->duracion_semanas }} semanas {{ $curso->duracion_horas }} horas c/u)
                                     </option>
                                 @endforeach
                             </select>
+
                         </div>
 
                         <!-- Select para Profesores -->
@@ -371,17 +376,59 @@
                         <!-- Campo para la Hora de Clase -->
                         <div class="mb-3">
                             <label for="horaClase" class="form-label">Hora de Clase</label>
-                            <input
-                                type="time"
+                            <select
                                 class="form-control"
                                 id="horaClase"
                                 name="hora_clase"
-                                min="08:00"
-                                max="22:00"
-                                value="{{ old('hora_clase') }}"
                                 required>
-                            <div class="invalid-feedback" id="errorHoraClase" style="display: none;">La hora de inicio debe estar entre 8:00 AM y 10:00 PM</div>
+                                <option value="" disabled selected>Seleccione una hora</option>
+                                @for ($hora = 8; $hora <= 22; $hora++)
+                                    <option value="{{ str_pad($hora, 2, '0', STR_PAD_LEFT) }}:00"
+                                        {{ old('hora_clase') == str_pad($hora, 2, '0', STR_PAD_LEFT) . ':00' ? 'selected' : '' }}>
+                                        {{ $hora }}:00
+                                    </option>
+                                @endfor
+                            </select>
+                            <div class="invalid-feedback" id="errorHoraClase" style="display: none;">Debe seleccionar una hora válida.</div>
                         </div>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const cursoSelect = document.getElementById('cursoSelect');
+                                const horaClaseSelect = document.getElementById('horaClase');
+
+                                // Función para actualizar las opciones de la hora de clase
+                                function actualizarHorasDisponibles() {
+                                    const curso = cursoSelect.selectedOptions[0];
+                                    const duracion = curso ? parseInt(curso.getAttribute('data-duracion')) : 0; // Duración en horas
+
+                                    // Limpiar las opciones actuales
+                                    horaClaseSelect.innerHTML = '<option value="" disabled selected>Seleccione una hora</option>';
+
+                                    // Definir el rango de horas disponibles (8 AM a 10 PM)
+                                    const horaInicio = 8; // 8 AM
+                                    const horaFin = 22;  // 10 PM
+
+                                    // Generar las opciones de hora según la duración del curso (en horas)
+                                    for (let i = horaInicio; i <= horaFin - duracion; i++) {
+                                        const horaInicioFormatted = String(i).padStart(2, '0') + ':00';
+
+                                        // Calcular la hora de fin
+                                        const horaFinCurso = i + duracion;
+                                        const horaFinFormatted = String(horaFinCurso).padStart(2, '0') + ':00';
+
+                                        // Crear la opción con hora inicio y fin
+                                        const option = document.createElement('option');
+                                        option.value = horaInicioFormatted;
+                                        option.textContent = `${horaInicioFormatted} - ${horaFinFormatted}`;
+                                        horaClaseSelect.appendChild(option);
+                                    }
+                                }
+
+                                // Al cambiar el curso, actualizamos las opciones de hora
+                                cursoSelect.addEventListener('change', actualizarHorasDisponibles);
+                            });
+                        </script>
 
 
                         <!-- Campo para el Monto de Colegiatura -->
@@ -410,41 +457,7 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const cursoSelect = document.getElementById('cursoSelect');
-            const horaClaseSelect = document.getElementById('horaClase');
 
-            // Función para actualizar las opciones de la hora de clase
-            function actualizarHorasDisponibles() {
-                const curso = cursoSelect.selectedOptions[0];
-                const duracion = curso ? parseInt(curso.getAttribute('data-duracion')) : 0; // Duración en horas
-
-                // Limpiar las opciones actuales
-                horaClaseSelect.innerHTML = '<option value="" disabled selected>Seleccione una hora</option>';
-
-                // Definir el rango de horas disponibles (8 AM a 10 PM)
-                const horaInicio = 8; // 8 AM
-                const horaFin = 22;  // 10 PM
-
-                // Generar las opciones de hora según la duración del curso (en horas)
-                for (let i = horaInicio; i <= horaFin - duracion; i++) {
-                    for (let j = 0; j < 60; j += 30) { // 30 minutos de diferencia
-                        const hora = String(i).padStart(2, '0');
-                        const minutos = String(j).padStart(2, '0');
-                        const horaFormatted = `${hora}:${minutos}`;
-                        const option = document.createElement('option');
-                        option.value = horaFormatted;
-                        option.textContent = `${horaFormatted} - ${duracion} horas`;
-                        horaClaseSelect.appendChild(option);
-                    }
-                }
-            }
-
-            // Al cambiar el curso, actualizamos las opciones de hora
-            cursoSelect.addEventListener('change', actualizarHorasDisponibles);
-        });
-    </script>
 
 
 

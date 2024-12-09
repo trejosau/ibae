@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CitaController;
 use App\Http\Controllers\CompraController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GraficasController;
@@ -24,6 +25,8 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/cambiar-admin', [ProfileController::class, 'cambiarAdmin'])->name('cambiarAdmin');
 
+Route::get('/cita/success', [CitaController::class, 'paymentSuccess'])->name('cita.success');
+Route::get('/cita/cancel', [CitaController::class, 'paymentCancel'])->name('cita.cancel');
 
 Route::get('/todosLosProductos', function () {
     $productos = Productos::all();

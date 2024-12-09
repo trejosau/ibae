@@ -126,15 +126,15 @@
                         <!-- Fecha y Hora -->
                         <div class="col-md-6 mb-3">
                             <label for="pickDay">Seleccionar Fecha</label>
-                            <input 
-                                type="date" 
-                                class="form-control" 
-                                wire:model="fechaElegida" 
-                                wire:change="obtenerHorariosLibres" 
-                                min="{{ $fechaMinima }}" 
+                            <input
+                                type="date"
+                                class="form-control"
+                                wire:model="fechaElegida"
+                                wire:change="obtenerHorariosLibres"
+                                min="{{ $fechaMinima }}"
                                 max="{{ $fechaMaxima }}">
                         </div>
-                        
+
                         <div class="col-md-6 mb-3">
                             <label for="pickTime">Seleccionar Hora</label>
                             <select id="pickTime" class="form-control" wire:model="horaElegida">
@@ -186,21 +186,21 @@
                         <label for="paymentOption" style="font-size: 1rem; font-weight: bold; display: block; margin-bottom: 5px;">
                             Selecciona cómo deseas pagar:
                         </label>
-                        <select id="paymentOption" name="paymentOption" style="margin-bottom: 10px; margin-top: 10px; width: 100%; padding: 10px; font-size: 1rem; border: 1px solid #ddd; border-radius: 5px;">
+                        <select id="paymentOption" name="paymentOption" wire:model.live="tipopago" style="margin-bottom: 10px; margin-top: 10px; width: 100%; padding: 10px; font-size: 1rem; border: 1px solid #ddd; border-radius: 5px;">
                             <option value="anticipo">Pagar solo anticipo</option>
                             <option value="completo">Pagar cita completa</option>
                         </select>
                     </div>
                 </div>
-                
-                
 
-                
+
+
+
                 <!-- Botón flotante Confirmar -->
                 <button wire:click="confirmarCita" class="btn btn-success" style="padding: 10px 20px; font-size: 1rem; border-radius: 8px;">
                     Confirmar
                 </button>
-                
+
             </div>
         @endif
 
