@@ -11,10 +11,10 @@
 
     <div class="main-container">
         <a href="/tienda" class="back-link">← Volver a la tienda</a>
-        
+
         <div class="checkout-container">
             <h2>Detalles del Pedido</h2>
-    
+
             <div class="checkout-content">
                 <!-- Lista de Productos -->
                 <div class="checkout-items">
@@ -22,7 +22,7 @@
                         @foreach($productos_actualizados as $producto)
                             <div class="checkout-item">
                                 <div class="product-img-container">
-                                    <img src="{{ $producto['main_photo'] ?? '/ruta/a/imagen-placeholder.jpg' }}" alt="{{ $producto['nombre'] }}" class="product-img">
+                                    <img src="{{ $producto['main_photo'] }}" alt="{{ $producto['nombre'] }}" class="product-img">
                                 </div>
                                 <div class="product-details">
                                     <h4 class="product-name">{{ $producto['nombre'] }}</h4>
@@ -36,11 +36,11 @@
                         <p>No hay productos en el carrito.</p>
                     @endif
                 </div>
-    
+
                 <!-- Resumen del Pedido -->
                 <div class="checkout-summary">
                     <h3>Resumen del Pedido</h3>
-                    
+
                     <div class="order-summary">
                         <div class="order-item">Subtotal de Productos :</div>
                         @if(isset($subtotal) && $subtotal > 0)
@@ -51,7 +51,7 @@
                             <p>No hay productos válidos en el pedido.</p>
                         @endif
                     </div>
-    
+
                     @if(!empty($errores_stock))
                         <div class="stock-errors">
                             <h3>Errores de Stock</h3>
@@ -64,7 +64,7 @@
                             </ul>
                         </div>
                     @endif
-    
+
                     <form action="{{ route('pago') }}" method="POST">
                         @csrf
                         <button type="submit" class="checkout-button" @if(empty($productos_actualizados)) disabled @endif>
@@ -75,9 +75,9 @@
             </div>
         </div>
     </div>
-    
 
-    
+
+
 
     <style>
         /* Contenedor Principal */

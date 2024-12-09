@@ -406,6 +406,15 @@ public function checkout()
         // Buscar el producto en la base de datos utilizando el 'id' almacenado en el carrito
         $producto = Productos::find($id);
 
+        $user = auth()->user();
+
+        $precioAplicado = $producto->precio_venta;
+
+        if ($user->hasRole('estudiante')) {
+            $precioAplicado = $producto->precio_lista;
+        }
+
+
         if ($producto) {
             // Verificar si el stock disponible es suficiente
             if ($producto->stock >= $item['cantidad']) {
@@ -413,8 +422,9 @@ public function checkout()
                 $productos_actualizados[] = [
                     'id_producto' => $id,  // Usar el 'id' como referencia
                     'nombre' => $producto->nombre,
-                    'precio' => $producto->precio_venta,  // Usar el precio de venta
-                    'cantidad' => $item['cantidad']
+                    'precio' => $precioAplicado,
+                    'cantidad' => $item['cantidad'],
+                    'main_photo' => $producto->main_photo
                 ];
             } else {
                 // Producto sin stock suficiente
