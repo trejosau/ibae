@@ -1,14 +1,14 @@
 <div class="container my-4">
     <h2 class="text-center mb-4">Gestión de Inscripciones</h2>
 
-  
+
 
     <!-- Botón para agregar Inscripción -->
     <div class="d-flex justify-content-center mb-4">
-        <button 
-            type="button" 
-            class="btn" 
-            data-bs-toggle="modal" 
+        <button
+            type="button"
+            class="btn"
+            data-bs-toggle="modal"
             data-bs-target="#modalAgregarInscripcion"
             style="background-color: #C39BD3; color: white; border: none;">
             Agregar Inscripción
@@ -53,7 +53,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="inscripcionPrecio" class="form-label">Precio</label>
-                        <input type="number" name="precio" class="form-control" id="inscripcionPrecio" required>
+                        <input type="number" name="precio" class="form-control" id="inscripcionPrecio" required min="1" max="9999">
                     </div>
                     <div class="mb-3">
                         <label for="inscripcionDescripcion" class="form-label">Descripción</label>

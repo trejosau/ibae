@@ -54,9 +54,9 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <button 
-                                            class="btn btn-primary btn-sm" 
-                                            data-bs-toggle="modal" 
+                                        <button
+                                            class="btn btn-primary btn-sm"
+                                            data-bs-toggle="modal"
                                             data-bs-target="#modalEditarServicio{{ $servicio->id }}">
                                             Modificar
                                         </button>
@@ -111,7 +111,7 @@
 
                         <div class="mb-3">
                             <label for="precio" class="form-label">Precio</label>
-                            <input type="number" class="form-control" id="precio" name="precio" required>
+                            <input type="number" class="form-control" id="precio" name="precio" required maxlength="9999">
                         </div>
 
                         <div class="mb-3">
@@ -132,12 +132,12 @@
 
                         <div class="mb-3">
                             <label for="duracion_minima" class="form-label">Duración mínima</label>
-                            <input type="number" class="form-control" id="duracion_minima" name="duracion_minima" required min="1">
+                            <input type="number" class="form-control" id="duracion_minima" name="duracion_minima" required min="1" maxlength="9999">
                         </div>
 
                         <div class="mb-3">
                             <label for="duracion_maxima" class="form-label">Duración máxima</label>
-                            <input type="number" class="form-control" id="duracion_maxima" name="duracion_maxima" required min="1">
+                            <input type="number" class="form-control" id="duracion_maxima" name="duracion_maxima" required min="1" maxlength="9999">
                         </div>
 
                         <div class="modal-footer">
@@ -198,30 +198,30 @@
                         <label for="categoria{{ $servicio->id }}" class="form-label">Categoría</label>
                         <select class="form-select" id="categoria{{ $servicio->id }}" name="categoria" required>
                             @foreach ($categorias as $categoria)
-                                <option value="{{ $categoria->id }}" 
+                                <option value="{{ $categoria->id }}"
                                     {{ $servicio->categoria == $categoria->id ? 'selected' : '' }}>
                                     {{ $categoria->nombre }}
                                 </option>
                             @endforeach
                         </select>
-                        
+
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="descripcion{{ $servicio->id }}" class="form-label">Descripción</label>
                         <textarea class="form-control" id="descripcion{{ $servicio->id }}" name="descripcion" required>{{ $servicio->descripcion }}</textarea>
                     </div>
                     <div class="mb-3">
                         <label for="duracion_minima{{ $servicio->id }}" class="form-label">Duración mínima</label>
-                        <input type="number" class="form-control" id="duracion_minima{{ $servicio->id }}" name="duracion_minima" value="{{ $servicio->duracion_minima }}" required>
+                        <input type="number" min="1" max="9999" class="form-control" id="duracion_minima{{ $servicio->id }}" name="duracion_minima" value="{{ $servicio->duracion_minima }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="duracion_maxima{{ $servicio->id }}" class="form-label">Duración máxima</label>
-                        <input type="number" class="form-control" id="duracion_maxima{{ $servicio->id }}" name="duracion_maxima" value="{{ $servicio->duracion_maxima }}" required>
+                        <input type="number" min="1" max="9999" class="form-control" id="duracion_maxima{{ $servicio->id }}" name="duracion_maxima" value="{{ $servicio->duracion_maxima }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="precio{{ $servicio->id }}" class="form-label">Precio</label>
-                        <input type="number" class="form-control" id="precio{{ $servicio->id }}" name="precio" value="{{ $servicio->precio }}" step="0.01" required>
+                        <input type="number" min="1" max="9999" class="form-control" id="precio{{ $servicio->id }}" name="precio" value="{{ $servicio->precio }}" step="0.01" required>
                     </div>
                     <div class="mb-3">
                         <label for="estado{{ $servicio->id }}" class="form-label">Estado</label>

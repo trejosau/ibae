@@ -64,6 +64,19 @@ class ProductosController extends Controller
         $stock = $data['stock'];
         $estado = $data['estado'];
 
+
+        if ($precio_proveedor >= $precio_lista) {
+            return redirect()->back()->with('error', 'El Precio Proveedor debe ser menor que el Precio Lista.');
+        }
+
+        if ($precio_lista >= $precio_venta) {
+            return redirect()->back()->with('error', 'El Precio Lista debe ser menor que el Precio Venta.');
+        }
+
+
+
+
+
         $producto = Productos::create([
             'nombre' => $nombre,
             'descripcion' => $descripcion,
