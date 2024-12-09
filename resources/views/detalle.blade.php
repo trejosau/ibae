@@ -211,6 +211,24 @@
             color: #333;
             font-size: 20px;
         }
+
+
+
+        .back-link {
+        color: #333;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .back-link:hover {
+        color: #555; /* Color más claro al pasar el mouse */
+        text-decoration: underline;
+        transform: translateX(-5px); /* Movimiento sutil hacia la izquierda */
+    }
         </style>
         
 
@@ -219,7 +237,7 @@
 <!-- Contenedor principal -->
 <div class="container my-5 padding">
     <div class="mb-3">
-        <a href="/tienda" class="back-link"> Volver a la tienda</a>
+        <a href="/tienda" class="back-link">← Volver a Tienda</a>
     </div>
     <div class="row">
         <div class="col-md-6">
@@ -289,16 +307,7 @@
                     </div>
                 </a>
             
-                <!-- Formulario para agregar al carrito fuera del enlace -->
-                <form id="agregar-carrito-form">
-                    @csrf
-                    <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
-                    <button type="button" class="btn btn-rel fw-bold mt-3" 
-                            aria-label="Agregar {{ $productoRelacionado->nombre }} al carrito" 
-                            onclick="agregarAlCarrito({{ $productoRelacionado->id }})">
-                        <i class="fas fa-shopping-cart"></i> Agregar al carrito
-                    </button>
-                </form>
+
             </div>
             
             @empty

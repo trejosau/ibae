@@ -8,83 +8,82 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
+
     <div class="main-container">
         <a href="/tienda" class="back-link">← Volver a la tienda</a>
-
+        
         <div class="checkout-container">
             <h2>Detalles del Pedido</h2>
-
+    
             <div class="checkout-content">
-                <!-- Lista de Productos con stock suficiente -->
+                <!-- Lista de Productos -->
                 <div class="checkout-items">
-                    @foreach ($productos_actualizados as $producto)
-                        <div class="checkout-item">
-                            <div class="product-img-container">
-                                <img src="{{ $producto['main_photo'] ?? '/ruta/a/imagen-placeholder.jpg' }}" alt="{{ $producto['nombre'] }}" class="product-img">
-                            </div>
-                            <div class="product-details">
-                                <h4 class="product-name">{{ $producto['nombre'] }}</h4>
-                                <p class="product-price">Precio: ${{ number_format($producto['precio'], 2) }}</p>
-                                <p class="product-quantity">Cantidad: {{ $producto['cantidad'] }}</p>
-                                <p class="product-total">Total: ${{ number_format($producto['precio'] * $producto['cantidad'], 2) }}</p>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <!-- Errores de Stock -->
-                @if (count($errores_stock) > 0)
-                    <div class="checkout-items">
-                        <h4 class="error-title">Errores de Stock</h4>
-                        @foreach ($errores_stock as $error)
-                            <div class="checkout-item error-item">
+                    @if(!empty($productos_actualizados) && count($productos_actualizados) > 0)
+                        @foreach($productos_actualizados as $producto)
+                            <div class="checkout-item">
                                 <div class="product-img-container">
-                                    <img src="/ruta/a/imagen-placeholder-error.jpg" alt="Producto fuera de stock" class="product-img">
+                                    <img src="{{ $producto['main_photo'] ?? '/ruta/a/imagen-placeholder.jpg' }}" alt="{{ $producto['nombre'] }}" class="product-img">
                                 </div>
                                 <div class="product-details">
-                                    <h4 class="product-name">{{ $error['nombre'] }}</h4>
-                                    <p class="error-stock-info">Stock disponible: {{ $error['stock_disponible'] }}</p>
-                                    <p class="error-quantity">Cantidad solicitada: {{ $error['cantidad_solicitada'] }}</p>
+                                    <h4 class="product-name">{{ $producto['nombre'] }}</h4>
+                                    <p class="product-price">Precio: ${{ number_format($producto['precio'], 2) }}</p>
+                                    <p class="product-quantity">Cantidad: {{ $producto['cantidad'] }}</p>
+                                    <p class="product-total">Total: ${{ number_format($producto['precio'] * $producto['cantidad'], 2) }}</p>
                                 </div>
                             </div>
                         @endforeach
-                    </div>
-                @endif
-
+                    @else
+                        <p>No hay productos en el carrito.</p>
+                    @endif
+                </div>
+    
                 <!-- Resumen del Pedido -->
                 <div class="checkout-summary">
                     <h3>Resumen del Pedido</h3>
-
+                    
                     <div class="order-summary">
-                        <div class="order-item">Subtotal de Productos:</div>
-                        @php $subtotal = 0; @endphp
-                        @foreach ($productos_actualizados as $producto)
-                            @php
-                                $subtotal += $producto['precio'] * $producto['cantidad'];
-                            @endphp
-                            <div class="order-item">
-                                {{ $producto['nombre'] }}: ${{ number_format($producto['precio'] * $producto['cantidad'], 2) }}
+                        <div class="order-item">Subtotal de Productos :</div>
+                        @if(isset($subtotal) && $subtotal > 0)
+                            <div class="subtotal">
+                                <h3>Subtotal: ${{ number_format($subtotal, 2) }}</h3>
                             </div>
-                        @endforeach
-                        <div class="subtotal">
-                            <h3>Subtotal: ${{ number_format($subtotal, 2) }}</h3>
-                        </div>
+                        @else
+                            <p>No hay productos válidos en el pedido.</p>
+                        @endif
                     </div>
-
+    
+                    @if(!empty($errores_stock))
+                        <div class="stock-errors">
+                            <h3>Errores de Stock</h3>
+                            <ul>
+                                @foreach($errores_stock as $error)
+                                    <li>
+                                        {{ $error['nombre'] }} - Stock disponible: {{ $error['stock_disponible'] }}, solicitado: {{ $error['cantidad_solicitada'] }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+    
                     <form action="{{ route('pago') }}" method="POST">
                         @csrf
-                        <button type="submit" class="checkout-button">Proceder al Pago</button>
+                        <button type="submit" class="checkout-button" @if(empty($productos_actualizados)) disabled @endif>
+                            Proceder al Pago
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    
+
+    
 
     <style>
         /* Contenedor Principal */
         .main-container {
             padding-top: 50px;
-            padding-bottom: 70px;
+            padding-bottom:70px;
             max-width: 1200px;
             margin: 0 auto;
             padding-left: 20px;
@@ -183,24 +182,6 @@
             color: #666;
         }
 
-        /* Errores de Stock */
-        .error-title {
-            font-size: 1.5rem;
-            color: #ff5a5f;
-            margin-bottom: 15px;
-        }
-
-        .error-item {
-            background-color: #fff3f3;
-            border: 1px solid #ff5a5f;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .error-stock-info, .error-quantity {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
         /* Resumen del Pedido */
         .checkout-summary {
             padding: 25px;
@@ -227,9 +208,15 @@
             color: #555;
         }
 
-        .subtotal {
-            margin-top: 20px;
+        .order-total {
             font-weight: bold;
+            font-size: 1.3rem;
+            color: #ff5a5f;
+            margin-top: 10px;
+        }
+
+        .subtotal-amount {
+            color: #333;
         }
 
         /* Botón de Pago */
