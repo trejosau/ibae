@@ -41,6 +41,7 @@
                                 <div class="col-8 p-3">
                                     <h5 class="card-title text-primary m-0">{{ $curso->nombre }}</h5>
                                     <p class="card-text m-0"><strong>Duración:</strong> {{ $curso->duracion_semanas }} semanas</p>
+                                    <p class="card-text m-0"><strong>Duración:</strong> {{ $curso->duracion_horas }} horas</p>
                                 </div>
                                 <!-- Estado -->
                                 <div class="col-2 p-0 position-relative">

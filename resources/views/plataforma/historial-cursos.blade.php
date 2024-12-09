@@ -65,6 +65,7 @@
                             <p class="card-text mb-1">
                                 <strong>Día de Clase:</strong> {{ $apertura->dia_clase }}<br>
                                 <strong>Hora de Clase:</strong> {{ $apertura->hora_clase }}<br>
+                                <strong>Hora de Fin:</strong> {{ $apertura->hora_clase_fin }}<br>
                                 <strong>Fecha de Inicio:</strong> {{ $apertura->fecha_inicio }}
                             </p>
                             <p class="card-text mb-2">
