@@ -28,6 +28,8 @@ class ServiciosDisponibles extends Component
     public $duracionTotal = 0;
     public $fechaMinima;
     public $fechaMaxima;
+    public $anticipo = 0;
+
 
     public $inputs = [
         ['id' => 'cantidad_piedras', 'label' => 'Piedras', 'value' => 0],
@@ -205,8 +207,10 @@ class ServiciosDisponibles extends Component
         foreach ($servicios as $servicio) {
             $total += $servicio->precio;
         }
+        $this->anticipo = $total * 0.30; // Actualizar anticipo basado en el 30% del total
         return $total;
     }
+    
 
     public function resetDatosCita()
 {
@@ -282,8 +286,7 @@ class ServiciosDisponibles extends Component
     
 }
 
-    
-    
+   
     public function render()
     {
         return view('livewire.servicios-disponibles', [

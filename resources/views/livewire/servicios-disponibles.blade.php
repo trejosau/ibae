@@ -167,7 +167,15 @@
                         @endforeach
                     </div>
                 @endif
+                <p style="font-size: 1rem; color: #333; padding-top: 15px; line-height: 1.5;">
+                    <strong style="font-weight: bold;">Para apartar tu cita:</strong> deberás pagar este anticipo. Se te redirigirá a otra pestaña para concretar la compra.
+                </p>
+                <p style="font-size: 1.2rem; color: black; font-weight: bold; margin-top: 10px; margin-bottom: 10px;">
+                    <strong>Anticipo:</strong> ${{ number_format($anticipo, 2) }}
+                </p>
+                
 
+                
                 <!-- Botón flotante Confirmar -->
                 <button wire:click="confirmarCita" class="btn btn-success" style="padding: 10px 20px; font-size: 1rem; border-radius: 8px;">
                     Confirmar
