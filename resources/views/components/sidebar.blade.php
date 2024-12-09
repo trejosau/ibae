@@ -77,12 +77,6 @@
                     <span>Usuarios</span>
                 </a>
             </li>
-            <li class="sidebar-item">
-                <a href="{{ route('dashboard.auditoria') }}" class="sidebar-link">
-                    <i class='fas fa-archive'></i>
-                    <span>Auditoría</span>
-                </a>
-            </li>
             @endrole
 
         </ul>
