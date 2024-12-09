@@ -168,6 +168,34 @@
                     </div>
                 @endif
 
+                <div style="border-top: 2px solid #ddd; padding-top: 10px;">
+                    <div class="total" style="margin-bottom: 10px; margin-top: 10px; font-size: 1.1rem; font-weight: bold;">
+                        <strong>Total:</strong>
+                        <span style="font-size: 1.2rem; color: #28a745;">
+                            ${{ number_format(array_sum(array_map(function ($id) use ($servicios) {
+                                return $servicios->find($id)->precio;
+                            }, $selectedServices)), 2) }}
+                        </span>
+                    </div>
+                    <p style="display: inline-block; margin-bottom: 10px; margin-top: 10px; font-size: 1.1rem; font-weight: bold;">
+                      <strong>Anticipo:</strong> <span style="display: inline-block; font-size: 1.2rem; color: #28a745;">${{ number_format($anticipo, 2) }} </span> <p style="display: inline-block; padding-left:5px;" class="small">Esto es el 30% del total</p>
+                    <p style="font-size: 1rem; color: #333; padding-top: 15px; line-height: 1.5;">
+                        <strong style="font-weight: bold;">Para apartar tu cita:</strong> deberás pagar este anticipo. Se te redirigirá a otra pestaña para concretar la compra o de lo contrario se puede pagar toda la cita.
+                    </p>
+                    <div style="margin-top: 15px;">
+                        <label for="paymentOption" style="font-size: 1rem; font-weight: bold; display: block; margin-bottom: 5px;">
+                            Selecciona cómo deseas pagar:
+                        </label>
+                        <select id="paymentOption" name="paymentOption" style="margin-bottom: 10px; margin-top: 10px; width: 100%; padding: 10px; font-size: 1rem; border: 1px solid #ddd; border-radius: 5px;">
+                            <option value="anticipo">Pagar solo anticipo</option>
+                            <option value="completo">Pagar cita completa</option>
+                        </select>
+                    </div>
+                </div>
+                
+                
+
+                
                 <!-- Botón flotante Confirmar -->
                 <button wire:click="confirmarCita" class="btn btn-success" style="padding: 10px 20px; font-size: 1rem; border-radius: 8px;">
                     Confirmar

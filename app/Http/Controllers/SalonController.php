@@ -60,7 +60,7 @@ class SalonController extends Controller
     
     
         // Depuración opcional para verificar los datos
-        // dd($citas);
+     
     
         return view('salon.miscitas', compact('citas'));
     }

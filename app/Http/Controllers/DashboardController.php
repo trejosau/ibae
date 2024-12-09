@@ -432,61 +432,115 @@ class DashboardController extends Controller
 
 
     
-public function citas(Request $request)
-{
-    $estilistas = Estilista::all();
-    $citas = Citas::with('comprador')->get()->map(function ($cita) {
-        $cita->fecha_inicio = $cita->fecha_hora_inicio_cita->format('Y-m-d'); // Solo fecha
-        $cita->hora_inicio = $cita->fecha_hora_inicio_cita->format('H:i:s'); // Solo hora
-        return $cita;
-    });
-    $servicios = Servicios::all();
-    $detalleCitas = DetalleCita::all();
-
-    return view('dashboard.index', compact('estilistas', 'citas', 'servicios', 'detalleCitas'));
-} 
-
-public function registrarCita(Request $request)
-{
-    // Validación de datos
-    $validatedData = $request->validate([
-        'cliente' => 'required|string|max:255',
-        'estilista_id' => 'required|exists:estilistas,id',
-        'fecha_hora_inicio_cita' => 'required|date',
-        'total' => 'required|numeric|min:0',
-        'estado_cita' => 'required|in:programada,cancelada,completada',
-        'servicios' => 'required|array|min:1',
-        'servicios.*' => 'exists:servicios,id',
-    ]);
-
-    // Crear la cita
-    $cita = Citas::create([
-        'id_estilista' => $validatedData['estilista_id'],
-        'cliente' => $validatedData['cliente'],
-        'fecha_hora_creacion' => now(),
-        'fecha_hora_inicio_cita' => $validatedData['fecha_hora_inicio_cita'],
-        'total' => $validatedData['total'],
-        'estado_cita' => $validatedData['estado_cita'],
-        'id_comprador' => null,
-        'fecha_hora_fin_cita' => null,
-        'anticipo' => 0,
-        'pago_restante' => 0,
-        'estado_pago' => 'concluido',
-        'nueva_fecha_hora_inicio_cita' => null,
-        'motivo_reprogramacion' => null,
-    ]);
-
-    // Registrar servicios en detalle_cita
-    foreach ($validatedData['servicios'] as $servicioId) {
-        DetalleCita::create([
-            'id_cita' => $cita->id,
-            'id_servicio' => $servicioId,
+    public function citas(Request $request)
+    {
+        $estilistas = Estilista::all();
+        $citas = Citas::with(['comprador', 'detalleCita.servicio'])->get()->map(function ($cita) {
+            $cita->fecha_inicio = $cita->fecha_hora_creacion->format('Y-m-d');
+            $cita->hora_inicio = $cita->fecha_hora_creacion->format('H:i:s');
+            $cita->total_servicios = $cita->detalleCita->sum(function ($detalle) {
+                return $detalle->servicio->precio;
+            });
+            return $cita;
+        });
+        $servicios = Servicios::all();
+        $detalleCitas = DetalleCita::all();
+    
+        return view('dashboard.index', compact('estilistas', 'citas', 'servicios', 'detalleCitas'));
+    }
+     
+    public function registrarCita(Request $request)
+    {
+        // Validación de datos
+        $validatedData = $request->validate([
+            'cliente' => 'required|string|max:255',
+            'estilista_id' => 'required|exists:estilistas,id',
+            'fecha_hora_inicio_cita' => 'required|date',
+            'estado_cita' => 'required|in:programada,cancelada,completada',
+            'servicios' => 'required|array|min:1',
+            'servicios.*' => 'exists:servicios,id',
         ]);
+    
+        // Calcular el total sumando los precios de los servicios
+        $total = 0;
+        foreach ($validatedData['servicios'] as $servicioId) {
+            $servicio = Servicios::findOrFail($servicioId); // Asume que tienes un modelo Servicio
+            $total += $servicio->precio;
+        }
+    
+        // Crear la cita
+        $cita = Citas::create([
+            'id_estilista' => $validatedData['estilista_id'],
+            'cliente' => $validatedData['cliente'],
+            'fecha_hora_creacion' => now(),
+            'fecha_hora_inicio_cita' => $validatedData['fecha_hora_inicio_cita'],
+            'total' => $total,
+            'estado_cita' => $validatedData['estado_cita'],
+            'id_comprador' => null,
+            'fecha_hora_fin_cita' => null,
+            'anticipo' => 0,
+            'pago_restante' => 0,
+            'estado_pago' => 'concluido',
+            'nueva_fecha_hora_inicio_cita' => null,
+            'motivo_reprogramacion' => null,
+        ]);
+    
+        // Registrar servicios en detalle_cita
+        foreach ($validatedData['servicios'] as $servicioId) {
+            DetalleCita::create([
+                'id_cita' => $cita->id,
+                'id_servicio' => $servicioId,
+            ]);
+        }
+    
+        // Redirigir con un mensaje de éxito
+        return redirect()->back()->with('success', 'Cita registrada exitosamente.');
+    }
+    
+    public function reprogramar(Request $request, $id)
+    {
+        // Validar los datos del formulario
+        $request->validate([
+            'fecha' => 'required|date|after_or_equal:today',
+            'hora' => 'required|date_format:H:i',
+        ]);
+    
+        // Buscar la cita por ID
+        $cita = Citas::findOrFail($id);
+    
+        // Actualizar la fecha y hora
+        $cita->update([
+            'fecha_hora_creacion' => $request->input('fecha') . ' ' . $request->input('hora'),
+            'estado_cita' => 'reprogramada', // Actualizamos el estado a 'reprogramada'
+        ]);
+    
+        // Redirigir con mensaje de éxito
+        return redirect()->back()->with('success', 'La cita se ha reprogramado con éxito.');
     }
 
+    public function concluirPago($id)
+{
+    // Buscar la cita por ID
+    $cita = Citas::findOrFail($id);
+
+    // Actualizar los campos de pago
+    $cita->update([
+        'estado_pago' => 'Concluido',
+        'anticipo' => 0,
+        'pago_restante' => 0,
+    ]);
+
     // Redirigir con un mensaje de éxito
-    return redirect()->back()->with('success', 'Cita registrada exitosamente.');
+    return redirect()->back()->with('success', 'El pago se ha concluido correctamente.');
 }
+
+    
+
+
+
+
+
+
 
     public function servicios(Request $request)
     {

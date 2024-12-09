@@ -100,6 +100,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/salon/registrar-cita', [DashboardController::class, 'registrarCita'])->name('salon.registrarCita');
         Route::put('/servicios/{servicio}', [ServiciosController::class, 'update'])->name('servicios.update');
         Route::put('/servicios/update-estado/{id}', [ServiciosController::class, 'updateEstado'])->name('servicios.updateEstado');
+        Route::put('/citas/{id}/reprogramar', [DashboardController::class, 'reprogramar'])->name('citas.reprogramar');
+        Route::put('/citas/{id}/concluir-pago', [DashboardController::class, 'concluirPago'])->name('citas.concluirPago');
+
 
     });
 
