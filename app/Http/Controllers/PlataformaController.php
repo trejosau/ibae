@@ -989,7 +989,6 @@ public function actualizarTemas(Request $request, $moduloId)
 
     public function historialPagos()
     {
-
         return view('plataforma.index');
     }
 
