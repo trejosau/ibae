@@ -31,6 +31,30 @@ use Illuminate\Support\Facades\DB;
 
 class PlataformaController extends Controller
 {
+
+    public function revertirBaja(Request $request)
+    {
+        $matricula = $request->matricula;
+        $cursoAperturaId = $request->curso_apertura_id;
+
+        $estudiante = Estudiante::where('matricula', $matricula)->first();
+        $apertura = CursoApertura::where('id', $cursoAperturaId)->first();
+
+        // Verificar si el estudiante está inscrito en el curso
+        $estudianteCurso = EstudianteCurso::where('id_estudiante', $estudiante->matricula)
+            ->where('id_curso_apertura', $cursoAperturaId)
+            ->first();
+
+
+        // Si el estudiante está inscrito en el curso, se cambia su estado a "baja"
+        if ($estudianteCurso) {
+            $estudianteCurso->estado = 'cursando';
+            $estudianteCurso->save();
+        }
+
+        return redirect()->route('plataforma.historial-cursos')->with('success', 'Estudiante revertido correctamente.');
+    }
+
     public function finalizarCurso($cursoAperturaId)
         {
             $cursoApertura = CursoApertura::find($cursoAperturaId);
@@ -382,6 +406,7 @@ public function actualizarTemas(Request $request, $moduloId)
 
     public function quitarAlumnoCurso(Request $request)
     {
+
         // Recuperar el estudiante según la matrícula
         $estudiante = Estudiante::where('matricula', $request->matricula)->first();
 
@@ -389,11 +414,11 @@ public function actualizarTemas(Request $request, $moduloId)
         if (!$estudiante) {
             return back()->with('error', 'Estudiante no encontrado.');
         }
-
         // Verificar si el estudiante está inscrito en el curso
         $estudianteCurso = EstudianteCurso::where('id_estudiante', $estudiante->matricula)
             ->where('id_curso_apertura', $request->apertura_id)
             ->first();
+
 
         // Si el estudiante está inscrito en el curso, se cambia su estado a "baja"
         if ($estudianteCurso) {

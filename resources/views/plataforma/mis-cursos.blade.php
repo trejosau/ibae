@@ -184,12 +184,12 @@
                             </div>
                             <div class="mb-3">
                                 <label for="duracion_semanas" class="form-label">Duración (semanas)</label>
-                                <input type="number" class="form-control" id="duracion_semanas" name="duracion_semanas" min="1" step="1" required>
+                                <input type="number" class="form-control" id="duracion_semanas" name="duracion_semanas" min="1" step="1" required max="24">
 
                             </div>
                             <div class="mb-3">
                                 <label for="duracion_horas" class="form-label">Duración por clase (horas)</label>
-                                <input type="number" class="form-control" id="duracion_horas" name="duracion_horas" min="1" required>
+                                <input type="number" class="form-control" id="duracion_horas" name="duracion_horas" min="1"  max="24"  required>
                             </div>
                             <div class="mb-3">
                                 <label for="id_certificacion" class="form-label">Certificado</label>

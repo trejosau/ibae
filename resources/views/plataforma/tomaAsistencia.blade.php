@@ -160,7 +160,7 @@
 <body>
 <div class="container">
     <a href="{{ route('plataforma.historial-cursos') }}" class="btn btn-primary btn-sm mb-3 btn-guardar" >
-        <i class="fa fa-arrow-left" style="margin-right: 10px"></i> Regresar 
+        <i class="fa fa-arrow-left" style="margin-right: 10px"></i> Regresar
     </a>
 
     <!-- Mensajes de éxito o error -->
@@ -177,7 +177,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-    
+
     <!-- Header de la página -->
     <div class="header">
         <div>
@@ -274,8 +274,8 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
 
-                                    <!-- Enlace que redirige al controlador con los parámetros necesarios -->
-                                    <a href="{{ route('darDeBaja', ['matricula' => $matricula, 'apertura_id' => $idApertura]) }}" class="btn btn-danger">Confirmar Baja</a>
+                                    <a href="{{ route('darDeBajaEnAsistencia', ['matricula' => $matricula, 'apertura_id' => $idApertura]) }}" class="btn btn-danger">Confirmar Baja</a>
+
                                 </div>
                             </div>
                         </div>

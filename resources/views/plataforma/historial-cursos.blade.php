@@ -298,6 +298,12 @@
                                                 </form>
                                             @elseif($estado === 'baja')
                                                 <span class="badge bg-warning">Alumno Baja</span>
+                                                <form action="{{ route('revertirBaja') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="matricula" value="{{ $estudiante->matricula }}">
+                                                    <input type="hidden" name="curso_apertura_id" value="{{ $apertura->id }}">
+                                                    <button type="submit" class="btn btn-success btn-sm">Revertir baja<i class="fa fa-times"></i></button>
+                                                </form>
                                             @else
                                                 <form action="{{ route('inscribirAlumno') }}" method="POST">
                                                     @csrf
@@ -333,12 +339,11 @@
                         <div class="mb-3">
                             <label for="cursoSelect" class="form-label">Selecciona el Curso</label>
                             <select class="form-select" id="cursoSelect" name="id_curso" required>
-                                <option value="" disabled {{ old('id_curso') ? '' : 'selected' }}>Seleccione un curso</option>
+                                <option value="" disabled>Seleccione un curso</option>
                                 @foreach($cursos as $curso)
                                     <option value="{{ $curso->id }}"
                                             data-duracion="{{ $curso->duracion_horas }}"
-                                            data-duracionhoras="{{ $curso->duracion_horas }}"
-                                        {{ old('id_curso') == $curso->id ? 'selected' : '' }}>
+                                            data-duracionhoras="{{ $curso->duracion_horas }}">
                                         {{ $curso->nombre }} ({{ $curso->duracion_semanas }} semanas {{ $curso->duracion_horas }} horas c/u)
                                     </option>
                                 @endforeach
@@ -441,6 +446,8 @@
                                 name="monto_colegiatura"
                                 placeholder="Ingrese el monto de colegiatura"
                                 value="{{ old('monto_colegiatura') }}"
+                                min="1"
+                                max="9999"
                                 required>
                         </div>
 
