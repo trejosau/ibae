@@ -74,60 +74,68 @@
                 </div>
             </div>
 
-            <!-- Productos -->
-            <div class="col-md-9">
-                <div class="row g-4">
-                    @forelse($productos as $producto)
-                        <div class="col-lg-4 col-md-6">
-                            <div class="card h-100 shadow border-0" style="background-color: #f9f9f9; border-radius: 10px;">
-                                <div class="ratio ratio-1x1" style="overflow: hidden; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-                                    <a href="{{ route('producto.detalle', $producto->id) }}" class="shadow-sm border-0">
-                                        <img src="{{ $producto->main_photo }}" alt="{{ $producto->nombre }}" class="card-img-top" style="object-fit: cover;">
-                                    </a>
-                                </div>
-                                <div class="card-body d-flex flex-column p-3">
-                                    <h5 class="card-title text-truncate text-dark">{{ $producto->nombre }}</h5>
-                                    <p class="card-text text-muted text-truncate">{{ Str::limit($producto->descripcion, 80) }}</p>
-                                    @if (auth()->check() && auth()->user()->Persona?->Estudiante)
-                                        <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_lista, 2) }}</p>
-                                        <small class="text-muted">Descuento: -${{ $producto->precio_venta - $producto->precio_lista }}</small>
-                                    @else
-                                        <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
-                                        @endif
-                                        </a>
-                                        <p>En stock:
-                                            <span class="badge {{ $producto->stock > 0 ? 'bg-success' : 'bg-danger' }}">
-                                            {{ $producto->stock }}
-                                        </span>
-                                        </p>
-                                        <div class="mt-auto">
-                                            <form id="agregar-carrito-form">
-                                                @csrf
-                                                <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
-                                                <button type="button" class="btn btn-agg btn-lg fw-bold mt-3"
-                                                        aria-label="Agregar {{ $producto->nombre }} al carrito"
-                                                        onclick="agregarAlCarrito({{ $producto->id }})">
-                                                    <i class="fas fa-shopping-cart"></i> Agregar al carrito
-                                                </button>
-                                            </form>
-                                        </div>
-                                </div>
+<!-- Productos -->
+<div class="col-md-9">
+    <div class="row g-4">
+        @forelse($productos as $producto)
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow border-0" style="background-color: #f9f9f9; border-radius: 10px;">
+                    <!-- Imagen del producto -->
+                    <div class="ratio ratio-1x1 position-relative" style="overflow: hidden; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                        <!-- Verificación de estado agotado -->
+                        @if($producto->estado === 'agotado')
+                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-danger bg-opacity-50 d-flex justify-content-center align-items-center">
+                                <span class="text-white fs-4">Agotado</span>
                             </div>
+                        @endif
+                        <a href="{{ route('producto.detalle', $producto->id) }}" class="shadow-sm border-0">
+                            <img src="{{ $producto->main_photo }}" alt="{{ $producto->nombre }}" class="card-img-top" style="object-fit: cover;">
+                        </a>
+                    </div>
+                    <!-- Detalles del producto -->
+                    <div class="card-body d-flex flex-column p-3">
+                        <h5 class="card-title text-truncate text-dark">{{ $producto->nombre }}</h5>
+                        <p class="card-text text-muted text-truncate">{{ Str::limit($producto->descripcion, 80) }}</p>
+                        @if (auth()->check() && auth()->user()->Persona?->Estudiante)
+                            <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_lista, 2) }}</p>
+                            <small class="text-muted">Descuento: -${{ $producto->precio_venta - $producto->precio_lista }}</small>
+                        @else
+                            <p class="card-text text-danger fw-bold mb-4 precio">Precio: ${{ number_format($producto->precio_venta, 2) }}</p>
+                        @endif
+                        <p>En stock:
+                            <span class="badge {{ $producto->stock > 0 ? 'bg-success' : 'bg-danger' }}">
+                                {{ $producto->stock }}
+                            </span>
+                        </p>
+                        <div class="mt-auto">
+                            <form id="agregar-carrito-form">
+                                @csrf
+                                <input type="hidden" name="cantidad" id="cantidad-input" value="1" />
+                                <button type="button" class="btn btn-agg btn-lg fw-bold mt-3"
+                                        aria-label="Agregar {{ $producto->nombre }} al carrito"
+                                        onclick="agregarAlCarrito({{ $producto->id }})">
+                                    <i class="fas fa-shopping-cart"></i> Agregar al carrito
+                                </button>
+                            </form>
                         </div>
-                    @empty
-                        <!-- Mensaje mejorado para filtros vacíos -->
-                        <div class="col-12">
-                            <div class="alert alert-warning text-center">
-                                No se encontraron productos para los filtros seleccionados. <br>
-                                Intenta con diferentes opciones.
-                            </div>
-                        </div>
-                    @endforelse
-                </div>
-                <div class="d-flex justify-content-center mt-5">
-                    {{ $productos->links('pagination::bootstrap-4') }}
+                    </div>
                 </div>
             </div>
+        @empty
+            <!-- Mensaje mejorado para filtros vacíos -->
+            <div class="col-12">
+                <div class="alert alert-warning text-center">
+                    No se encontraron productos para los filtros seleccionados. <br>
+                    Intenta con diferentes opciones.
+                </div>
+            </div>
+        @endforelse
+    </div>
+    <div class="d-flex justify-content-center mt-5">
+        {{ $productos->links('pagination::bootstrap-4') }}
+    </div>
+</div>
+
         </div>
     </div>
 </div>
