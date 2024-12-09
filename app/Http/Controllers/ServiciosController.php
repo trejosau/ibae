@@ -56,10 +56,6 @@ class ServiciosController extends Controller
     return redirect()->back()->with('success', 'Servicio inactivado correctamente.');
 }
 
-
-
-
-
         
         public function update(Request $request, $id)
         {

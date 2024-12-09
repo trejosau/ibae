@@ -40,8 +40,8 @@
                                     </td>
                                     
                                     <td>{{ $cita->estilista->persona->nombre ?? 'No asignado' }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($cita->fecha_hora_inicio_cita)->format('Y-m-d') }}</td> 
-                                    <td>{{ \Carbon\Carbon::parse($cita->fecha_hora_inicio_cita)->format('H:i:s') }}</td> 
+                                    <td>{{ \Carbon\Carbon::parse($cita->fecha_hora_creacion)->format('Y-m-d') }}</td> 
+                                    <td>{{ \Carbon\Carbon::parse($cita->fecha_hora_creacion)->format('H:i:s') }}</td> 
                                     <td>
                                         <span class="badge" style="
                                             @if($cita->estado_cita == 'programada') 
@@ -66,6 +66,12 @@
                                             data-bs-target="#modal-ver-detalle-{{ $cita->id }}">
                                             Ver
                                         </button>
+                                        <button 
+                                        class="btn btn-warning btn-sm" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modal-reprogramar-{{ $cita->id }}">
+                                        Reprogramar
+                                    </button>
                                     </td>
                                 </tr>
                             @empty
@@ -142,12 +148,53 @@
                     <div class="w-100 text-end">
                         <h5 class="fw-bold text-primary">Total de Servicios: <span class="text-success">${{ number_format($totalServicios, 2) }}</span></h5>
                     </div>
+                    @if($cita->estado_pago == 'anticipo')
+                    <form action="{{ route('citas.concluirPago', $cita->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('PUT') <!-- Usa PUT para actualizar el estado del pago -->
+                        <button type="submit" class="btn btn-success">
+                            Concluir Pago
+                        </button>
+                    </form>
+                    @endif
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
     </div>
     @endforeach
+
+
+    @foreach($citas as $cita)
+    <!-- Modal Reprogramar -->
+    <div class="modal fade" id="modal-reprogramar-{{ $cita->id }}" tabindex="-1" aria-labelledby="reprogramarModalLabel-{{ $cita->id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reprogramarModalLabel-{{ $cita->id }}">Reprogramar Cita</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('citas.reprogramar', $cita->id) }}" method="POST">
+                        @csrf
+                        @method('PUT') <!-- Especifica el método PUT -->
+                        <div class="mb-3">
+                            <label for="fecha-{{ $cita->id }}" class="form-label">Nueva Fecha</label>
+                            <input type="date" id="fecha-{{ $cita->id }}" name="fecha" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="hora-{{ $cita->id }}" class="form-label">Nueva Hora</label>
+                            <input type="time" id="hora-{{ $cita->id }}" name="hora" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>                    
+                </div>
+            </div>
+        </div>
+    </div>
+@endforeach
+
+
     
 <!-- Modal para registrar cita -->
 <div class="modal fade" id="modal-agregar-cita" tabindex="-1" aria-labelledby="modalRegistrarCitaLabel" aria-hidden="true">
@@ -182,12 +229,7 @@
                         <input type="datetime-local" class="form-control" id="fecha_hora_inicio_cita" name="fecha_hora_inicio_cita" required>
                     </div>
 
-                    <!-- Total -->
-                    <div class="mb-3">
-                        <label for="total" class="form-label">Total</label>
-                        <input type="number" class="form-control" id="total" name="total" step="0.01" required>
-                    </div>
-
+        
                     <!-- Estado de la cita -->
                     <div class="mb-3">
                         <label for="estado_cita" class="form-label">Estado de la Cita</label>
@@ -206,6 +248,11 @@
                         </div>
                         <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="agregar-servicio">Agregar Servicio</button>
                     </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Total Calculado</label>
+                        <input type="text" class="form-control" id="total_calculado" readonly value="$0.00">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -220,24 +267,38 @@
     document.addEventListener('DOMContentLoaded', function () {
         const serviciosContainer = document.getElementById('servicios-container');
         const agregarServicioBtn = document.getElementById('agregar-servicio');
+        const totalCalculado = document.getElementById('total_calculado');
+
+        const actualizarTotal = () => {
+            let total = 0;
+            serviciosContainer.querySelectorAll('select[name="servicios[]"]').forEach(select => {
+                const option = select.selectedOptions[0];
+                if (option && option.dataset.precio) {
+                    total += parseFloat(option.dataset.precio);
+                }
+            });
+            totalCalculado.value = `$${total.toFixed(2)}`;
+        };
 
         agregarServicioBtn.addEventListener('click', () => {
             const servicioSelect = `
                 <div class="mb-2 d-flex align-items-center">
-                    <select class="form-control me-2" name="servicios[]" required>
-                        <option value="">Seleccione un Servicio</option>
+                    <select class="form-control me-2" name="servicios[]" required onchange="actualizarTotal()">
+                        <option value="" data-precio="0">Seleccione un Servicio</option>
                         @foreach ($servicios as $servicio)
-                            <option value="{{ $servicio->id }}">{{ $servicio->nombre }} (${{ number_format($servicio->precio, 2) }})</option>
+                            <option value="{{ $servicio->id }}" data-precio="{{ $servicio->precio }}">{{ $servicio->nombre }} (${{ number_format($servicio->precio, 2) }})</option>
                         @endforeach
                     </select>
                     <button type="button" class="btn btn-danger btn-sm remove-servicio">X</button>
                 </div>`;
             serviciosContainer.insertAdjacentHTML('beforeend', servicioSelect);
+            actualizarTotal();
         });
 
         serviciosContainer.addEventListener('click', (e) => {
             if (e.target.classList.contains('remove-servicio')) {
                 e.target.parentElement.remove();
+                actualizarTotal();
             }
         });
     });
