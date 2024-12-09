@@ -111,7 +111,7 @@
 
                         <div class="mb-3">
                             <label for="precio" class="form-label">Precio</label>
-                            <input type="number" class="form-control" id="precio" name="precio" required maxlength="9999">
+                            <input type="number" class="form-control" id="precio" name="precio" required max="9999" min="1">
                         </div>
 
                         <div class="mb-3">
@@ -132,12 +132,12 @@
 
                         <div class="mb-3">
                             <label for="duracion_minima" class="form-label">Duración mínima</label>
-                            <input type="number" class="form-control" id="duracion_minima" name="duracion_minima" required min="1" maxlength="9999">
+                            <input type="number" class="form-control" id="duracion_minima" name="duracion_minima" required max="9999" min="1">
                         </div>
 
                         <div class="mb-3">
                             <label for="duracion_maxima" class="form-label">Duración máxima</label>
-                            <input type="number" class="form-control" id="duracion_maxima" name="duracion_maxima" required min="1" maxlength="9999">
+                            <input type="number" class="form-control" id="duracion_maxima" name="duracion_maxima" required max="9999" min="1">
                         </div>
 
                         <div class="modal-footer">
