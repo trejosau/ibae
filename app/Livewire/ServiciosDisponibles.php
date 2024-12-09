@@ -30,17 +30,6 @@ class ServiciosDisponibles extends Component
     public $fechaMaxima;
     public $anticipo = 0;
 
-
-    public $inputs = [
-        ['id' => 'cantidad_piedras', 'label' => 'Piedras', 'value' => 0],
-        ['id' => 'cantidad_cristales', 'label' => 'Cristales', 'value' => 0],
-        ['id' => 'cantidad_stickers', 'label' => 'Stickers', 'value' => 0],
-        ['id' => 'cantidad_efecto_foil', 'label' => 'Foil', 'value' => 0],
-        ['id' => 'cantidad_efecto_espejo', 'label' => 'Espejo', 'value' => 0],
-        ['id' => 'cantidad_efecto_azucar', 'label' => 'Azúcar', 'value' => 0],
-        ['id' => 'cantidad_efecto_mano_alzada', 'label' => 'Mano Alzada', 'value' => 0],
-        ['id' => 'cantidad_efecto_3d', 'label' => '3D', 'value' => 0],
-    ];
     public $tipopago = 'anticipo';
     public $total = 0;
     public $max = 10;
@@ -49,38 +38,14 @@ class ServiciosDisponibles extends Component
         // Lógica para manejar el valor seleccionado
         if ($value == 'anticipo') {
             // Realizar lógica para pago anticipo
-        } elseif ($value == 'completo') {
+        } elseif ($value == 'concluido') {
             // Realizar lógica para pago completo
         }
     }
     // Este método se ejecuta cada vez que un input se actualiza.
-    public function updated($field)
-    {
-        // Sumamos todos los valores de los inputs
-        $this->total = array_sum(array_column($this->inputs, 'value'));
 
-        // Si el total excede el máximo, ajustamos los valores
-        if ($this->total > $this->max) {
-            $this->adjustValues();
-        }
-    }
 
-    private function adjustValues()
-    {
-        // Restablecemos el total
-        $this->total = 0;
 
-        // Ajustamos los valores de los inputs
-        foreach ($this->inputs as $key => $input) {
-            // Si agregar este valor excede el máximo, ajustamos este campo
-            if ($this->total + $input['value'] > $this->max) {
-                // Ajustamos el valor del campo para que no se exceda
-                $this->inputs[$key]['value'] = $this->max - $this->total;
-            }
-            // Sumamos el nuevo valor
-            $this->total += $this->inputs[$key]['value'];
-        }
-    }
 
 
     public function obtenerHorariosLibres()
@@ -257,13 +222,39 @@ class ServiciosDisponibles extends Component
         // Calcular los valores de la cita
         $total = $this->calcularTotal($this->selectedServices);
         $anticipo = $total * 0.30; // Ejemplo de anticipo del 30%
-        $pagoRestante = $total - $anticipo;
+        $pagoRestante = 0;
         $fechaHoraCompleta = Carbon::parse($this->fechaElegida . ' ' . $this->horaElegida);
         $fechaHoraFin = $fechaHoraCompleta->copy()->addMinutes($duracionTotal);
 
         if ($this->tipopago == 'anticipo') {
+            $pagoRestante = $total - $anticipo;
             $total = $anticipo;
         }
+
+        $nombreEstilista = Estilista::find($this->estilistaSeleccionada)->persona->nombre;
+
+        $cita = Citas::create([
+            'id_estilista' => $this->estilistaSeleccionada,
+            'id_comprador' => $comprador->id,
+            'fecha_hora_inicio_cita' => $fechaHoraCompleta,
+            'fecha_hora_fin_cita' => $fechaHoraFin,
+            'total' => $total,
+            'anticipo' => $anticipo,
+            'pago_restante' => $pagoRestante,
+            'estado_pago' => $this->tipopago,
+            'estado_cita' => 'programada',
+        ]);
+
+
+        foreach ($this->selectedServices as $servicio) {
+            DetalleCita::create([
+                'id_cita' => $cita->id,
+                'id_servicio' => $servicio->id,
+            ]);
+        }
+
+        // Resetear los datos de la cita
+        $this->resetDatosCita();
 
 
         try {
@@ -275,9 +266,9 @@ class ServiciosDisponibles extends Component
                 'line_items' => [
                     [
                         'price_data' => [
-                            'currency' => 'mxn', // Ajustar la moneda
+                            'currency' => 'mxn',
                             'product_data' => [
-                                'name' => 'Cita Estilista - ' . $this->estilistaSeleccionada,
+                                'name' => 'Cita Estilista - ' . $nombreEstilista,
                             ],
                             'unit_amount' => $total * 100,
                         ],
@@ -285,8 +276,8 @@ class ServiciosDisponibles extends Component
                     ],
                 ],
                 'mode' => 'payment',
-                'success_url' => route('cita.success', ['cita_id' => 'CITA_ID']), // Redirigir a una URL de éxito
-                'cancel_url' => route('cita.cancel'), // Redirigir si el usuario cancela el pago
+                'success_url' => route('cita.success'),
+                'cancel_url' => route('cita.cancel', ['id_cita' => $cita->id]),
             ]);
 
             // Redirigir al usuario a la página de pago de Stripe

@@ -17,51 +17,23 @@ class CitaController extends Controller
     /**
      * Manejar la redirección después de un pago exitoso.
      */
-    public function paymentSuccess(Request $request)
+    public function paymentSuccess()
     {
-        $citaId = $request->get('cita_id');
-
-        // Verificar si la cita existe
-        $cita = Citas::find($citaId);
-        if (!$cita) {
-            session()->flash('error', 'No se encontró la cita para confirmar el pago.');
-            return redirect()->route('cita.index');
-        }
-
-        // Aquí deberías verificar el pago en Stripe y asegurarte de que se haya completado correctamente
-        $paymentIntent = PaymentIntent::retrieve($request->get('payment_intent'));
-
-        // Solo proceder si el pago fue exitoso
-        if ($paymentIntent->status === 'succeeded') {
-            // Actualizar la cita para confirmar el pago
-            $cita->update([
-                'estado_pago' => 'pagado',
-                'estado_cita' => 'confirmada',
-            ]);
-
-            // Registrar los detalles de la cita
-            foreach ($request->selectedServices as $servicio) {
-                DetalleCita::create([
-                    'id_cita' => $cita->id,
-                    'id_servicio' => $servicio['id'],
-                ]);
-            }
-
-            session()->flash('success', 'Pago confirmado y cita agendada exitosamente.');
-            return redirect()->route('miscitas');
-        } else {
-            session()->flash('error', 'El pago no se completó correctamente.');
-            return redirect()->route('cita.index');
-        }
+        return redirect()->route('miscitas')->with('success', 'Pago exitoso y cita confirmada');
     }
 
     /**
      * Manejar la cancelación de un pago de Stripe.
      */
-    public function paymentCancel()
+    public function paymentCancel(Request $request)
     {
-        session()->flash('error', 'El pago fue cancelado.');
-        return redirect()->route('salon.agendar');
+        $cita = Citas::find($request->id_cita);
+
+        Citas::destroy($cita->id);
+
+
+
+        return redirect()->route('salon.agendar')->with('error', 'El pago no fue exitoso.');
     }
 
     /**
