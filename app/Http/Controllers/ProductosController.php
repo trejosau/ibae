@@ -566,6 +566,9 @@ public function storeCategoria(Request $request)
             $productoRegistro = Productos::findOrFail($productoId);
 
             $productoRegistro->stock -= $producto['cantidad'];
+            if ($productoRegistro->stock = 0) {
+                $productoRegistro->estado = 'agotado';
+            }
             $productoRegistro->save();
         }
 
