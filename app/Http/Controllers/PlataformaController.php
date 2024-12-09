@@ -46,8 +46,7 @@ class PlataformaController extends Controller
         $hoy = Carbon::today();
 
         // Buscar los cursos que deben iniciarse hoy
-        $cursosIniciados = CursoApertura::where('fecha_inicio', '<=', $hoy)
-            ->where('estado', 'programado')
+        $cursosIniciados = CursoApertura::where('estado', 'programado')
             ->get();
 
 
@@ -989,7 +988,6 @@ public function actualizarTemas(Request $request, $moduloId)
 
     public function historialPagos()
     {
-
         return view('plataforma.index');
     }
 
