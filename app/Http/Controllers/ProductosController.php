@@ -21,6 +21,21 @@ use Stripe\Stripe;
 class ProductosController extends Controller
 {
 
+    public function eliminarSubcategoria($id)
+    {
+        // Buscar la subcategoría por su ID
+        $subcategoria = Subcategoria::find($id);
+
+        // Verificar si la subcategoría existe
+        if ($subcategoria) {
+            // Eliminar la subcategoría
+            $subcategoria->delete();
+        }
+
+        // Redirigir de nuevo a la página anterior
+        return redirect()->back()->with('success', 'Subcategoría eliminada exitosamente.');
+    }
+
     public function catalogo()
     {
         $productos = Productos::all(); // Obtiene todos los productos
@@ -184,15 +199,59 @@ class ProductosController extends Controller
             'precio_venta' => 'required|numeric|min:0',
             'cantidad' => 'required|integer|min:0',
             'medida' => 'required|string|max:50',
-            'id_categoria' => 'required|exists:categorias,id',
-            'id_subcategoria_1' => 'nullable|exists:subcategorias,id',
-            'id_subcategoria_2' => 'nullable|exists:subcategorias,id',
-            'id_subcategoria_3' => 'nullable|exists:subcategorias,id',
+            'id_categoria' => 'required|exists:categorias,nombre',
+            'id_subcategoria_1' => 'nullable|exists:subcategorias,nombre',
+            'id_subcategoria_2' => 'nullable|exists:subcategorias,nombre',
+            'id_subcategoria_3' => 'nullable|exists:subcategorias,nombre',
             'main_photo' => 'required|image|mimes:jpeg,png,jpg,webp',
             'stock' => 'required|integer|min:0',
             'estado' => 'required|in:activo,inactivo',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'nombre.required' => 'El nombre del producto es obligatorio.',
+            'nombre.string' => 'El nombre del producto debe ser una cadena de texto.',
+            'nombre.max' => 'El nombre del producto no puede tener más de 255 caracteres.',
+            'nombre.unique' => 'Ya existe un producto con este nombre.',
+            'descripcion.required' => 'La descripción es obligatoria.',
+            'descripcion.string' => 'La descripción debe ser una cadena de texto.',
+            'marca.required' => 'La marca es obligatoria.',
+            'marca.string' => 'La marca debe ser una cadena de texto.',
+            'marca.max' => 'La marca no puede tener más de 255 caracteres.',
+            'precio_proveedor.required' => 'El precio proveedor es obligatorio.',
+            'precio_proveedor.numeric' => 'El precio proveedor debe ser un número.',
+            'precio_proveedor.min' => 'El precio proveedor no puede ser negativo.',
+            'precio_lista.required' => 'El precio de lista es obligatorio.',
+            'precio_lista.numeric' => 'El precio de lista debe ser un número.',
+            'precio_lista.min' => 'El precio de lista no puede ser negativo.',
+            'precio_venta.required' => 'El precio de venta es obligatorio.',
+            'precio_venta.numeric' => 'El precio de venta debe ser un número.',
+            'precio_venta.min' => 'El precio de venta no puede ser negativo.',
+            'cantidad.required' => 'La cantidad es obligatoria.',
+            'cantidad.integer' => 'La cantidad debe ser un número entero.',
+            'cantidad.min' => 'La cantidad no puede ser negativa.',
+            'medida.required' => 'La medida es obligatoria.',
+            'medida.string' => 'La medida debe ser una cadena de texto.',
+            'medida.max' => 'La medida no puede tener más de 50 caracteres.',
+            'id_categoria.required' => 'La categoría es obligatoria.',
+            'id_categoria.exists' => 'La categoría seleccionada no existe.',
+            'id_subcategoria_1.exists' => 'La subcategoría 1 seleccionada no existe.',
+            'id_subcategoria_2.exists' => 'La subcategoría 2 seleccionada no existe.',
+            'id_subcategoria_3.exists' => 'La subcategoría 3 seleccionada no existe.',
+            'main_photo.required' => 'La foto principal es obligatoria.',
+            'main_photo.image' => 'La foto principal debe ser una imagen.',
+            'main_photo.mimes' => 'La foto principal debe ser de tipo jpeg, png, jpg o webp.',
+            'stock.required' => 'El stock es obligatorio.',
+            'stock.integer' => 'El stock debe ser un número entero.',
+            'stock.min' => 'El stock no puede ser negativo.',
+            'estado.required' => 'El estado del producto es obligatorio.',
+            'estado.in' => 'El estado debe ser activo o inactivo.',
+        ];
+    }
+
 
     private function processImage($request, $nombre, $cantidad, $medida)
     {
@@ -455,10 +514,11 @@ public function checkout()
 
 public function storeCategoria(Request $request)
 {
-        $request->validate([
-            'nombre_categoria' => 'required|string|max:255|unique:categorias,nombre',
-        ]);
-        $categoria = Categorias::create([
+    $request->validate([
+        'nombre_categoria' => 'required|string|max:255|unique:categorias,nombre|regex:/^[\pL\s]+$/u',
+    ]);
+
+    $categoria = Categorias::create([
             'nombre' => $request->nombre_categoria,
         ]);
 

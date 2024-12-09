@@ -107,11 +107,11 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="rfcProfesor" class="form-label">RFC</label>
-                                    <input type="text" class="form-control" id="rfcProfesor" name="RFC" maxlength="13" value="{{ old('RFC') }}">
+                                    <input type="text" class="form-control" id="rfcProfesor" required name="RFC" minlength="12" maxlength="13" value="{{ old('RFC') }}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="curpProfesor" class="form-label">CURP</label>
-                                    <input type="text" class="form-control" id="curpProfesor" name="CURP" maxlength="18">
+                                    <input type="text" class="form-control" id="curpProfesor" name="CURP" minlength="18" maxlength="18" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -135,27 +135,27 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="zipcodeProfesor" class="form-label">Código Postal</label>
-                                    <input type="text" class="form-control" id="zipcodeProfesor" name="zipcode" maxlength="10">
+                                    <input type="text" class="form-control" id="zipcodeProfesor" name="zipcode" maxlength="10" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="ciudadProfesor" class="form-label">Ciudad</label>
-                                    <input type="text" class="form-control" id="ciudadProfesor" name="ciudad" maxlength="100">
+                                    <input type="text" class="form-control" id="ciudadProfesor" name="ciudad" maxlength="100" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="coloniaProfesor" class="form-label">Colonia</label>
-                                    <input type="text" class="form-control" id="coloniaProfesor" name="colonia" maxlength="100">
+                                    <input type="text" class="form-control" id="coloniaProfesor" name="colonia" maxlength="100" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="calleProfesor" class="form-label">Calle</label>
-                                    <input type="text" class="form-control" id="calleProfesor" name="calle" maxlength="100">
+                                    <input type="text" class="form-control" id="calleProfesor" name="calle" maxlength="100" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="n_extProfesor" class="form-label">Número Exterior</label>
-                                    <input type="text" class="form-control" id="n_extProfesor" name="n_ext" maxlength="10">
+                                    <input type="text" class="form-control" id="n_extProfesor" name="n_ext" maxlength="10" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="n_intProfesor" class="form-label">Número Interior</label>
-                                    <input type="text" class="form-control" id="n_intProfesor" name="n_int" maxlength="10">
+                                    <input type="text" class="form-control" id="n_intProfesor" name="n_int" maxlength="10" required>
                                 </div>
                             </div>
                         </div>

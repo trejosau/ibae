@@ -162,14 +162,14 @@
                             <div class="col-md-3">
                                 <label for="stock_min" class="form-label">Stock Mínimo</label>
                                 <input type="number" name="stock_min" id="stock_min" class="form-control"
-                                       value="{{ request('stock_min') }}" placeholder="0">
+                                       value="{{ request('stock_min') }}" placeholder="0" min="0" max="99999">
                             </div>
 
                             <!-- Filtro por Stock Máximo -->
                             <div class="col-md-3">
                                 <label for="stock_max" class="form-label">Stock Máximo</label>
                                 <input type="number" name="stock_max" id="stock_max" class="form-control"
-                                       value="{{ request('stock_max') }}" placeholder="100">
+                                       value="{{ request('stock_max') }}" placeholder="100" min="0" max="99999">
                             </div>
 
                             <!-- Filtro por Proveedor -->

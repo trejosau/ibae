@@ -131,8 +131,8 @@
                             </div>
                             <div class="col-12 col-md-6 mb-3">
                                 <label for="marca" class="form-label">Marca</label>
-                                <select class="form-select" id="marca" name="marca">
-                                    <option value="">Selecciona una marca...</option>
+                                <select class="form-select" id="marca" name="marca" required>
+                                    <option value="" disabled selected>Selecciona una marca...</option>
                                     @foreach($marcas as $marca)
                                         <option value="{{ $marca->id }}">{{ $marca->nombre_empresa }}</option>
                                     @endforeach
@@ -150,15 +150,15 @@
                         <div class="row">
                             <div class="col-12 col-md-4 mb-3">
                                 <label for="precio_proveedor" class="form-label">Precio Proveedor</label>
-                                <input type="number" class="form-control" id="precio_proveedor" name="precio_proveedor" required>
+                                <input type="number" class="form-control" id="precio_proveedor" name="precio_proveedor" required min="0" max="99999">
                             </div>
                             <div class="col-12 col-md-4 mb-3">
                                 <label for="precio_lista" class="form-label">Precio Lista</label>
-                                <input type="number" class="form-control" id="precio_lista" name="precio_lista" required>
+                                <input type="number" class="form-control" id="precio_lista" name="precio_lista" required  min="0" max="99999">
                             </div>
                             <div class="col-12 col-md-4 mb-3">
                                 <label for="precio_venta" class="form-label">Precio Venta</label>
-                                <input type="number" class="form-control" id="precio_venta" name="precio_venta" required>
+                                <input type="number" class="form-control" id="precio_venta" name="precio_venta" required  min="0" max="99999">
                             </div>
                         </div>
 
@@ -166,27 +166,29 @@
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label for="cantidad" class="form-label">Cantidad</label>
-                                <input type="number" class="form-control" id="cantidad" name="cantidad" required>
+                                <input type="number" class="form-control" id="cantidad" name="cantidad" required  min="0" max="99999">
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="medida" class="form-label">Medida</label>
-                                <select class="form-select" id="medida" name="medida">
-                                    <option disabled selected>Selecciona una medida...</option>
+                                <select class="form-select" id="medida" name="medida" required>
+                                    <option value="" disabled selected>Selecciona una medida...</option>
                                     @foreach($medidas as $valor => $texto)
                                         <option value="{{ $valor }}">{{ $texto }}</option>
                                     @endforeach
                                 </select>
+
                             </div>
                             <div class="row">
                                 <!-- Categoría -->
                                 <div class="col-md-12 mb-3">
                                     <label for="id_categoria" class="form-label">Categoría</label>
-                                    <select class="form-select" id="id_categoria" name="id_categoria">
-                                        <option value="">Selecciona una categoría...</option>
+                                    <select class="form-select" id="id_categoria" name="id_categoria" required>
+                                        <option value="" disabled selected>Selecciona una categoría...</option>
                                         @foreach($categorias as $categoria)
                                             <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
                                         @endforeach
                                     </select>
+
                                 </div>
 
                                 <!-- Subcategoría 1 -->
@@ -492,7 +494,22 @@
 
     <!-- Tabla de productos -->
     <div class="card">
-        <div class="card-header">Lista de Productos</div>
+
+        <div class="card-header">
+            <h5>Lista de Productos</h5>
+
+            <!-- Formulario de búsqueda -->
+            <form method="GET" action="{{ route('dashboard.productos') }}" class="d-flex">
+                <input
+                    type="text"
+                    class="form-control me-2"
+                    name="buscar"
+                    placeholder="Buscar por nombre"
+                    value="{{ request()->get('buscar') }}"
+                >
+                <button class="btn btn-outline-success" type="submit">Buscar</button>
+            </form>
+        </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-striped">

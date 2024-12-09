@@ -49,7 +49,35 @@ class UsuarioController extends Controller
             'phone' => ['required', 'string', 'min:13', 'max:13', 'regex:/^\+52\d{10}$/'],
             'username' => 'required|string|max:255|unique:users,username',
             'email' => 'required|email|max:255',
+        ], [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.string' => 'El nombre debe ser una cadena de texto.',
+            'nombre.max' => 'El nombre no puede tener más de 255 caracteres.',
+
+            'ap_paterno.required' => 'El apellido paterno es obligatorio.',
+            'ap_paterno.string' => 'El apellido paterno debe ser una cadena de texto.',
+            'ap_paterno.max' => 'El apellido paterno no puede tener más de 255 caracteres.',
+
+            'ap_materno.required' => 'El apellido materno es obligatorio.',
+            'ap_materno.string' => 'El apellido materno debe ser una cadena de texto.',
+            'ap_materno.max' => 'El apellido materno no puede tener más de 255 caracteres.',
+
+            'phone.required' => 'El número de teléfono es obligatorio.',
+            'phone.string' => 'El número de teléfono debe ser una cadena de texto.',
+            'phone.min' => 'El número de teléfono debe tener exactamente 13 caracteres.',
+            'phone.max' => 'El número de teléfono debe tener exactamente 13 caracteres.',
+            'phone.regex' => 'El número de teléfono debe tener el formato correcto (+52 seguido de 10 dígitos).',
+
+            'username.required' => 'El nombre de usuario es obligatorio.',
+            'username.string' => 'El nombre de usuario debe ser una cadena de texto.',
+            'username.max' => 'El nombre de usuario no puede tener más de 255 caracteres.',
+            'username.unique' => 'El nombre de usuario ya está en uso.',
+
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'El correo electrónico debe ser una dirección válida.',
+            'email.max' => 'El correo electrónico no puede tener más de 255 caracteres.',
         ]);
+
 
 
         // Generar contraseña aleatoria
@@ -145,10 +173,44 @@ class UsuarioController extends Controller
             'nombre' => 'required|string|max:255',
             'ap_paterno' => 'required|string|max:255',
             'ap_materno' => 'required|string|max:255',
-            'phone' => ['required', 'string','min:15', 'max:15', 'regex:/^\+52\d{10}$/'],
+            'phone' => [
+                'required',
+                'string',
+                'min:15',
+                'max:15',
+                'regex:/^\+52\d{10}$/'
+            ],
             'username' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
+        ], [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.string' => 'El nombre debe ser una cadena de texto.',
+            'nombre.max' => 'El nombre no puede tener más de 255 caracteres.',
+
+            'ap_paterno.required' => 'El apellido paterno es obligatorio.',
+            'ap_paterno.string' => 'El apellido paterno debe ser una cadena de texto.',
+            'ap_paterno.max' => 'El apellido paterno no puede tener más de 255 caracteres.',
+
+            'ap_materno.required' => 'El apellido materno es obligatorio.',
+            'ap_materno.string' => 'El apellido materno debe ser una cadena de texto.',
+            'ap_materno.max' => 'El apellido materno no puede tener más de 255 caracteres.',
+
+            'phone.required' => 'El número de teléfono es obligatorio.',
+            'phone.string' => 'El número de teléfono debe ser una cadena de texto.',
+            'phone.min' => 'El número de teléfono debe tener exactamente 15 caracteres.',
+            'phone.max' => 'El número de teléfono debe tener exactamente 15 caracteres.',
+            'phone.regex' => 'El número de teléfono debe estar en el formato: +52 seguido de 10 dígitos.',
+
+            'username.required' => 'El nombre de usuario es obligatorio.',
+            'username.string' => 'El nombre de usuario debe ser una cadena de texto.',
+            'username.max' => 'El nombre de usuario no puede tener más de 255 caracteres.',
+
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'El correo electrónico debe ser una dirección válida.',
+            'email.max' => 'El correo electrónico no puede tener más de 255 caracteres.',
+            'email.unique' => 'Este correo electrónico ya está registrado.',
         ]);
+
 
         $emailExiste = User::where('email', $request->email)->first();
         if ($emailExiste) {
@@ -242,7 +304,13 @@ class UsuarioController extends Controller
             'nombre' => 'required|string|max:255',
             'ap_paterno' => 'required|string|max:255',
             'ap_materno' => 'required|string|max:255',
-            'phone' => ['required', 'string', 'max:13','min:13', 'regex:/^\+52\d{10}$/'],
+            'phone' => [
+                'required',
+                'string',
+                'max:13',
+                'min:13',
+                'regex:/^\+52\d{10}$/',
+            ],
             'RFC' => 'nullable|string|max:20',
             'CURP' => 'nullable|string|max:20',
             'username' => 'required|string|max:255|unique:users,username',
@@ -254,6 +322,63 @@ class UsuarioController extends Controller
             'calle' => 'required|string|max:100',
             'n_ext' => 'required|string|max:10',
             'n_int' => 'nullable|string|max:10',
+        ], [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.string' => 'El nombre debe ser una cadena de texto.',
+            'nombre.max' => 'El nombre no puede tener más de 255 caracteres.',
+
+            'ap_paterno.required' => 'El apellido paterno es obligatorio.',
+            'ap_paterno.string' => 'El apellido paterno debe ser una cadena de texto.',
+            'ap_paterno.max' => 'El apellido paterno no puede tener más de 255 caracteres.',
+
+            'ap_materno.required' => 'El apellido materno es obligatorio.',
+            'ap_materno.string' => 'El apellido materno debe ser una cadena de texto.',
+            'ap_materno.max' => 'El apellido materno no puede tener más de 255 caracteres.',
+
+            'phone.required' => 'El número de teléfono es obligatorio.',
+            'phone.string' => 'El número de teléfono debe ser una cadena de texto.',
+            'phone.max' => 'El número de teléfono no puede tener más de 13 caracteres.',
+            'phone.min' => 'El número de teléfono debe tener exactamente 13 caracteres.',
+            'phone.regex' => 'El número de teléfono debe estar en el formato: +52 seguido de 10 dígitos.',
+
+            'RFC.max' => 'El RFC no puede tener más de 20 caracteres.',
+
+            'CURP.max' => 'La CURP no puede tener más de 20 caracteres.',
+
+            'username.required' => 'El nombre de usuario es obligatorio.',
+            'username.string' => 'El nombre de usuario debe ser una cadena de texto.',
+            'username.max' => 'El nombre de usuario no puede tener más de 255 caracteres.',
+            'username.unique' => 'Este nombre de usuario ya está en uso.',
+
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'El correo electrónico debe ser una dirección válida.',
+            'email.max' => 'El correo electrónico no puede tener más de 255 caracteres.',
+
+            'especialidad.required' => 'La especialidad es obligatoria.',
+            'especialidad.string' => 'La especialidad debe ser una cadena de texto.',
+            'especialidad.in' => 'La especialidad debe ser una de las siguientes opciones: estilismo, barbería, maquillaje, uñas.',
+
+            'zipcode.required' => 'El código postal es obligatorio.',
+            'zipcode.string' => 'El código postal debe ser una cadena de texto.',
+            'zipcode.size' => 'El código postal debe tener exactamente 5 caracteres.',
+
+            'ciudad.required' => 'La ciudad es obligatoria.',
+            'ciudad.string' => 'La ciudad debe ser una cadena de texto.',
+            'ciudad.max' => 'La ciudad no puede tener más de 100 caracteres.',
+
+            'colonia.required' => 'La colonia es obligatoria.',
+            'colonia.string' => 'La colonia debe ser una cadena de texto.',
+            'colonia.max' => 'La colonia no puede tener más de 100 caracteres.',
+
+            'calle.required' => 'La calle es obligatoria.',
+            'calle.string' => 'La calle debe ser una cadena de texto.',
+            'calle.max' => 'La calle no puede tener más de 100 caracteres.',
+
+            'n_ext.required' => 'El número exterior es obligatorio.',
+            'n_ext.string' => 'El número exterior debe ser una cadena de texto.',
+            'n_ext.max' => 'El número exterior no puede tener más de 10 caracteres.',
+
+            'n_int.max' => 'El número interior no puede tener más de 10 caracteres.',
         ]);
 
         $emailExiste = User::where('email', $request->email)->first();

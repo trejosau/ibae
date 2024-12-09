@@ -237,6 +237,11 @@
                                 </button>
                             </div>
                                 @endif
+                            @if($producto->estado == 'inactivo')
+                                <div class="position-absolute top-0 start-0 w-100 h-100 bg-danger bg-opacity-50 d-flex justify-content-center align-items-center">
+                                    <span class="text-white fs-4">Inactivo</span>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

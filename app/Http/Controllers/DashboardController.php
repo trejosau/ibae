@@ -426,24 +426,24 @@ class DashboardController extends Controller
         $estilistas = Estilista::all();
         $servicios = Servicios::all();
         $detalleCitas = DetalleCita::all();
-    
+
         // Aplicar filtros
         $query = Citas::query()->with(['comprador', 'detalleCita.servicio']);
-    
+
         if ($request->filled('nombre')) {
             $query->whereHas('comprador.persona', function ($query) use ($request) {
                 $query->where('nombre', 'like', '%' . $request->nombre . '%');
             });
         }
-    
+
         if ($request->filled('fecha')) {
             $query->whereDate('fecha_hora_creacion', $request->fecha);
         }
-    
+
         if ($request->filled('estado')) {
             $query->where('estado_cita', $request->estado);
         }
-    
+
         $citas = $query->paginate(10)->through(function ($cita) {
             $cita->fecha_inicio = $cita->fecha_hora_inicio_cita->format('Y-m-d');
             $cita->hora_inicio = $cita->fecha_hora_inicio_cita->format('H:i:s');
@@ -452,12 +452,12 @@ class DashboardController extends Controller
             });
             return $cita;
         });
-    
+
         return view('dashboard.index', compact('estilistas', 'citas', 'servicios', 'detalleCitas'));
     }
-    
-    
-     
+
+
+
     public function registrarCita(Request $request)
     {
         // Validación de datos
@@ -469,14 +469,14 @@ class DashboardController extends Controller
             'servicios' => 'required|array|min:1',
             'servicios.*' => 'exists:servicios,id',
         ]);
-    
+
         // Calcular el total sumando los precios de los servicios
         $total = 0;
         foreach ($validatedData['servicios'] as $servicioId) {
             $servicio = Servicios::findOrFail($servicioId); // Asume que tienes un modelo Servicio
             $total += $servicio->precio;
         }
-    
+
         // Crear la cita
         $cita = Citas::create([
             'id_estilista' => $validatedData['estilista_id'],
@@ -493,7 +493,7 @@ class DashboardController extends Controller
             'nueva_fecha_hora_inicio_cita' => null,
             'motivo_reprogramacion' => null,
         ]);
-    
+
         // Registrar servicios en detalle_cita
         foreach ($validatedData['servicios'] as $servicioId) {
             DetalleCita::create([
@@ -501,11 +501,11 @@ class DashboardController extends Controller
                 'id_servicio' => $servicioId,
             ]);
         }
-    
+
         // Redirigir con un mensaje de éxito
         return redirect()->back()->with('success', 'Cita registrada exitosamente.');
     }
-    
+
     public function reprogramar(Request $request, $id)
     {
         // Validar los datos del formulario
@@ -513,16 +513,16 @@ class DashboardController extends Controller
             'fecha' => 'required|date|after_or_equal:today',
             'hora' => 'required|date_format:H:i',
         ]);
-    
+
         // Buscar la cita por ID
         $cita = Citas::findOrFail($id);
-    
+
         // Actualizar la fecha y hora
         $cita->update([
             'fecha_hora_creacion' => $request->input('fecha') . ' ' . $request->input('hora'),
             'estado_cita' => 'reprogramada', // Actualizamos el estado a 'reprogramada'
         ]);
-    
+
         // Redirigir con mensaje de éxito
         return redirect()->back()->with('success', 'La cita se ha reprogramado con éxito.');
     }
@@ -544,7 +544,7 @@ class DashboardController extends Controller
 
 
 
-    
+
 }
 
 
@@ -560,7 +560,7 @@ public function completarCita($id)
 
     // Actualiza los valores
     $cita->estado_cita = 'completada';
-    
+
     // Guarda los cambios
     $cita->save();
 
@@ -587,11 +587,23 @@ public function completarCita($id)
 
     public function productos(Request $request)
     {
+        // Obtener el término de búsqueda desde el request
+        $buscar = $request->get('buscar');
 
+        // Obtener las categorías, subcategorías y marcas
         $categorias = Categorias::with('subcategorias')->get();
         $subcategorias = Subcategoria::all();
         $marcas = Proveedores::all();
-        $productos = Productos::with('proveedor','subcategoria')->orderBy('fecha_agregado', 'desc')->paginate(6);
+
+        // Filtrar productos si se proporciona el término de búsqueda
+        $productos = Productos::with('proveedor', 'subcategoria')
+            ->when($buscar, function($query, $buscar) {
+                return $query->where('nombre', 'like', "%{$buscar}%");
+            })
+            ->orderBy('fecha_agregado', 'desc')
+            ->paginate(6);
+
+        // Definir las medidas
         $medidas = [
             'pzas' => 'Piezas',
             'ml' => 'Mililitros',
