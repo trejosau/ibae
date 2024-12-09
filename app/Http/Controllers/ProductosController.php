@@ -22,19 +22,13 @@ class ProductosController extends Controller
 {
 
     public function eliminarSubcategoria($id)
-    {
-        // Buscar la subcategoría por su ID
-        $subcategoria = Subcategoria::find($id);
+        {
+            $subcategoria = Subcategoria::find($id);
 
-        // Verificar si la subcategoría existe
-        if ($subcategoria) {
-            // Eliminar la subcategoría
+            $subcategoria->Categories()->detach();
             $subcategoria->delete();
+            return redirect()->back();
         }
-
-        // Redirigir de nuevo a la página anterior
-        return redirect()->back()->with('success', 'Subcategoría eliminada exitosamente.');
-    }
 
     public function catalogo()
     {
@@ -78,19 +72,6 @@ class ProductosController extends Controller
         $id_subcategoria_3 = $data['id_subcategoria_3'];
         $stock = $data['stock'];
         $estado = $data['estado'];
-
-
-        if ($precio_proveedor >= $precio_lista) {
-            return redirect()->back()->with('error', 'El Precio Proveedor debe ser menor que el Precio Lista.');
-        }
-
-        if ($precio_lista >= $precio_venta) {
-            return redirect()->back()->with('error', 'El Precio Lista debe ser menor que el Precio Venta.');
-        }
-
-
-
-
 
         $producto = Productos::create([
             'nombre' => $nombre,
@@ -180,7 +161,7 @@ class ProductosController extends Controller
             'stock' => $data['stock'],
             'estado' => $data['estado'],
             'main_photo' => $url,
-            ]);
+        ]);
 
 
 
@@ -199,10 +180,10 @@ class ProductosController extends Controller
             'precio_venta' => 'required|numeric|min:0',
             'cantidad' => 'required|integer|min:0',
             'medida' => 'required|string|max:50',
-            'id_categoria' => 'required|exists:categorias,nombre',
-            'id_subcategoria_1' => 'nullable|exists:subcategorias,nombre',
-            'id_subcategoria_2' => 'nullable|exists:subcategorias,nombre',
-            'id_subcategoria_3' => 'nullable|exists:subcategorias,nombre',
+            'id_categoria' => 'required|exists:categorias,id',
+            'id_subcategoria_1' => 'nullable|exists:subcategorias,id',
+            'id_subcategoria_2' => 'nullable|exists:subcategorias,id',
+            'id_subcategoria_3' => 'nullable|exists:subcategorias,id',
             'main_photo' => 'required|image|mimes:jpeg,png,jpg,webp',
             'stock' => 'required|integer|min:0',
             'estado' => 'required|in:activo,inactivo',
