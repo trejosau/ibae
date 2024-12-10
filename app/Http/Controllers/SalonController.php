@@ -27,32 +27,22 @@ class SalonController extends Controller
     {
         // Obtenemos al estilista autenticado
         $estilista = Auth::user()->persona?->estilista;
-
+    
         if (!$estilista) {
             return redirect()->back()->with('error', 'No tienes citas asignadas.');
         }
-
+    
         // Obtenemos las citas del estilista, incluyendo comprador, detalleCita y servicio
         $citas = Citas::where('id_estilista', $estilista->id)
             ->with(['comprador.persona', 'detalleCita.servicio'])
             ->orderBy('fecha_hora_inicio_cita', 'asc')
-<<<<<<< HEAD
             ->paginate(10); // Número de registros por página
     
         // Retornamos la vista con las citas del estilista
         return view('salon.miagenda', compact('citas'));
     }
     
-    
-=======
-            ->get();
 
-        // Retornamos la vista con las citas del estilista
-        return view('salon.miagenda', compact('citas'));
-    }
-
-
->>>>>>> 96258641dc3bc0a484de25ee2e60fbfd4f95c071
     public function miscitas()
     {
         $comprador = Auth::user()->persona?->comprador;
