@@ -1,4 +1,3 @@
-
 <div class="auditoria-section">
     <h2 class="text-center mb-4">Reportes y Auditoría</h2>
 
@@ -19,7 +18,7 @@
                     <td>{{ $auditoria->operacion }}</td>
                     <td>{{ $auditoria->tabla_afectada }}</td>
                     <td>{{ $auditoria->usuario_actor }}</td>
-                    <td>{{ $auditoria->usuario_afectado }}</td>
+                    <td>{{ $auditoria->AfectadoUser->name ?? 'N/A' }}</td>
                 </tr>
             </tbody>
         </table>

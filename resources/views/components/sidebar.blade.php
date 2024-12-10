@@ -44,6 +44,7 @@
                     <span>Compras</span>
                 </a>
             </li>
+
             @endrole
 
             @role('admin|estilista')
@@ -75,6 +76,12 @@
                 <a href="{{ route('dashboard.usuarios') }}" class="sidebar-link">
                     <i class="fa-regular fa-user"></i>
                     <span>Usuarios</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{{ route('dashboard.auditoria') }}" class="sidebar-link">
+                    <i class='fas fa-archive'></i>
+                    <span>Auditoría</span>
                 </a>
             </li>
             @endrole

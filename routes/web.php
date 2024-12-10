@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuditoriaController;
 use App\Http\Controllers\CitaController;
 use App\Http\Controllers\CompraController;
 use App\Http\Controllers\DashboardController;

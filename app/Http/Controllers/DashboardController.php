@@ -673,15 +673,20 @@ public function completarCita($id)
         return view('dashboard.index', compact('usuarios'));
     }
 
-    public function auditoria(Request $request)
+    public function auditoria()
     {
-        $auditorias = Auditoria::where('operacion', '!=', 'INSERT')->orderBy('fecha', 'desc')->paginate(10);
-        return view('dashboard.index' , compact('auditorias'));
+        // Obtener todas las auditorías desde la base de datos
+        $auditorias = Auditoria::with(['user', 'afectadoUser'])->get();
+
+        // Retornar la vista con los datos
+        return view('dashboard.index', compact('auditorias'));
     }
 
     public function profile(Request $request)
     {
         return view('dashboard.index');
     }
+
+
 
 }
