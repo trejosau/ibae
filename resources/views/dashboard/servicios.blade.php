@@ -131,12 +131,12 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="duracion_minima" class="form-label">Duración mínima</label>
+                            <label for="duracion_minima" class="form-label">Duración mínima <small>(en minutos)</small></label>
                             <input type="number" class="form-control" id="duracion_minima" name="duracion_minima" required max="9999" min="1">
                         </div>
 
                         <div class="mb-3">
-                            <label for="duracion_maxima" class="form-label">Duración máxima</label>
+                            <label for="duracion_maxima" class="form-label">Duración máxima <small>(en minutos)</small></label>
                             <input type="number" class="form-control" id="duracion_maxima" name="duracion_maxima" required max="9999" min="1">
                         </div>
 

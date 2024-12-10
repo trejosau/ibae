@@ -465,15 +465,47 @@ class DashboardController extends Controller
             'cliente' => 'required|string|max:255',
             'estilista_id' => 'required|exists:estilistas,id',
             'fecha_hora_inicio_cita' => 'required|date',
-            'estado_cita' => 'required|in:programada,cancelada,completada',
             'servicios' => 'required|array|min:1',
             'servicios.*' => 'exists:servicios,id',
         ]);
 
-        // Calcular el total sumando los precios de los servicios
+        $fechaHoraInicio = Carbon::parse($validatedData['fecha_hora_inicio_cita']);
+
+        // Calcular duración total y fecha de fin
+        $totalDuracion = 0;
+        foreach ($validatedData['servicios'] as $servicioId) {
+            $servicio = Servicios::findOrFail($servicioId);
+            $totalDuracion += $servicio->duracion_maxima;
+        }
+        $fechaHoraFin = $fechaHoraInicio->copy()->addMinutes($totalDuracion);
+
+        // Validar que la fecha de fin no exceda las 10:00 PM
+        $horaLimite = $fechaHoraInicio->copy()->setTime(22, 0, 0);
+        if ($fechaHoraFin->greaterThan($horaLimite)) {
+            return redirect()->back()->withErrors(['error' => 'La cita no puede terminar después de las 10:00 PM.']);
+        }
+
+        // Validar solapamiento de citas con el estilista
+        $citasExistentes = Citas::where('id_estilista', $validatedData['estilista_id'])
+            ->where('estado_cita', 'programada')
+            ->where(function ($query) use ($fechaHoraInicio, $fechaHoraFin) {
+                $query->whereBetween('fecha_hora_inicio_cita', [$fechaHoraInicio, $fechaHoraFin])
+                    ->orWhereBetween('fecha_hora_fin_cita', [$fechaHoraInicio, $fechaHoraFin])
+                    ->orWhere(function ($query) use ($fechaHoraInicio, $fechaHoraFin) {
+                        $query->where('fecha_hora_inicio_cita', '<=', $fechaHoraInicio)
+                            ->where('fecha_hora_fin_cita', '>=', $fechaHoraFin);
+                    });
+            })->exists();
+
+        if ($citasExistentes) {
+
+            return redirect()->back()->with('error', 'Ya existe una cita programada con el mismo horario o hay conflictos con otro horario.');
+        }
+
+        // Calcular el costo total
         $total = 0;
         foreach ($validatedData['servicios'] as $servicioId) {
-            $servicio = Servicios::findOrFail($servicioId); // Asume que tienes un modelo Servicio
+            $servicio = Servicios::findOrFail($servicioId);
             $total += $servicio->precio;
         }
 
@@ -482,11 +514,11 @@ class DashboardController extends Controller
             'id_estilista' => $validatedData['estilista_id'],
             'cliente' => $validatedData['cliente'],
             'fecha_hora_creacion' => now(),
-            'fecha_hora_inicio_cita' => $validatedData['fecha_hora_inicio_cita'],
+            'fecha_hora_inicio_cita' => $fechaHoraInicio,
+            'fecha_hora_fin_cita' => $fechaHoraFin->format('Y-m-d H:i:s'),
             'total' => $total,
-            'estado_cita' => $validatedData['estado_cita'],
+            'estado_cita' => 'programada',
             'id_comprador' => null,
-            'fecha_hora_fin_cita' => null,
             'anticipo' => 0,
             'pago_restante' => 0,
             'estado_pago' => 'concluido',

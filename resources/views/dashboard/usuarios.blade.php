@@ -155,7 +155,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="n_intProfesor" class="form-label">Número Interior</label>
-                                    <input type="text" class="form-control" id="n_intProfesor" name="n_int" maxlength="10" required>
+                                    <input type="text" class="form-control" id="n_intProfesor" name="n_int" maxlength="10">
                                 </div>
                             </div>
                         </div>
