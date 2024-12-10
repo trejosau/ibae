@@ -8,6 +8,23 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
+
+.back-link {
+        color: #333;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .back-link:hover {
+        color: #555; /* Color más claro al pasar el mouse */
+        text-decoration: underline;
+        transform: translateX(-5px); /* Movimiento sutil hacia la izquierda */
+    }
+
         body {
             background-color: #f8f9fa;
             font-family: 'Arial', sans-serif;
@@ -37,6 +54,9 @@
 <body>
     @include('components.navbarSalon')
     <div class="container my-5" style="padding-top: 120px">
+        <div class="mb-3">
+            <a href="/salon" class="back-link">← Volver a la Salon</a>
+        </div>
         <h1 class="text-center mb-4"><i class="bi bi-calendar3"></i> Mi Agenda</h1>
     
         @if($citas->isEmpty())
@@ -61,12 +81,12 @@
                         @foreach($citas as $cita)
                             <tr>
                                 <td>
-                                    <strong>Inicio:</strong>{{ \Carbon\Carbon::parse($cita->fecha_hora_creacion)->format('Y-m-d') }}
-                                    </strong><td>{{ \Carbon\Carbon::parse($cita->fecha_hora_creacion)->format('H:i:s') }}</td> 
+                                    <strong>Inicio:</strong>{{ \Carbon\Carbon::parse($cita->fecha_hora_inicio_cita)->format('Y-m-d') }}
+                                    </strong><td>{{ \Carbon\Carbon::parse($cita->fecha_hora_inicio_cita)->format('H:i:s') }}</td> 
 
                                 </td>
                                 <td>
-                                    <strong>Nombre:</strong> {{ $cita->comprador->persona->nombre ?? 'Sin registrar' }}<br>
+                                    <strong>Nombre:</strong> {{ $cita->comprador->persona->users->username ?? 'Sin registrar' }}<br>
                                     <strong>Contacto:</strong> {{ $cita->comprador->persona->telefono ?? 'N/A' }}
                                 </td>
                                 <td>
@@ -102,12 +122,14 @@
                                     </button>
                                 
                                     <!-- Botón Reprogramar -->
-                                    <button 
-                                        class="btn btn-warning btn-sm" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#modal-reprogramar-{{ $cita->id }}">
-                                        Reprogramar
-                                    </button>
+                                    @if($cita->estado_cita != 'completada' && $cita->estado_cita != 'reprogramada')
+                                    <button
+                                    class="btn btn-warning btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modal-reprogramar-{{ $cita->id }}">
+                                    Reprogramar
+                                </button>
+                                    @endif
                                 </td>
                                 
                             </tr>
@@ -117,7 +139,10 @@
             </div>
         @endif
     </div>
-
+<!-- Paginación -->
+<div class="d-flex justify-content-center mt-4">
+    {{ $citas->links('pagination::bootstrap-4') }}
+</div>
 
     @foreach ($citas as $cita)
     <div class="modal fade" id="modal-ver-detalle-{{ $cita->id }}" tabindex="-1" aria-labelledby="modalVerDetalleLabel-{{ $cita->id }}" aria-hidden="true">
@@ -185,6 +210,15 @@
                         <button type="submit" class="btn btn-success">Concluir Pago</button>
                     </form>
                     @endif
+                    @if($cita->estado_cita != 'completada')
+                    <form action="{{ route('citas.completar', $cita->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-primary">
+                            Completar Cita
+                        </button>
+                    </form>
+                    @endif
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
@@ -222,6 +256,8 @@
             </div>
         </div>
     </div>
+
+
     @endforeach
     
     @include('components.footer')

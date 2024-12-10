@@ -245,6 +245,7 @@ class ServiciosDisponibles extends Component
         $cita = Citas::create([
             'id_estilista' => $this->estilistaSeleccionada,
             'id_comprador' => $comprador->id,
+            'fecha_hora_creacion'=>now(),
             'fecha_hora_inicio_cita' => $fechaHoraCompleta,
             'fecha_hora_fin_cita' => $fechaHoraFin,
             'total' => $total,
