@@ -135,7 +135,7 @@
                                 <td>{{ $cita->estilista?->persona?->nombre ?? 'No asignado' }}</td>
                                 <td>
                                     <span class="badge 
-                                        @if($cita->estado_cita === 'programada') bg-warning 
+                                        @if($cita->estado_cita === 'programada') bg-primary 
                                         @elseif($cita->estado_cita === 'cancelada') bg-danger 
                                         @elseif($cita->estado_cita === 'completada') bg-success 
                                         @else bg-warning 
