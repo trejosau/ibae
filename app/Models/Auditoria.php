@@ -19,12 +19,7 @@ class Auditoria extends Model
         'fecha',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function afectadoUser()
+    public function usuarioafectado()
     {
         return $this->belongsTo(User::class, 'afectado_user_id');
     }

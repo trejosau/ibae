@@ -708,7 +708,9 @@ public function completarCita($id)
     public function auditoria()
     {
         // Obtener todas las auditorías desde la base de datos
-        $auditorias = Auditoria::with(['user', 'afectadoUser'])->get();
+        $auditorias = Auditoria::with(['usuarioactor', 'usuarioafectado'])->get();
+
+        dd($auditorias);
 
         // Retornar la vista con los datos
         return view('dashboard.index', compact('auditorias'));

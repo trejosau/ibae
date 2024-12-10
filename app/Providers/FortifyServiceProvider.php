@@ -57,18 +57,21 @@ class FortifyServiceProvider extends ServiceProvider
 
             if ($user && Hash::check($request->password, $user->password)) {
                 if ($user->estado === 'activo') {
-
+                    // Si el usuario está activo, inicie sesión
                     Auth::login($user, $request->filled('remember'));
                     return $user;
                 }
 
+
                 if ($user->estado === 'inactivo') {
-                    return redirect()->route('login')->with('error', 'Tu cuenta esta bloqueada.');
+                    return null;
                 }
             }
 
+            // Si no es válido, devolvemos null
             return null;
         });
+
 
 
         Fortify::registerView('auth.register');

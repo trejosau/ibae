@@ -42,12 +42,14 @@ class User extends Authenticatable
         return $this->hasOne(Persona::class, 'usuario', 'id');
     }
 
-    public function auditorias()
+
+    /**
+     * Relación con auditorías donde el usuario es el afectado.
+     */
+    public function auditoriasComoAfectado()
     {
-        return $this->hasMany(Auditoria::class, 'user_id');
+        return $this->hasMany(Auditoria::class, 'afectado_user_id', 'id');
     }
-
-
 
 
 
