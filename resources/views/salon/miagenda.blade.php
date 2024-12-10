@@ -58,7 +58,7 @@
             <a href="/salon" class="back-link">← Volver a la Salon</a>
         </div>
         <h1 class="text-center mb-4"><i class="bi bi-calendar3"></i> Mi Agenda</h1>
-    
+
         @if($citas->isEmpty())
             <div class="alert alert-warning text-center">
                 <p><i class="bi bi-calendar-x"></i> No tienes citas asignadas.</p>
@@ -82,7 +82,7 @@
                             <tr>
                                 <td>
                                     <strong>Inicio:</strong>{{ \Carbon\Carbon::parse($cita->fecha_hora_inicio_cita)->format('Y-m-d') }}
-                                    </strong><td>{{ \Carbon\Carbon::parse($cita->fecha_hora_inicio_cita)->format('H:i:s') }}</td> 
+                                    </strong><td>{{ \Carbon\Carbon::parse($cita->fecha_hora_inicio_cita)->format('H:i:s') }}</td>
 
                                 </td>
                                 <td>
@@ -95,32 +95,32 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <span class="badge" style=" 
-                                    @if($cita->estado_cita == 'programada') 
+                                    <span class="badge" style="
+                                    @if($cita->estado_cita == 'programada')
                                         background-color: blue; color: white;
-                                    @elseif($cita->estado_cita == 'reprogramada') 
+                                    @elseif($cita->estado_cita == 'reprogramada')
                                         background-color: orange; color: white;
-                                    @elseif($cita->estado_cita == 'cancelada') 
+                                    @elseif($cita->estado_cita == 'cancelada')
                                         background-color: red; color: white;
-                                    @elseif($cita->estado_cita == 'completada') 
+                                    @elseif($cita->estado_cita == 'completada')
                                         background-color: green; color: white;
                                     @else
                                         background-color: gray; color: white;
                                     @endif">
                                     {{ ucfirst($cita->estado_cita) }}
                                 </span>
-                                
+
                                 </td>
                                 <td>{{ $cita->estado_pago }}</td>
                                 <td>
                                     <!-- Botón Ver Detalle -->
-                                    <button 
-                                        class="btn btn-info btn-sm" 
-                                        data-bs-toggle="modal" 
+                                    <button
+                                        class="btn btn-info btn-sm"
+                                        data-bs-toggle="modal"
                                         data-bs-target="#modal-ver-detalle-{{ $cita->id }}">
                                         Ver Detalle
                                     </button>
-                                
+
                                     <!-- Botón Reprogramar -->
                                     @if($cita->estado_cita != 'completada' && $cita->estado_cita != 'reprogramada')
                                     <button
@@ -131,7 +131,7 @@
                                 </button>
                                     @endif
                                 </td>
-                                
+
                             </tr>
                         @endforeach
                     </tbody>
@@ -225,9 +225,9 @@
         </div>
     </div>
     @endforeach
-    
 
-    
+
+
     @foreach($citas as $cita)
 
     <div class="modal fade" id="modal-reprogramar-{{ $cita->id }}" tabindex="-1" aria-labelledby="reprogramarModalLabel-{{ $cita->id }}" aria-hidden="true">
@@ -251,7 +251,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </form>
-                                        
+
                 </div>
             </div>
         </div>
@@ -259,7 +259,7 @@
 
 
     @endforeach
-    
+
     @include('components.footer')
 </body>
 </html>

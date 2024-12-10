@@ -426,27 +426,27 @@ class DashboardController extends Controller
         $estilistas = Estilista::all();
         $servicios = Servicios::all();
         $detalleCitas = DetalleCita::all();
-    
+
         // Crear la consulta base
         $query = Citas::query()->with(['comprador', 'detalleCita.servicio']);
-    
+
         // Filtrar por nombre del cliente
         if ($request->get('nombre')) {
             $query->whereHas('comprador.persona', function ($query) use ($request) {
                 $query->where('nombre', 'like', '%' . $request->get('nombre') . '%');
             });
         }
-    
+
         // Filtrar por fecha
         if ($request->get('fecha')) {
             $query->whereDate('fecha_hora_creacion', $request->get('fecha'));
         }
-    
+
         // Filtrar por estado
         if ($request->get('estado')) {
             $query->where('estado_cita', $request->get('estado'));
         }
-    
+
         // Obtener las citas con paginación
         $citas = $query->paginate(10)->through(function ($cita) {
             $cita->fecha_inicio = $cita->fecha_hora_inicio_cita->format('Y-m-d');
@@ -456,12 +456,12 @@ class DashboardController extends Controller
             });
             return $cita;
         });
-    
+
         // Pasar las variables a la vista
         return view('dashboard.index', compact('estilistas', 'citas', 'servicios', 'detalleCitas'));
     }
-    
-    
+
+
 
 
     public function registrarCita(Request $request)
@@ -733,7 +733,7 @@ public function completarCita($id)
         // Obtener todas las auditorías desde la base de datos
         $auditorias = Auditoria::with(['usuarioactor', 'usuarioafectado'])->get();
 
-        dd($auditorias);
+
 
         // Retornar la vista con los datos
         return view('dashboard.index', compact('auditorias'));
