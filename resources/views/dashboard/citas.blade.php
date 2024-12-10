@@ -26,41 +26,42 @@
 
     <h2 class="text-center mb-4">Sección de Citas</h2>
 
-    <!-- Filtros -->
-    <div class="row mb-4">
-        <!-- Filtro por nombre del cliente o comprador -->
-        <div class="col-md-4">
-            <div class="input-group">
-                <label class="input-group-text" for="filtro-nombre">Nombre del Cliente</label>
-                <input type="text" class="form-control" id="filtro-nombre" name="nombre" value="{{ request('nombre') }}">
-            </div>
-        </div>
-        <!-- Filtro por fecha -->
-        <div class="col-md-4">
-            <div class="input-group">
-                <label class="input-group-text" for="filtro-fecha">Fecha</label>
-                <input type="date" class="form-control" id="filtro-fecha" name="fecha" value="{{ request('fecha') }}">
-            </div>
-        </div>
-        <!-- Filtro por estado -->
-        <div class="col-md-4">
-            <div class="input-group">
-                <label class="input-group-text" for="filtro-estado">Estado</label>
-                <select class="form-control" id="filtro-estado" name="estado">
-                    <option value="">Todos</option>
-                    <option value="programada" {{ request('estado') == 'programada' ? 'selected' : '' }}>Programada</option>
-                    <option value="reprogramada" {{ request('estado') == 'reprogramada' ? 'selected' : '' }}>Reprogramada</option>
-                    <option value="cancelada" {{ request('estado') == 'cancelada' ? 'selected' : '' }}>Cancelada</option>
-                    <option value="completada" {{ request('estado') == 'completada' ? 'selected' : '' }}>Completada</option>
-                </select>
-            </div>
-        </div>
-    </div>
+   <!-- Formulario de búsqueda con filtros -->
+<form method="GET" action="{{ route('dashboard.citas') }}" class="d-flex mb-4">
+    <!-- Filtro por nombre del cliente -->
+    <input
+        type="text"
+        class="form-control me-2"
+        name="nombre"
+        placeholder="Buscar por nombre"
+        value="{{ request()->get('nombre') }}"
+    >
+
+    <!-- Filtro por fecha -->
+    <input
+        type="date"
+        class="form-control me-2"
+        name="fecha"
+        value="{{ request()->get('fecha') }}"
+    >
+
+    <!-- Filtro por estado -->
+    <select class="form-control me-2" name="estado">
+        <option value="">Todos</option>
+        <option value="programada" {{ request()->get('estado') == 'programada' ? 'selected' : '' }}>Programada</option>
+        <option value="reprogramada" {{ request()->get('estado') == 'reprogramada' ? 'selected' : '' }}>Reprogramada</option>
+        <option value="cancelada" {{ request()->get('estado') == 'cancelada' ? 'selected' : '' }}>Cancelada</option>
+        <option value="completada" {{ request()->get('estado') == 'completada' ? 'selected' : '' }}>Completada</option>
+    </select>
+
+    <!-- Botón de búsqueda -->
+    <button class="btn btn-outline-success" type="submit">Buscar</button>
+</form>
+
 
     <!-- Botones para aplicar y limpiar filtros -->
     <div class="row mb-4">
         <div class="col-md-12 text-center">
-            <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
             <a href="{{ route('dashboard.citas') }}" class="btn btn-secondary">Limpiar Filtros</a>
         </div>
     </div>
