@@ -170,6 +170,7 @@ class ServiciosDisponibles extends Component
 
             // Establecer fecha mínima (hoy) y máxima (hoy + 7 días)
     $this->fechaMinima = now()->format('Y-m-d');
+
     $this->fechaMaxima = now()->addDays(7)->format('Y-m-d');
 
     }
@@ -198,6 +199,10 @@ class ServiciosDisponibles extends Component
 
     public function confirmarCita()
     {
+        if ($this->fechaElegida < $this->fechaMinima) {
+            return  redirect()->back()->with('error', 'Esta fecha no esta valida.');
+        }
+
         // Verificar si los datos necesarios están disponibles
         if (!$this->fechaElegida || !$this->estilistaSeleccionada || !$this->selectedServices) {
             return redirect()->back()->with('error', 'Faltan datos para confirmar la cita.');

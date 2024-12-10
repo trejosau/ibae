@@ -24,7 +24,7 @@ class Admin extends Seeder
         $user = User::create([
             'username' => 'admin',
             'email' => 'admin@example.com',
-            'password' => bcrypt('4040'),
+            'password' => bcrypt('8899'),
             'profile_photo_url' => 'https://imagenes-ibae.s3.us-east-2.amazonaws.com/images/profiles/default_profile.jpg',
             'created_at' => now(),
             'updated_at' => now(),

@@ -42,7 +42,7 @@
                         @endif
 
                         <li class="nav-item">
-                            <a class="nav-link roboto-medium" href="{{ route('salon.index') }}">Salon</a>
+                            <a class="nav-link roboto-medium" href="{{ route('salon.index') }}">Salón</a>
                             </li>
                           <li class="nav-item">
                         <a class="nav-link roboto-medium" href="/tienda">Tienda</a>
