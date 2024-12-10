@@ -154,8 +154,8 @@
     @include('components.navbarTienda')
 
 <!-- Contenido principal -->
-<div class="container">
-    <h1>Mis Pedidos</h1>
+<div class="container" style="margin-top: 120px">
+
 
     <!-- Iterar sobre los pedidos -->
     @forelse ($pedidos as $pedido)

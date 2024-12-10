@@ -426,24 +426,28 @@ class DashboardController extends Controller
         $estilistas = Estilista::all();
         $servicios = Servicios::all();
         $detalleCitas = DetalleCita::all();
-
-        // Aplicar filtros
+    
+        // Crear la consulta base
         $query = Citas::query()->with(['comprador', 'detalleCita.servicio']);
-
-        if ($request->filled('nombre')) {
+    
+        // Filtrar por nombre del cliente
+        if ($request->get('nombre')) {
             $query->whereHas('comprador.persona', function ($query) use ($request) {
-                $query->where('nombre', 'like', '%' . $request->nombre . '%');
+                $query->where('nombre', 'like', '%' . $request->get('nombre') . '%');
             });
         }
-
-        if ($request->filled('fecha')) {
-            $query->whereDate('fecha_hora_creacion', $request->fecha);
+    
+        // Filtrar por fecha
+        if ($request->get('fecha')) {
+            $query->whereDate('fecha_hora_creacion', $request->get('fecha'));
         }
-
-        if ($request->filled('estado')) {
-            $query->where('estado_cita', $request->estado);
+    
+        // Filtrar por estado
+        if ($request->get('estado')) {
+            $query->where('estado_cita', $request->get('estado'));
         }
-
+    
+        // Obtener las citas con paginación
         $citas = $query->paginate(10)->through(function ($cita) {
             $cita->fecha_inicio = $cita->fecha_hora_inicio_cita->format('Y-m-d');
             $cita->hora_inicio = $cita->fecha_hora_inicio_cita->format('H:i:s');
@@ -452,10 +456,12 @@ class DashboardController extends Controller
             });
             return $cita;
         });
-
+    
+        // Pasar las variables a la vista
         return view('dashboard.index', compact('estilistas', 'citas', 'servicios', 'detalleCitas'));
     }
-
+    
+    
 
 
     public function registrarCita(Request $request)
