@@ -122,14 +122,6 @@
                                             data-bs-target="#modal-ver-detalle-{{ $cita->id }}">
                                             Ver
                                         </button>
-                                        @if($cita->estado_cita != 'completada' && $cita->estado_cita != 'reprogramada')
-                                        <button
-                                        class="btn btn-warning btn-sm"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modal-reprogramar-{{ $cita->id }}">
-                                        Reprogramar
-                                    </button>
-                                        @endif
                                     </td>
                                 </tr>
                             @empty
@@ -327,11 +319,6 @@
                             <!-- Aquí se agregarán dinámicamente los selects de servicios -->
                         </div>
                         <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="agregar-servicio">Agregar Servicio</button>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Total Calculado</label>
-                        <input type="text" class="form-control" id="total_calculado" readonly value="$0.00">
                     </div>
                 </div>
                 <div class="modal-footer">

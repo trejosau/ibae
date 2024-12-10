@@ -120,16 +120,6 @@
                                         data-bs-target="#modal-ver-detalle-{{ $cita->id }}">
                                         Ver Detalle
                                     </button>
-
-                                    <!-- Botón Reprogramar -->
-                                    @if($cita->estado_cita != 'completada' && $cita->estado_cita != 'reprogramada')
-                                    <button
-                                    class="btn btn-warning btn-sm"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#modal-reprogramar-{{ $cita->id }}">
-                                    Reprogramar
-                                </button>
-                                    @endif
                                 </td>
 
                             </tr>
