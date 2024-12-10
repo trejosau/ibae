@@ -12,8 +12,7 @@
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
                 <div class="accordion-body">
-                    Tienes que acudir a la academia y ahi un administrador o profesor te inscribiria a tu curso. En caso de que no tengas cuenta se te registrara una nueva.
-                </div>
+                    Tienes que acudir a la academia, donde un administrador o profesor te inscribirá en tu curso. En caso de que no tengas cuenta, se te registrará una nueva.                </div>
             </div>
         </div>
 
@@ -21,13 +20,12 @@
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingTwo">
                 <button class="accordion-button flat-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    ¿Como se maneja las inscripciones y colegiaturas?
-                </button>
+                    ¿Cómo se manejan las inscripciones y colegiaturas?              
+                  </button>
             </h2>
             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
                 <div class="accordion-body">
-                    La inscripciones una vez de por vida y las colegiaturas se hace cada semana. Solo pagas inscripcion la primera vez.
-                </div>
+                    Las inscripciones se realizan una sola vez en la vida, mientras que las colegiaturas se pagan semanalmente. Solo pagas la inscripción la primera vez.                </div>
             </div>
         </div>
 
