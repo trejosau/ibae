@@ -95,7 +95,7 @@
 <body>
     @include('components.navbarSalon')
 
-    <div class="container mt-5">
+    <div class="container mt-5" style="padding-top: 100px">
         @if (session('error'))
             <div class="alert alert-danger">
                 {{ session('error') }}
@@ -107,7 +107,7 @@
                 <p><i class="bi bi-calendar-x"></i> No tienes citas registradas.</p>
             </div>
         @else
-            <div style="padding-top: 100px">
+            <div>
                 <div class="mb-3">
                     <a href="/salon" class="back-link">← Volver al Salón</a>
                 </div>
