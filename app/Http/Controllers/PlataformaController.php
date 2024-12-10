@@ -796,7 +796,7 @@ public function actualizarTemas(Request $request, $moduloId)
             $user->username = $estudiante->matricula;
             $user->save();
 
-            $passowrdExiste = 'Ingresa con tu contraseña actual o en su caso con google';
+            $passowrdExiste = 'Te has converitdo en estudiante ingresa con tu contraseña actual o en su caso con google';
 
             // Enviar correo con las credenciales
             Mail::to($request->email)->send(new EnvioCredenciales($user, $passowrdExiste));

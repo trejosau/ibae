@@ -1,4 +1,29 @@
 <div class="citas-section">
+
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
     <h2 class="text-center mb-4">Sección de Citas</h2>
 
     <!-- Filtros -->
@@ -31,7 +56,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Botones para aplicar y limpiar filtros -->
     <div class="row mb-4">
         <div class="col-md-12 text-center">
@@ -39,7 +64,7 @@
             <a href="{{ route('dashboard.citas') }}" class="btn btn-secondary">Limpiar Filtros</a>
         </div>
     </div>
-    
+
 
 
     <!-- Citas Recientes -->
@@ -68,19 +93,19 @@
                                     <td>
                                         {{ $cita->comprador->persona->nombre ?? $cita->cliente ?? 'No asignado' }}
                                     </td>
-                                    
+
                                     <td>{{ $cita->estilista->persona->nombre ?? 'No asignado' }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($cita->fecha_hora_creacion)->format('Y-m-d') }}</td> 
-                                    <td>{{ \Carbon\Carbon::parse($cita->fecha_hora_creacion)->format('H:i:s') }}</td> 
+                                    <td>{{ \Carbon\Carbon::parse($cita->fecha_hora_creacion)->format('Y-m-d') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($cita->fecha_hora_creacion)->format('H:i:s') }}</td>
                                     <td>
                                         <span class="badge" style="
-                                            @if($cita->estado_cita == 'programada') 
+                                            @if($cita->estado_cita == 'programada')
                                                 background-color: blue; color: white;
-                                            @elseif($cita->estado_cita == 'reprogramada') 
+                                            @elseif($cita->estado_cita == 'reprogramada')
                                                 background-color: orange; color: white;
-                                            @elseif($cita->estado_cita == 'cancelada') 
+                                            @elseif($cita->estado_cita == 'cancelada')
                                                 background-color: red; color: white;
-                                            @elseif($cita->estado_cita == 'completada') 
+                                            @elseif($cita->estado_cita == 'completada')
                                                 background-color: green; color: white;
                                             @else
                                                 background-color: gray; color: white;
@@ -90,16 +115,16 @@
                                     </td>
                                     <td>{{ $cita->estado_pago }}</td>
                                     <td>
-                                        <button 
-                                            class="btn btn-info btn-sm" 
-                                            data-bs-toggle="modal" 
+                                        <button
+                                            class="btn btn-info btn-sm"
+                                            data-bs-toggle="modal"
                                             data-bs-target="#modal-ver-detalle-{{ $cita->id }}">
                                             Ver
                                         </button>
                                         @if($cita->estado_cita != 'completada' && $cita->estado_cita != 'reprogramada')
-                                        <button 
-                                        class="btn btn-warning btn-sm" 
-                                        data-bs-toggle="modal" 
+                                        <button
+                                        class="btn btn-warning btn-sm"
+                                        data-bs-toggle="modal"
                                         data-bs-target="#modal-reprogramar-{{ $cita->id }}">
                                         Reprogramar
                                     </button>
@@ -113,7 +138,7 @@
                             @endforelse
                         </tbody>
                     </table>
-                    
+
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-agregar-cita">Agregar Cita</button>
                 </div>
             </div>
@@ -121,9 +146,9 @@
         <div class="d-flex justify-content-center mt-3">
             {{ $citas->links('pagination::bootstrap-5') }}
         </div>
-        
+
     </div>
-    
+
     @foreach ($citas as $cita)
     <div class="modal fade" id="modal-ver-detalle-{{ $cita->id }}" tabindex="-1" aria-labelledby="modalVerDetalleLabel-{{ $cita->id }}" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -209,7 +234,7 @@
     </div>
     @endforeach
 
-    
+
 
     @foreach($citas as $cita)
     <!-- Modal Reprogramar -->
@@ -233,7 +258,7 @@
                             <input type="time" id="hora-{{ $cita->id }}" name="hora" class="form-control" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar</button>
-                    </form>                    
+                    </form>
                 </div>
             </div>
         </div>
@@ -241,7 +266,7 @@
 @endforeach
 
 
-    
+
 <!-- Modal para registrar cita -->
 <div class="modal fade" id="modal-agregar-cita" tabindex="-1" aria-labelledby="modalRegistrarCitaLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -272,19 +297,9 @@
                     <!-- Fecha y hora de inicio de la cita -->
                     <div class="mb-3">
                         <label for="fecha_hora_inicio_cita" class="form-label">Fecha y Hora de Inicio</label>
-                        <input type="datetime-local" class="form-control" id="fecha_hora_inicio_cita" name="fecha_hora_inicio_cita" required>
+                        <input type="datetime-local" class="form-control" id="fecha_hora_inicio_cita" name="fecha_hora_inicio_cita" required step="3600">
                     </div>
 
-        
-                    <!-- Estado de la cita -->
-                    <div class="mb-3">
-                        <label for="estado_cita" class="form-label">Estado de la Cita</label>
-                        <select class="form-control" id="estado_cita" name="estado_cita" required>
-                            <option value="programada">Programada</option>
-                            <option value="cancelada">Cancelada</option>
-                            <option value="completada">Completada</option>
-                        </select>
-                    </div>
 
                     <!-- Servicios -->
                     <div class="mb-3">
@@ -309,8 +324,8 @@
     </div>
 
 
- 
-    
+
+
 </div>
 
 <script>

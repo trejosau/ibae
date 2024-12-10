@@ -104,9 +104,12 @@ class UsuarioController extends Controller
                 'updated_at' => null,
             ]);
 
-
-
             $user->save();
+
+            $passowrdExiste = 'Te has converitdo en administrador ingresa con tu contraseña actual o en su caso con google';
+
+            // Enviar correo con las credenciales
+            Mail::to($request->email)->send(new EnvioCredenciales($user, $passowrdExiste));
 
             return redirect()->route('dashboard.usuarios')->with('success', 'Usuario con este correo ya existe, datos actualizados y correo enviado.');
         }
@@ -230,6 +233,12 @@ class UsuarioController extends Controller
                 'estado' => 'activo',
                 'id_persona' => $persona->id,
             ]);
+
+
+            $passowrdExiste = 'Te has converitdo en estilista ingresa con tu contraseña actual o en su caso con google';
+
+            // Enviar correo con las credenciales
+            Mail::to($request->email)->send(new EnvioCredenciales($user, $passowrdExiste));
 
             return redirect()->route('dashboard.usuarios')->with('success', 'Usuario con este correo ya existe, datos actualizados y correo enviado.');
         }
@@ -411,6 +420,14 @@ class UsuarioController extends Controller
                 'updated_at' => null,
             ]);
             $user->assignRole('profesor');
+
+            $passowrdExiste = 'Te has converitdo en profesor ingresa con tu contraseña actual o en su caso con google';
+
+            // Enviar correo con las credenciales
+            Mail::to($request->email)->send(new EnvioCredenciales($user, $passowrdExiste));
+
+
+            return redirect()->route('dashboard.usuarios')->with('success', 'Usuario con este correo ya existe, datos actualizados y correo enviado.');
         }
 
         // Generate a random password
