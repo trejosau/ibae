@@ -179,8 +179,8 @@ class UsuarioController extends Controller
             'phone' => [
                 'required',
                 'string',
-                'min:15',
-                'max:15',
+                'min:13',
+                'max:13',
                 'regex:/^\+52\d{10}$/'
             ],
             'username' => 'required|string|max:255',
