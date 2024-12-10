@@ -76,7 +76,7 @@ Route::middleware(['auth', 'role:cliente'])->group(function () {
     Route::get('/checkout', [ProductosController::class, 'checkout'])->name('checkout');
     Route::put('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.changePassword');
     Route::get('/miscitas', [SalonController::class, 'miscitas'])->name('miscitas');
-    Route::put('/citas/{id}/cancelar', [SalonController::class, 'cancelarCita'])->name('citas.cancelar');
+
 
 
 });
@@ -107,6 +107,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/citas/{id}/reprogramar', [DashboardController::class, 'reprogramar'])->name('citas.reprogramar');
         Route::put('/citas/{id}/concluir-pago', [DashboardController::class, 'concluirPago'])->name('citas.concluirPago');
         Route::put('/citas/{id}/completar', [DashboardController::class, 'completarCita'])->name('citas.completar');
+        Route::put('/citas/{id}/cancelar', [DashboardController::class, 'cancelarCita'])->name('citas.cancelar');
+        Route::put('/citas/{id}/rev-cancelar', [DashboardController::class, 'revCancelarCita'])->name('citas.revCancelar');
 
 
 

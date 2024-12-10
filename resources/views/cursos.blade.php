@@ -145,7 +145,7 @@
 </div>
 
 <div class="container mt-5" id="courses">
-    <h2 class="text-center mb-4 reveal fw-bold fs-5 pt-5">Nuestros Cursos</h2>
+    <h2 class="text-center mb-4 reveal fw-bold fs-5 pt-5">Nuestros cursos proximos a iniciar</h2>
     <div class="row">
         @foreach ($cursos as $curso)
             @if($curso->estado == 'programado')
@@ -155,8 +155,8 @@
                             <h5 class="card-title pb-3">{{ $curso->nombre }}</h5>
                             <p class="card-text pb-3">Curso con inicio el: {{ \Carbon\Carbon::parse($curso->fecha_inicio)->format('d M Y') }}</p>
                             <p><i class="fas fa-clock icon-style pb-3"></i>{{ $curso->dia_clase }}</p>
-                            <p><i class="fas fa-clock icon-style pb-3"></i>{{ $curso->hora_clase }}</p>
-                            <p><i class="fas fa-clock icon-style pb-3"></i>{{ $curso->hora_clase_fin }}</p>
+                            <p><i class="fas fa-clock icon-style pb-3"></i>Hora inicio: {{ $curso->hora_clase }}</p>
+                            <p><i class="fas fa-clock icon-style pb-3"></i>Hora fin: {{ $curso->hora_clase_fin }}</p>
                             <p><i class="fas fa-dollar-sign icon-style pb-3"></i>${{ number_format($curso->monto_colegiatura, 2) }}</p>
                         </div>
                     </div>
