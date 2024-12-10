@@ -218,15 +218,33 @@
                         </button>
                     </form>
                     @endif
-                    @if($cita->estado_cita != 'completada')
-                <form action="{{ route('citas.completar', $cita->id) }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('PUT')
-                    <button type="submit" class="btn btn-primary">
-                        Completar Cita
-                    </button>
-                </form>
+                    @if($cita->estado_cita != 'completada' && $cita->estado_cita != 'cancelada')
+                        <form action="{{ route('citas.completar', $cita->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn btn-primary">
+                                Completar Cita
+                            </button>
+                        </form>
                 @endif
+                    @if($cita->estado_cita != 'completada' && $cita->estado_cita != 'cancelada')
+                        <form action="{{ route('citas.cancelar', $cita->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn btn-danger">
+                                Cancelar Cita
+                            </button>
+                        </form>
+                    @endif
+                    @if($cita->estado_cita == 'cancelada')
+                        <form action="{{ route('citas.revCancelar', $cita->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn btn-danger">
+                                Revertor Cancelación
+                            </button>
+                        </form>
+                    @endif
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>

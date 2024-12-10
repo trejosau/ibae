@@ -559,6 +559,23 @@ class DashboardController extends Controller
         return redirect()->back()->with('success', 'La cita se ha reprogramado con éxito.');
     }
 
+    public function cancelarCita($id)
+    {
+        // Buscar la cita por ID
+        $cita = Citas::findOrFail($id);
+        $cita->estado_cita = 'cancelada';
+        $cita->save();
+        return redirect()->back()->with('success', 'Cita cancelada exitosamente.');
+    }
+    public function revCancelarCita($id)
+    {
+
+        $cita = Citas::findOrFail($id);
+        $cita->estado_cita = 'programada';
+        $cita->save();
+        return redirect()->back()->with('success', 'Cita revertida exitosamente.');
+    }
+
     public function concluirPago($id)
 {
     // Buscar la cita por ID
@@ -708,7 +725,9 @@ public function completarCita($id)
     public function auditoria()
     {
         // Obtener todas las auditorías desde la base de datos
-        $auditorias = Auditoria::with(['user', 'afectadoUser'])->get();
+        $auditorias = Auditoria::with(['usuarioactor', 'usuarioafectado'])->get();
+
+        dd($auditorias);
 
         // Retornar la vista con los datos
         return view('dashboard.index', compact('auditorias'));

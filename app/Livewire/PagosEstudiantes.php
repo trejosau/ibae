@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\EstudianteCurso;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use App\Models\Colegiaturas;
@@ -23,64 +24,49 @@ class PagosEstudiantes extends Component
 
     public function historialPagos()
     {
-        // Subconsulta para obtener el último pago por cada estudiante curso
-        $subquery = DB::table('colegiaturas')
-            ->select('id_estudiante_curso', DB::raw('MAX(fecha_pago) as max_fecha_pago'))
-            ->where('semana', 1)
-            ->groupBy('id_estudiante_curso');
+        $query = EstudianteCurso::query();
 
-        // Consulta principal para obtener las colegiaturas con los detalles del último pago
-        $query = Colegiaturas::joinSub($subquery, 'ultimo_pago', function ($join) {
-            $join->on('colegiaturas.id_estudiante_curso', '=', 'ultimo_pago.id_estudiante_curso')
-                ->on('colegiaturas.fecha_pago', '=', 'ultimo_pago.max_fecha_pago');
-        })
-            ->with(['estudianteCurso.estudiante.persona', 'estudianteCurso.cursoApertura', 'estudianteCurso.colegiaturas'])
-            ->distinct();  // Para evitar duplicados
-
-        // Filtrar por matrícula si se ha proporcionado
+        // Filtro por matrícula
         if (!empty($this->matricula)) {
-            $query->whereHas('estudianteCurso.estudiante', function ($q) {
+            $query->whereHas('estudiante', function ($q) {
                 $q->where('matricula', 'like', '%' . $this->matricula . '%');
             });
         }
 
-        // Filtrar por nombre si se ha proporcionado
+        // Filtro por nombre del estudiante
         if (!empty($this->nombre)) {
-            $query->whereHas('estudianteCurso.estudiante.persona', function ($q) {
+            $query->whereHas('estudiante.persona', function ($q) {
                 $q->where('nombre', 'like', '%' . $this->nombre . '%');
             });
         }
 
-        // Filtrar por fecha de pago exacta
-        if (!empty($this->fecha_pago)) {
-            $query->whereDate('colegiaturas.fecha_pago', $this->fecha_pago);
-        }
-
-        // Filtrar por fecha de inicio si se ha proporcionado
-        if (!empty($this->fecha_inicio)) {
-            $query->where('colegiaturas.fecha_pago', '>=', $this->fecha_inicio);
-        }
-
-        // Filtro por rango de fechas (fecha de inicio y fecha de fin)
+        // Filtro por rango de fechas de pago
         if (!empty($this->fecha_inicio) && !empty($this->fecha_fin)) {
-            $query->whereBetween('colegiaturas.fecha_pago', [$this->fecha_inicio, $this->fecha_fin]);
+            $query->whereHas('colegiaturas', function ($q) {
+                $q->whereBetween('fecha_pago', [$this->fecha_inicio, $this->fecha_fin]);
+            });
         }
 
-        // Ejecutar la consulta y obtener los resultados
-        $colegiaturas = $query->paginate(9);  // Cambia el número según tus necesidades.
+        // Cargar datos agrupados por EstudianteCurso
+        $estudianteCursos = $query->with([
+            'cursoApertura.curso',    // Curso relacionado
+            'estudiante.persona',    // Datos del estudiante
+            'colegiaturas',          // Todas las colegiaturas asociadas
+        ])->paginate(9);
 
-        // Calcular el adeudo de cada colegiatura
-        foreach ($colegiaturas as $colegiatura) {
-            $adeudo = $colegiatura->estudianteCurso->colegiaturas
-                ->where('colegiatura', 0)  // Asumiendo que 0 significa no pagado
-                ->sum('Monto');
+        // Añadir información adicional (pagos completados y adeudos)
+        foreach ($estudianteCursos as $estudianteCurso) {
+            $pagosCompletados = $estudianteCurso->colegiaturas->where('colegiatura', 1)->count();
+            $totalSemanas = $estudianteCurso->colegiaturas->count();
+            $adeudo = $estudianteCurso->colegiaturas->where('colegiatura', 0)->sum('Monto');
 
-            $colegiatura->adeudo = $adeudo;
+            $estudianteCurso->pagos_completados = $pagosCompletados;
+            $estudianteCurso->total_semanas = $totalSemanas;
+            $estudianteCurso->adeudo = $adeudo;
         }
 
-        return $colegiaturas;
+        return $estudianteCursos;
     }
-
 
     public function goToPage($page)
     {

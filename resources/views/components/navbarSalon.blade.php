@@ -101,7 +101,18 @@ background-color: #934e66; /* Color de fondo al hacer clic */
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
+
+
+
+
+
+
                 <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        @if(request()->path() !== 'salon')
+                            <a class="nav-link" href="/salon">Salon</a>
+                        @endif
+                    </li>
                     @if(auth()->check())
                     <li class="nav-item">
                         <a class="nav-link" href="/miscitas">Mis Citas</a>
@@ -111,7 +122,7 @@ background-color: #934e66; /* Color de fondo al hacer clic */
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('miagenda') }}">Agenda</a>
                     </li>
-                    
+
                     @endif
                     @endif
                 </ul>
@@ -135,7 +146,7 @@ background-color: #934e66; /* Color de fondo al hacer clic */
                     @endif
                 </div>
             </div>
-    
+
             </div>
         </div>
     </nav>

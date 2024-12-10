@@ -27,15 +27,16 @@ class SalonController extends Controller
     {
         // Obtenemos al estilista autenticado
         $estilista = Auth::user()->persona?->estilista;
-    
+
         if (!$estilista) {
             return redirect()->back()->with('error', 'No tienes citas asignadas.');
         }
-    
+
         // Obtenemos las citas del estilista, incluyendo comprador, detalleCita y servicio
         $citas = Citas::where('id_estilista', $estilista->id)
             ->with(['comprador.persona', 'detalleCita.servicio'])
             ->orderBy('fecha_hora_inicio_cita', 'asc')
+<<<<<<< HEAD
             ->paginate(10); // Número de registros por página
     
         // Retornamos la vista con las citas del estilista
@@ -43,6 +44,15 @@ class SalonController extends Controller
     }
     
     
+=======
+            ->get();
+
+        // Retornamos la vista con las citas del estilista
+        return view('salon.miagenda', compact('citas'));
+    }
+
+
+>>>>>>> 96258641dc3bc0a484de25ee2e60fbfd4f95c071
     public function miscitas()
     {
         $comprador = Auth::user()->persona?->comprador;
@@ -79,31 +89,32 @@ class SalonController extends Controller
             'fecha' => 'required|date',
             'hora' => 'required|date_format:H:i',
         ]);
-    
+
         // Buscar la cita por ID
         $cita = Citas::findOrFail($id);
-    
+
         // Actualizar la fecha y hora
         $nuevaFechaHora = $request->fecha . ' ' . $request->hora;
         $cita->update([
             'fecha_hora_inicio_cita' => $nuevaFechaHora,
         ]);
-    
+
         // Redirigir con mensaje de éxito
         return redirect()->back()->with('success', 'La cita se ha reprogramado correctamente.');
     }
-    
+
+
 
     public function concluirPago($id)
     {
         // Buscar la cita por ID
         $cita = Citas::findOrFail($id);
-    
+
         // Verificar el estado del pago
         if ($cita->estado_pago !== 'anticipo') {
             return redirect()->back()->with('error', 'El pago no está en estado de anticipo, no se puede concluir.');
         }
-    
+
         // Realizar la actualización
         $cita->update([
             'estado_pago' => 'concluido',
@@ -111,7 +122,7 @@ class SalonController extends Controller
             'pago_restante' => 0,
             'estado_cita' => 'completada'
         ]);
-    
+
         // Verificar la actualización
         if ($cita->estado_cita == 'completada') {
             return redirect()->back()->with('success', 'El pago se ha concluido correctamente y la cita está ahora completada.');
@@ -119,7 +130,7 @@ class SalonController extends Controller
             return redirect()->back()->with('error', 'Hubo un error al actualizar el estado de la cita.');
         }
     }
-    
+
 
     public function completarCita($id)
 {

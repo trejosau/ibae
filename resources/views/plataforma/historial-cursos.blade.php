@@ -1,19 +1,29 @@
 <div class="container mt-4">
-
-    @if (session('message'))
-    <div class="alert alert-info">
-        {{ session('message') }}
-    </div>
-@endif
-
-    <h2 class="text-center mb-4">Gestión de Cursos Aperturados</h2>
-
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+    @if (session('message'))
+    <div class="alert alert-info">
+        {{ session('message') }}
+    </div>
+@endif
+        @if ($errors->any())
+            <div class="alert alert-danger" style="z-index: 2000; position: relative;">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+    <h2 class="text-center mb-4">Gestión de Cursos Aperturados</h2>
+
+
+
+
 
     @if(session('error'))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -339,7 +349,7 @@
                         <div class="mb-3">
                             <label for="cursoSelect" class="form-label">Selecciona el Curso</label>
                             <select class="form-select" id="cursoSelect" name="id_curso" required>
-                                <option value="" disabled>Seleccione un curso</option>
+                                <option value="" selected disabled>Seleccione un curso</option>
                                 @foreach($cursos as $curso)
                                     <option value="{{ $curso->id }}"
                                             data-duracion="{{ $curso->duracion_horas }}"

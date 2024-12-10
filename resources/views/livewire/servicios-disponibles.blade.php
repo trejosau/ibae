@@ -188,7 +188,7 @@
                         </label>
                         <select id="paymentOption" name="paymentOption" wire:model.live="tipopago" style="margin-bottom: 10px; margin-top: 10px; width: 100%; padding: 10px; font-size: 1rem; border: 1px solid #ddd; border-radius: 5px;">
                             <option value="anticipo">Pagar solo anticipo</option>
-                            <option value="completo">Pagar cita completa</option>
+                            <option value="concluido">Pagar cita completa</option>
                         </select>
                     </div>
                 </div>
